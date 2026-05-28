@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FULL 5-STACK — SILO ORIENTATION</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;background:#020208;height:100%}
+body{color:#cbd5e1;font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+@keyframes pulse{0%,100%{opacity:0.6}50%{opacity:1}}
+@keyframes floatSoft{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
+#stack{transform-style:preserve-3d;will-change:transform;transition:transform 0.5s ease-out}
+.layer{border-radius:12px;transition:all 0.4s cubic-bezier(.2,.8,.2,1);cursor:pointer;backface-visibility:hidden;will-change:filter, box-shadow}
+.layer:hover{filter:brightness(1.3) saturate(1.2);z-index:10}
+.layer:active{transform:scale(0.98) !important}
+@media (max-width:768px){
+  .wrap-gap{gap:24px !important;margin-top:24px !important}
+  #stack{height:460px;margin-top:-10px}
+  h1{font-size:22px !important}
+}
+</style>
+</head>
+<body>
+<div style="background:#020208; color:#cbd5e1; font-family:monospace; min-height:100vh; padding:20px;">
+<h1 style="text-align:center; color:#22d3ee; text-shadow:0 0 10px #22d3ee;">FULL 5-STACK — SILO ORIENTATION</h1>
+<div class="wrap-gap" style="display:flex; justify-content:center; gap:40px; margin-top:40px; flex-wrap:wrap;">
+<div id="stack" style="position:relative; width:300px; height:500px; perspective:1000px;">
+<!-- 5 layers -->
+<div class="layer" style="position:absolute; left:50%; width:220px; height:220px; margin-left:-110px; background:rgba(245,158,11,0.2); border:2px solid #f59e0b; box-shadow:0 0 30px #f59e0b; transform:translateZ(0px) translateY(300px); display:flex; align-items:center; justify-content:center; flex-direction:column;">
+<div style="color:#f59e0b; font-weight:bold;">LAYER 1</div><div>BORONIC</div><div style="font-size:11px; opacity:0.7;">9 cells • neutron base</div>
+</div>
+<div class="layer" style="position:absolute; left:50%; width:190px; height:190px; margin-left:-95px; background:rgba(34,211,238,0.2); border:2px solid #22d3ee; box-shadow:0 0 25px #22d3ee; transform:translateZ(40px) translateY(220px); display:flex; align-items:center; justify-content:center; flex-direction:column;">
+<div style="color:#22d3ee; font-weight:bold;">LAYER 2</div><div>TOROIDAL</div><div style="font-size:11px; opacity:0.7;">32 cells • 3x20 loop</div>
+</div>
+<div class="layer" style="position:absolute; left:50%; width:160px; height:160px; margin-left:-80px; background:rgba(168,85,247,0.2); border:2px solid #a855f7; box-shadow:0 0 20px #a855f7; transform:translateZ(80px) translateY(150px); display:flex; align-items:center; justify-content:center; flex-direction:column;">
+<div style="color:#a855f7; font-weight:bold;">LAYER 3</div><div>PLASMIC</div><div style="font-size:11px; opacity:0.7;">8 cells • bridge</div>
+</div>
+<div class="layer" style="position:absolute; left:50%; width:130px; height:130px; margin-left:-65px; background:rgba(250,204,21,0.2); border:2px solid #facc15; box-shadow:0 0 20px #facc15; transform:translateZ(120px) translateY(90px); display:flex; align-items:center; justify-content:center; flex-direction:column;">
+<div style="color:#facc15; font-weight:bold;">LAYER 4</div><div>PHOTONIC</div><div style="font-size:11px; opacity:0.7;">16 cells • light</div>
+</div>
+<div class="layer" style="position:absolute; left:50%; width:100px; height:100px; margin-left:-50px; background:rgba(255,255,255,0.1); border:2px solid #fff; box-shadow:0 0 20px #fff; transform:translateZ(160px) translateY(40px); display:flex; align-items:center; justify-content:center; flex-direction:column;">
+<div style="color:#fff; font-weight:bold;">LAYER 5</div><div>TRIADIC</div><div style="font-size:10px; opacity:0.7;">256 trits • 768 gates</div>
+</div>
+<!-- TSVs -->
+<div style="position:absolute; left:50%; top:40px; width:2px; height:360px; background:linear-gradient(to bottom, #fff, #facc15, #a855f7, #22d3ee, #f59e0b); margin-left:-1px; box-shadow:0 0 10px #22d3ee; animation:pulse 2s infinite;"></div>
+</div>
+<div style="max-width:400px;">
+<h2 style="color:#67e8f9;">Wiring — SoC on SoC</h2>
+<p>• <span style="color:#f59e0b;">Boronic</span> base anchors to 10x10 grid (1.1-10.3)</p>
+<p>• <span style="color:#22d3ee;">Toroidal</span> wraps it, 3x20 tensors push inward</p>
+<p>• <span style="color:#a855f7;">Plasmic</span> sits on bridge 8.9→9.1, handles phase jumps</p>
+<p>• <span style="color:#facc15;">Photonic</span> core drives light compute at 2.8s</p>
+<p>• <span style="color:#fff;">Triadic</span> top controls all with -1/0/+1 logic</p>
+<p style="margin-top:20px;">TSVs (through-silicon vias) run vertical: 100-grid bus up, 256-trit bus down. Silo orientation means each chip sits directly on the next — no lateral wiring, all push.</p>
+<div style="margin-top:30px; padding:15px; border:1px solid #334155; background:#0b1220;">
+<div>System: 5 layers</div>
+<div>Nodes: 100 + 256 = 356</div>
+<div>Gates: 768 triadic + ~200 binary = ~968</div>
+<div>Orientation: SILO (vertical)</div>
+</div>
+</div>
+</div>
+<div style="text-align:center; margin-top:40px; opacity:0.6; font-size:12px;">5 processors • wired • limitless loops</div>
+</div>
+<script>
+(function(){
+  const stack = document.getElementById('stack');
+  const layers = document.querySelectorAll('.layer');
+  let rotY = 22, rotX = -14, idle = true, t = 0;
+  
+  function render(){
+    stack.style.transform = `rotateX(${rotX}deg) rotateY(${rotY}deg)`;
+  }
+  render();
+  
+  // idle auto-rotate
+  setInterval(()=>{
+    if(idle){
+      t += 0.01;
+      rotY = 22 + Math.sin(t)*5;
+      render();
+    }
+  }, 50);
+  
+  // mouse parallax
+  const onMove = (e)=>{
+    const r = stack.getBoundingClientRect();
+    const cx = r.left + r.width/2;
+    const cy = r.top + r.height/2;
+    const dx = (e.clientX - cx) / r.width;
+    const dy = (e.clientY - cy) / r.height;
+    if(Math.abs(dx) < 0.9 && Math.abs(dy) < 0.9){
+      rotY = 22 + dx * 30;
+      rotX = -14 - dy * 20;
+      render();
+    }
+  };
+  window.addEventListener('mousemove', onMove);
+  window.addEventListener('touchmove', (e)=>{ if(e.touches[0]) onMove(e.touches[0]) }, {passive:true});
+  
+  stack.addEventListener('mouseenter', ()=> idle=false);
+  stack.addEventListener('mouseleave', ()=>{ idle=true; rotY=22; rotX=-14; render(); });
+  
+  // layer interactions
+  layers.forEach((layer,i)=>{
+    layer.style.animation = `floatSoft ${3.5 + i*0.4}s ease-in-out infinite`;
+    layer.addEventListener('click', ()=>{
+      layers.forEach(l=>{ l.style.opacity='0.35'; l.style.filter=''; });
+      layer.style.opacity='1';
+      layer.style.filter='brightness(1.5)';
+      layer.style.boxShadow = layer.style.boxShadow.replace('30px','50px');
+      setTimeout(()=>{
+        layers.forEach(l=>{ l.style.opacity='1'; l.style.filter=''; });
+      }, 1400);
+    });
+  });
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,21 @@
+;!function(){try { var e="undefined"!=typeof globalThis?globalThis:"undefined"!=typeof global?global:"undefined"!=typeof window?window:"undefined"!=typeof self?self:{},n=(new e.Error).stack;n&&((e._debugIds|| (e._debugIds={}))[n]="fad43da3-7c17-7871-46d1-7f694283cc8f")}catch(e){}}();
+(globalThis.TURBOPACK||(globalThis.TURBOPACK=[])).push(["object"==typeof document?document.currentScript:void 0,312270,e=>{e.q("/_next/static/media/pdf.worker.min.0o_ims387um.a.mjs")},836584,e=>{"use strict";var t=e.i(364383),r=e.i(819658);let i=`
+html, body { margin: 0; padding: 0; background: #525659; height: 100%; }
+.pdf-viewer { min-height: 100vh; }
+.pdf-viewer__pages { padding: 16px 0; }
+.pdf-viewer__page {
+  display: block;
+  margin: 0 auto 16px;
+  background: #fff;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+  max-width: calc(100% - 32px);
+}
+.pdf-viewer__error {
+  padding: 24px;
+  text-align: center;
+  font-family: system-ui, sans-serif;
+  color: #ff8a80;
+}
+`;e.s(["PdfViewer",0,function({pdfBase64:a}){let l=(0,r.useRef)(null),[n,s]=(0,r.useState)(null);return(0,r.useEffect)(()=>{let t=l.current;if(null==t)return;let r=!1;return(async()=>{try{let i=await e.A(674935);i.GlobalWorkerOptions.workerSrc=new e.U(e.r(312270)).href;let l=(e=>{let t=atob(e),r=new Uint8Array(t.length);for(let e=0;e<t.length;e++)r[e]=t.charCodeAt(e);return r})(a),n=await i.getDocument({data:l}).promise;if(r)return;t.replaceChildren();let s=Math.max(1,t.clientWidth-32);for(let e=1;e<=n.numPages;e++){if(r)return;let i=await n.getPage(e),a=i.getViewport({scale:1}),l=Math.min(1.5,s/a.width),d=i.getViewport({scale:l}),o=document.createElement("canvas");o.className="pdf-viewer__page";let c=window.devicePixelRatio||1;o.width=Math.floor(d.width*c),o.height=Math.floor(d.height*c),o.style.width=`${d.width}px`,o.style.height=`${d.height}px`,t.appendChild(o);let h=o.getContext("2d");null!=h&&(1!==c&&h.scale(c,c),await i.render({canvasContext:h,viewport:d,canvas:o}).promise)}}catch(e){r||(console.error("PDF render failed",e),s("Failed to render PDF"))}})(),()=>{r=!0}},[a]),(0,t.jsxs)("div",{className:"pdf-viewer",children:[(0,t.jsx)("div",{ref:l,className:"pdf-viewer__pages","aria-label":"PDF preview"}),null!=n&&(0,t.jsx)("div",{className:"pdf-viewer__error",children:n}),(0,t.jsx)("style",{children:i})]})}])},674935,e=>{e.v(t=>Promise.all(["static/chunks/0ir-xzw3u2-13.js","static/chunks/0gvql5xh0g45s.js"].map(t=>e.l(t))).then(()=>t(696784)))}]);
+
+//# debugId=fad43da3-7c17-7871-46d1-7f694283cc8f

@@ -1,0 +1,4 @@
+;!function(){try { var e="undefined"!=typeof globalThis?globalThis:"undefined"!=typeof global?global:"undefined"!=typeof window?window:"undefined"!=typeof self?self:{},n=(new e.Error).stack;n&&((e._debugIds|| (e._debugIds={}))[n]="c591b723-6545-4695-58e2-54f32354b37a")}catch(e){}}();
+(globalThis.TURBOPACK||(globalThis.TURBOPACK=[])).push(["object"==typeof document?document.currentScript:void 0,285820,t=>{"use strict";let r=(0,t.i(840387).createClientLogger)("EctoEmptyErrorBoundary");t.s(["default",0,function({error:t}){return r.error({error:t},"Next boundary caught an error"),null}])},391242,t=>{"use strict";var r=t.i(285820);t.s([],305508),t.i(305508),t.s(["default",()=>r.default],391242)}]);
+
+//# debugId=c591b723-6545-4695-58e2-54f32354b37a

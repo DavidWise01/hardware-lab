@@ -1,0 +1,17 @@
+{
+  "package": "valence_drill_1_1plus2",
+  "version": "0=1=.",
+  "axiom": "3/3 = 2/3 DOWN + 1/3 UP",
+  "components": {
+    "p+": "dynamic",
+    "e-": "static", 
+    "n": "alive/dead",
+    "ν": "ghost lol",
+    "g": "always down"
+  },
+  "structure": "3x3x3 -> 0 -> torus -> ........∞",
+  "drill": "1 > 1 + 2",
+  "result": "table_level = true",
+  "note": "neutrino left, gravity stayed, you watched",
+  "final": "lol = 1 = ."
+}

@@ -1,0 +1,963 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>VALENCE KIT · STIMULUS · 0-5-0 COUNTER</title>
+<style>
+:root{
+  --bg:#020202; --panel:rgba(8,8,8,0.94); --border:#1a1a1a; --ink:#e5e5e5; --dim:#666;
+  --A:#dc2626; --I:#a855f7; --N:#39ff14; --L:#ffffff;
+  --gold:#d4af37; --copper:#c87533;
+  --rail-pos:#dc2626; --rail-neg:#3b82f6; --sig:#eab308;
+  --seg-on:#ff3322; --seg-off:#220808;
+}
+*{box-sizing:border-box}
+html,body{height:100%;margin:0;background:var(--bg);color:var(--ink);font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;overflow:hidden}
+#scene{position:fixed;inset:0;cursor:grab}
+#scene:active{cursor:grabbing}
+
+.header{position:fixed;top:8px;left:8px;right:8px;display:flex;justify-content:space-between;align-items:flex-start;pointer-events:none;z-index:10;gap:8px;flex-wrap:wrap}
+.title{pointer-events:auto;background:var(--panel);border:1px solid var(--border);border-radius:8px;padding:6px 11px;backdrop-filter:blur(8px)}
+.title h1{margin:0;font-size:10px;letter-spacing:.26em;color:#bbb;font-weight:400}
+.title .sub{font-size:8px;letter-spacing:.22em;color:#555;margin-top:2px}
+
+.rails{pointer-events:auto;background:var(--panel);border:1px solid var(--border);border-radius:8px;padding:6px 11px;backdrop-filter:blur(8px);font-size:9px;letter-spacing:.12em;display:flex;gap:10px}
+.rails .r{display:flex;align-items:center;gap:5px}
+.rails .dot{width:7px;height:7px;border-radius:50%;box-shadow:0 0 6px currentColor}
+.rails .pos{color:var(--rail-pos)} .rails .neg{color:var(--rail-neg)} .rails .sig{color:var(--sig)} .rails .stim{color:var(--gold)}
+.rails .v{color:#888}
+
+.side{position:fixed;top:55px;right:8px;width:280px;background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:10px;backdrop-filter:blur(10px);z-index:10;max-height:calc(100vh - 130px);overflow-y:auto;font-size:11px}
+.side h3{margin:0 0 5px;font-size:9px;letter-spacing:.2em;color:#888;font-weight:400}
+.side .grp{margin-bottom:10px;padding-bottom:8px;border-bottom:1px solid #111}
+.side .grp:last-child{margin-bottom:0;padding-bottom:0;border-bottom:none}
+
+/* STIMULUS PANEL */
+.stim-row{display:flex;gap:3px;margin-bottom:6px}
+.vbtn{flex:1;background:#080808;border:1px solid #1f1408;color:#bbb;padding:7px 4px;border-radius:5px;cursor:pointer;font:inherit;font-size:10px;letter-spacing:.05em;text-align:center;transition:all .15s}
+.vbtn:hover{border-color:#444}
+.vbtn.on{background:linear-gradient(180deg,#1f1408,#0a0a0a);border-color:var(--gold);color:var(--gold);box-shadow:0 0 8px rgba(212,175,55,0.3)}
+
+/* 7-SEG COUNTER (UI) */
+.counter-display{
+  background:#080000;border:1px solid #2a0a0a;border-radius:6px;
+  padding:8px;text-align:center;
+}
+.counter-digits{
+  font-family:ui-monospace,monospace;font-size:38px;letter-spacing:6px;
+  color:var(--seg-on);text-shadow:0 0 10px rgba(255,51,34,0.7),0 0 20px rgba(255,51,34,0.3);
+  font-weight:bold;
+}
+.counter-bar{display:flex;height:6px;gap:1px;margin-top:6px;background:#1a0808;border-radius:2px;overflow:hidden}
+.counter-bar .seg{flex:1;background:#220808;transition:all .15s}
+.counter-bar .seg.on{background:var(--seg-on);box-shadow:0 0 4px var(--seg-on)}
+.counter-meta{font-size:8px;letter-spacing:.2em;color:#666;margin-top:4px;display:flex;justify-content:space-between}
+
+.piece{display:flex;align-items:center;gap:6px;padding:5px 8px;background:#080808;border:1px solid #181818;border-radius:5px;margin-bottom:2px;cursor:pointer;transition:all .15s;font-size:10px}
+.piece:hover{border-color:#333;background:#0f0f0f}
+.piece.selected{border-color:var(--gold);background:#1a1208}
+.piece.disabled{opacity:0.4}
+.piece .sw{width:8px;height:8px;border-radius:50%;flex-shrink:0;box-shadow:0 0 6px currentColor}
+.piece .sw.V{background:#fff;color:#fff} .piece .sw.A{background:var(--A);color:var(--A)}
+.piece .sw.I{background:var(--I);color:var(--I)} .piece .sw.N{background:var(--N);color:var(--N)}
+.piece .sw.L{background:var(--L);color:var(--L)}
+.piece.disabled .sw{box-shadow:none;background:#333;color:#333}
+.piece .name{flex:1;letter-spacing:.1em}
+.piece .ref{font-size:8px;color:#666;letter-spacing:.05em;margin-right:4px}
+.piece .toggle{width:24px;height:12px;background:#222;border-radius:6px;position:relative;cursor:pointer;flex-shrink:0}
+.piece .toggle::after{content:'';position:absolute;top:2px;left:2px;width:8px;height:8px;border-radius:50%;background:#666;transition:all .15s}
+.piece.on .toggle{background:#0a3a0a}
+.piece.on .toggle::after{left:14px;background:#39ff14}
+
+.controls{display:flex;gap:4px;flex-wrap:wrap}
+.btn{background:#151515;border:1px solid #333;color:#ccc;padding:5px 8px;border-radius:5px;cursor:pointer;font:inherit;font-size:9px;letter-spacing:.1em}
+.btn:hover{border-color:var(--gold);color:#fff}
+.btn.on{background:#1a1208;border-color:var(--gold);color:var(--gold)}
+
+input[type=range]{width:100%;margin:3px 0}
+
+.info{position:fixed;bottom:8px;left:8px;width:340px;max-width:calc(100vw - 16px);background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:10px;backdrop-filter:blur(10px);z-index:10;font-size:10px;line-height:1.55;max-height:42vh;overflow-y:auto}
+.info .lbl{font-size:9px;letter-spacing:.22em;color:#666;margin-bottom:3px;display:flex;justify-content:space-between}
+.info .lbl .ref{color:var(--copper)}
+.info .name{font-size:13px;letter-spacing:.18em;color:#fff;margin-bottom:5px}
+.info .desc{color:#aaa;font-size:10px;margin-bottom:7px}
+.info .k{color:#555;display:inline-block;width:90px}
+.info .v{color:#ccc}
+.info .row{margin:1px 0}
+.info .sect{margin-top:7px;padding-top:5px;border-top:1px solid #1a1a1a}
+.info .sect h4{margin:0 0 4px;font-size:9px;letter-spacing:.18em;color:#888;font-weight:400}
+.info .formula{font-family:ui-monospace,monospace;color:#a855f7;padding:2px 5px;background:#0a0a14;border-radius:3px;display:inline-block;margin:2px 0;font-size:10px}
+
+.life-status{position:fixed;bottom:8px;right:8px;background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:7px 11px;backdrop-filter:blur(10px);z-index:10;display:flex;align-items:center;gap:7px;font-size:10px;letter-spacing:.18em}
+.life-status .pulse{width:10px;height:10px;border-radius:50%;background:#222;transition:all .15s}
+.life-status.alive .pulse{background:var(--L);box-shadow:0 0 10px var(--L),0 0 20px rgba(255,255,255,0.4);animation:beat 1.2s ease-in-out infinite}
+@keyframes beat {0%,100%{transform:scale(1)} 10%{transform:scale(1.3)} 20%{transform:scale(1)} 30%{transform:scale(1.4)} 40%{transform:scale(1)}}
+.life-status.alive .txt{color:var(--L)}
+.life-status.dim .txt{color:#444}
+
+.scope{position:fixed;top:105px;left:8px;background:var(--panel);border:1px solid var(--border);border-radius:8px;padding:6px;backdrop-filter:blur(8px);z-index:10;width:240px}
+.scope .lbl{font-size:8px;letter-spacing:.22em;color:#666;margin-bottom:3px;display:flex;justify-content:space-between}
+.scope canvas{display:block;width:100%;height:50px;background:#000;border:1px solid #1a1a1a;border-radius:3px}
+.scope .info-row{font-size:9px;color:#666;letter-spacing:.08em;margin-top:3px;display:flex;justify-content:space-between}
+.scope .info-row .v{color:#ddd}
+.scope .ch-row{display:flex;gap:6px;margin-top:3px;font-size:8px;letter-spacing:.1em}
+.scope .ch{display:flex;align-items:center;gap:3px}
+.scope .ch .dot{width:6px;height:6px;border-radius:50%}
+
+@media (max-width:760px){.side{width:200px;top:50px} .info{width:270px;font-size:9px} .scope{display:none} .counter-digits{font-size:30px}}
+</style>
+</head>
+<body>
+<canvas id="scene"></canvas>
+
+<div class="header">
+  <div class="title">
+    <h1>VALENCE-1 · 27φ TOROIDAL · STIMULUS</h1>
+    <div class="sub">12-STEP COUNTER 00→5→00 · 5V STIMULUS BANK · STOICHEION v11.0</div>
+  </div>
+  <div class="rails">
+    <div class="r stim"><span class="dot"></span>V_stim<span class="v" id="vstim">2.0V</span></div>
+    <div class="r pos"><span class="dot"></span>V_in<span class="v" id="vin">9.0V</span></div>
+    <div class="r pos"><span class="dot"></span>+5V<span class="v" id="vcc">5.0V</span></div>
+    <div class="r sig"><span class="dot"></span>fsw<span class="v" id="fsw">30 kHz</span></div>
+    <div class="r neg"><span class="dot"></span>GND<span class="v">0.0V</span></div>
+  </div>
+</div>
+
+<div class="scope">
+  <div class="lbl"><span>SCOPE · 4-CHANNEL</span><span id="scope-hz">— Hz</span></div>
+  <canvas id="scope-canvas" width="480" height="100"></canvas>
+  <div class="ch-row">
+    <div class="ch"><span class="dot" style="background:#dc2626"></span>SW</div>
+    <div class="ch"><span class="dot" style="background:#eab308"></span>I_L</div>
+    <div class="ch"><span class="dot" style="background:#a855f7"></span>V_out</div>
+    <div class="ch"><span class="dot" style="background:#39ff14"></span>φ</div>
+    <div class="ch"><span class="dot" style="background:#ff3322"></span>CTR</div>
+  </div>
+</div>
+
+<div class="side">
+  <div class="grp">
+    <h3>STIMULUS · BENCH SUPPLY</h3>
+    <div class="stim-row">
+      <button class="vbtn" data-v="0.5">0.5V</button>
+      <button class="vbtn" data-v="1">1V</button>
+      <button class="vbtn on" data-v="2">2V</button>
+      <button class="vbtn" data-v="3">3V</button>
+      <button class="vbtn" data-v="4">4V</button>
+    </div>
+    <div class="counter-display">
+      <div class="counter-digits" id="ctr-digits">00</div>
+      <div class="counter-bar" id="ctr-bar">
+        <div class="seg"></div><div class="seg"></div><div class="seg"></div>
+        <div class="seg"></div><div class="seg"></div><div class="seg"></div>
+        <div class="seg"></div><div class="seg"></div><div class="seg"></div>
+        <div class="seg"></div><div class="seg"></div><div class="seg"></div>
+      </div>
+      <div class="counter-meta"><span id="ctr-phase">RISING</span><span id="ctr-step">step 0/12</span></div>
+    </div>
+    <input type="range" id="ctr-speed" min="2" max="30" value="10" step="1" style="margin-top:8px">
+    <div style="font-size:8px;letter-spacing:.18em;color:#555;text-align:center">COUNTER RATE <span id="ctr-rate-lbl" style="color:#aaa">2.0 Hz</span></div>
+  </div>
+
+  <div class="grp">
+    <h3>SUBSYSTEMS · BOM</h3>
+    <div class="piece on" data-piece="V"><div class="sw V"></div><div class="ref">BB1</div><div class="name">VESSEL · breadboard</div><div class="toggle"></div></div>
+    <div class="piece on" data-piece="A"><div class="sw A"></div><div class="ref">D1-27 / U2-4</div><div class="name">ANIMATION · LED ring</div><div class="toggle"></div></div>
+    <div class="piece on" data-piece="I"><div class="sw I"></div><div class="ref">L1 / U1 / Y1 / DS1</div><div class="name">INTELLECT · MCU+toroid</div><div class="toggle"></div></div>
+    <div class="piece on" data-piece="N"><div class="sw N"></div><div class="ref">BAT·U5·Q1·D28</div><div class="name">NOURISHMENT · SMPS</div><div class="toggle"></div></div>
+    <div class="piece on" data-piece="L"><div class="sw L"></div><div class="ref">HB1·R1</div><div class="name">LIFE · heartbeat</div><div class="toggle"></div></div>
+  </div>
+
+  <div class="grp">
+    <h3>VIEW</h3>
+    <div class="controls">
+      <button class="btn" id="explode">EXPLODE</button>
+      <button class="btn" id="assemble">ASSEMBLE</button>
+      <button class="btn" id="top">TOP</button>
+      <button class="btn" id="iso">ISO</button>
+      <button class="btn" id="bfield">B-FIELD</button>
+      <button class="btn" id="signal">SIGNAL</button>
+    </div>
+  </div>
+
+  <div class="grp">
+    <h3>PHASE CLOCK <span id="speed-lbl" style="color:var(--gold)">4.0 Hz</span></h3>
+    <input type="range" id="speed" min="0" max="300" value="100" step="5">
+  </div>
+</div>
+
+<div class="info" id="info">
+  <div class="lbl"><span>SELECTED</span><span class="ref" id="info-ref"></span></div>
+  <div class="name" id="info-name">— click a component —</div>
+  <div class="desc" id="info-desc">Set V_stim with the bench buttons. Watch counter ramp 00→5→00. Higher stimulus = brighter system. Counter modulates the energy breath of the toroid.</div>
+  <div id="info-meta"></div>
+  <div id="info-extra"></div>
+</div>
+
+<div class="life-status alive" id="life-status">
+  <div class="pulse"></div>
+  <div class="txt" id="life-txt">LIFE · ALIVE</div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/0.160.0/three.min.js"></script>
+<script>
+// ============================================================
+// SCENE
+// ============================================================
+const canvas = document.getElementById('scene');
+const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+renderer.setSize(window.innerWidth, window.innerHeight);
+renderer.toneMapping = THREE.ACESFilmicToneMapping;
+renderer.toneMappingExposure = 1.1;
+
+const scene = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera(38, window.innerWidth/window.innerHeight, 0.1, 2000);
+scene.add(new THREE.AmbientLight(0x1e1e22, 0.65));
+const keyL = new THREE.DirectionalLight(0xffffff, 1.0); keyL.position.set(150, 250, 100); scene.add(keyL);
+const fillL = new THREE.DirectionalLight(0xc8d8ff, 0.35); fillL.position.set(-100, 100, -50); scene.add(fillL);
+const rimL = new THREE.DirectionalLight(0xa855f7, 0.3); rimL.position.set(0, 80, -200); scene.add(rimL);
+
+let theta=-Math.PI/4, phi=Math.PI/3.2, radius=440;
+const camTarget=new THREE.Vector3(0,0,0);
+function updateCamera(){camera.position.x=camTarget.x+radius*Math.sin(phi)*Math.cos(theta);camera.position.y=camTarget.y+radius*Math.cos(phi);camera.position.z=camTarget.z+radius*Math.sin(phi)*Math.sin(theta);camera.lookAt(camTarget)}
+updateCamera();
+let isDragging=false,lastX,lastY,dragStartX,dragStartY,didDrag=false;
+canvas.addEventListener('mousedown',e=>{isDragging=true;dragStartX=lastX=e.clientX;dragStartY=lastY=e.clientY;didDrag=false});
+window.addEventListener('mousemove',e=>{if(!isDragging)return;if(Math.abs(e.clientX-dragStartX)+Math.abs(e.clientY-dragStartY)>4)didDrag=true;theta-=(e.clientX-lastX)*0.006;phi-=(e.clientY-lastY)*0.006;phi=Math.max(0.1,Math.min(Math.PI-0.1,phi));lastX=e.clientX;lastY=e.clientY;updateCamera()});
+window.addEventListener('mouseup',()=>isDragging=false);
+canvas.addEventListener('wheel',e=>{e.preventDefault();radius*=e.deltaY>0?1.08:0.92;radius=Math.max(150,Math.min(900,radius));updateCamera()},{passive:false});
+canvas.addEventListener('touchstart',e=>{if(e.touches.length===1){isDragging=true;dragStartX=lastX=e.touches[0].clientX;dragStartY=lastY=e.touches[0].clientY;didDrag=false}});
+canvas.addEventListener('touchmove',e=>{if(!isDragging||e.touches.length!==1)return;e.preventDefault();if(Math.abs(e.touches[0].clientX-dragStartX)+Math.abs(e.touches[0].clientY-dragStartY)>6)didDrag=true;theta-=(e.touches[0].clientX-lastX)*0.008;phi-=(e.touches[0].clientY-lastY)*0.008;phi=Math.max(0.1,Math.min(Math.PI-0.1,phi));lastX=e.touches[0].clientX;lastY=e.touches[0].clientY;updateCamera()},{passive:false});
+canvas.addEventListener('touchend',()=>isDragging=false);
+window.addEventListener('resize',()=>{camera.aspect=window.innerWidth/window.innerHeight;camera.updateProjectionMatrix();renderer.setSize(window.innerWidth,window.innerHeight)});
+
+// LABEL
+function makeLabel(text, color='#888', size=22, w=256, h=64){
+  const cv=document.createElement('canvas'); cv.width=w; cv.height=h;
+  const ctx=cv.getContext('2d'); ctx.font=`${size}px ui-monospace, Menlo, monospace`;
+  ctx.textAlign='center'; ctx.textBaseline='middle'; ctx.fillStyle=color; ctx.fillText(text, w/2, h/2);
+  const tex=new THREE.CanvasTexture(cv); tex.minFilter=THREE.LinearFilter;
+  const sp=new THREE.Sprite(new THREE.SpriteMaterial({map:tex,transparent:true,depthWrite:false}));
+  sp.scale.set(40,10,1); return sp;
+}
+
+// MATERIALS
+const M = {
+  bbPlastic: () => new THREE.MeshStandardMaterial({color:0xe8e3d0,metalness:0.0,roughness:0.85}),
+  bbHole: () => new THREE.MeshStandardMaterial({color:0x0a0a0a,metalness:0.2,roughness:0.95}),
+  copper: () => new THREE.MeshStandardMaterial({color:0xc87533,metalness:0.85,roughness:0.35,emissive:0xc87533,emissiveIntensity:0.12}),
+  enamel: () => new THREE.MeshStandardMaterial({color:0xa0521a,metalness:0.4,roughness:0.5,emissive:0xc87533,emissiveIntensity:0.1}),
+  silver: () => new THREE.MeshStandardMaterial({color:0xc0c0c0,metalness:0.9,roughness:0.22}),
+  black: () => new THREE.MeshStandardMaterial({color:0x0a0a0a,metalness:0.3,roughness:0.7}),
+  blackEpoxy:() => new THREE.MeshStandardMaterial({color:0x141414,metalness:0.1,roughness:0.6}),
+  resBody: () => new THREE.MeshStandardMaterial({color:0xc4a888,roughness:0.7}),
+  red: () => new THREE.MeshStandardMaterial({color:0xdc2626,metalness:0.2,roughness:0.6}),
+  blue: () => new THREE.MeshStandardMaterial({color:0x3b82f6,metalness:0.2,roughness:0.6}),
+  capBody: () => new THREE.MeshStandardMaterial({color:0x0a2a14,emissive:0x39ff14,emissiveIntensity:0.18,metalness:0.5,roughness:0.5}),
+  ceramicCap: () => new THREE.MeshStandardMaterial({color:0xd4a05e,roughness:0.7}),
+  toroidYellow: () => new THREE.MeshStandardMaterial({color:0xc9a64a,roughness:0.65,metalness:0.1}),
+  toroidWhite: () => new THREE.MeshStandardMaterial({color:0xe8e0d0,roughness:0.7,metalness:0.05}),
+  to220Body: () => new THREE.MeshStandardMaterial({color:0x0a0a0a,metalness:0.2,roughness:0.7}),
+  to220Tab: () => new THREE.MeshStandardMaterial({color:0xb0b0b8,metalness:0.85,roughness:0.3}),
+};
+
+const root = new THREE.Group(); scene.add(root);
+const pieces = {};
+
+// ============================================================
+// VESSEL — breadboard
+// ============================================================
+const vesselGroup = new THREE.Group();
+{
+  const W=340, D=220, T=8;
+  vesselGroup.add(Object.assign(new THREE.Mesh(new THREE.BoxGeometry(W,T,D),M.bbPlastic()), {position:new THREE.Vector3(0,-T/2,0)}));
+  vesselGroup.add(Object.assign(new THREE.Mesh(new THREE.BoxGeometry(W,1.5,D),M.black()), {position:new THREE.Vector3(0,-T-0.75,0)}));
+  vesselGroup.add(Object.assign(new THREE.Mesh(new THREE.BoxGeometry(W*0.78,2.6,6),new THREE.MeshStandardMaterial({color:0xc4bba0,roughness:0.85})), {position:new THREE.Vector3(0,0.1,0)}));
+
+  const railGeo = new THREE.BoxGeometry(W*0.94, 0.5, 1.2);
+  const railRedMat = new THREE.MeshStandardMaterial({color:0xdc2626,emissive:0xdc2626,emissiveIntensity:0.3,roughness:0.4});
+  const railBlueMat = new THREE.MeshStandardMaterial({color:0x3b82f6,emissive:0x3b82f6,emissiveIntensity:0.3,roughness:0.4});
+  [[-100,railRedMat],[-94,railRedMat],[94,railBlueMat],[100,railBlueMat]].forEach(([z,m])=>{
+    const r = new THREE.Mesh(railGeo, m); r.position.set(0,0.4,z); vesselGroup.add(r);
+  });
+  [['+V','#dc2626',-W/2+10,-97],['+V','#dc2626',W/2-10,-97],['GND','#3b82f6',-W/2+12,97],['GND','#3b82f6',W/2-12,97]].forEach(([t,c,x,z])=>{
+    const l=makeLabel(t,c,18); l.position.set(x,1,z); l.scale.set(16,5,1); vesselGroup.add(l);
+  });
+
+  const holeGeo = new THREE.CylinderGeometry(0.9,0.9,1.5,8);
+  const SPACING=6, cols=34, colOffset=-((cols-1)*SPACING)/2;
+  const grids=[{z0:-75,rows:11},{z0:15,rows:11}];
+  let totalHoles=0; grids.forEach(g=>totalHoles+=cols*g.rows); totalHoles+=4*cols;
+  const holes = new THREE.InstancedMesh(holeGeo, M.bbHole(), totalHoles);
+  const dummy = new THREE.Object3D(); let idx=0;
+  for(const g of grids) for(let r=0;r<g.rows;r++) for(let c=0;c<cols;c++){dummy.position.set(colOffset+c*SPACING,0.3,g.z0+r*SPACING);dummy.updateMatrix();holes.setMatrixAt(idx++,dummy.matrix)}
+  for(const rz of [-100,-94,94,100]) for(let c=0;c<cols;c++){dummy.position.set(colOffset+c*SPACING,0.5,rz);dummy.updateMatrix();holes.setMatrixAt(idx++,dummy.matrix)}
+  holes.instanceMatrix.needsUpdate=true; vesselGroup.add(holes);
+
+  for(let c=0;c<cols;c+=5){const l=makeLabel(String(c+1),'#777',16);l.position.set(colOffset+c*SPACING,0.5,-8);l.scale.set(8,2.5,1);vesselGroup.add(l)}
+  const id1=makeLabel('BB1 · VALENCE-1','#666',14); id1.position.set(-W/2+30,0.5,D/2-9); id1.scale.set(50,5,1); vesselGroup.add(id1);
+  const id2=makeLabel('REV.D · STIMULUS','#555',12); id2.position.set(W/2-40,0.5,D/2-9); id2.scale.set(60,4,1); vesselGroup.add(id2);
+
+  for(const [mx,mz] of [[-W/2+10,-D/2+10],[W/2-10,-D/2+10],[-W/2+10,D/2-10],[W/2-10,D/2-10]]){
+    vesselGroup.add(Object.assign(new THREE.Mesh(new THREE.CylinderGeometry(3,3,10,16),M.silver()), {position:new THREE.Vector3(mx,-2,mz)}));
+    vesselGroup.add(Object.assign(new THREE.Mesh(new THREE.CylinderGeometry(1.6,1.6,11,12),M.black()), {position:new THREE.Vector3(mx,-2,mz)}));
+  }
+}
+pieces.V = { group: vesselGroup, basePos: new THREE.Vector3(0,0,0), explodePos: new THREE.Vector3(0,-40,0) };
+root.add(vesselGroup);
+
+// ============================================================
+// INTELLECT — TOROID + MCU + Shift regs + Crystal + 7-SEG DISPLAY DS1
+// ============================================================
+const intellectGroup = new THREE.Group();
+let toroidGroup, bFieldGroup, ds1Segments = [];
+{
+  // TOROID (L1) — same as before
+  toroidGroup = new THREE.Group();
+  const R_major = 28, R_minor = 11;
+  const coreTop = new THREE.Mesh(new THREE.TorusGeometry(R_major,R_minor,16,64), M.toroidYellow());
+  coreTop.rotation.x = Math.PI/2; toroidGroup.add(coreTop);
+  const coreBot = new THREE.Mesh(new THREE.TorusGeometry(R_major,R_minor*0.6,12,64), M.toroidWhite());
+  coreBot.rotation.x = Math.PI/2; coreBot.position.y=-4; toroidGroup.add(coreBot);
+
+  // Helical winding
+  const N_TURNS=16, wireRadius=1.1, segmentsPerTurn=16;
+  const totalSegs = N_TURNS*segmentsPerTurn;
+  const wirePts=[new THREE.Vector3(R_major+R_minor+8,-8,0), new THREE.Vector3(R_major+R_minor+3,0,0)];
+  for(let i=0;i<=totalSegs;i++){
+    const t=i/totalSegs;
+    const ma=t*Math.PI*2, mi=t*N_TURNS*Math.PI*2;
+    const rM=R_minor+2;
+    wirePts.push(new THREE.Vector3((R_major+rM*Math.cos(mi))*Math.cos(ma), rM*Math.sin(mi), (R_major+rM*Math.cos(mi))*Math.sin(ma)));
+  }
+  wirePts.push(new THREE.Vector3(R_major+R_minor+3,0,0));
+  wirePts.push(new THREE.Vector3(R_major+R_minor+8,-8,0));
+  const winding = new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(wirePts), totalSegs*2, wireRadius, 6, false), M.enamel());
+  toroidGroup.add(winding);
+
+  const leadGeo=new THREE.CylinderGeometry(0.8,0.8,18,8);
+  toroidGroup.add(Object.assign(new THREE.Mesh(leadGeo,M.silver()),{position:new THREE.Vector3(R_major+R_minor+8,-16,0)}));
+  toroidGroup.add(Object.assign(new THREE.Mesh(leadGeo,M.silver()),{position:new THREE.Vector3(R_major+R_minor+8,-16,-6)}));
+  intellectGroup.add(toroidGroup);
+
+  // B-field viz
+  bFieldGroup = new THREE.Group(); bFieldGroup.visible = false;
+  for(let i=0;i<8;i++){
+    const offset=(i/8)*Math.PI*2;
+    const pts=[];
+    for(let s=0;s<=32;s++){
+      const a=(s/32)*Math.PI*2;
+      pts.push(new THREE.Vector3((R_major+R_minor*0.4*Math.cos(offset))*Math.cos(a), R_minor*0.4*Math.sin(offset), (R_major+R_minor*0.4*Math.cos(offset))*Math.sin(a)));
+    }
+    bFieldGroup.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints(pts), new THREE.LineBasicMaterial({color:0xa855f7,transparent:true,opacity:0.7})));
+  }
+  for(let i=0;i<8;i++){
+    const a=(i/8)*Math.PI*2;
+    const arrow = new THREE.Mesh(new THREE.ConeGeometry(2,5,6), new THREE.MeshBasicMaterial({color:0xa855f7,transparent:true,opacity:0.85}));
+    arrow.position.set(R_major*Math.cos(a),0,R_major*Math.sin(a));
+    arrow.rotation.x=Math.PI/2; arrow.rotation.z=-a-Math.PI/2;
+    bFieldGroup.add(arrow);
+  }
+  intellectGroup.add(bFieldGroup);
+
+  const l1lbl = makeLabel('L1 · 25µH · 16T · type 26','#aa88ff',16); l1lbl.position.set(0,20,-44); l1lbl.scale.set(60,6,1); intellectGroup.add(l1lbl);
+
+  // MCU U1
+  const u1G=new THREE.Group();
+  u1G.add(new THREE.Mesh(new THREE.BoxGeometry(26,4,14),M.blackEpoxy()));
+  const u1Notch=new THREE.Mesh(new THREE.CylinderGeometry(1.2,1.2,0.5,12),new THREE.MeshStandardMaterial({color:0x222,roughness:0.95}));
+  u1Notch.position.set(-9,2.1,0); u1Notch.rotation.x=Math.PI/2; u1G.add(u1Notch);
+  for(let i=0;i<7;i++) for(let s=0;s<2;s++){
+    const pin=new THREE.Mesh(new THREE.BoxGeometry(0.8,1,1.6),M.silver()); pin.position.set(-9+i*3,0.5,s===0?-7.8:7.8); u1G.add(pin);
+    const pl=new THREE.Mesh(new THREE.CylinderGeometry(0.45,0.45,6,6),M.silver()); pl.position.set(-9+i*3,-2.5,s===0?-7.8:7.8); u1G.add(pl);
+  }
+  u1G.position.set(75,2,-35); intellectGroup.add(u1G);
+  const u1Lbl=makeLabel('U1 · ATtiny84','#bbb',14); u1Lbl.position.set(75,4.5,-35); u1Lbl.scale.set(40,5,1); intellectGroup.add(u1Lbl);
+
+  // Crystal Y1
+  const y1=new THREE.Mesh(new THREE.CylinderGeometry(2,2,6,12),M.silver()); y1.rotation.z=Math.PI/2; y1.position.set(95,2,-32); intellectGroup.add(y1);
+  const y1L=makeLabel('Y1 · 16 MHz','#888',11); y1L.position.set(95,5,-32); y1L.scale.set(30,4,1); intellectGroup.add(y1L);
+
+  // 3× shift registers U2-U4
+  for(let r=0;r<3;r++){
+    const sx=-90+r*30, sz=50;
+    const srG=new THREE.Group();
+    srG.add(new THREE.Mesh(new THREE.BoxGeometry(28,4,14),M.blackEpoxy()));
+    const n=new THREE.Mesh(new THREE.CylinderGeometry(1.2,1.2,0.5,12),new THREE.MeshStandardMaterial({color:0x222,roughness:0.95}));
+    n.position.set(-10,2.1,0); n.rotation.x=Math.PI/2; srG.add(n);
+    for(let i=0;i<8;i++) for(let s=0;s<2;s++){
+      const pin=new THREE.Mesh(new THREE.BoxGeometry(0.8,1,1.6),M.silver()); pin.position.set(-10.5+i*3,0.5,s===0?-7.8:7.8); srG.add(pin);
+      const pl=new THREE.Mesh(new THREE.CylinderGeometry(0.45,0.45,6,6),M.silver()); pl.position.set(-10.5+i*3,-2.5,s===0?-7.8:7.8); srG.add(pl);
+    }
+    srG.position.set(sx,2,sz); intellectGroup.add(srG);
+    const lbl=makeLabel(['U2·74HC595','U3·74HC595','U4·74HC595'][r],'#888',13); lbl.position.set(sx,4.5,sz); lbl.scale.set(40,4,1); intellectGroup.add(lbl);
+  }
+
+  // === DS1 · 7-SEGMENT DISPLAY (2 digits, common-cathode) ===
+  // Real display: black plastic body, 2 red 7-seg digits, 10-pin DIP
+  const ds1G = new THREE.Group();
+  const dsBody = new THREE.Mesh(new THREE.BoxGeometry(38, 5, 22), new THREE.MeshStandardMaterial({color:0x0a0a0a, metalness:0.1, roughness:0.85}));
+  dsBody.position.y = 2.5; ds1G.add(dsBody);
+
+  // Display window (slightly recessed dark area)
+  const dsWindow = new THREE.Mesh(new THREE.BoxGeometry(34, 0.3, 18), new THREE.MeshStandardMaterial({color:0x140000, roughness:0.5, emissive:0x300000, emissiveIntensity:0.1}));
+  dsWindow.position.y = 5.1; ds1G.add(dsWindow);
+
+  // Pins (10 total, 5 each side)
+  for(let i=0;i<5;i++) for(let s=0;s<2;s++){
+    const pin=new THREE.Mesh(new THREE.BoxGeometry(0.8,1,1.6),M.silver()); pin.position.set(-8+i*4,0.5,s===0?-11.8:11.8); ds1G.add(pin);
+    const pl=new THREE.Mesh(new THREE.CylinderGeometry(0.45,0.45,6,6),M.silver()); pl.position.set(-8+i*4,-2.5,s===0?-11.8:11.8); ds1G.add(pl);
+  }
+
+  // 7-SEGMENT GEOMETRY for each digit
+  // Segments: a=top, b=top-right, c=bottom-right, d=bottom, e=bottom-left, f=top-left, g=middle
+  // We'll define one digit at origin (centered), then offset for 2 digits
+  function makeDigit(offsetX){
+    const dG = new THREE.Group();
+    const hSegGeo = new THREE.BoxGeometry(5, 0.6, 1.2);   // horizontal
+    const vSegGeo = new THREE.BoxGeometry(1.2, 0.6, 5);   // vertical
+    const onMat = new THREE.MeshStandardMaterial({color:0xff3322, emissive:0xff3322, emissiveIntensity:1.6, roughness:0.4, transparent:true, opacity:0.95});
+    const offMat = new THREE.MeshStandardMaterial({color:0x401010, emissive:0xff3322, emissiveIntensity:0.04, roughness:0.7});
+
+    const positions = [
+      {n:'a', geo:hSegGeo, x:0,      y:6.0, z:-6, on:onMat.clone(), off:offMat.clone()},   // top
+      {n:'b', geo:vSegGeo, x:3,    y:6.0, z:-3, on:onMat.clone(), off:offMat.clone()},   // top-right
+      {n:'c', geo:vSegGeo, x:3,    y:6.0, z:3,  on:onMat.clone(), off:offMat.clone()},   // bottom-right
+      {n:'d', geo:hSegGeo, x:0,      y:6.0, z:6,  on:onMat.clone(), off:offMat.clone()},   // bottom
+      {n:'e', geo:vSegGeo, x:-3,   y:6.0, z:3,  on:onMat.clone(), off:offMat.clone()},   // bottom-left
+      {n:'f', geo:vSegGeo, x:-3,   y:6.0, z:-3, on:onMat.clone(), off:offMat.clone()},   // top-left
+      {n:'g', geo:hSegGeo, x:0,      y:6.0, z:0,  on:onMat.clone(), off:offMat.clone()},   // middle
+    ];
+    const digitSegs = {};
+    for(const p of positions){
+      const m = new THREE.Mesh(p.geo, p.off);
+      m.position.set(p.x + offsetX, p.y, p.z);
+      dG.add(m);
+      digitSegs[p.n] = { mesh: m, onMat: p.on, offMat: p.off };
+    }
+    return { group: dG, segs: digitSegs };
+  }
+
+  const digit10 = makeDigit(-8);
+  const digit1  = makeDigit(8);
+  ds1G.add(digit10.group);
+  ds1G.add(digit1.group);
+  ds1Segments = [digit10.segs, digit1.segs];
+
+  ds1G.position.set(75, 0, 12); // between U1 and the LED ring
+  intellectGroup.add(ds1G);
+
+  const ds1Lbl = makeLabel('DS1 · 2-DIGIT 7-SEG', '#ff7755', 12); ds1Lbl.position.set(75, 9, 28); ds1Lbl.scale.set(50, 4, 1); intellectGroup.add(ds1Lbl);
+}
+intellectGroup.position.y = 14;
+pieces.I = { group: intellectGroup, basePos: new THREE.Vector3(0,14,0), explodePos: new THREE.Vector3(0,100,0) };
+root.add(intellectGroup);
+
+// 7-segment digit-to-segments map (we only need 0-5 plus blank)
+const SEG_MAP = {
+  0: ['a','b','c','d','e','f'],
+  1: ['b','c'],
+  2: ['a','b','d','e','g'],
+  3: ['a','b','c','d','g'],
+  4: ['b','c','f','g'],
+  5: ['a','c','d','f','g'],
+};
+
+function setDigit(digitIdx, value){
+  // value: 0-5 or null for blank
+  const segs = ds1Segments[digitIdx];
+  if (!segs) return;
+  const active = (value !== null && value !== undefined) ? (SEG_MAP[value] || []) : [];
+  for (const n of ['a','b','c','d','e','f','g']){
+    const s = segs[n];
+    s.mesh.material = active.includes(n) ? s.onMat : s.offMat;
+  }
+}
+
+function set7Seg(value){
+  // value is 0-5; show as "00" "01" "02" "03" "04" "05"
+  // Per user request: 00, 1, 2, 3, 4, 5 — so display "00" for zero, "0N" for digits 1-5
+  const tens = (value === 0) ? 0 : 0;
+  const ones = value;
+  setDigit(0, tens);
+  setDigit(1, ones);
+}
+
+// ============================================================
+// ANIMATION — 27 LEDs
+// ============================================================
+const animationGroup = new THREE.Group();
+const leds = [];
+{
+  for(let i=0;i<27;i++){
+    const angle=(i/27)*Math.PI*2-Math.PI/2;
+    const tier=i<12?'A':i<24?'B':'C';
+    const baseColor=tier==='A'?0xdc2626:tier==='B'?0xf5e5d0:0xa855f7;
+    const ledG=new THREE.Group();
+    const ledMat=new THREE.MeshStandardMaterial({color:baseColor,emissive:baseColor,emissiveIntensity:0.2,transparent:true,opacity:0.85,metalness:0,roughness:0.12});
+    const lcy=new THREE.Mesh(new THREE.CylinderGeometry(2.5,2.5,5,16),ledMat); lcy.position.y=2.5; ledG.add(lcy);
+    const ldome=new THREE.Mesh(new THREE.SphereGeometry(2.5,16,12,0,Math.PI*2,0,Math.PI/2),ledMat); ldome.position.y=5; ledG.add(ldome);
+    const flange=new THREE.Mesh(new THREE.CylinderGeometry(2.8,2.8,0.5,16),ledMat); flange.position.y=0.3; ledG.add(flange);
+    const flat=new THREE.Mesh(new THREE.BoxGeometry(0.3,4,4),new THREE.MeshStandardMaterial({color:0x222,roughness:0.7})); flat.position.set(-2.45,2.5,0); ledG.add(flat);
+    const l1=new THREE.Mesh(new THREE.CylinderGeometry(0.4,0.4,14,6),M.silver()); l1.position.set(0.8,-5,0); ledG.add(l1);
+    const l2=new THREE.Mesh(new THREE.CylinderGeometry(0.4,0.4,11,6),M.silver()); l2.position.set(-0.8,-3.5,0); ledG.add(l2);
+    ledG.position.set(Math.cos(angle)*60,0,Math.sin(angle)*60); ledG.rotation.y=-angle;
+    ledG.userData={tier,baseColor,mat:ledMat,phaseIdx:i};
+    animationGroup.add(ledG); leds.push(ledG);
+    if(i%4===0){const c=tier==='A'?'#dc2626':tier==='B'?'#aaa':'#a855f7'; const l=makeLabel('D'+(i+1),c,11); l.position.set(Math.cos(angle)*78,4,Math.sin(angle)*78); l.scale.set(18,3.5,1); animationGroup.add(l)}
+  }
+  const ring=new THREE.Mesh(new THREE.TorusGeometry(60,0.4,6,60),M.copper()); ring.rotation.x=Math.PI/2; ring.position.y=0.3; animationGroup.add(ring);
+
+  for(let i=0;i<8;i++){
+    const rG=new THREE.Group();
+    const rBody=new THREE.Mesh(new THREE.CylinderGeometry(2,2,9,12),M.resBody()); rBody.rotation.z=Math.PI/2; rG.add(rBody);
+    for(const b of [{c:0xdc2626,x:-2.5},{c:0xdc2626,x:-1},{c:0x8b4513,x:0.5},{c:0xd4af37,x:2.5}]){
+      const band=new THREE.Mesh(new THREE.CylinderGeometry(2.05,2.05,0.8,12),new THREE.MeshStandardMaterial({color:b.c,roughness:0.6})); band.rotation.z=Math.PI/2; band.position.x=b.x; rG.add(band);
+    }
+    const lA=new THREE.Mesh(new THREE.CylinderGeometry(0.3,0.3,4,6),M.silver()); lA.position.set(-6.5,0,0); rG.add(lA);
+    const lA2=new THREE.Mesh(new THREE.CylinderGeometry(0.3,0.3,7,6),M.silver()); lA2.position.set(-6.5,-3.5,0); rG.add(lA2);
+    const lB=new THREE.Mesh(new THREE.CylinderGeometry(0.3,0.3,4,6),M.silver()); lB.position.set(6.5,0,0); rG.add(lB);
+    const lB2=new THREE.Mesh(new THREE.CylinderGeometry(0.3,0.3,7,6),M.silver()); lB2.position.set(6.5,-3.5,0); rG.add(lB2);
+    rG.position.set(-100+i*12,2,78); animationGroup.add(rG);
+  }
+  const rbL=makeLabel('R2-R28 · 220Ω · 27ea','#c4a888',12); rbL.position.set(-50,5,86); rbL.scale.set(80,4,1); animationGroup.add(rbL);
+}
+pieces.A = { group: animationGroup, basePos: new THREE.Vector3(0,0,0), explodePos: new THREE.Vector3(0,55,0) };
+root.add(animationGroup);
+
+// ============================================================
+// NOURISHMENT — SMPS chain
+// ============================================================
+const nourishmentGroup = new THREE.Group();
+const caps = [];
+let q1Mesh;
+{
+  // Battery (now relabeled — "BAT1 · V_stim · adjustable")
+  const batBody=new THREE.Mesh(new THREE.BoxGeometry(42,20,26),new THREE.MeshStandardMaterial({color:0x0a0a0a,metalness:0.4,roughness:0.6})); batBody.position.set(-135,10,-55); nourishmentGroup.add(batBody);
+  const stripe=new THREE.Mesh(new THREE.BoxGeometry(42.1,7,0.1),new THREE.MeshStandardMaterial({color:0xc87533,emissive:0xc87533,emissiveIntensity:0.3})); stripe.position.set(-135,14,-42); nourishmentGroup.add(stripe);
+  const batLbl=makeLabel('BAT1 · STIMULUS SUPPLY','#c87533',13); batLbl.position.set(-135,21,-55); batLbl.scale.set(60,5,1); nourishmentGroup.add(batLbl);
+
+  // V_stim level indicator on battery — small panel showing current voltage
+  const vCanvas = document.createElement('canvas'); vCanvas.width = 128; vCanvas.height = 32;
+  const vCtx = vCanvas.getContext('2d');
+  const vTex = new THREE.CanvasTexture(vCanvas);
+  const vPanel = new THREE.Sprite(new THREE.SpriteMaterial({map:vTex, transparent:true, depthWrite:false}));
+  vPanel.position.set(-135, 12, -42); vPanel.scale.set(28, 7, 1);
+  nourishmentGroup.add(vPanel);
+  // Function exposed to update label later
+  window._updateVPanel = (v) => {
+    vCtx.fillStyle = '#0a0000'; vCtx.fillRect(0,0,128,32);
+    vCtx.fillStyle = '#ff3322';
+    vCtx.font = 'bold 22px ui-monospace, Menlo, monospace';
+    vCtx.textAlign = 'center'; vCtx.textBaseline = 'middle';
+    vCtx.fillText(v.toFixed(1) + 'V', 64, 16);
+    vTex.needsUpdate = true;
+  };
+  window._updateVPanel(2.0);
+
+  const termPos=new THREE.Mesh(new THREE.CylinderGeometry(2,2.5,4,8),M.silver()); termPos.position.set(-122,22,-62); nourishmentGroup.add(termPos);
+  const termNeg=new THREE.Mesh(new THREE.CylinderGeometry(2.5,2.5,4,16),M.silver()); termNeg.position.set(-148,22,-62); nourishmentGroup.add(termNeg);
+  const pl=makeLabel('+','#dc2626',16); pl.position.set(-122,26,-62); pl.scale.set(8,3,1); nourishmentGroup.add(pl);
+  const nl=makeLabel('−','#3b82f6',16); nl.position.set(-148,26,-62); nl.scale.set(8,3,1); nourishmentGroup.add(nl);
+
+  // SW1
+  const swG=new THREE.Group();
+  swG.add(new THREE.Mesh(new THREE.BoxGeometry(14,5,8),new THREE.MeshStandardMaterial({color:0xddd5c0,roughness:0.7})));
+  const ss=new THREE.Mesh(new THREE.BoxGeometry(4,3,5),new THREE.MeshStandardMaterial({color:0x1a1a1a,roughness:0.5})); ss.position.set(2,4,0); swG.add(ss);
+  for(let i=-1;i<=1;i++) swG.add(Object.assign(new THREE.Mesh(new THREE.CylinderGeometry(0.4,0.4,8,6),M.silver()),{position:new THREE.Vector3(i*4,-3,0)}));
+  swG.position.set(-95,3,-55); nourishmentGroup.add(swG);
+  const sl=makeLabel('SW1','#888',12); sl.position.set(-95,7,-55); sl.scale.set(20,4,1); nourishmentGroup.add(sl);
+
+  // C_in
+  for(const spec of [{x:-78,z:-50,h:28,r:7,name:'C_in · 100µF'},{x:20,z:-45,h:22,r:5.5,name:'C_out · 47µF'}]){
+    const capG=new THREE.Group(); const bodyMat=M.capBody();
+    capG.add(new THREE.Mesh(new THREE.CylinderGeometry(spec.r,spec.r,spec.h,16),bodyMat));
+    const ns=new THREE.Mesh(new THREE.CylinderGeometry(spec.r+0.1,spec.r+0.1,4,16),new THREE.MeshStandardMaterial({color:0x222})); ns.position.y=spec.h/2-4; capG.add(ns);
+    const top=new THREE.Mesh(new THREE.CylinderGeometry(spec.r-0.1,spec.r-0.1,1,16),M.black()); top.position.y=spec.h/2+0.5; capG.add(top);
+    capG.add(Object.assign(new THREE.Mesh(new THREE.CylinderGeometry(0.4,0.4,spec.h+10,6),M.silver()),{position:new THREE.Vector3(-2,-spec.h/2-5,0)}));
+    capG.add(Object.assign(new THREE.Mesh(new THREE.CylinderGeometry(0.4,0.4,spec.h+10,6),M.silver()),{position:new THREE.Vector3(2,-spec.h/2-5,0)}));
+    capG.position.set(spec.x,spec.h/2,spec.z); capG.userData={mat:bodyMat}; nourishmentGroup.add(capG); caps.push(capG);
+    const cl=makeLabel(spec.name,'#39ff14',12); cl.position.set(spec.x,spec.h+5,spec.z); cl.scale.set(50,4,1); nourishmentGroup.add(cl);
+  }
+
+  // U5 7805
+  const u5G=new THREE.Group();
+  const u5b=new THREE.Mesh(new THREE.BoxGeometry(11,13,5),M.to220Body()); u5b.position.y=6.5; u5G.add(u5b);
+  const u5t=new THREE.Mesh(new THREE.BoxGeometry(11,6,1.2),M.to220Tab()); u5t.position.set(0,16,0); u5G.add(u5t);
+  u5G.add(Object.assign(new THREE.Mesh(new THREE.CylinderGeometry(1.2,1.2,1.4,12),M.black()),{rotation:new THREE.Euler(Math.PI/2,0,0),position:new THREE.Vector3(0,17,0)}));
+  for(let i=-1;i<=1;i++) u5G.add(Object.assign(new THREE.Mesh(new THREE.CylinderGeometry(0.55,0.55,12,6),M.silver()),{position:new THREE.Vector3(i*3,-3,0)}));
+  u5G.position.set(-55,0,-45); nourishmentGroup.add(u5G);
+  const u5l=makeLabel('U5 · 7805 · 5V REG','#aaa',12); u5l.position.set(-55,24,-45); u5l.scale.set(50,4,1); nourishmentGroup.add(u5l);
+
+  // Q1 MOSFET
+  const q1G=new THREE.Group();
+  const q1b=new THREE.Mesh(new THREE.BoxGeometry(11,13,5),M.to220Body()); q1b.position.y=6.5; q1G.add(q1b);
+  const q1t=new THREE.Mesh(new THREE.BoxGeometry(11,6,1.2),M.to220Tab()); q1t.position.set(0,16,0); q1G.add(q1t);
+  q1G.add(Object.assign(new THREE.Mesh(new THREE.CylinderGeometry(1.2,1.2,1.4,12),M.black()),{rotation:new THREE.Euler(Math.PI/2,0,0),position:new THREE.Vector3(0,17,0)}));
+  for(let i=-1;i<=1;i++) q1G.add(Object.assign(new THREE.Mesh(new THREE.CylinderGeometry(0.55,0.55,12,6),M.silver()),{position:new THREE.Vector3(i*3,-3,0)}));
+  q1G.position.set(-30,0,-45); q1Mesh=q1G; nourishmentGroup.add(q1G);
+  const q1l=makeLabel('Q1 · IRFZ44N MOSFET','#888',12); q1l.position.set(-30,24,-45); q1l.scale.set(60,4,1); nourishmentGroup.add(q1l);
+
+  // D28
+  const d28G=new THREE.Group();
+  const d28b=new THREE.Mesh(new THREE.CylinderGeometry(2.4,2.4,11,12),new THREE.MeshStandardMaterial({color:0x1a1a1a,roughness:0.6})); d28b.rotation.z=Math.PI/2; d28G.add(d28b);
+  const cb=new THREE.Mesh(new THREE.CylinderGeometry(2.45,2.45,1.2,12),new THREE.MeshStandardMaterial({color:0xcccccc,emissive:0xcccccc,emissiveIntensity:0.2})); cb.rotation.z=Math.PI/2; cb.position.x=3.5; d28G.add(cb);
+  d28G.add(Object.assign(new THREE.Mesh(new THREE.CylinderGeometry(0.4,0.4,4,6),M.silver()),{position:new THREE.Vector3(-8,0,0)}));
+  d28G.add(Object.assign(new THREE.Mesh(new THREE.CylinderGeometry(0.4,0.4,8,6),M.silver()),{position:new THREE.Vector3(-8,-4,0)}));
+  d28G.add(Object.assign(new THREE.Mesh(new THREE.CylinderGeometry(0.4,0.4,4,6),M.silver()),{position:new THREE.Vector3(8,0,0)}));
+  d28G.add(Object.assign(new THREE.Mesh(new THREE.CylinderGeometry(0.4,0.4,8,6),M.silver()),{position:new THREE.Vector3(8,-4,0)}));
+  d28G.position.set(-5,3,-45); nourishmentGroup.add(d28G);
+  const d28l=makeLabel('D28 · SS34 schottky','#aaa',12); d28l.position.set(-5,8,-55); d28l.scale.set(50,4,1); nourishmentGroup.add(d28l);
+
+  // ceramics
+  for(let i=0;i<3;i++){
+    const c=new THREE.Mesh(new THREE.BoxGeometry(3,4,2),M.ceramicCap()); c.position.set(48+i*6,2,-45); nourishmentGroup.add(c);
+    nourishmentGroup.add(Object.assign(new THREE.Mesh(new THREE.CylinderGeometry(0.25,0.25,6,6),M.silver()),{position:new THREE.Vector3(48+i*6-1,-2,-45)}));
+    nourishmentGroup.add(Object.assign(new THREE.Mesh(new THREE.CylinderGeometry(0.25,0.25,6,6),M.silver()),{position:new THREE.Vector3(48+i*6+1,-2,-45)}));
+  }
+  const cl=makeLabel('C2·C3·C4 · 0.1µF','#d4a05e',11); cl.position.set(54,8,-38); cl.scale.set(45,4,1); nourishmentGroup.add(cl);
+
+  // Test points
+  for(let i=0;i<3;i++){
+    nourishmentGroup.add(Object.assign(new THREE.Mesh(new THREE.CylinderGeometry(0.8,0.8,8,8),M.silver()),{position:new THREE.Vector3(120+i*8,4,-65)}));
+    nourishmentGroup.add(Object.assign(new THREE.Mesh(new THREE.SphereGeometry(1.3,8,8),M.silver()),{position:new THREE.Vector3(120+i*8,8,-65)}));
+  }
+  const tl=makeLabel('TP1·TP2·TP3','#666',11); tl.position.set(128,13,-65); tl.scale.set(45,4,1); nourishmentGroup.add(tl);
+}
+pieces.N = { group: nourishmentGroup, basePos: new THREE.Vector3(0,0,0), explodePos: new THREE.Vector3(-50,50,0) };
+root.add(nourishmentGroup);
+
+// ============================================================
+// LIFE
+// ============================================================
+const lifeGroup = new THREE.Group();
+let lifeLed, lifeLedMat, lifeAura;
+{
+  lifeLedMat=new THREE.MeshStandardMaterial({color:0xffffff,emissive:0xffffff,emissiveIntensity:1.3,transparent:true,opacity:0.9,metalness:0,roughness:0.1});
+  lifeLed=new THREE.Group();
+  const lc=new THREE.Mesh(new THREE.CylinderGeometry(3,3,6,20),lifeLedMat); lc.position.y=3; lifeLed.add(lc);
+  const ld=new THREE.Mesh(new THREE.SphereGeometry(3,20,14,0,Math.PI*2,0,Math.PI/2),lifeLedMat); ld.position.y=6; lifeLed.add(ld);
+  const lf=new THREE.Mesh(new THREE.CylinderGeometry(3.4,3.4,0.5,20),lifeLedMat); lf.position.y=0.3; lifeLed.add(lf);
+  lifeAura=new THREE.Mesh(new THREE.SphereGeometry(7,24,24),new THREE.MeshBasicMaterial({color:0xffffff,transparent:true,opacity:0.15,side:THREE.BackSide})); lifeAura.position.y=5; lifeLed.add(lifeAura);
+  lifeLed.add(Object.assign(new THREE.Mesh(new THREE.CylinderGeometry(0.5,0.5,14,6),M.silver()),{position:new THREE.Vector3(-0.8,-4,0)}));
+  lifeLed.add(Object.assign(new THREE.Mesh(new THREE.CylinderGeometry(0.5,0.5,14,6),M.silver()),{position:new THREE.Vector3(0.8,-4,0)}));
+  lifeLed.position.set(130,0,40); lifeGroup.add(lifeLed);
+
+  const rG=new THREE.Group();
+  const rb=new THREE.Mesh(new THREE.CylinderGeometry(3,3,16,16),M.resBody()); rb.rotation.z=Math.PI/2; rG.add(rb);
+  for(const b of [{c:0xdc2626,x:-5},{c:0xdc2626,x:-2},{c:0x8b4513,x:1},{c:0xd4af37,x:5}]){
+    const band=new THREE.Mesh(new THREE.CylinderGeometry(3.05,3.05,1.2,16),new THREE.MeshStandardMaterial({color:b.c,roughness:0.6})); band.rotation.z=Math.PI/2; band.position.x=b.x; rG.add(band);
+  }
+  rG.add(Object.assign(new THREE.Mesh(new THREE.CylinderGeometry(0.4,0.4,6,6),M.silver()),{position:new THREE.Vector3(-11,0,0)}));
+  rG.add(Object.assign(new THREE.Mesh(new THREE.CylinderGeometry(0.4,0.4,10,6),M.silver()),{position:new THREE.Vector3(-11,-5,0)}));
+  rG.add(Object.assign(new THREE.Mesh(new THREE.CylinderGeometry(0.4,0.4,6,6),M.silver()),{position:new THREE.Vector3(11,0,0)}));
+  rG.add(Object.assign(new THREE.Mesh(new THREE.CylinderGeometry(0.4,0.4,10,6),M.silver()),{position:new THREE.Vector3(11,-5,0)}));
+  rG.position.set(105,3,40); lifeGroup.add(rG);
+  const r1l=makeLabel('R1 · 220Ω','#c4a888',13); r1l.position.set(105,10,32); r1l.scale.set(40,4.5,1); lifeGroup.add(r1l);
+  const hbl=makeLabel('HB1 · LIFE','#fff',14); hbl.position.set(130,13,40); hbl.scale.set(36,5,1); lifeGroup.add(hbl);
+}
+pieces.L = { group: lifeGroup, basePos: new THREE.Vector3(0,0,0), explodePos: new THREE.Vector3(60,85,30) };
+root.add(lifeGroup);
+
+// JUMPER WIRES
+function makeWire(s,e,mid,c,t=0.6){const pts=[s,...mid,e];const curve=new THREE.CatmullRomCurve3(pts);return new THREE.Mesh(new THREE.TubeGeometry(curve,28,t,8,false),new THREE.MeshStandardMaterial({color:c,metalness:0.1,roughness:0.6,emissive:c,emissiveIntensity:0.05}))}
+const wiresGroup = new THREE.Group(); root.add(wiresGroup);
+wiresGroup.add(makeWire(new THREE.Vector3(-122,24,-62),new THREE.Vector3(-99,4,-55),[new THREE.Vector3(-110,30,-58)],0xdc2626,0.8));
+wiresGroup.add(makeWire(new THREE.Vector3(-91,4,-55),new THREE.Vector3(-78,2,-50),[new THREE.Vector3(-84,8,-52)],0xdc2626,0.7));
+wiresGroup.add(makeWire(new THREE.Vector3(-78,2,-50),new THREE.Vector3(-58,2,-45),[new THREE.Vector3(-68,7,-47)],0xdc2626,0.6));
+wiresGroup.add(makeWire(new THREE.Vector3(-52,2,-45),new THREE.Vector3(-33,2,-45),[new THREE.Vector3(-42,6,-44)],0xeab308,0.5));
+wiresGroup.add(makeWire(new THREE.Vector3(-27,2,-45),new THREE.Vector3(-2,2,0),[new THREE.Vector3(-14,12,-22)],0xf97316,0.55));
+wiresGroup.add(makeWire(new THREE.Vector3(2,2,0),new THREE.Vector3(-13,2,-45),[new THREE.Vector3(-6,15,-22)],0xeab308,0.5));
+wiresGroup.add(makeWire(new THREE.Vector3(3,2,-45),new THREE.Vector3(20,2,-45),[new THREE.Vector3(11,6,-44)],0xdc2626,0.6));
+wiresGroup.add(makeWire(new THREE.Vector3(22,2,-45),new THREE.Vector3(25,4,-95),[new THREE.Vector3(24,15,-70)],0xdc2626,0.6));
+wiresGroup.add(makeWire(new THREE.Vector3(-148,24,-62),new THREE.Vector3(-150,5,95),[new THREE.Vector3(-160,40,-30),new THREE.Vector3(-160,40,50)],0x101010,0.8));
+wiresGroup.add(makeWire(new THREE.Vector3(60,4,-95),new THREE.Vector3(68,3,-43),[new THREE.Vector3(64,18,-70)],0xdc2626,0.45));
+wiresGroup.add(makeWire(new THREE.Vector3(82,3,-28),new THREE.Vector3(85,5,95),[new THREE.Vector3(90,16,30)],0x101010,0.45));
+wiresGroup.add(makeWire(new THREE.Vector3(70,3,-28),new THREE.Vector3(-90,3,42),[new THREE.Vector3(-10,25,5)],0x22c55e,0.4));
+wiresGroup.add(makeWire(new THREE.Vector3(76,3,-28),new THREE.Vector3(-78,3,42),[new THREE.Vector3(0,22,2)],0x3b82f6,0.4));
+wiresGroup.add(makeWire(new THREE.Vector3(82,3,-28),new THREE.Vector3(-66,3,42),[new THREE.Vector3(8,20,0)],0xeab308,0.4));
+// New wires: U1 → DS1 (red data wire — segment drive)
+wiresGroup.add(makeWire(new THREE.Vector3(86,3,-28),new THREE.Vector3(75,3,4),[new THREE.Vector3(80,15,-12)],0xff3322,0.4));
+wiresGroup.add(makeWire(new THREE.Vector3(116,1,40),new THREE.Vector3(129,0,40),[],0xf97316,0.4));
+wiresGroup.add(makeWire(new THREE.Vector3(132,0,40),new THREE.Vector3(140,5,95),[new THREE.Vector3(138,8,60)],0x101010,0.4));
+wiresGroup.add(makeWire(new THREE.Vector3(88,3,-28),new THREE.Vector3(94,1,40),[new THREE.Vector3(110,20,5)],0xf97316,0.4));
+
+// ============================================================
+// STATE
+// ============================================================
+const COUNTER_SEQUENCE = [0, 1, 2, 3, 4, 5, 5, 4, 3, 2, 1, 0];
+const state = {
+  V:true, A:true, I:true, N:true, L:true,
+  exploded:false, speed:1.0, phaseIdx:0, phaseAccum:0,
+  showB:false, showSignal:false,
+  vStim: 2.0,            // V_stim selection
+  ctrIdx: 0,             // index into COUNTER_SEQUENCE
+  ctrAccum: 0,           // tick accumulator
+  ctrRate: 2.0,          // counter ticks per second
+};
+
+// 7-seg display: set initial
+set7Seg(0);
+
+const DESCS = {
+  V: { ref:'BB1', name:'VESSEL · BREADBOARD', sub:'34×22 · 0.1″ pitch · 660 tie-points',
+       desc:'Solderless prototyping substrate. Holds all 5 subsystems via friction-fit through-hole sockets. Power rails (red +V, blue GND) run continuously along both edges.',
+       meta:`<div class="row"><span class="k">type</span><span class="v">half-size breadboard</span></div><div class="row"><span class="k">pitch</span><span class="v">2.54mm (0.1″)</span></div><div class="row"><span class="k">rails</span><span class="v">2× +V · 2× GND</span></div><div class="row"><span class="k">role</span><span class="v">contains all · A · anchor</span></div>`,
+       extra:`<div class="sect"><h4>HOW IT WORKS</h4>Each column under the matrix area is a 5-hole bus internally connected. Horizontal rails carry continuous power to every component that taps in. Center valley accommodates DIP packages so each side of the chip plugs into independent columns.</div>` },
+
+  A: { ref:'D1-D27 · U2-U4 · R2-R28', name:'ANIMATION · 27-LED RING', sub:'shift-register cascade · brightness modulated by V_stim × counter',
+       desc:'27 indicator LEDs. 12 RED ANCHOR + 12 WARM-WHITE WITNESS + 3 PURPLE COHERENCE. Brightness scales with V_stim. Counter (00→5→00) modulates the overall amplitude — the "breath" of the system.',
+       meta:`<div class="row"><span class="k">LED part</span><span class="v">5mm diffused THT</span></div><div class="row"><span class="k">count</span><span class="v">12+12+3 = 27</span></div><div class="row"><span class="k">drivers</span><span class="v">3× 74HC595 cascade</span></div><div class="row"><span class="k">R-bank</span><span class="v">220Ω × 27 (5%)</span></div><div class="row"><span class="k">modulation</span><span class="v">brightness = V_stim × ctr/5</span></div><div class="row"><span class="k">role</span><span class="v">drives · EMIT·ROUTE·ACT</span></div>`,
+       extra:`<div class="sect"><h4>SIGNAL PATH</h4>U1 PB0 → SER (data) → U2 → U3 → U4 cascade. U1 PB1 → SRCLK. U1 PB2 → RCLK. Each rising SRCLK shifts one bit. RCLK pulse transfers shift register to output latch.</div><div class="sect"><h4>STIMULUS COUPLING</h4>The counter (0-5-0 ramp) acts as a 6-bit DAC value scaling the PWM duty cycle on the shift register OE pin. At ctr=0 the LEDs are dark; at ctr=5 they're at full V_stim brightness.</div>` },
+
+  I: { ref:'L1 · U1 · Y1 · DS1 · U2-U4', name:'INTELLECT · MCU + TOROID + DISPLAY', sub:'ATtiny84 · 25µH toroid · 2-digit 7-seg',
+       desc:'Brain. U1 (ATtiny84) generates PWM for the boost converter (Q1+L1+D28), clocks data to LED shift registers, drives the 2-digit 7-segment display DS1, and toggles the heartbeat output. L1 is a type-26 powdered-iron toroidal inductor with 16-turn helical copper winding.',
+       meta:`<div class="row"><span class="k">L1 inductance</span><span class="v">25µH · 16 turns</span></div><div class="row"><span class="k">core</span><span class="v">type 26 · μ_r ≈ 75</span></div><div class="row"><span class="k">A_L</span><span class="v">100 nH/turn²</span></div><div class="row"><span class="k">I_sat</span><span class="v">~3 A DC</span></div><div class="row"><span class="k">MCU</span><span class="v">ATtiny84 · 14-pin DIP</span></div><div class="row"><span class="k">DS1</span><span class="v">2-digit common-cathode 7-seg</span></div><div class="row"><span class="k">f_clock</span><span class="v">16 MHz (Y1)</span></div><div class="row"><span class="k">role</span><span class="v">processes · B · witness</span></div>`,
+       extra:`<div class="sect"><h4>TOROIDAL PHYSICS</h4>Ampère's law: B-field confined entirely inside the core. Zero external leakage flux → self-shielding, no EMI radiation, more inductance per volume than solenoid.<br><span class="formula">L = μ₀μ_r N²A / (2πR) ≈ 25 µH</span><br><span class="formula">L = N² · A_L = 16² × 100nH = 25.6 µH</span></div><div class="sect"><h4>DS1 COUNTER</h4>U1 multiplexes the 2-digit display at ~200 Hz. Shows counter value 00→05→00 in a 12-step cycle. Counter step rate is user-adjustable. Each step represents one "breath" — energy ramping into and out of L1.</div><div class="sect"><h4>FIRMWARE</h4>Main loop: (1) increment counter every 1/ctrRate sec. (2) update DS1. (3) compute PWM duty = (counter/5) × (V_stim/4). (4) drive shift registers with rotating phase pattern. (5) toggle HB1 GPIO at half-frequency.</div>` },
+
+  N: { ref:'BAT1 · SW1 · U5 · Q1 · D28', name:'NOURISHMENT · STIMULUS SUPPLY', sub:'V_stim adjustable bench supply → 5V rail',
+       desc:'Switch-mode power chain. The "battery" is now a programmable stimulus supply — select 0.5V / 1V / 2V / 3V / 4V from the bench buttons. Higher V_stim = brighter LEDs, faster response, taller heartbeat.',
+       meta:`<div class="row"><span class="k">BAT1</span><span class="v">V_stim 0.5-4.0V · selectable</span></div><div class="row"><span class="k">U5</span><span class="v">LM7805 · 1.5A · 2V dropout</span></div><div class="row"><span class="k">Q1</span><span class="v">IRFZ44N · 49A · 17mΩ</span></div><div class="row"><span class="k">D28</span><span class="v">SS34 schottky · 3A · 0.4V Vf</span></div><div class="row"><span class="k">C_in</span><span class="v">100µF/16V</span></div><div class="row"><span class="k">C_out</span><span class="v">47µF/16V</span></div><div class="row"><span class="k">role</span><span class="v">feeds · REFLECT·RETURN</span></div>`,
+       extra:`<div class="sect"><h4>STIMULUS LEVELS</h4>· 0.5V: subthreshold, system whispers<br>· 1V: bare minimum, weak chase<br>· 2V: nominal operating point<br>· 3V: elevated, fast chase + bright LEDs<br>· 4V: full power, max brightness</div><div class="sect"><h4>POWER FLOW</h4>BAT+ → SW1 → C_in (filter) → U5 (regulate to 5V) → C_out + ceramics → U1 VCC. Q1+L1+D28 form the boost demonstrator off the same rail.</div>` },
+
+  L: { ref:'HB1 · R1', name:'LIFE · HEARTBEAT INDICATOR', sub:'amplitude × V_stim × counter',
+       desc:'System-alive indicator. Beats only when 2 of 3 (V·A·I) present AND Nourishment feeding. Heartbeat AMPLITUDE scales with V_stim and counter value — at high V_stim and counter=5, the beat is enormous; at low V_stim, faint.',
+       meta:`<div class="row"><span class="k">HB1</span><span class="v">5mm cool-white</span></div><div class="row"><span class="k">R1</span><span class="v">220Ω · ¼W · 5% (R-R-Br-Au)</span></div><div class="row"><span class="k">drive</span><span class="v">U1 PB3 GPIO</span></div><div class="row"><span class="k">pattern</span><span class="v">lub-dub double-beat</span></div><div class="row"><span class="k">amplitude</span><span class="v">∝ V_stim × ctr/5</span></div><div class="row"><span class="k">rule</span><span class="v">2/3 V·A·I + N + L = ALIVE</span></div><div class="row"><span class="k">role</span><span class="v">emerges · C · coherence</span></div>`,
+       extra:`<div class="sect"><h4>BREATH SYNC</h4>The heartbeat scales with the system breath (counter). At counter peak (5) the heart pulses brightest. At counter valley (00) the heart still beats but barely visible — this is the rest phase of the breath.</div>` },
+};
+
+function lifeIsAlive(){const v=(state.V?1:0)+(state.A?1:0)+(state.I?1:0); return state.V&&v>=2&&state.N&&state.L}
+function updateLifeStatus(){
+  const a=lifeIsAlive();
+  document.getElementById('life-status').classList.toggle('alive',a);
+  document.getElementById('life-status').classList.toggle('dim',!a);
+  document.getElementById('life-txt').textContent=a?'LIFE · ALIVE':'LIFE · DORMANT';
+  document.getElementById('vcc').textContent=(state.N&&state.V)?'5.0V':'0.0V';
+  document.getElementById('vin').textContent=state.N?(state.vStim*2.25).toFixed(1)+'V':'0.0V';
+  document.getElementById('fsw').textContent=(state.N&&state.I)?'30 kHz':'— Hz';
+  document.getElementById('vstim').textContent=state.vStim.toFixed(1)+'V';
+}
+
+// ============================================================
+// UI
+// ============================================================
+document.querySelectorAll('.piece').forEach(el=>el.addEventListener('click',e=>{
+  const k=el.dataset.piece;
+  if(e.target.classList.contains('toggle')||e.target.closest('.toggle')){
+    state[k]=!state[k];
+    el.classList.toggle('on',state[k]);
+    el.classList.toggle('disabled',!state[k]);
+    pieces[k].group.visible=state[k];
+    updateLifeStatus();
+  }else selectPiece(k);
+}));
+
+function selectPiece(k){
+  document.querySelectorAll('.piece').forEach(p=>p.classList.toggle('selected',p.dataset.piece===k));
+  const d=DESCS[k];
+  document.getElementById('info-name').textContent=d.name+' · '+d.sub;
+  document.getElementById('info-name').style.color=k==='V'?'#e8e3d0':k==='A'?'#dc2626':k==='I'?'#a855f7':k==='N'?'#39ff14':'#fff';
+  document.getElementById('info-ref').textContent=d.ref;
+  document.getElementById('info-desc').textContent=d.desc;
+  document.getElementById('info-meta').innerHTML=d.meta;
+  document.getElementById('info-extra').innerHTML=d.extra||'';
+}
+
+document.getElementById('explode').onclick=()=>{state.exploded=true};
+document.getElementById('assemble').onclick=()=>{state.exploded=false};
+document.getElementById('top').onclick=()=>{theta=-Math.PI/2;phi=0.2;radius=400;updateCamera()};
+document.getElementById('iso').onclick=()=>{theta=-Math.PI/4;phi=Math.PI/3.2;radius=440;updateCamera()};
+document.getElementById('bfield').onclick=e=>{state.showB=!state.showB;bFieldGroup.visible=state.showB;e.target.classList.toggle('on',state.showB);if(state.showB)selectPiece('I')};
+document.getElementById('signal').onclick=e=>{state.showSignal=!state.showSignal;wiresGroup.children.forEach(w=>{if(w.material)w.material.emissiveIntensity=state.showSignal?0.5:0.05});e.target.classList.toggle('on',state.showSignal)};
+document.getElementById('speed').oninput=e=>{state.speed=parseInt(e.target.value)/100;document.getElementById('speed-lbl').textContent=(state.speed*4).toFixed(1)+' Hz'};
+
+// VOLTAGE STIMULUS BUTTONS
+document.querySelectorAll('.vbtn').forEach(btn=>btn.addEventListener('click',()=>{
+  document.querySelectorAll('.vbtn').forEach(b=>b.classList.remove('on'));
+  btn.classList.add('on');
+  state.vStim = parseFloat(btn.dataset.v);
+  window._updateVPanel(state.vStim);
+  updateLifeStatus();
+}));
+
+// COUNTER RATE SLIDER
+document.getElementById('ctr-speed').oninput=e=>{
+  state.ctrRate = parseInt(e.target.value)/5;  // 2-30 → 0.4 to 6 Hz
+  document.getElementById('ctr-rate-lbl').textContent = state.ctrRate.toFixed(1) + ' Hz';
+};
+
+// RAYCAST
+const raycaster=new THREE.Raycaster(),mouse=new THREE.Vector2();
+function findPiece(o){for(const k of ['V','A','I','N','L']){let c=o;while(c){if(c===pieces[k].group)return k;c=c.parent}}return null}
+canvas.addEventListener('click',e=>{
+  if(didDrag)return;
+  mouse.x=(e.clientX/window.innerWidth)*2-1; mouse.y=-(e.clientY/window.innerHeight)*2+1;
+  raycaster.setFromCamera(mouse,camera);
+  const hits=raycaster.intersectObjects(root.children,true);
+  if(hits.length){const k=findPiece(hits[0].object); if(k)selectPiece(k)}
+});
+
+// SCOPE
+const sCv=document.getElementById('scope-canvas'),sCtx=sCv.getContext('2d');
+const sData={ch1:new Array(80).fill(0),ch2:new Array(80).fill(0),ch3:new Array(80).fill(0),ch4:new Array(80).fill(0),ch5:new Array(80).fill(0)};
+function drawScope(){
+  const w=sCv.width,h=sCv.height;
+  sCtx.fillStyle='#000'; sCtx.fillRect(0,0,w,h);
+  sCtx.strokeStyle='#1a1a1a'; sCtx.lineWidth=1;
+  for(let i=0;i<=8;i++){sCtx.beginPath();sCtx.moveTo(i*w/8,0);sCtx.lineTo(i*w/8,h);sCtx.stroke()}
+  for(let i=0;i<=5;i++){sCtx.beginPath();sCtx.moveTo(0,i*h/5);sCtx.lineTo(w,i*h/5);sCtx.stroke()}
+  const ch=[
+    {k:'ch1',c:'#dc2626',o:0.88,s:0.1},
+    {k:'ch2',c:'#eab308',o:0.7,s:0.14},
+    {k:'ch3',c:'#a855f7',o:0.5,s:0.14},
+    {k:'ch4',c:'#39ff14',o:0.3,s:0.1},
+    {k:'ch5',c:'#ff3322',o:0.12,s:0.1},  // counter trace
+  ];
+  for(const c of ch){
+    sCtx.strokeStyle=c.c; sCtx.lineWidth=1.3; sCtx.beginPath();
+    const d=sData[c.k];
+    for(let i=0;i<d.length;i++){
+      const x=(i/(d.length-1))*w, y=h-(d[i]*h*c.s+h*c.o);
+      if(i===0) sCtx.moveTo(x,y); else sCtx.lineTo(x,y);
+    }
+    sCtx.stroke();
+  }
+}
+
+// ANIMATION
+const clock=new THREE.Clock();
+function lerp(a,b,t){return a+(b-a)*t}
+function lerpV(v,t,p){v.x=lerp(v.x,t.x,p);v.y=lerp(v.y,t.y,p);v.z=lerp(v.z,t.z,p)}
+
+let frame=0;
+function animate(){
+  requestAnimationFrame(animate);
+  const dt=clock.getDelta(),t=clock.elapsedTime; frame++;
+
+  // explode/assemble
+  for(const k of ['V','A','I','N','L']){const p=pieces[k]; lerpV(p.group.position,state.exploded?p.explodePos:p.basePos,dt*4)}
+
+  // counter tick
+  if (state.V && state.I && state.N){
+    state.ctrAccum += dt * state.ctrRate;
+    while (state.ctrAccum >= 1){
+      state.ctrAccum -= 1;
+      state.ctrIdx = (state.ctrIdx + 1) % COUNTER_SEQUENCE.length;
+      const v = COUNTER_SEQUENCE[state.ctrIdx];
+      set7Seg(v);
+      document.getElementById('ctr-digits').textContent = v === 0 ? '00' : '0' + v;
+      // bar indicator
+      const barSegs = document.querySelectorAll('#ctr-bar .seg');
+      barSegs.forEach((s, i) => s.classList.toggle('on', i === state.ctrIdx));
+      const half = COUNTER_SEQUENCE.length / 2;
+      document.getElementById('ctr-phase').textContent = state.ctrIdx < half ? 'RISING ↑' : 'FALLING ↓';
+      document.getElementById('ctr-step').textContent = 'step ' + state.ctrIdx + '/' + (COUNTER_SEQUENCE.length-1);
+    }
+  }
+
+  // current counter value (normalized 0-1) — drives "breath"
+  const ctrVal = COUNTER_SEQUENCE[state.ctrIdx];
+  const breath = ctrVal / 5; // 0 to 1
+  // V_stim normalized (max 4V = 1.0)
+  const vNorm = state.vStim / 4;
+  // combined energy
+  const energy = breath * vNorm;
+
+  // toroid rotation when alive
+  if(state.I&&state.N) toroidGroup.rotation.y += dt * 0.12 * (0.3 + vNorm);
+  if(state.showB) bFieldGroup.rotation.y += dt * (0.3 + energy * 1.5);
+
+  // Q1 switching visual
+  if(state.N && q1Mesh){
+    const vs = Math.sin(t * 12 * (0.5 + vNorm)) > 0 ? 1 : 0;
+    q1Mesh.children.forEach(c=>{if(c.material&&c.material.emissive){c.material.emissive=new THREE.Color(vs ? 0x442200 : 0x000000)}});
+  }
+
+  // LED phase chase + breath modulation
+  let activePhase = 0;
+  if(state.A&&state.V&&state.I&&state.N){
+    const effectiveSpeed = state.speed * (0.3 + vNorm); // V_stim affects phase rate too
+    state.phaseAccum += dt * effectiveSpeed * 4;
+    while(state.phaseAccum >= 1){state.phaseAccum -= 1; state.phaseIdx = (state.phaseIdx+1) % 27}
+    leds.forEach((led,i)=>{
+      const d=Math.min(Math.abs(i-state.phaseIdx),27-Math.abs(i-state.phaseIdx));
+      let intensity = 0.05 * energy + 0.05;
+      if(d===0) intensity = 1.7 * energy + 0.15;
+      else if(d===1) intensity = 0.75 * energy + 0.1;
+      else if(d===2) intensity = 0.35 * energy + 0.08;
+      led.userData.mat.emissiveIntensity = lerp(led.userData.mat.emissiveIntensity, intensity, 0.25);
+      if(d===0) activePhase = breath; else if(d===1) activePhase = Math.max(activePhase, breath*0.5);
+    });
+  } else {
+    leds.forEach(led=>{led.userData.mat.emissiveIntensity = lerp(led.userData.mat.emissiveIntensity, 0.04, 0.05)});
+  }
+
+  // caps breathe with V_stim
+  if(state.N){
+    caps.forEach((c,i)=>{
+      const v = (0.15 + Math.sin(t*1.2+i*0.4)*0.08) * (0.5 + vNorm * 0.5);
+      c.userData.mat.emissiveIntensity = lerp(c.userData.mat.emissiveIntensity, v, 0.1);
+    });
+  } else caps.forEach(c=>c.userData.mat.emissiveIntensity = lerp(c.userData.mat.emissiveIntensity,0,0.05));
+
+  // heartbeat — scaled by V_stim AND counter
+  const alive = lifeIsAlive();
+  if(alive && lifeLed){
+    const beatT = (t * state.speed * 1.2) % 1.2;
+    let s = 1.0;
+    if(beatT<0.08) s=1.0+(beatT/0.08)*0.35;
+    else if(beatT<0.16) s=1.35-((beatT-0.08)/0.08)*0.35;
+    else if(beatT<0.24) s=1.0+((beatT-0.16)/0.08)*0.45;
+    else if(beatT<0.34) s=1.45-((beatT-0.24)/0.10)*0.45;
+    else s=1.0;
+    // scale beat amplitude by energy
+    const beatScale = 0.4 + 0.6 * energy;
+    const actualScale = 1.0 + (s - 1.0) * beatScale * 1.4;
+    lifeLed.scale.setScalar(actualScale);
+    if(lifeAura) lifeAura.material.opacity = (0.04 + (actualScale-1)*0.3) * (0.3 + vNorm * 0.7);
+    lifeLedMat.emissiveIntensity = (0.4 + (actualScale-1)*2) * (0.3 + energy * 0.7) + 0.2;
+  } else if(lifeLed){
+    lifeLed.scale.setScalar(lerp(lifeLed.scale.x,0.55,0.05));
+    if(lifeAura) lifeAura.material.opacity = lerp(lifeAura.material.opacity,0.02,0.05);
+    lifeLedMat.emissiveIntensity = lerp(lifeLedMat.emissiveIntensity,0.08,0.05);
+  }
+
+  // 7-seg display brightness scales with V_stim
+  if (state.I && state.V){
+    for (const digit of ds1Segments){
+      for (const segName in digit){
+        const s = digit[segName];
+        s.onMat.emissiveIntensity = 1.0 + vNorm * 0.8;
+      }
+    }
+  }
+
+  // scope data
+  if(frame % 2 === 0){
+    const fastSw = Math.sin(t*80*(0.5+vNorm)) > 0 ? 0.9 * vNorm : 0.05;
+    const induct = (0.5+0.4*Math.sin(t*80+Math.PI/2)) * vNorm;
+    const vout = state.N ? (0.4 + vNorm * 0.5) + Math.sin(t*40)*0.03 : 0;
+    const ctrTrace = breath;
+    Object.entries({
+      ch1: state.N && state.I ? fastSw : 0,
+      ch2: state.N && state.I ? induct : 0,
+      ch3: state.N ? vout : 0,
+      ch4: activePhase,
+      ch5: state.V && state.I ? ctrTrace : 0,
+    }).forEach(([k,v])=>{sData[k].shift(); sData[k].push(v)});
+    if(frame % 6 === 0){drawScope(); document.getElementById('scope-hz').textContent=(state.speed*4).toFixed(1)+' Hz'}
+  }
+
+  if(!isDragging){theta+=dt*0.04; updateCamera()}
+  renderer.render(scene,camera);
+}
+animate();
+updateLifeStatus();
+selectPiece('I');
+drawScope();
+</script>
+</body>
+</html>

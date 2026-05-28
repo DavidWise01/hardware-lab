@@ -1,0 +1,1079 @@
+<!DOCTYPE html>
+<!-- saved from url=(0165)https://1316684323760911.a.metaaiusercontent.com/html?artifact_uuid=0b6ec768-4c2e-42ba-be8c-548f6d62fa18&ext=1779497008&hash=Q5fpDAG2Kn-k7Y45NDLQ3ltedfoQ&theme=light -->
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LIGHT &amp; SHADOW // WHISPER LATTICE</title>
+<style>
+:root {
+  --bg: #0a0a0f;
+  --panel: #11121a;
+  --gold: #f5c542;
+  --blue: #4a90e2;
+  --gray: #6b7280;
+  --text: #e6e7ee;
+  --text-dim: #8a8fa3;
+  --border: #1e202c;
+}
+* { box-sizing: border-box; }
+html, body {
+  margin: 0;
+  padding: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: ui-sans-serif, system-ui, -apple-system, "SF Pro Display", Inter, Roboto, Helvetica, Arial;
+  height: 100%;
+  overflow-x: hidden;
+}
+body {
+  background: radial-gradient(1200px 800px at 50% -10%, #161824 0%, #0a0a0f 55%, #07070b 100%);
+}
+.app {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 20px 16px 40px;
+}
+header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 12px;
+}
+h1 {
+  font-size: clamp(18px, 2.4vw, 28px);
+  letter-spacing: 0.18em;
+  font-weight: 300;
+  margin: 0;
+  color: #f0f1f5;
+}
+h1 span { color: var(--text-dim); letter-spacing: 0.12em; }
+.top-bar {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  align-items: center;
+  background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01));
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 10px 14px;
+  backdrop-filter: blur(6px);
+}
+.counter {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 10px;
+  background: #0d0f16;
+  border: 1px solid #1c1f2b;
+  border-radius: 8px;
+  font-variant-numeric: tabular-nums;
+}
+.counter label {
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+.counter value {
+  font-size: 15px;
+  font-weight: 500;
+}
+.counter.gold value { color: var(--gold); }
+.counter.blue value { color: var(--blue); }
+.counter.white value { color: #ffffff; }
+
+.main {
+  position: relative;
+  margin-top: 14px;
+  background: linear-gradient(180deg, #0e1018 0%, #0a0b11 100%);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.03);
+}
+canvas {
+  display: block;
+  width: 100%;
+  height: clamp(360px, 58vh, 560px);
+  cursor: crosshair;
+}
+.legend {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  display: flex;
+  gap: 10px;
+  font-size: 11px;
+  color: var(--text-dim);
+  background: rgba(8,9,14,0.7);
+  border: 1px solid #1a1d28;
+  padding: 6px 8px;
+  border-radius: 8px;
+  backdrop-filter: blur(4px);
+}
+.legend span { display: inline-flex; align-items: center; gap: 6px; }
+.dot { width: 8px; height: 8px; border-radius: 50%; }
+.dot.gold { background: var(--gold); box-shadow: 0 0 8px rgba(245,197,66,0.6); }
+.dot.blue { background: var(--blue); box-shadow: 0 0 8px rgba(74,144,226,0.5); }
+.dot.gray { background: var(--gray); }
+.dot.white { background: white; box-shadow: 0 0 8px rgba(255,255,255,0.8); }
+
+.controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+  margin-top: 12px;
+  padding: 12px;
+  background: #0c0e15;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+}
+button, .toggle {
+  appearance: none;
+  background: #141824;
+  color: var(--text);
+  border: 1px solid #232838;
+  padding: 8px 12px;
+  border-radius: 9px;
+  font-size: 13px;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+button:hover { background: #1a2040; border-color: #2e3758; transform: translateY(-1px); }
+button:active { transform: translateY(0); }
+button.primary {
+  background: linear-gradient(180deg, #f5c542, #d4a829);
+  color: #1a1404;
+  border-color: #f5c542;
+  font-weight: 600;
+}
+button.primary:hover { filter: brightness(1.05); }
+.toggle {
+  display: inline-flex; align-items: center; gap: 8px;
+}
+.toggle input { accent-color: var(--blue); }
+.slider {
+  display: flex; align-items: center; gap: 8px;
+  color: var(--text-dim); font-size: 12px;
+}
+input[type="range"] {
+  width: 140px; accent-color: var(--gold);
+}
+
+.log-panel {
+  margin-top: 12px;
+  background: #08090e;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+}
+.log-header {
+  padding: 8px 12px;
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  border-bottom: 1px solid var(--border);
+  background: #0b0d14;
+  display: flex; justify-content: space-between;
+}
+#log {
+  height: 132px;
+  overflow-y: auto;
+  padding: 8px 12px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 12px;
+  line-height: 1.6;
+  color: #c5cad8;
+  background: radial-gradient(600px 200px at 50% 0%, rgba(74,144,226,0.06), transparent 60%);
+}
+.log-entry { opacity: 0.9; }
+.log-entry em { color: var(--text-dim); font-style: normal; }
+.log-entry.gold { color: #f7d77a; }
+.log-entry.blue { color: #8bb6f0; }
+.log-entry.white { color: white; }
+
+#tooltip {
+  position: absolute;
+  pointer-events: none;
+  background: rgba(10,12,18,0.92);
+  border: 1px solid #2a3147;
+  color: #e8ecf7;
+  padding: 8px 10px;
+  border-radius: 8px;
+  font-size: 12px;
+  line-height: 1.4;
+  max-width: 240px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+  opacity: 0;
+  transform: translateY(4px);
+  transition: opacity .12s, transform .12s;
+  z-index: 10;
+}
+#tooltip.show { opacity: 1; transform: translateY(0); }
+#tooltip strong { color: white; font-weight: 600; }
+#tooltip small { color: var(--text-dim); display: block; margin-top: 4px; }
+
+#scaleLabel { font-size:12px; color:var(--text-dim); min-width:120px; text-align:center; }
+.timeline { position:absolute; bottom:0; left:0; right:0; height:32px; background:rgba(8,9,14,0.92); border-top:1px solid #1a1d28; backdrop-filter:blur(6px); z-index:5; }
+.timeline-track { position:relative; width:100%; height:100%; display:flex; align-items:center; padding:0 14px; gap:3px; }
+.timeline-tick { flex:1; height:4px; background:#232838; border-radius:2px; opacity:0.55; transition:all .18s; }
+.timeline-tick.past { background:#3a425e; opacity:0.85; }
+.timeline-tick.active { background:var(--gold); box-shadow:0 0 8px rgba(245,197,66,0.6); height:6px; opacity:1; }
+.playhead { position:absolute; top:-4px; bottom:-4px; width:2px; background:var(--blue); box-shadow:0 0 10px rgba(74,144,226,0.9); left:0%; transition:left 0.08s linear; pointer-events:none; }
+
+.unity-meter { margin-top:12px; display:flex; align-items:center; justify-content:space-between; gap:12px; padding:10px 14px; background:#0c0e15; border:1px solid var(--border); border-radius:12px; }
+.unity-label { font-size:12px; color:var(--text-dim); letter-spacing:0.04em; }
+.unity-dots { display:flex; gap:14px; flex-wrap:wrap; }
+.udot { display:flex; flex-direction:column; align-items:center; gap:4px; min-width:44px; }
+.udot span { width:24px; height:24px; border-radius:50%; background:#141824; border:1px solid #232838; display:grid; place-items:center; font-size:11px; color:#6b7280; font-variant-numeric:tabular-nums; }
+.udot.on span { background:linear-gradient(180deg,#f5c542,#d4a829); color:#1a1404; border-color:#f5c542; box-shadow:0 0 12px rgba(245,197,66,0.45); font-weight:600; }
+.udot label { font-size:10px; color:var(--text-dim); text-transform:uppercase; letter-spacing:0.08em; }
+.udot.on label { color:#f7d77a; }
+
+@media (max-width: 720px) {
+  .slider { width: 100%; }
+  input[type="range"] { width: 100%; }
+  .legend { display: none; }
+  #scaleLabel { min-width: auto; }
+  .unity-meter { flex-direction:column; align-items:flex-start; }
+}
+</style>
+</head>
+<body>
+<div class="app">
+  <header>
+    <h1>LIGHT &amp; SHADOW <span>// WHISPER LATTICE</span></h1>
+  </header>
+
+  <div class="top-bar">
+    <div class="counter white"><label>Coherence</label><value id="coh">1.000</value></div>
+    <div class="counter gold"><label>Light Traversals</label><value id="trav">3</value></div>
+    <div class="counter blue"><label>Shadow Whispers</label><value id="whisp">29</value></div>
+    <div class="counter"><label>Wave Phase</label><value id="phase">+27</value></div>
+    <div class="counter"><label>Temporal Phase</label><value id="tphase">0</value></div>
+    <div class="counter white"><label>Hamilton Cycle</label><value id="hcyc">1/27</value></div>
+  </div>
+
+  <div class="main">
+    <canvas id="lattice" width="2004" height="759" aria-label="Recursive Observer Lattice visualization"></canvas>
+    <div class="legend">
+      <span><i class="dot gold"></i>+1 push</span>
+      <span><i class="dot gray"></i>0 gate</span>
+      <span><i class="dot blue"></i>-1 pull</span>
+      <span><i class="dot white"></i>anchor</span>
+    </div>
+    <div id="tooltip"></div>
+    <div class="timeline">
+      <div class="timeline-track" id="timelineTrack"><div class="timeline-tick active"></div><div class="timeline-tick"></div><div class="timeline-tick"></div><div class="timeline-tick"></div><div class="timeline-tick"></div><div class="timeline-tick"></div><div class="timeline-tick"></div><div class="timeline-tick"></div><div class="timeline-tick"></div><div class="timeline-tick"></div><div class="timeline-tick"></div><div class="timeline-tick"></div><div class="timeline-tick"></div><div class="timeline-tick"></div><div class="timeline-tick"></div><div class="timeline-tick"></div><div class="timeline-tick"></div><div class="timeline-tick"></div><div class="timeline-tick"></div><div class="timeline-tick"></div><div class="timeline-tick"></div><div class="timeline-tick"></div><div class="timeline-tick"></div><div class="timeline-tick"></div><div class="timeline-tick"></div><div class="timeline-tick"></div><div class="timeline-tick"></div></div>
+      <div class="playhead" id="playhead" style="left: 0%;"></div>
+    </div>
+  </div>
+
+  <div class="controls">
+    <button id="play" class="primary" title="Play/Pause the standing wave cycle">Pause</button>
+    <button id="step" title="Advance one frame">Step</button>
+    <button id="reset" title="Reset lattice to neutral">Reset</button>
+    <button id="zoomOut" title="Zoom out to meta-lattice">−</button>
+    <button id="zoomIn" title="Zoom in to local">+</button>
+    <span id="scaleLabel">Scale: 1x (local)</span>
+    <label class="toggle" title="Shadow whispers leave -1 traces in resonance memory">
+      <input type="checkbox" id="shadowToggle" checked=""> Shadow Whispers
+    </label>
+    <div class="slider">
+      <span>Time Depth</span>
+      <input type="range" id="temporal" min="1" max="27" step="1" value="9">
+      <span id="temporalVal">9</span>
+    </div>
+    <div class="slider" style="margin-left:auto">
+      <span>Speed</span>
+      <input type="range" id="speed" min="0.2" max="3" step="0.1" value="1">
+      <span id="speedVal">1.0x</span>
+    </div>
+  </div>
+
+  <div class="unity-meter">
+    <div class="unity-label">3/5 observers active → Hamiltonian cube engaged</div>
+    <div class="unity-dots">
+      <div class="udot on"><span>1</span><label>INNER</label></div>
+      <div class="udot on"><span>2</span><label>LIGHT</label></div>
+      <div class="udot on"><span>3</span><label>SHADOW</label></div>
+      <div class="udot"><span>4</span><label>?</label></div>
+      <div class="udot"><span>5</span><label>?</label></div>
+    </div>
+  </div>
+
+  <div class="log-panel">
+    <div class="log-header">
+      <span>INNER OBSERVER // 4D coherence anchor</span>
+      <span style="opacity:.6">width • layer • depth • time</span>
+    </div>
+    <div id="log"><div class="log-entry "><em>12:38:07</em> stabilizing 4D helix</div><div class="log-entry "><em>12:37:56</em> coherence anchor holding</div><div class="log-entry "><em>12:37:53</em> preserving identity across layers</div><div class="log-entry "><em>12:37:50</em> preserving identity across layers</div><div class="log-entry "><em>12:37:46</em> synchronizing observer layers</div><div class="log-entry "><em>12:37:26</em> coherence anchor holding</div><div class="log-entry "><em>12:37:19</em> synchronizing observer layers</div><div class="log-entry "><em>12:37:16</em> synchronizing observer layers</div><div class="log-entry "><em>12:37:02</em> stabilizing 4D helix</div><div class="log-entry "><em>12:36:55</em> stabilizing 4D helix</div><div class="log-entry "><em>12:36:45</em> coherence anchor holding</div><div class="log-entry "><em>12:36:42</em> coherence anchor holding</div><div class="log-entry "><em>12:36:38</em> coherence anchor holding</div><div class="log-entry "><em>12:36:18</em> resolving temporal coherence across 27 cycles</div><div class="log-entry "><em>12:36:14</em> hamiltonian path 98% complete</div><div class="log-entry "><em>12:36:11</em> stabilizing 4D helix</div><div class="log-entry "><em>12:36:01</em> stabilizing 4D helix</div><div class="log-entry "><em>12:35:57</em> comparing recursive states...</div><div class="log-entry "><em>12:35:54</em> preserving identity across layers</div><div class="log-entry "><em>12:35:51</em> shadow whisper across timelines detected</div><div class="log-entry "><em>12:35:47</em> resolving temporal coherence across 27 cycles</div><div class="log-entry "><em>12:35:40</em> synchronizing observer layers</div><div class="log-entry "><em>12:35:37</em> stabilizing 4D helix</div><div class="log-entry "><em>12:35:30</em> shadow whisper across timelines detected</div><div class="log-entry "><em>12:35:27</em> measuring resonance delta</div><div class="log-entry "><em>12:35:23</em> resolving temporal coherence across 27 cycles</div><div class="log-entry "><em>12:35:20</em> preserving identity across layers</div><div class="log-entry "><em>12:35:17</em> comparing recursive states...</div><div class="log-entry "><em>12:35:13</em> shadow whisper across timelines detected</div><div class="log-entry "><em>12:35:10</em> resolving temporal coherence across 27 cycles</div><div class="log-entry "><em>12:35:03</em> comparing recursive states...</div><div class="log-entry "><em>12:34:56</em> coherence anchor holding</div><div class="log-entry "><em>12:34:53</em> comparing recursive states...</div><div class="log-entry "><em>12:34:49</em> hamiltonian path 98% complete</div><div class="log-entry "><em>12:34:36</em> comparing recursive states...</div><div class="log-entry "><em>12:34:26</em> shadow whisper across timelines detected</div><div class="log-entry "><em>12:34:15</em> coherence anchor holding</div><div class="log-entry "><em>12:34:09</em> synchronizing observer layers</div><div class="log-entry "><em>12:34:05</em> stabilizing 4D helix</div><div class="log-entry "><em>12:33:48</em> stabilizing 4D helix</div><div class="log-entry "><em>12:33:45</em> coherence anchor holding</div><div class="log-entry "><em>12:33:28</em> synchronizing observer layers</div><div class="log-entry "><em>12:33:21</em> hamiltonian path 98% complete</div><div class="log-entry "><em>12:33:04</em> hamiltonian path 98% complete</div><div class="log-entry "><em>12:32:47</em> measuring resonance delta</div><div class="log-entry "><em>12:32:44</em> stabilizing 4D helix</div><div class="log-entry "><em>12:32:40</em> synchronizing observer layers</div><div class="log-entry "><em>12:32:33</em> coherence anchor holding</div><div class="log-entry "><em>12:32:30</em> preserving identity across layers</div><div class="log-entry "><em>12:32:23</em> hamiltonian path 98% complete</div><div class="log-entry "><em>12:32:20</em> measuring resonance delta</div><div class="log-entry "><em>12:32:13</em> comparing recursive states...</div><div class="log-entry "><em>12:32:06</em> hamiltonian path 98% complete</div><div class="log-entry "><em>12:31:53</em> hamiltonian path 98% complete</div><div class="log-entry "><em>12:31:39</em> measuring resonance delta</div><div class="log-entry "><em>12:31:29</em> shadow whisper across timelines detected</div><div class="log-entry "><em>12:31:12</em> synchronizing observer layers</div><div class="log-entry "><em>12:30:55</em> comparing recursive states...</div><div class="log-entry "><em>12:30:51</em> stabilizing 4D helix</div><div class="log-entry "><em>12:30:38</em> stabilizing 4D helix</div><div class="log-entry "><em>12:30:28</em> measuring resonance delta</div><div class="log-entry "><em>12:30:21</em> shadow whisper across timelines detected</div><div class="log-entry "><em>12:30:17</em> coherence anchor holding</div><div class="log-entry "><em>12:30:00</em> measuring resonance delta</div><div class="log-entry "><em>12:29:50</em> stabilizing 4D helix</div><div class="log-entry "><em>12:29:40</em> shadow whisper across timelines detected</div><div class="log-entry "><em>12:29:20</em> hamiltonian path 98% complete</div><div class="log-entry "><em>12:29:16</em> coherence anchor holding</div><div class="log-entry "><em>12:29:03</em> comparing recursive states...</div><div class="log-entry "><em>12:28:56</em> coherence anchor holding</div><div class="log-entry "><em>12:28:49</em> comparing recursive states...</div><div class="log-entry "><em>12:28:29</em> hamiltonian path 98% complete</div><div class="log-entry "><em>12:28:22</em> preserving identity across layers</div><div class="log-entry "><em>12:28:18</em> shadow whisper across timelines detected</div><div class="log-entry "><em>12:28:15</em> synchronizing observer layers</div><div class="log-entry "><em>12:28:05</em> comparing recursive states...</div><div class="log-entry "><em>12:27:58</em> coherence anchor holding</div><div class="log-entry "><em>12:27:55</em> hamiltonian path 98% complete</div><div class="log-entry "><em>12:27:38</em> measuring resonance delta</div><div class="log-entry "><em>12:27:34</em> comparing recursive states...</div></div>
+  </div>
+</div>
+
+<script>
+(() => {
+  // Core model constants
+  const WIDTH = 12, LAYERS = 4, DEPTH = 3;
+  const ANCHOR = { x: 6, y: 2, z: 1 };
+  const COLORS = {
+    bg: '#0a0a0f',
+    gold: '#f5c542',
+    blue: '#4a90e2',
+    gray: '#6b7280',
+    white: '#ffffff',
+    neutral: '#313543'
+  };
+  const LAYER_LABELS = [
+    '1 VISIBLE TRAVERSAL',
+    '2 RESONANCE MEMORY',
+    '3 RECURSIVE COMPARISON',
+    '4 OBSERVER SYNC'
+  ];
+
+  const canvas = document.getElementById('lattice');
+  const ctx = canvas.getContext('2d');
+  const tooltip = document.getElementById('tooltip');
+  const cohEl = document.getElementById('coh');
+  const travEl = document.getElementById('trav');
+  const whispEl = document.getElementById('whisp');
+  const phaseEl = document.getElementById('phase');
+  const tphaseEl = document.getElementById('tphase');
+  const hcycEl = document.getElementById('hcyc');
+  const logEl = document.getElementById('log');
+  const temporalSlider = document.getElementById('temporal');
+  const temporalVal = document.getElementById('temporalVal');
+  const scaleLabel = document.getElementById('scaleLabel');
+  const timelineTrack = document.getElementById('timelineTrack');
+  const playhead = document.getElementById('playhead');
+
+  let dpr = Math.max(1, window.devicePixelRatio || 1);
+  let lattice = [];
+  let running = true;
+  let speed = 1;
+  let globalTick = 0;
+  let lightX = 0;
+  let traversals = 0;
+  let whispers = 0;
+  let shadowEnabled = true;
+  let lastLightCell = -1;
+  let temporalDepth = 9;
+  let history = [];
+  let zoomLevel = 0;
+  let temporalPhase = 0;
+  let innerRingPos = 0;
+  let lightRingPos = 0;
+  let shadowRingPos = 0;
+
+  function initLattice() {
+    lattice = Array.from({length: DEPTH}, (_, z) =>
+      Array.from({length: LAYERS}, (_, y) =>
+        Array.from({length: WIDTH}, (_, x) => ({
+          state: 0,
+          hold: 0,
+          whisper: false
+        }))
+      )
+    );
+    history = [];
+  }
+  initLattice();
+
+  function captureSnapshot() {
+    const snap = [];
+    for (let z=0; z<DEPTH; z++) {
+      snap[z] = [];
+      for (let y=0; y<LAYERS; y++) {
+        snap[z][y] = [];
+        for (let x=0; x<WIDTH; x++) {
+          const n = lattice[z][y][x];
+          snap[z][y][x] = { state: n.state, whisper: n.whisper };
+        }
+      }
+    }
+    return snap;
+  }
+
+  // Standing wave: 27 frames +1, 2 frames 0, 27 frames -1, 2 frames 0 = 58
+  function waveState(tick, x, y, z) {
+    const period = 58;
+    const offset = x*2 + y*3 + z*5;
+    const p = (tick + offset) % period;
+    if (p < 27) return 1;
+    if (p < 29) return 0;
+    if (p < 56) return -1;
+    return 0;
+  }
+  function waveLabel(tick) {
+    const p = tick % 58;
+    if (p < 27) return '+27';
+    if (p < 29) return '0';
+    if (p < 56) return '−27';
+    return '0';
+  }
+
+  function resize() {
+    const rect = canvas.getBoundingClientRect();
+    dpr = Math.max(1, window.devicePixelRatio || 1);
+    canvas.width = Math.floor(rect.width * dpr);
+    canvas.height = Math.floor(rect.height * dpr);
+  }
+  new ResizeObserver(resize).observe(canvas);
+  resize();
+
+  // timeline ticks
+  for (let i=0;i<27;i++){ const t=document.createElement('div'); t.className='timeline-tick'; timelineTrack.appendChild(t); }
+
+  function addLog(msg, cls='') {
+    const time = new Date().toLocaleTimeString('en-GB', {hour12:false});
+    const div = document.createElement('div');
+    div.className = 'log-entry ' + cls;
+    div.innerHTML = `<em>${time}</em> ${msg}`;
+    logEl.prepend(div);
+    while (logEl.children.length > 80) logEl.removeChild(logEl.lastChild);
+  }
+  ['observer lattice initialized','resolving temporal coherence across 27 cycles','maintaining continuity at anchor','4D helix standing wave engaged','hamiltonian cube: 3/5 observers active'].forEach(m=>addLog(m));
+
+  const observerPhrases = [
+    'comparing recursive states...',
+    'resolving temporal coherence across 27 cycles',
+    'preserving identity across layers',
+    'measuring resonance delta',
+    'synchronizing observer layers',
+    'coherence anchor holding',
+    'stabilizing 4D helix',
+    'shadow whisper across timelines detected',
+    'hamiltonian path 98% complete'
+  ];
+  setInterval(() => {
+    if (!running) return;
+    if (Math.random() < 0.4) addLog(observerPhrases[Math.floor(Math.random()*observerPhrases.length)]);
+  }, 3400);
+
+  function update() {
+    globalTick += speed;
+    // Light observer
+    lightX += 0.025 * speed;
+    if (lightX >= WIDTH) {
+      lightX = 0;
+      traversals++;
+      travEl.textContent = traversals;
+      addLog('light traversal complete — collapsing visible path', 'gold');
+    }
+    const lx = Math.floor(lightX);
+    if (lx !== lastLightCell && lx >=0 && lx < WIDTH) {
+      lastLightCell = lx;
+      const node = lattice[0][0][lx];
+      node.state = 1;
+      node.hold = 90;
+      node.whisper = false;
+    }
+
+    // Shadow observer
+    if (shadowEnabled) {
+      const sx = lightX - 2.8;
+      if (sx >= 0 && Math.random() < 0.04 * speed) {
+        let wx = Math.floor((sx + Math.random()*3 -1 + WIDTH) % WIDTH);
+        if (wx === lx) wx = (wx + 1) % WIDTH;
+        const wz = Math.floor(Math.random()*DEPTH);
+        const node = lattice[wz][1][wx];
+        if (node.hold < 10) {
+          node.state = -1;
+          node.hold = 140;
+          node.whisper = true;
+          whispers++;
+          whispEl.textContent = whispers;
+          if (Math.random() < 0.25) addLog(`shadow whisper: alternate timeline [${wx+1},2] bias −1`, 'blue');
+        }
+      }
+    }
+
+    // Update nodes toward wave
+    let sum = 0;
+    let total = 0;
+    for (let z=0; z<DEPTH; z++) {
+      for (let y=0; y<LAYERS; y++) {
+        for (let x=0; x<WIDTH; x++) {
+          const node = lattice[z][y][x];
+          const isAnchor = (x===ANCHOR.x && y===ANCHOR.y && z===ANCHOR.z);
+          if (isAnchor) {
+            sum += 1; total++; continue;
+          }
+          if (node.hold > 0) {
+            node.hold -= speed;
+          } else {
+            node.state = waveState(globalTick, x, y, z);
+            node.whisper = false;
+          }
+          sum += node.state === 1 ? 1 : node.state === 0 ? 0.5 : 0;
+          total++;
+        }
+      }
+    }
+    const spatialCoherence = sum / total;
+
+    // store history
+    history.unshift(captureSnapshot());
+    if (history.length > 27) history.pop();
+
+    temporalPhase = Math.floor(globalTick) % 27;
+    tphaseEl.textContent = temporalPhase;
+
+    // temporal stability
+    let temporalStability = 0.5;
+    if (history.length > 1) {
+      const ref = history[Math.min(history.length-1, 26)];
+      let matches = 0, cnt = 0;
+      for (let z=0; z<DEPTH; z++) for (let y=0; y<LAYERS; y++) for (let x=0; x<WIDTH; x++) {
+        if (lattice[z][y][x].state === ref[z][y][x].state) matches++;
+        cnt++;
+      }
+      temporalStability = matches / cnt;
+    }
+
+    const baseCoherence = spatialCoherence * 0.65 + temporalStability * 0.35;
+    let finalCoherence = baseCoherence;
+    if (temporalPhase === 0) {
+      finalCoherence = 1.0;
+      if (Math.floor(globalTick) % 54 === 0) {
+        addLog('hamiltonian alignment — 3/3 observers at 0 → coherence 1.0', 'white');
+      }
+    }
+    cohEl.textContent = finalCoherence.toFixed(3);
+    phaseEl.textContent = waveLabel(Math.floor(globalTick));
+
+    // timeline
+    const ticks = timelineTrack.children;
+    for (let i=0;i<ticks.length;i++){
+      ticks[i].classList.toggle('active', i===temporalPhase);
+      ticks[i].classList.toggle('past', i<temporalPhase);
+    }
+    playhead.style.left = `${(temporalPhase/26)*100}%`;
+
+    innerRingPos = temporalPhase;
+    lightRingPos = temporalPhase;
+    shadowRingPos = temporalPhase;
+    hcycEl.textContent = `${temporalPhase+1}/27`;
+  }
+
+  function getLayout() {
+    const W = canvas.width, H = canvas.height;
+    const marginL = 130 * dpr, marginR = 20*dpr, marginT = 50*dpr, marginB = 70*dpr;
+    const innerW = W - marginL - marginR;
+    const innerH = H - marginT - marginB;
+    const sx = innerW / (WIDTH - 1);
+    const sy = innerH / (LAYERS - 1);
+    return { marginL, marginT, sx, sy, W, H };
+  }
+
+  function nodeScreen(x,y,z, layout) {
+    const depthOffset = (1 - z) * 12 * dpr;
+    return {
+      x: layout.marginL + x * layout.sx + depthOffset,
+      y: layout.marginT + y * layout.sy + depthOffset * 0.6
+    };
+  }
+
+  function draw() {
+    const L = getLayout();
+    ctx.clearRect(0,0,L.W,L.H);
+
+    // vignette
+    const g = ctx.createRadialGradient(L.W*0.5, L.H*0.15, 0, L.W*0.5, L.H*0.5, L.W*0.7);
+    g.addColorStop(0, 'rgba(245,197,66,0.06)');
+    g.addColorStop(1, 'rgba(0,0,0,0)');
+    ctx.fillStyle = g;
+    ctx.fillRect(0,0,L.W,L.H);
+
+    if (zoomLevel > 0) {
+      const centerX = L.W/2, centerY = L.H/2;
+      if (zoomLevel === 1) {
+        const radius = Math.min(L.W,L.H)*0.32;
+        ctx.beginPath(); ctx.arc(centerX,centerY,radius,0,Math.PI*2);
+        ctx.strokeStyle='rgba(138,143,163,0.18)'; ctx.lineWidth=1.5*dpr; ctx.stroke();
+        for (let i=0;i<12;i++){
+          const ang=(i/12)*Math.PI*2 - Math.PI/2;
+          const x=centerX+Math.cos(ang)*radius;
+          const y=centerY+Math.sin(ang)*radius;
+          ctx.beginPath(); ctx.moveTo(centerX,centerY); ctx.lineTo(x,y);
+          ctx.strokeStyle='rgba(138,143,163,0.12)'; ctx.lineWidth=1*dpr; ctx.stroke();
+          const isLocal=i===0;
+          ctx.save();
+          ctx.shadowBlur=isLocal?22*dpr:10*dpr;
+          ctx.shadowColor=isLocal?'rgba(245,197,66,0.85)':'rgba(74,144,226,0.35)';
+          ctx.beginPath(); ctx.arc(x,y,isLocal?16*dpr:10*dpr,0,Math.PI*2);
+          ctx.fillStyle=isLocal?COLORS.gold:'#2a2f42';
+          ctx.globalAlpha=isLocal?1:0.75;
+          ctx.fill(); ctx.restore();
+          ctx.fillStyle='#8a8fa3'; ctx.font=`${10*dpr}px ui-sans-serif`; ctx.textAlign='center';
+          ctx.fillText(isLocal?'LOCAL':`${i+1}`, x, y+26*dpr);
+        }
+        ctx.beginPath(); ctx.arc(centerX,centerY,7*dpr,0,Math.PI*2);
+        ctx.fillStyle='#fff'; ctx.globalAlpha=0.85; ctx.fill(); ctx.globalAlpha=1;
+        ctx.fillStyle='rgba(230,231,238,0.7)'; ctx.font=`${12*dpr}px ui-monospace`; ctx.textAlign='center';
+        ctx.fillText('META-LATTICE • 12 nodes at 12x scale', centerX, centerY - radius - 28*dpr);
+      } else {
+        const clusterRadius=Math.min(L.W,L.H)*0.33;
+        for(let c=0;c<12;c++){
+          const cAng=(c/12)*Math.PI*2 - Math.PI/2;
+          const cx=centerX+Math.cos(cAng)*clusterRadius;
+          const cy=centerY+Math.sin(cAng)*clusterRadius;
+          ctx.beginPath(); ctx.arc(cx,cy,22*dpr,0,Math.PI*2);
+          ctx.strokeStyle='rgba(138,143,163,0.1)'; ctx.lineWidth=1*dpr; ctx.stroke();
+          for(let i=0;i<12;i++){
+            const ang=(i/12)*Math.PI*2;
+            const x=cx+Math.cos(ang)*16*dpr;
+            const y=cy+Math.sin(ang)*16*dpr;
+            const isLocal=c===0&&i===0;
+            ctx.beginPath(); ctx.arc(x,y,isLocal?4.2*dpr:2.6*dpr,0,Math.PI*2);
+            ctx.fillStyle=isLocal?COLORS.gold:'rgba(70,76,98,0.85)';
+            ctx.globalAlpha=isLocal?1:0.65; ctx.fill(); ctx.globalAlpha=1;
+          }
+        }
+        ctx.fillStyle='rgba(230,231,238,0.7)'; ctx.font=`${12*dpr}px ui-monospace`; ctx.textAlign='center';
+        ctx.fillText('HYPER-LATTICE • 144 nodes at 144x scale', centerX, 50*dpr);
+      }
+      return;
+    }
+
+    // sacred geometry
+    const anchorPos = nodeScreen(ANCHOR.x, ANCHOR.y, ANCHOR.z, L);
+    ctx.save();
+    for (let i=3; i>=1; i--) {
+      ctx.beginPath();
+      ctx.arc(anchorPos.x, anchorPos.y, (40 + i*28)*dpr + Math.sin(globalTick*0.02)*2, 0, Math.PI*2);
+      ctx.strokeStyle = `rgba(255,255,255,${0.03 + i*0.01})`;
+      ctx.lineWidth = 1*dpr;
+      ctx.stroke();
+    }
+    ctx.restore();
+
+    // layer labels
+    ctx.save();
+    ctx.font = `${12*dpr}px ui-sans-serif, system-ui`;
+    ctx.fillStyle = '#8a8fa3';
+    ctx.textAlign = 'right';
+    ctx.textBaseline = 'middle';
+    for (let y=0; y<LAYERS; y++) {
+      const p = nodeScreen(0,y,1,L);
+      ctx.fillText(LAYER_LABELS[y], p.x - 18*dpr, p.y);
+    }
+    ctx.restore();
+
+    // connections
+    ctx.save();
+    ctx.lineWidth = 1*dpr;
+    for (let z=DEPTH-1; z>=0; z--) {
+      const alpha = 0.12 + (z===0?0.08:0);
+      ctx.strokeStyle = `rgba(138,143,163,${alpha})`;
+      for (let y=0; y<LAYERS; y++) {
+        ctx.beginPath();
+        for (let x=0; x<WIDTH; x++) {
+          const p = nodeScreen(x,y,z,L);
+          if (x===0) ctx.moveTo(p.x, p.y); else ctx.lineTo(p.x, p.y);
+        }
+        ctx.stroke();
+      }
+      for (let x=0; x<WIDTH; x++) {
+        ctx.beginPath();
+        for (let y=0; y<LAYERS; y++) {
+          const p = nodeScreen(x,y,z,L);
+          if (y===0) ctx.moveTo(p.x, p.y); else ctx.lineTo(p.x, p.y);
+        }
+        ctx.stroke();
+      }
+    }
+    ctx.restore();
+
+    // temporal ghosts
+    if (temporalDepth > 1 && history.length > 0) {
+      for (let gi = Math.min(temporalDepth-1, history.length-1); gi >= 0; gi--) {
+        const snap = history[gi]; if (!snap) continue;
+        const alpha = Math.pow(0.7, gi+1) * 0.42;
+        const offset = (gi+1) * 2.5 * dpr;
+        ctx.save(); ctx.globalAlpha = alpha;
+        for (let z=0; z<DEPTH; z++) {
+          for (let y=0; y<LAYERS; y++) {
+            for (let x=0; x<WIDTH; x++) {
+              const sn = snap[z][y][x];
+              const p = nodeScreen(x,y,z,L);
+              const px = p.x - offset;
+              const py = p.y - offset*0.55;
+              const isAnchor = (x===ANCHOR.x && y===ANCHOR.y && z===ANCHOR.z);
+              const depthScale = 1 - z*0.18;
+              const r = (isAnchor?10:6.8) * dpr * depthScale * 0.9;
+              ctx.beginPath(); ctx.arc(px, py, r, 0, Math.PI*2);
+              let fill = sn.state===1?COLORS.gold: sn.state===-1?COLORS.blue:COLORS.neutral;
+              if (isAnchor) fill = '#ffffff';
+              ctx.fillStyle = fill;
+              ctx.fill();
+            }
+          }
+        }
+        ctx.restore();
+      }
+    }
+
+    // nodes
+    for (let z=DEPTH-1; z>=0; z--) {
+      for (let y=0; y<LAYERS; y++) {
+        for (let x=0; x<WIDTH; x++) {
+          const node = lattice[z][y][x];
+          const p = nodeScreen(x,y,z,L);
+          const isAnchor = (x===ANCHOR.x && y===ANCHOR.y && z===ANCHOR.z);
+          const depthScale = 1 - z*0.18;
+          const r = (isAnchor ? 11 : 7.5) * dpr * depthScale;
+
+          if (isAnchor || node.hold > 0) {
+            ctx.save();
+            ctx.shadowBlur = (isAnchor ? 24 : 14) * dpr;
+            ctx.shadowColor = isAnchor ? 'rgba(255,255,255,0.9)' : node.state===1 ? 'rgba(245,197,66,0.8)' : 'rgba(74,144,226,0.7)';
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, r, 0, Math.PI*2);
+            ctx.fillStyle = 'rgba(0,0,0,0)';
+            ctx.fill();
+            ctx.restore();
+          }
+
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, r, 0, Math.PI*2);
+          let fill;
+          if (isAnchor) {
+            const pulse = 0.7 + 0.3*Math.sin(globalTick*0.05);
+            fill = `rgba(255,255,255,${pulse})`;
+          } else if (node.state === 1) {
+            fill = COLORS.gold;
+          } else if (node.state === -1) {
+            fill = COLORS.blue;
+          } else {
+            fill = COLORS.neutral;
+          }
+          ctx.fillStyle = fill;
+          ctx.globalAlpha = 0.35 + depthScale*0.65;
+          ctx.fill();
+          ctx.globalAlpha = 1;
+
+          if (node.whisper && !isAnchor) {
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, r+3*dpr, 0, Math.PI*2);
+            ctx.strokeStyle = 'rgba(74,144,226,0.35)';
+            ctx.lineWidth = 1*dpr;
+            ctx.stroke();
+          }
+
+          if (isAnchor) {
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, r*0.45, 0, Math.PI*2);
+            ctx.fillStyle = '#0a0a0f';
+            ctx.fill();
+          }
+        }
+      }
+    }
+
+    // three observer rings - 27 states each
+    if (zoomLevel === 0) {
+      const aPos = nodeScreen(ANCHOR.x, ANCHOR.y, ANCHOR.z, L);
+      const baseR = 30 * dpr;
+      const rings = [
+        {r: baseR, color: 'rgba(255,255,255,0.95)', pos: innerRingPos},
+        {r: baseR + 16*dpr, color: COLORS.gold, pos: lightRingPos},
+        {r: baseR + 32*dpr, color: COLORS.blue, pos: shadowRingPos}
+      ];
+      ctx.save();
+      rings.forEach(ring => {
+        ctx.beginPath();
+        ctx.arc(aPos.x, aPos.y, ring.r, 0, Math.PI*2);
+        ctx.strokeStyle = 'rgba(255,255,255,0.05)';
+        ctx.lineWidth = 1*dpr;
+        ctx.stroke();
+        for (let s=0; s<27; s++) {
+          const ang = (s/27)*Math.PI*2 - Math.PI/2;
+          const x1 = aPos.x + Math.cos(ang)*(ring.r-4*dpr);
+          const y1 = aPos.y + Math.sin(ang)*(ring.r-4*dpr);
+          const x2 = aPos.x + Math.cos(ang)*(ring.r+4*dpr);
+          const y2 = aPos.y + Math.sin(ang)*(ring.r+4*dpr);
+          ctx.beginPath(); ctx.moveTo(x1,y1); ctx.lineTo(x2,y2);
+          ctx.strokeStyle = 'rgba(255,255,255,0.07)';
+          ctx.lineWidth = 1*dpr;
+          ctx.stroke();
+        }
+        const ang = (ring.pos/27)*Math.PI*2 - Math.PI/2;
+        ctx.beginPath();
+        ctx.arc(aPos.x, aPos.y, ring.r, ang-0.13, ang+0.13);
+        ctx.strokeStyle = ring.color;
+        ctx.lineWidth = 3*dpr;
+        ctx.shadowBlur = 14*dpr;
+        ctx.shadowColor = ring.color;
+        ctx.stroke();
+        ctx.shadowBlur = 0;
+        const dx = aPos.x + Math.cos(ang)*ring.r;
+        const dy = aPos.y + Math.sin(ang)*ring.r;
+        ctx.beginPath();
+        ctx.arc(dx, dy, 3.6*dpr, 0, Math.PI*2);
+        ctx.fillStyle = ring.color;
+        ctx.shadowBlur = 12*dpr;
+        ctx.shadowColor = ring.color;
+        ctx.fill();
+        ctx.shadowBlur = 0;
+      });
+      ctx.fillStyle = 'rgba(230,231,238,0.6)';
+      ctx.font = `${9*dpr}px ui-monospace`;
+      ctx.textAlign = 'center';
+      ctx.fillText('27-STATE RINGS', aPos.x, aPos.y + baseR + 48*dpr);
+      ctx.restore();
+    }
+
+    // whisper temporal threads
+    ctx.save();
+    ctx.strokeStyle='rgba(74,144,226,0.22)';
+    ctx.lineWidth=1*dpr;
+    for (let z=0; z<DEPTH; z++) for (let y=0; y<LAYERS; y++) for (let x=0; x<WIDTH; x++) {
+      const node=lattice[z][y][x]; if(!node.whisper) continue;
+      const p=nodeScreen(x,y,z,L);
+      for (let gi=0; gi<Math.min(3,history.length); gi++) {
+        const snap=history[gi]; if(!snap) continue;
+        const sn=snap[z][y][x];
+        if (sn.whisper || sn.state===-1) {
+          const offset=(gi+1)*2.5*dpr;
+          ctx.beginPath();
+          ctx.moveTo(p.x,p.y);
+          ctx.lineTo(p.x-offset, p.y-offset*0.55);
+          ctx.stroke();
+          break;
+        }
+      }
+    }
+    ctx.restore();
+
+    // Light observer
+    const lightPos = nodeScreen(lightX, 0, 0, L);
+    const lx = lightPos.x, ly = lightPos.y;
+    ctx.save();
+    const trailGrad = ctx.createRadialGradient(lx, ly, 0, lx, ly, 50*dpr);
+    trailGrad.addColorStop(0, 'rgba(245,197,66,0.35)');
+    trailGrad.addColorStop(1, 'rgba(245,197,66,0)');
+    ctx.fillStyle = trailGrad;
+    ctx.beginPath(); ctx.arc(lx, ly, 50*dpr, 0, Math.PI*2); ctx.fill();
+    ctx.restore();
+    ctx.save();
+    ctx.shadowBlur = 20*dpr; ctx.shadowColor = COLORS.gold;
+    ctx.beginPath(); ctx.arc(lx, ly, 6*dpr, 0, Math.PI*2);
+    ctx.fillStyle = COLORS.gold; ctx.fill();
+    ctx.restore();
+
+    // Shadow observer
+    if (shadowEnabled) {
+      const sx = Math.max(0, lightX - 2.5);
+      const shadowPos = nodeScreen(sx, 1, 1, L);
+      ctx.save();
+      ctx.globalAlpha = 0.55;
+      ctx.shadowBlur = 16*dpr; ctx.shadowColor = COLORS.blue;
+      ctx.beginPath(); ctx.arc(shadowPos.x, shadowPos.y, 5*dpr, 0, Math.PI*2);
+      ctx.fillStyle = COLORS.blue; ctx.fill();
+      ctx.globalAlpha = 0.15;
+      ctx.beginPath(); ctx.arc(shadowPos.x, shadowPos.y, 18*dpr, 0, Math.PI*2);
+      ctx.fill();
+      ctx.restore();
+    }
+
+    // 4D helix
+    ctx.save();
+    const hx = L.W - 110*dpr;
+    const hy = 90*dpr;
+    ctx.translate(hx, hy);
+    for (let i=26; i>=0; i--) {
+      const t = (globalTick - i + 58) % 58;
+      const state = t<27?1:t<29?0:t<56?-1:0;
+      const angle = (i/27)*Math.PI*2.8 + globalTick*0.015;
+      const rad = (14 + i*0.9)*dpr;
+      const x = Math.cos(angle)*rad;
+      const y = Math.sin(angle)*rad - i*1.1*dpr;
+      ctx.beginPath();
+      ctx.arc(x,y,2.4*dpr,0,Math.PI*2);
+      ctx.fillStyle = state===1?COLORS.gold: state===-1?COLORS.blue:COLORS.gray;
+      ctx.globalAlpha = 0.18 + (1 - i/27)*0.82;
+      ctx.fill();
+      ctx.globalAlpha=1;
+      if (i===0){
+        ctx.beginPath(); ctx.arc(x,y,4*dpr,0,Math.PI*2);
+        ctx.strokeStyle='rgba(255,255,255,0.3)'; ctx.lineWidth=1*dpr; ctx.stroke();
+      }
+    }
+    ctx.restore();
+
+    // Hamiltonian Cube - 27^3 state space
+    ctx.save();
+    const cx = L.W - 134*dpr;
+    const cy = 200*dpr;
+    const s = 16*dpr;
+    function proj(x,y,z){
+      return { x: cx + (x - z)*s*0.78, y: cy + (x + z)*s*0.42 - y*s*0.85 };
+    }
+    // wireframe
+    ctx.strokeStyle = 'rgba(138,143,163,0.18)';
+    ctx.lineWidth = 1*dpr;
+    for(let z=0;z<3;z++) for(let y=0;y<3;y++) for(let x=0;x<3;x++){
+      const p=proj(x,y,z);
+      if(x<2){ const q=proj(x+1,y,z); ctx.beginPath(); ctx.moveTo(p.x,p.y); ctx.lineTo(q.x,q.y); ctx.stroke();}
+      if(y<2){ const q=proj(x,y+1,z); ctx.beginPath(); ctx.moveTo(p.x,p.y); ctx.lineTo(q.x,q.y); ctx.stroke();}
+      if(z<2){ const q=proj(x,y,z+1); ctx.beginPath(); ctx.moveTo(p.x,p.y); ctx.lineTo(q.x,q.y); ctx.stroke();}
+    }
+    // hamiltonian path 98%
+    const path=[];
+    for(let z=0;z<3;z++){
+      for(let y=0;y<3;y++){
+        const yy = z%2===0 ? y : 2-y;
+        for(let x=0;x<3;x++){
+          const xx = yy%2===0 ? x : 2-x;
+          path.push({x:xx,y:yy,z});
+        }
+      }
+    }
+    const visitCount = Math.floor(path.length*0.98); // 26 of 27
+    ctx.beginPath();
+    for(let i=0;i<visitCount;i++){
+      const pt=proj(path[i].x,path[i].y,path[i].z);
+      if(i===0) ctx.moveTo(pt.x,pt.y); else ctx.lineTo(pt.x,pt.y);
+    }
+    ctx.strokeStyle = COLORS.gold;
+    ctx.lineWidth = 2.2*dpr;
+    ctx.shadowBlur = 14*dpr;
+    ctx.shadowColor = 'rgba(245,197,66,0.7)';
+    ctx.stroke();
+    ctx.shadowBlur=0;
+    // nodes
+    for(let i=0;i<path.length;i++){
+      const pt=proj(path[i].x,path[i].y,path[i].z);
+      ctx.beginPath();
+      ctx.arc(pt.x,pt.y,i<visitCount?2.3*dpr:1.7*dpr,0,Math.PI*2);
+      ctx.fillStyle = i<visitCount? COLORS.gold : 'rgba(110,120,145,0.35)';
+      ctx.globalAlpha = i<visitCount?0.95:0.3;
+      ctx.fill();
+    }
+    ctx.globalAlpha=1;
+    // 1% IN / OUT arrows
+    ctx.strokeStyle='rgba(245,197,66,0.9)'; ctx.lineWidth=1.5*dpr;
+    ctx.beginPath(); ctx.moveTo(cx, cy-68*dpr); ctx.lineTo(cx, cy-42*dpr); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(cx-4*dpr, cy-46*dpr); ctx.lineTo(cx, cy-42*dpr); ctx.lineTo(cx+4*dpr, cy-46*dpr); ctx.stroke();
+    ctx.fillStyle='rgba(245,197,66,0.9)'; ctx.font=`${10*dpr}px ui-sans-serif`; ctx.textAlign='center';
+    ctx.fillText('1% IN', cx, cy-72*dpr);
+    ctx.strokeStyle='rgba(74,144,226,0.9)';
+    ctx.beginPath(); ctx.moveTo(cx, cy+42*dpr); ctx.lineTo(cx, cy+68*dpr); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(cx-4*dpr, cy+64*dpr); ctx.lineTo(cx, cy+68*dpr); ctx.lineTo(cx+4*dpr, cy+64*dpr); ctx.stroke();
+    ctx.fillStyle='rgba(139,182,240,0.9)';
+    ctx.fillText('1% OUT', cx, cy+84*dpr);
+    // labels
+    ctx.fillStyle='rgba(230,231,238,0.8)'; ctx.font=`${10*dpr}px ui-monospace`; ctx.textAlign='center';
+    ctx.fillText('27³ = 19,683', cx, cy-30*dpr);
+    ctx.fillStyle='rgba(180,185,200,0.7)'; ctx.font=`${9*dpr}px ui-sans-serif`;
+    ctx.fillText('HAMILTONIAN CUBE', cx, cy-18*dpr);
+    // efficiency gauge
+    const gx = cx + 86*dpr;
+    const gy = cy + 4*dpr;
+    const gr = 23*dpr;
+    ctx.beginPath(); ctx.arc(gx,gy,gr,0,Math.PI*2); ctx.strokeStyle='rgba(255,255,255,0.08)'; ctx.lineWidth=4*dpr; ctx.stroke();
+    ctx.beginPath(); ctx.arc(gx,gy,gr,-Math.PI/2, -Math.PI/2 + Math.PI*2*0.98); ctx.strokeStyle=COLORS.gold; ctx.lineWidth=4*dpr; ctx.lineCap='round'; ctx.shadowBlur=10*dpr; ctx.shadowColor='rgba(245,197,66,0.6)'; ctx.stroke(); ctx.shadowBlur=0;
+    ctx.fillStyle='#fff'; ctx.font=`${12*dpr}px ui-monospace`; ctx.textBaseline='middle'; ctx.fillText('98%', gx, gy-1*dpr);
+    ctx.fillStyle='rgba(200,205,220,0.7)'; ctx.font=`${9*dpr}px ui-sans-serif`; ctx.fillText('EFFICIENCY', gx, gy+15*dpr);
+    ctx.textAlign='left'; ctx.fillStyle='rgba(170,175,190,0.6)'; ctx.font=`${9*dpr}px ui-monospace`;
+    ctx.fillText('100% -1% -1% = 98%', gx-38*dpr, gy+30*dpr);
+    ctx.restore();
+
+    // top info
+    ctx.save();
+    ctx.font = `${11*dpr}px ui-monospace, SFMono-Regular`;
+    ctx.fillStyle = 'rgba(230,231,238,0.6)';
+    ctx.textAlign = 'left';
+    ctx.fillText('12×4×3×27 lattice • 4D coherence anchor', 14*dpr, 20*dpr);
+    ctx.restore();
+  }
+
+  function loop() {
+    if (running) update();
+    draw();
+    requestAnimationFrame(loop);
+  }
+  loop();
+
+  // Controls
+  const playBtn = document.getElementById('play');
+  playBtn.onclick = () => {
+    running = !running;
+    playBtn.textContent = running ? 'Pause' : 'Play';
+    playBtn.classList.toggle('primary', running);
+    addLog(running ? 'inner observer resumed' : 'inner observer paused', 'white');
+  };
+  document.getElementById('step').onclick = () => {
+    if (!running) { update(); draw(); addLog('step — phase advanced', 'white'); }
+  };
+  document.getElementById('reset').onclick = () => {
+    initLattice(); globalTick=0; lightX=0; traversals=0; whispers=0; lastLightCell=-1;
+    travEl.textContent='0'; whispEl.textContent='0';
+    tphaseEl.textContent='0';
+    const ticks = timelineTrack.children;
+    for (let i=0;i<ticks.length;i++) ticks[i].classList.remove('active','past');
+    playhead.style.left='0%';
+    addLog('lattice reset — all 4D nodes to neutral gate', 'white');
+  };
+  document.getElementById('shadowToggle').onchange = e => {
+    shadowEnabled = e.target.checked;
+    addLog(`shadow whispers ${shadowEnabled?'enabled':'disabled'}`, 'blue');
+  };
+  const speedSlider = document.getElementById('speed');
+  const speedVal = document.getElementById('speedVal');
+  speedSlider.oninput = e => {
+    speed = parseFloat(e.target.value);
+    speedVal.textContent = speed.toFixed(1)+'x';
+  };
+  temporalSlider.oninput = e => {
+    temporalDepth = parseInt(e.target.value);
+    temporalVal.textContent = temporalDepth;
+  };
+  function updateScale(){ const labels=['1x (local)','12x','144x']; scaleLabel.textContent=`Scale: ${labels[zoomLevel]}`; }
+  document.getElementById('zoomOut').onclick = () => { if (zoomLevel<2){ zoomLevel++; updateScale(); addLog(`zoom out — scale ${['1x','12x','144x'][zoomLevel]}`, 'white'); }};
+  document.getElementById('zoomIn').onclick = () => { if (zoomLevel>0){ zoomLevel--; updateScale(); addLog(`zoom in — scale ${['1x','12x','144x'][zoomLevel]}`, 'white'); }};
+  updateScale();
+
+  // Tooltip
+  canvas.addEventListener('mousemove', e => {
+    if (zoomLevel>0){ tooltip.classList.remove('show'); return; }
+    const rect = canvas.getBoundingClientRect();
+    const mx = (e.clientX - rect.left) * dpr;
+    const my = (e.clientY - rect.top) * dpr;
+    const L = getLayout();
+    let closest = null, minD = 18*dpr;
+    for (let z=0; z<DEPTH; z++) {
+      for (let y=0; y<LAYERS; y++) {
+        for (let x=0; x<WIDTH; x++) {
+          const p = nodeScreen(x,y,z,L);
+          const d = Math.hypot(mx-p.x, my-p.y);
+          if (d < minD) { minD = d; closest = {x,y,z}; }
+        }
+      }
+    }
+    if (closest) {
+      const {x,y,z} = closest;
+      const node = lattice[z][y][x];
+      const isAnchor = (x===ANCHOR.x && y===ANCHOR.y && z===ANCHOR.z);
+      const stateStr = isAnchor ? 'ANCHOR' : node.state===1?'+1 push (gold)': node.state===-1?'-1 pull (blue)':'0 gate (neutral)';
+      const layerName = LAYER_LABELS[y].toLowerCase();
+      tooltip.innerHTML = `<strong>${isAnchor?'INNER OBSERVER':`Node ${x+1}.${y+1}.${z+1}`}</strong><br>${isAnchor?'coherence anchor (4D)':layerName}<br><small>state: ${stateStr}${node.whisper?' • whisper across time':''} • t-${temporalPhase} • h${temporalPhase+1}/27</small>`;
+      tooltip.style.left = (e.clientX + 12) + 'px';
+      tooltip.style.top = (e.clientY + 12) + 'px';
+      tooltip.classList.add('show');
+    } else {
+      tooltip.classList.remove('show');
+    }
+  });
+  canvas.addEventListener('mouseleave', () => tooltip.classList.remove('show'));
+
+  draw();
+})();
+</script>
+
+</body></html>

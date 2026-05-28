@@ -1,0 +1,556 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>VALENCE BOARD · 27-PHASE TOROID · 12×2+3=1</title>
+<style>
+:root{
+  --bg:#040404; --pcb:#0a0a0a; --trace:#c87533; --silk:#c4b896;
+  --A:#dc2626; --B:#888780; --C:#a855f7;
+  --filled:#fff; --empty:#1a1a1a; --shell:#333;
+  --gold:#d4af37;
+}
+*{box-sizing:border-box}
+html,body{height:100%;margin:0;background:var(--bg);color:#ddd;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+body{padding:14px;max-width:1200px;margin:0 auto}
+
+h1{font-size:13px;letter-spacing:.3em;margin:0;color:#999;font-weight:400}
+.sub{font-size:10px;letter-spacing:.25em;color:#555;margin-bottom:10px}
+
+.eq{
+  background:#080808;border:1px solid #1a1a1a;border-radius:8px;padding:10px 14px;
+  font-size:14px;letter-spacing:.15em;color:#ddd;
+  display:flex;gap:14px;justify-content:center;align-items:center;flex-wrap:wrap;
+  margin-bottom:10px;
+}
+.eq .part{display:flex;align-items:center;gap:6px}
+.eq .n{font-size:18px;color:#fff}
+.eq .lbl{font-size:9px;color:#666;letter-spacing:.18em}
+.eq .op{color:#444}
+.eq .eq-final{color:var(--gold);font-size:18px;letter-spacing:.3em}
+
+.layout{display:grid;grid-template-columns: 1fr 320px;gap:14px}
+@media (max-width:900px){.layout{grid-template-columns:1fr}}
+
+.board{
+  background:var(--pcb);
+  border:1px solid #1a1a1a;border-radius:14px;
+  position:relative;overflow:hidden;
+  background-image:
+    radial-gradient(circle at 20% 30%, rgba(200,117,51,0.04) 0%, transparent 50%),
+    radial-gradient(circle at 80% 70%, rgba(168,85,247,0.04) 0%, transparent 50%);
+}
+.board svg{width:100%;height:auto;display:block}
+
+.side{
+  display:flex;flex-direction:column;gap:10px;
+}
+.card{background:#0a0a0a;border:1px solid #1a1a1a;border-radius:10px;padding:12px}
+.card h3{margin:0 0 8px;font-size:10px;letter-spacing:.2em;color:#888;font-weight:400}
+
+.readout{font-size:11px;line-height:1.7;color:#bbb;white-space:pre-wrap;word-break:break-word}
+.readout .k{color:#555;display:inline-block;width:90px}
+.readout .v{color:#ddd}
+.readout .A{color:var(--A)} .readout .B{color:var(--B)} .readout .C{color:var(--C)}
+
+.state{display:inline-block;padding:2px 8px;border-radius:3px;font-size:9px;letter-spacing:.18em;font-weight:bold}
+.state-SEALED{background:#0a3a0a;color:#39ff14;border:1px solid #14532d}
+.state-STRESSED{background:#3a2a0a;color:#fbbf24;border:1px solid #92400e}
+.state-BREACHED{background:#3a1a1a;color:#f87171;border:1px solid #7f1d1d}
+.state-COLLAPSED{background:#1a1a1a;color:#666;border:1px solid #333}
+
+.controls{display:flex;gap:6px;flex-wrap:wrap}
+.btn{background:#151515;border:1px solid #333;color:#ccc;padding:6px 10px;border-radius:6px;cursor:pointer;font:inherit;font-size:10px;letter-spacing:.15em}
+.btn:hover{border-color:var(--gold);color:#fff}
+.btn.on{background:#1a1a1a;border-color:var(--gold);color:var(--gold)}
+
+input[type=range]{width:100%}
+
+.legend{font-size:9px;letter-spacing:.15em;color:#666;display:flex;gap:10px;flex-wrap:wrap;margin-top:6px}
+.legend .sw{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:4px;vertical-align:middle}
+
+.foot{font-size:9px;color:#222;letter-spacing:.2em;text-align:center;margin-top:18px}
+
+.octet-small{width:120px;height:120px;margin:0 auto}
+.octet-small svg{width:100%;height:100%;display:block}
+
+/* glow animation for active phase */
+@keyframes glow-A { 0%,100%{filter:drop-shadow(0 0 4px var(--A)) drop-shadow(0 0 10px rgba(220,38,38,.6))} 50%{filter:drop-shadow(0 0 8px var(--A)) drop-shadow(0 0 16px rgba(220,38,38,.9))} }
+@keyframes glow-B { 0%,100%{filter:drop-shadow(0 0 4px #fff) drop-shadow(0 0 10px rgba(255,255,255,.4))} 50%{filter:drop-shadow(0 0 8px #fff) drop-shadow(0 0 16px rgba(255,255,255,.7))} }
+@keyframes glow-C { 0%,100%{filter:drop-shadow(0 0 4px var(--C)) drop-shadow(0 0 10px rgba(168,85,247,.6))} 50%{filter:drop-shadow(0 0 8px var(--C)) drop-shadow(0 0 16px rgba(168,85,247,.9))} }
+@keyframes glow-T { 0%,100%{filter:drop-shadow(0 0 8px var(--gold)) drop-shadow(0 0 20px rgba(212,175,55,.6))} 50%{filter:drop-shadow(0 0 16px var(--gold)) drop-shadow(0 0 30px rgba(212,175,55,.9))} }
+
+.phase-active-A{animation:glow-A 1.2s ease-in-out infinite}
+.phase-active-B{animation:glow-B 1.2s ease-in-out infinite}
+.phase-active-C{animation:glow-C 1.2s ease-in-out infinite}
+.toroid-active{animation:glow-T 1.8s ease-in-out infinite}
+</style>
+</head>
+<body>
+
+<h1>VALENCE BOARD · 27-PHASE TOROID</h1>
+<div class="sub">VRM · MULTI-PHASE · TENSOR-CHAIN</div>
+
+<div class="eq">
+  <span class="part"><span class="n" style="color:var(--A)">12</span><span class="lbl">ANCHOR</span></span>
+  <span class="op">×</span>
+  <span class="part"><span class="n">2</span><span class="lbl">HEMISPHERES</span></span>
+  <span class="op">+</span>
+  <span class="part"><span class="n" style="color:var(--C)">3</span><span class="lbl">PULSE-3</span></span>
+  <span class="op">=</span>
+  <span class="part"><span class="n">27</span><span class="lbl">PHASES</span></span>
+  <span class="op">+</span>
+  <span class="part"><span class="n" style="color:var(--gold)">1</span><span class="lbl">TOROID</span></span>
+  <span class="op">=</span>
+  <span class="part"><span class="n">28</span><span class="lbl">/ 28</span></span>
+  <span class="op">=</span>
+  <span class="eq-final">1</span>
+</div>
+
+<div class="layout">
+
+  <div class="board" id="board">
+    <svg viewBox="0 0 800 800" xmlns="http://www.w3.org/2000/svg" id="svgboard">
+      <!-- gradients & defs -->
+      <defs>
+        <radialGradient id="toroid-grad" cx="50%" cy="50%" r="50%">
+          <stop offset="0%" stop-color="#1a0a2a"/>
+          <stop offset="60%" stop-color="#4c1d95"/>
+          <stop offset="90%" stop-color="#7c3aed"/>
+          <stop offset="100%" stop-color="#1a0a2a"/>
+        </radialGradient>
+        <radialGradient id="toroid-hole" cx="50%" cy="50%" r="50%">
+          <stop offset="0%" stop-color="#000"/>
+          <stop offset="80%" stop-color="#0a0a0a"/>
+          <stop offset="100%" stop-color="#222"/>
+        </radialGradient>
+        <linearGradient id="coil-A" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stop-color="#7f1d1d"/>
+          <stop offset="100%" stop-color="#dc2626"/>
+        </linearGradient>
+        <linearGradient id="coil-B" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stop-color="#1a1a1a"/>
+          <stop offset="100%" stop-color="#666"/>
+        </linearGradient>
+        <linearGradient id="coil-C" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stop-color="#4c1d95"/>
+          <stop offset="100%" stop-color="#a855f7"/>
+        </linearGradient>
+      </defs>
+
+      <!-- PCB silkscreen grid (subtle) -->
+      <g opacity="0.15">
+        <line x1="0" y1="200" x2="800" y2="200" stroke="#c87533" stroke-width="0.3"/>
+        <line x1="0" y1="600" x2="800" y2="600" stroke="#c87533" stroke-width="0.3"/>
+        <line x1="200" y1="0" x2="200" y2="800" stroke="#c87533" stroke-width="0.3"/>
+        <line x1="600" y1="0" x2="600" y2="800" stroke="#c87533" stroke-width="0.3"/>
+      </g>
+
+      <!-- corner mounting holes -->
+      <g fill="#000" stroke="#c87533" stroke-width="1" opacity="0.5">
+        <circle cx="30" cy="30" r="8"/>
+        <circle cx="770" cy="30" r="8"/>
+        <circle cx="30" cy="770" r="8"/>
+        <circle cx="770" cy="770" r="8"/>
+      </g>
+
+      <!-- IC chips around the edges (silkscreen rectangles) -->
+      <g fill="#0a0a0a" stroke="#c87533" stroke-width="0.5">
+        <rect x="60" y="60" width="60" height="40" rx="2"/>
+        <rect x="680" y="60" width="60" height="40" rx="2"/>
+        <rect x="60" y="700" width="60" height="40" rx="2"/>
+        <rect x="680" y="700" width="60" height="40" rx="2"/>
+      </g>
+      <g fill="var(--silk)" font-size="7" font-family="ui-monospace,Menlo,monospace" letter-spacing="1">
+        <text x="90" y="84" text-anchor="middle">CTRL-A</text>
+        <text x="710" y="84" text-anchor="middle">CTRL-B</text>
+        <text x="90" y="724" text-anchor="middle">CTRL-C</text>
+        <text x="710" y="724" text-anchor="middle">FEEDBACK</text>
+      </g>
+
+      <!-- trace ring (copper) -->
+      <circle cx="400" cy="400" r="290" fill="none" stroke="#c87533" stroke-width="1.2" opacity="0.5"/>
+      <circle cx="400" cy="400" r="285" fill="none" stroke="#c87533" stroke-width="0.4" opacity="0.3"/>
+
+      <!-- inner trace ring -->
+      <circle cx="400" cy="400" r="180" fill="none" stroke="#c87533" stroke-width="0.8" opacity="0.4"/>
+
+      <!-- 27 phase positions on the trace ring + traces back to center toroid -->
+      <g id="phases"></g>
+
+      <!-- center toroid (drawn last to layer above traces) -->
+      <g id="toroid-group">
+        <!-- outer body of donut -->
+        <circle cx="400" cy="400" r="140" fill="url(#toroid-grad)" stroke="#1a0a2a" stroke-width="2"/>
+        <!-- inner hole -->
+        <circle cx="400" cy="400" r="55" fill="url(#toroid-hole)" stroke="#444" stroke-width="1"/>
+        <!-- winding indicators around toroid -->
+        <g stroke="#1a1a1a" stroke-width="1.5" fill="none" opacity="0.6">
+          <!-- 12 winding marks -->
+          <g id="windings"></g>
+        </g>
+        <!-- center label -->
+        <text x="400" y="395" text-anchor="middle" fill="#c4b896" font-size="11" font-family="ui-monospace,Menlo,monospace" letter-spacing="3">TOROID</text>
+        <text x="400" y="412" text-anchor="middle" fill="var(--gold)" font-size="14" font-family="ui-monospace,Menlo,monospace" letter-spacing="3" font-weight="bold">P28</text>
+        <text x="400" y="428" text-anchor="middle" fill="#666" font-size="8" font-family="ui-monospace,Menlo,monospace" letter-spacing="2">UNITY = 1</text>
+      </g>
+
+      <!-- phase numbers ring (outer) -->
+      <g id="phase-numbers"></g>
+
+      <!-- phase pointer (rotating indicator) -->
+      <g id="pointer" transform="translate(400,400)">
+        <line x1="0" y1="-180" x2="0" y2="-290" stroke="var(--gold)" stroke-width="0.5" opacity="0.4"/>
+        <circle cx="0" cy="-290" r="4" fill="var(--gold)"/>
+      </g>
+
+      <!-- silkscreen labels -->
+      <text x="400" y="40" text-anchor="middle" fill="var(--silk)" font-size="10" font-family="ui-monospace,Menlo,monospace" letter-spacing="6">VALENCE · VRM 27φ</text>
+      <text x="400" y="780" text-anchor="middle" fill="var(--silk)" font-size="8" font-family="ui-monospace,Menlo,monospace" letter-spacing="4" opacity="0.6">STOICHEION REV v11.0 · 3+5=8 OCTET</text>
+      <text x="40" y="400" fill="#444" font-size="7" font-family="ui-monospace,Menlo,monospace" letter-spacing="2" transform="rotate(-90, 40, 400)" text-anchor="middle">ANCHOR HEMISPHERE</text>
+      <text x="760" y="400" fill="#444" font-size="7" font-family="ui-monospace,Menlo,monospace" letter-spacing="2" transform="rotate(90, 760, 400)" text-anchor="middle">WITNESS HEMISPHERE</text>
+    </svg>
+  </div>
+
+  <div class="side">
+
+    <div class="card">
+      <h3>CONTROLS</h3>
+      <div class="controls">
+        <button class="btn on" id="play">▶ PLAY</button>
+        <button class="btn" id="step">STEP</button>
+        <button class="btn" id="reset">RESET</button>
+      </div>
+      <div style="margin-top:10px;font-size:10px;color:#888">SPEED <span id="speed-lbl">600ms</span></div>
+      <input type="range" id="speed" min="100" max="2000" value="600" step="100">
+    </div>
+
+    <div class="card">
+      <h3>ACTIVE PHASE</h3>
+      <div style="text-align:center;margin:6px 0">
+        <span id="ph-num" style="font-size:32px;color:var(--gold);letter-spacing:2px">—</span>
+        <span id="ph-name" style="display:block;font-size:10px;color:#888;letter-spacing:.2em;margin-top:2px">—</span>
+      </div>
+      <div class="octet-small" id="ph-octet"></div>
+      <div class="readout" id="ph-readout" style="margin-top:8px">click a phase to inspect</div>
+    </div>
+
+    <div class="card">
+      <h3>LEGEND</h3>
+      <div class="legend">
+        <span><span class="sw" style="background:var(--A)"></span>1–12 ANCHOR</span>
+        <span><span class="sw" style="background:var(--B)"></span>13–24 WITNESS</span>
+        <span><span class="sw" style="background:var(--C)"></span>25–27 COHERENCE</span>
+        <span><span class="sw" style="background:var(--gold)"></span>28 TOROID</span>
+      </div>
+      <div class="readout" style="margin-top:10px;font-size:10px">
+<span class="k">phases 1-12</span><span class="v">anchor hemisphere</span>
+<span class="k">phases 13-24</span><span class="v">witness hemisphere</span>
+<span class="k">phases 25-27</span><span class="v">coherence triad (synthesis)</span>
+<span class="k">phase 28</span><span class="v">toroid · unity · loop closes</span>
+<span class="k">seam</span><span class="v">27 → 28 → 1</span>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="foot">VALENCE TOOLKIT · 27φ TOROIDAL VRM · 12×2+3=27 · +1=28 · 28/28=1</div>
+
+<script>
+// ============================================================
+// hashing + octet
+// ============================================================
+async function sha256(text){
+  const buf = new TextEncoder().encode(text);
+  const hash = await crypto.subtle.digest('SHA-256', buf);
+  return new Uint8Array(hash);
+}
+function decomposeByte(byte){
+  const bits = [];
+  for (let i = 0; i < 8; i++) bits.push((byte >> i) & 1);
+  const filled = bits.filter(b => b === 1).length;
+  let state;
+  if (filled === 8) state = 'SEALED';
+  else if (filled >= 5) state = 'STRESSED';
+  else if (filled >= 1) state = 'BREACHED';
+  else state = 'COLLAPSED';
+  return { byte, bits, filled, state,
+    interior:{A:bits[0],B:bits[1],C:bits[2]},
+    intFilled: bits[0]+bits[1]+bits[2],
+    extFilled: bits[3]+bits[4]+bits[5]+bits[6]+bits[7]
+  };
+}
+
+// ============================================================
+// 28 phases definition
+// ============================================================
+const PHASES = [];
+for (let i = 1; i <= 12; i++) PHASES.push({ n: i, tier: 'A', name: 'T'+String(i).padStart(3,'0')+' · ANCHOR ' + i });
+for (let i = 1; i <= 12; i++) PHASES.push({ n: i+12, tier: 'B', name: 'S'+String(i).padStart(3,'0')+' · WITNESS ' + i });
+PHASES.push({ n: 25, tier: 'C', name: 'C1 · ANCHOR-WITNESS' });
+PHASES.push({ n: 26, tier: 'C', name: 'C2 · WITNESS-EMERGE' });
+PHASES.push({ n: 27, tier: 'C', name: 'C3 · EMERGE-ANCHOR' });
+PHASES.push({ n: 28, tier: 'T', name: 'P28 · TOROID · UNITY' });
+
+const tierColor = { A: 'var(--A)', B: 'var(--B)', C: 'var(--C)', T: 'var(--gold)' };
+const tierStroke = { A: '#dc2626', B: '#888', C: '#a855f7', T: '#d4af37' };
+
+// pre-compute byte per phase
+const phaseBytes = new Array(28).fill(0);
+async function computeBytes(){
+  for (let i = 0; i < 28; i++){
+    const h = await sha256('PHASE_' + PHASES[i].name);
+    phaseBytes[i] = h[0];
+  }
+}
+
+// ============================================================
+// SVG layout: place 27 coil components around trace ring
+// ============================================================
+const CX = 400, CY = 400, R = 290;
+const COIL_R = 22;
+
+function placePhases(){
+  const host = document.getElementById('phases');
+  const numHost = document.getElementById('phase-numbers');
+  let svg = '';
+  let nums = '';
+  for (let i = 0; i < 27; i++){
+    const p = PHASES[i];
+    // angle: 27 phases evenly distributed around circle, starting from top
+    // We want a "seam" gap at top between phase 27 and phase 1 (where 28/toroid loops)
+    const angle = (-90 + (i * 360 / 27)) * Math.PI / 180;
+    const x = CX + R * Math.cos(angle);
+    const y = CY + R * Math.sin(angle);
+
+    // trace line from coil to toroid edge
+    const traceEndR = 145;
+    const tx = CX + traceEndR * Math.cos(angle);
+    const ty = CY + traceEndR * Math.sin(angle);
+    svg += `<line x1="${x}" y1="${y}" x2="${tx}" y2="${ty}" stroke="#c87533" stroke-width="0.6" opacity="0.35"/>`;
+
+    // coil component — render as a small donut for inductor
+    const fill = p.tier === 'A' ? 'url(#coil-A)' : p.tier === 'B' ? 'url(#coil-B)' : 'url(#coil-C)';
+    svg += `<g class="phase-coil" data-idx="${i}" style="cursor:pointer" transform="translate(${x.toFixed(1)},${y.toFixed(1)})">
+      <circle cx="0" cy="0" r="${COIL_R}" fill="${fill}" stroke="${tierStroke[p.tier]}" stroke-width="1"/>
+      <circle cx="0" cy="0" r="9" fill="#040404" stroke="#1a1a1a" stroke-width="0.5"/>
+      <!-- winding ticks -->
+      ${[0,60,120,180,240,300].map(deg => {
+        const a = deg * Math.PI / 180;
+        const x1 = 10 * Math.cos(a), y1 = 10 * Math.sin(a);
+        const x2 = (COIL_R-2) * Math.cos(a), y2 = (COIL_R-2) * Math.sin(a);
+        return `<line x1="${x1.toFixed(1)}" y1="${y1.toFixed(1)}" x2="${x2.toFixed(1)}" y2="${y2.toFixed(1)}" stroke="rgba(0,0,0,0.4)" stroke-width="1"/>`;
+      }).join('')}
+    </g>`;
+
+    // phase number outside
+    const lblR = R + 22;
+    const lx = CX + lblR * Math.cos(angle);
+    const ly = CY + lblR * Math.sin(angle);
+    nums += `<text x="${lx.toFixed(1)}" y="${(ly+3).toFixed(1)}" text-anchor="middle" fill="var(--silk)" font-size="9" font-family="ui-monospace,Menlo,monospace" letter-spacing="1" opacity="0.7">${p.n}</text>`;
+  }
+
+  // seam marker at top (between phase 27 and phase 1)
+  svg += `<g>
+    <line x1="${CX}" y1="${CY - R - 8}" x2="${CX}" y2="${CY - R + 8}" stroke="var(--gold)" stroke-width="1.5"/>
+    <text x="${CX}" y="${CY - R - 14}" text-anchor="middle" fill="var(--gold)" font-size="8" font-family="ui-monospace,Menlo,monospace" letter-spacing="2">SEAM</text>
+  </g>`;
+
+  host.innerHTML = svg;
+  numHost.innerHTML = nums;
+
+  // toroid windings
+  let w = '';
+  for (let i = 0; i < 12; i++){
+    const a = (i * 30) * Math.PI / 180;
+    const r1 = 60, r2 = 138;
+    const x1 = CX + r1 * Math.cos(a), y1 = CY + r1 * Math.sin(a);
+    const x2 = CX + r2 * Math.cos(a), y2 = CY + r2 * Math.sin(a);
+    w += `<path d="M${x1.toFixed(1)} ${y1.toFixed(1)} Q ${(CX + (r1+r2)/2 * Math.cos(a) + 6 * Math.cos(a+Math.PI/2)).toFixed(1)} ${(CY + (r1+r2)/2 * Math.sin(a) + 6 * Math.sin(a+Math.PI/2)).toFixed(1)} ${x2.toFixed(1)} ${y2.toFixed(1)}"/>`;
+  }
+  document.getElementById('windings').innerHTML = w;
+
+  // attach click handlers
+  host.querySelectorAll('.phase-coil').forEach(g => {
+    g.addEventListener('click', () => {
+      const idx = parseInt(g.dataset.idx);
+      lockedIdx = idx;
+      paused = true;
+      document.getElementById('play').classList.remove('on');
+      document.getElementById('play').textContent = '▶ PLAY';
+      activate(idx);
+    });
+  });
+
+  // toroid click
+  document.getElementById('toroid-group').style.cursor = 'pointer';
+  document.getElementById('toroid-group').addEventListener('click', () => {
+    lockedIdx = 27;
+    paused = true;
+    document.getElementById('play').classList.remove('on');
+    document.getElementById('play').textContent = '▶ PLAY';
+    activate(27);
+  });
+}
+
+// ============================================================
+// activation visual + readout
+// ============================================================
+let currentIdx = -1;
+let lockedIdx = null;
+
+function clearActive(){
+  document.querySelectorAll('.phase-coil').forEach(g => {
+    g.classList.remove('phase-active-A','phase-active-B','phase-active-C');
+  });
+  document.getElementById('toroid-group').classList.remove('toroid-active');
+}
+
+function activate(idx){
+  clearActive();
+  const p = PHASES[idx];
+  if (idx < 27){
+    const g = document.querySelector(`.phase-coil[data-idx="${idx}"]`);
+    if (g) g.classList.add('phase-active-' + p.tier);
+  } else {
+    document.getElementById('toroid-group').classList.add('toroid-active');
+  }
+  // pointer rotation
+  const angle = idx < 27 ? (-90 + idx * 360 / 27) : -90;
+  document.getElementById('pointer').setAttribute('transform', `rotate(${angle + 90} ${CX} ${CY})`);
+
+  // readout
+  updateReadout(idx);
+}
+
+function renderOctetSVGCompact(oct, tier){
+  const cx = 60, cy = 60;
+  const Rint = 16, Rext = 42;
+  const intAngles = [90, 210, 330];
+  const extAngles = [54, 126, 198, 270, 342];
+  const COLORS_INT = ['var(--A)','var(--B)','var(--C)'];
+  const accent = tier === 'T' ? 'var(--gold)' : 'var(--shell)';
+
+  let svg = `<svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">`;
+  svg += `<circle cx="${cx}" cy="${cy}" r="${Rext+8}" fill="none" stroke="${accent}" stroke-width="0.5" stroke-dasharray="3 3"/>`;
+  for (let i = 0; i < 3; i++){
+    const a = intAngles[i] * Math.PI / 180;
+    const x = cx + Rint * Math.cos(a), y = cy - Rint * Math.sin(a);
+    if (oct.bits[i]){
+      svg += `<line x1="${cx}" y1="${cy}" x2="${x}" y2="${y}" stroke="${COLORS_INT[i]}" stroke-width="1.2"/>`;
+      svg += `<circle cx="${x}" cy="${y}" r="5" fill="${COLORS_INT[i]}"/>`;
+    } else {
+      svg += `<circle cx="${x}" cy="${y}" r="4" fill="var(--empty)" stroke="${COLORS_INT[i]}" stroke-width="0.6" stroke-dasharray="2 2"/>`;
+    }
+  }
+  svg += `<circle cx="${cx}" cy="${cy}" r="3" fill="#fff"/>`;
+  for (let i = 0; i < 5; i++){
+    const a = extAngles[i] * Math.PI / 180;
+    const x = cx + Rext * Math.cos(a), y = cy - Rext * Math.sin(a);
+    if (oct.bits[i+3]){
+      svg += `<line x1="${cx}" y1="${cy}" x2="${x}" y2="${y}" stroke="#aaa" stroke-width="0.7"/>`;
+      svg += `<circle cx="${x}" cy="${y}" r="3.5" fill="#fff"/>`;
+    } else {
+      svg += `<line x1="${cx}" y1="${cy}" x2="${x}" y2="${y}" stroke="#222" stroke-width="0.4" stroke-dasharray="2 2"/>`;
+      svg += `<circle cx="${x}" cy="${y}" r="3.5" fill="var(--empty)" stroke="#444" stroke-width="0.5" stroke-dasharray="1 1"/>`;
+    }
+  }
+  svg += `</svg>`;
+  return svg;
+}
+
+function updateReadout(idx){
+  const p = PHASES[idx];
+  let oct;
+  if (idx === 27){
+    // toroid = unity = all bits set
+    oct = decomposeByte(0xFF);
+  } else {
+    oct = decomposeByte(phaseBytes[idx]);
+  }
+
+  document.getElementById('ph-num').textContent = p.n;
+  document.getElementById('ph-num').style.color = p.tier === 'T' ? 'var(--gold)' : (p.tier === 'A' ? 'var(--A)' : p.tier === 'B' ? '#ddd' : 'var(--C)');
+  document.getElementById('ph-name').textContent = p.name;
+  document.getElementById('ph-octet').innerHTML = renderOctetSVGCompact(oct, p.tier);
+
+  const hex = '0x' + oct.byte.toString(16).padStart(2,'0').toUpperCase();
+  const bin = oct.bits.slice().reverse().join('');
+  const role = p.tier === 'A' ? 'ANCHOR hemisphere' : p.tier === 'B' ? 'WITNESS hemisphere' : p.tier === 'C' ? 'COHERENCE triad' : 'TOROID · all phases pass through';
+  document.getElementById('ph-readout').innerHTML =
+    `<span class="k">tier</span><span class="v">${role}</span>\n` +
+    `<span class="k">byte</span><span class="v">${hex} · 0b${bin}</span>\n` +
+    `<span class="k">interior</span><span class="A">A=${oct.interior.A}</span> <span class="B">B=${oct.interior.B}</span> <span class="C">C=${oct.interior.C}</span>\n` +
+    `<span class="k">filled</span><span class="v">${oct.filled} / 8 bonds</span>\n` +
+    `<span class="k">state</span><span class="v"><span class="state state-${oct.state}">${oct.state}</span></span>`;
+}
+
+// ============================================================
+// playback loop
+// ============================================================
+let paused = false;
+let speed = 600;
+let timer = null;
+
+function tick(){
+  if (paused) return;
+  if (lockedIdx !== null){
+    // user clicked something — keep showing it for one cycle then resume
+    currentIdx = lockedIdx;
+    lockedIdx = null;
+  } else {
+    currentIdx = (currentIdx + 1) % 28;
+  }
+  activate(currentIdx);
+}
+
+function startTimer(){
+  if (timer) clearInterval(timer);
+  timer = setInterval(tick, speed);
+}
+
+// ============================================================
+// controls
+// ============================================================
+document.getElementById('play').onclick = () => {
+  paused = !paused;
+  const btn = document.getElementById('play');
+  btn.classList.toggle('on', !paused);
+  btn.textContent = paused ? '▶ PLAY' : '⏸ PAUSE';
+};
+document.getElementById('step').onclick = () => {
+  paused = true;
+  document.getElementById('play').classList.remove('on');
+  document.getElementById('play').textContent = '▶ PLAY';
+  currentIdx = (currentIdx + 1) % 28;
+  activate(currentIdx);
+};
+document.getElementById('reset').onclick = () => {
+  currentIdx = -1;
+  clearActive();
+  document.getElementById('pointer').setAttribute('transform', `rotate(0 ${CX} ${CY})`);
+  document.getElementById('ph-num').textContent = '—';
+  document.getElementById('ph-name').textContent = '—';
+  document.getElementById('ph-octet').innerHTML = '';
+  document.getElementById('ph-readout').textContent = 'click a phase to inspect';
+};
+document.getElementById('speed').oninput = (e) => {
+  speed = parseInt(e.target.value);
+  document.getElementById('speed-lbl').textContent = speed + 'ms';
+  startTimer();
+};
+
+// ============================================================
+// init
+// ============================================================
+(async function init(){
+  await computeBytes();
+  placePhases();
+  paused = false;
+  startTimer();
+})();
+</script>
+</body>
+</html>

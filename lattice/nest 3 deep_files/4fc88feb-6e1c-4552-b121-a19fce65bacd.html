@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<!-- saved from url=(0165)https://1507299754187665.a.metaaiusercontent.com/html?artifact_uuid=4fc88feb-6e1c-4552-b121-a19fce65bacd&ext=1779545722&hash=Q5fpDAGAYRkIhBxfQ-Zm_MfmK6sr&theme=light -->
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SYNC PULSE HARMONIZER // 3³((.3³(.03³)))</title>
+<style>
+  html,body{margin:0;padding:0;background:#000;color:#e0ffff;overflow:hidden;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; height:100%;}
+  canvas{display:block}
+  #main{position:fixed;top:0;left:0;width:100vw;height:100vh}
+  .osc-wrap{position:fixed;bottom:150px;left:50%;transform:translateX(-50%);width:min(920px,92vw);height:110px;background:rgba(0,8,10,0.8);border:1px solid rgba(0,255,255,0.25);border-radius:10px;backdrop-filter:blur(8px);box-shadow:0 0 40px rgba(0,255,255,0.08), inset 0 0 30px rgba(0,0,0,0.9);pointer-events:none}
+  #scope{width:100%;height:100%}
+  #ui{position:fixed;bottom:0;left:0;right:0;padding:14px 18px 18px;background:linear-gradient(to top,rgba(0,0,0,0.96) 65%,rgba(0,0,0,0));border-top:1px solid rgba(0,255,255,0.15);z-index:10}
+  .title{font-size:13px;letter-spacing:2px;color:#00ffff;text-shadow:0 0 12px rgba(0,255,255,0.85);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px}
+  .title .formula{opacity:0.75;color:#ff00ff;text-shadow:0 0 10px rgba(255,0,255,0.7)}
+  .readout{display:grid;grid-template-columns:repeat(5,auto);gap:12px 26px;margin-top:10px;font-size:11px;line-height:1.4;color:#7dd;white-space:nowrap;overflow-x:auto}
+  .readout b{color:#0ff;font-weight:500}
+  .readout .val{color:#fff;text-shadow:0 0 6px rgba(0,255,255,0.5)}
+  .controls{display:flex;align-items:center;gap:14px;margin-top:14px;flex-wrap:wrap}
+  button{background:#001a1e;border:1px solid rgba(0,255,255,0.45);color:#9ff;padding:7px 14px;border-radius:7px;font-family:inherit;font-size:12px;letter-spacing:1px;cursor:pointer;transition:all .2s;text-transform:uppercase}
+  button:hover{background:#002e33;border-color:#0ff;box-shadow:0 0 14px rgba(0,255,255,0.35);color:#fff}
+  button.active{background:#00ffff;color:#000;border-color:#0ff;box-shadow:0 0 20px rgba(0,255,255,0.85), inset 0 0 8px rgba(0,0,0,0.4);font-weight:600}
+  .slider-wrap{display:flex;align-items:center;gap:10px;background:rgba(0,25,30,0.65);padding:6px 12px;border-radius:8px;border:1px solid rgba(0,255,255,0.18)}
+  .slider-wrap label{font-size:10px;color:#6ab;letter-spacing:1px}
+  input[type=range]{-webkit-appearance:none;width:160px;height:4px;background:linear-gradient(90deg,#ff00ff,#00ffff);border-radius:2px;outline:none}
+  input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:14px;height:14px;border-radius:50%;background:#000;border:2px solid #0ff;box-shadow:0 0 10px #0ff;cursor:pointer}
+  input[type=range]::-moz-range-thumb{width:14px;height:14px;border-radius:50%;background:#000;border:2px solid #0ff;box-shadow:0 0 10px #0ff;cursor:pointer}
+  .phases{display:flex;gap:6px;align-items:center}
+  .phases .label{font-size:10px;color:#587;margin-right:4px;letter-spacing:1px}
+  .phase-btn{min-width:38px;padding:6px 0;text-align:center;font-variant-numeric:tabular-nums}
+  .phase-btn.active{background:#ff00ff;color:#000;border-color:#f0f;box-shadow:0 0 18px rgba(255,0,255,0.85)}
+  .convergence{position:fixed;top:18px;right:20px;font-size:11px;color:#456;letter-spacing:1.5px;transition:all .3s;padding:6px 10px;border:1px solid rgba(255,255,255,0.1);border-radius:6px;background:rgba(0,0,0,0.5)}
+  .convergence.on{color:#fff;border-color:rgba(255,255,255,0.8);text-shadow:0 0 12px #fff,0 0 30px #0ff;box-shadow:0 0 20px rgba(255,255,255,0.2);background:rgba(255,255,255,0.08)}
+  @media(max-width:720px){.readout{grid-template-columns:repeat(2,auto);gap:6px 16px}.osc-wrap{bottom:180px;height:90px}.controls{gap:10px}input[type=range]{width:120px}.title{font-size:12px}}
+</style>
+</head>
+<body>
+<canvas id="main" width="2093" height="1310"></canvas>
+<div class="osc-wrap"><canvas id="scope" width="1655" height="197"></canvas></div>
+<div class="convergence" id="conv">HARMONIC SEARCHING</div>
+
+<div id="ui">
+  <div class="title">
+    <span>SYNC PULSE HARMONIZER</span>
+    <span class="formula">// 3³((.3³(.03³)))</span>
+  </div>
+  <div class="readout">
+    <div>OUTER <b>3³</b> = <span class="val">27.000</span></div>
+    <div>MIDDLE <b>0.3³</b> = <span class="val">0.027</span></div>
+    <div>INNER <b>0.03³</b> = <span class="val">0.000027</span></div>
+    <div>NESTED = <span class="val" id="vNest">1.9683e-5</span> Hz</div>
+    <div>SCALED ×1e5 ×<span id="vScaleTxt">1.0</span> = <span class="val" id="vPulse">1.968</span> Hz</div>
+  </div>
+  <div class="controls">
+    <button id="playBtn" class="active">PAUSE</button>
+    <div class="slider-wrap">
+      <label>MASTER SCALE</label>
+      <input type="range" id="scale" min="0.1" max="10" value="1" step="0.1">
+      <span id="scaleVal" style="font-size:11px;color:#0ff;min-width:32px">1.0x</span>
+    </div>
+    <div class="phases">
+      <span class="label">TIMING</span>
+      <button class="phase-btn" data-idx="0">-5</button>
+      <button class="phase-btn" data-idx="1">0</button>
+      <button class="phase-btn active" data-idx="2">0</button>
+      <button class="phase-btn" data-idx="3">+5</button>
+    </div>
+  </div>
+</div>
+
+<script>
+(() => {
+  const main = document.getElementById('main');
+  const mctx = main.getContext('2d');
+  const scope = document.getElementById('scope');
+  const sctx = scope.getContext('2d');
+  const playBtn = document.getElementById('playBtn');
+  const scaleSlider = document.getElementById('scale');
+  const scaleVal = document.getElementById('scaleVal');
+  const vScaleTxt = document.getElementById('vScaleTxt');
+  const vPulse = document.getElementById('vPulse');
+  const vNest = document.getElementById('vNest');
+  const phaseBtns = [...document.querySelectorAll('.phase-btn')];
+  const convEl = document.getElementById('conv');
+
+  let audioCtx = null;
+  let running = true;
+  let scale = 1.0;
+  let start = performance.now() / 1000;
+  let pausedAt = 0;
+
+  const phaseOffsets = [-5, 0, 0, 5];
+  let phaseIdx = 1;
+  let phaseTimer = 0;
+  const phaseDur = 0.8;
+
+  const baseNest = 27 * 0.027 * 0.000027; // 0.000019683
+  vNest.textContent = baseNest.toExponential(4);
+
+  function updateReadout(){
+    const scaled = baseNest * 1e5 * scale;
+    vPulse.textContent = scaled.toFixed(3);
+    vScaleTxt.textContent = scale.toFixed(1);
+    scaleVal.textContent = scale.toFixed(1)+'x';
+  }
+  updateReadout();
+
+  playBtn.onclick = () => {
+    running = !running;
+    if(running){
+      playBtn.textContent = 'PAUSE';
+      playBtn.classList.add('active');
+      start = performance.now()/1000 - pausedAt;
+      if(!audioCtx){ try{ audioCtx = new (window.AudioContext||window.webkitAudioContext)(); }catch(e){} }
+    } else {
+      playBtn.textContent = 'PLAY';
+      playBtn.classList.remove('active');
+      pausedAt = performance.now()/1000 - start;
+    }
+  };
+
+  scaleSlider.oninput = e => { scale = parseFloat(e.target.value); updateReadout(); };
+
+  function setPhaseActive(){ phaseBtns.forEach((b,i)=>b.classList.toggle('active', i===phaseIdx)); }
+  phaseBtns.forEach(b=> b.onclick = ()=>{ phaseIdx = parseInt(b.dataset.idx); setPhaseActive(); phaseTimer=0; });
+  setPhaseActive();
+
+  function resize(){
+    const dpr = Math.min(window.devicePixelRatio||1, 2);
+    main.width = innerWidth * dpr;
+    main.height = innerHeight * dpr;
+    mctx.setTransform(1,0,0,1,0,0);
+    mctx.scale(dpr,dpr);
+    scope.width = scope.clientWidth * dpr;
+    scope.height = scope.clientHeight * dpr;
+    sctx.setTransform(1,0,0,1,0,0);
+    sctx.scale(dpr,dpr);
+  }
+  window.addEventListener('resize', resize);
+  resize();
+
+  const TWO_PI = Math.PI*2;
+  const freqs = [3, 0.3, 0.03]; // outer, middle, inner
+  const radiiBase = [250, 170, 95];
+  const colors = ['#00ffff','#ff00ff','#7fffff'];
+  const particles = [];
+  let lastSins = [0,0,0];
+  let lastMag = 0;
+  const history = [];
+  const histLen = 600;
+  const CONV_T = 0.88;
+
+  function beep(freq, dur=0.035, vol=0.022){
+    if(!audioCtx || !running) return;
+    const o = audioCtx.createOscillator();
+    const g = audioCtx.createGain();
+    o.type = 'sine';
+    o.frequency.value = freq;
+    g.gain.value = vol;
+    o.connect(g); g.connect(audioCtx.destination);
+    const t = audioCtx.currentTime;
+    o.start(t);
+    g.gain.exponentialRampToValueAtTime(0.0001, t+dur);
+    o.stop(t+dur);
+  }
+
+  function addParticles(x,y,color,count=6){
+    for(let i=0;i<count;i++){
+      const a = Math.random()*TWO_PI;
+      const s = 0.6 + Math.random()*2.2;
+      particles.push({x,y,vx:Math.cos(a)*s,vy:Math.sin(a)*s,life:1,decay:0.012+Math.random()*0.018,color});
+    }
+  }
+
+  let lastTime = performance.now()/1000;
+  function animate(ts){
+    const now = ts/1000;
+    const dt = Math.min(0.05, now - lastTime);
+    lastTime = now;
+
+    const t = running ? (now - start) : pausedAt;
+
+    if(running){
+      phaseTimer += dt * scale;
+      if(phaseTimer > phaseDur){ phaseTimer=0; phaseIdx=(phaseIdx+1)%4; setPhaseActive(); }
+    }
+    const phaseOffset = phaseOffsets[phaseIdx] * 0.008;
+    const tt = t * scale + phaseOffset;
+
+    const w = innerWidth, h = innerHeight;
+    const cx = w/2, cy = h*0.44;
+    const scaleR = Math.min(1, Math.min(w,h)/880);
+
+    mctx.fillStyle = 'rgba(0,0,0,0.16)';
+    mctx.fillRect(0,0,w,h);
+
+    const s1 = Math.sin(TWO_PI*3*tt);
+    const s2 = Math.sin(TWO_PI*0.3*tt);
+    const s3 = Math.sin(TWO_PI*0.03*tt);
+    const mag = Math.abs(s1*s2*s3);
+    const convergence = mag > CONV_T;
+
+    if(convergence){
+      mctx.fillStyle = 'rgba(255,255,255,0.055)';
+      mctx.fillRect(0,0,w,h);
+      convEl.classList.add('on');
+      convEl.textContent = 'HARMONIC CONVERGENCE';
+    } else {
+      convEl.classList.remove('on');
+      convEl.textContent = 'HARMONIC SEARCHING';
+    }
+
+    // draw rings
+    for(let rIdx=0; rIdx<3; rIdx++){
+      const f = freqs[rIdx];
+      const radius = radiiBase[rIdx]*scaleR;
+      const color = colors[rIdx];
+
+      // ring
+      mctx.beginPath();
+      mctx.arc(cx,cy,radius,0,TWO_PI);
+      mctx.strokeStyle = rIdx===0?'rgba(0,255,255,0.13)':rIdx===1?'rgba(255,0,255,0.13)':'rgba(125,255,255,0.13)';
+      mctx.lineWidth = 1;
+      mctx.stroke();
+
+      // 27 points (3x3x3)
+      mctx.save();
+      mctx.translate(cx,cy);
+      for(let i=0;i<27;i++){
+        const a = i/27*TWO_PI;
+        const x = Math.cos(a)*radius;
+        const y = Math.sin(a)*radius;
+        mctx.beginPath();
+        mctx.arc(x,y,1.1,0,TWO_PI);
+        mctx.fillStyle = rIdx===0?'rgba(0,255,255,0.22)':rIdx===1?'rgba(255,0,255,0.22)':'rgba(0,255,255,0.16)';
+        mctx.fill();
+      }
+      mctx.restore();
+
+      const rawSin = Math.sin(TWO_PI*f*tt);
+      const pulse = (rawSin+1)/2;
+      const size = 5 + pulse*11;
+
+      // peak detection
+      if(running && lastSins[rIdx] < 0.97 && rawSin >= 0.97){
+        beep(180 + rIdx*210, 0.03, 0.018);
+        for(let p=0;p<3;p++){
+          const a = TWO_PI*f*tt + p*TWO_PI/3;
+          addParticles(cx+Math.cos(a)*radius, cy+Math.sin(a)*radius, color, 4);
+        }
+      }
+      lastSins[rIdx] = rawSin;
+
+      // triangle of 3 pulses
+      const pts=[];
+      for(let p=0;p<3;p++){
+        const a = TWO_PI*f*tt + p*TWO_PI/3;
+        pts.push({x:cx+Math.cos(a)*radius, y:cy+Math.sin(a)*radius});
+      }
+      mctx.beginPath();
+      mctx.moveTo(pts[0].x,pts[0].y);
+      mctx.lineTo(pts[1].x,pts[1].y);
+      mctx.lineTo(pts[2].x,pts[2].y);
+      mctx.closePath();
+      mctx.strokeStyle = color+'30';
+      mctx.lineWidth = 1.2;
+      mctx.stroke();
+
+      pts.forEach(pt=>{
+        const grad = mctx.createRadialGradient(pt.x,pt.y,0,pt.x,pt.y,size*3.2);
+        grad.addColorStop(0, color+'ff');
+        grad.addColorStop(0.35, color+'88');
+        grad.addColorStop(1,'transparent');
+        mctx.fillStyle = grad;
+        mctx.beginPath();
+        mctx.arc(pt.x,pt.y,size*3.2,0,TWO_PI);
+        mctx.fill();
+        mctx.shadowBlur = 20;
+        mctx.shadowColor = color;
+        mctx.fillStyle = '#ffffff';
+        mctx.beginPath();
+        mctx.arc(pt.x,pt.y, Math.max(2, size*0.55),0,TWO_PI);
+        mctx.fill();
+        mctx.shadowBlur = 0;
+      });
+    }
+
+    // central core
+    const coreSize = 12 + mag*30;
+    const coreGrad = mctx.createRadialGradient(cx,cy,0,cx,cy,coreSize*2.6);
+    coreGrad.addColorStop(0,'rgba(255,255,255,0.98)');
+    coreGrad.addColorStop(0.25, convergence?'rgba(255,255,255,0.85)':'rgba(0,255,255,0.7)');
+    coreGrad.addColorStop(0.6, 'rgba(255,0,255,0.25)');
+    coreGrad.addColorStop(1,'transparent');
+    mctx.fillStyle = coreGrad;
+    mctx.beginPath();
+    mctx.arc(cx,cy,coreSize*2.6,0,TWO_PI);
+    mctx.fill();
+
+    // particles
+    for(let i=particles.length-1;i>=0;i--){
+      const p = particles[i];
+      p.x += p.vx; p.y += p.vy;
+      p.vx *= 0.985; p.vy *= 0.985;
+      p.life -= p.decay;
+      if(p.life<=0){ particles.splice(i,1); continue; }
+      mctx.globalAlpha = p.life*0.85;
+      mctx.fillStyle = p.color;
+      mctx.shadowBlur = 12;
+      mctx.shadowColor = p.color;
+      mctx.beginPath();
+      mctx.arc(p.x,p.y,2.2,0,TWO_PI);
+      mctx.fill();
+    }
+    mctx.globalAlpha = 1;
+    mctx.shadowBlur = 0;
+
+    if(convergence && running && lastMag <= CONV_T){
+      beep(660,0.09,0.035); beep(990,0.09,0.028); beep(1320,0.12,0.02);
+      addParticles(cx,cy,'#ffffff',70);
+      for(let r=0;r<3;r++){
+        const rad = radiiBase[r]*scaleR;
+        for(let p=0;p<3;p++){
+          const a = TWO_PI*freqs[r]*tt + p*TWO_PI/3;
+          addParticles(cx+Math.cos(a)*rad, cy+Math.sin(a)*rad, '#ffffff', 10);
+        }
+      }
+    }
+    lastMag = mag;
+
+    // OSCILLOSCOPE
+    history.push(s1*s2*s3);
+    if(history.length > histLen) history.shift();
+    const sw = scope.clientWidth, sh = scope.clientHeight;
+    sctx.clearRect(0,0,sw,sh);
+    sctx.strokeStyle = 'rgba(0,255,255,0.07)';
+    sctx.lineWidth = 1;
+    sctx.beginPath();
+    for(let i=1;i<5;i++){ const y=(i/5)*sh; sctx.moveTo(0,y); sctx.lineTo(sw,y); }
+    for(let i=1;i<12;i++){ const x=(i/12)*sw; sctx.moveTo(x,0); sctx.lineTo(x,sh); }
+    sctx.stroke();
+    sctx.strokeStyle = 'rgba(0,255,255,0.22)';
+    sctx.beginPath(); sctx.moveTo(0,sh/2); sctx.lineTo(sw,sh/2); sctx.stroke();
+
+    sctx.beginPath();
+    sctx.lineWidth = 2;
+    sctx.strokeStyle = convergence ? '#ffffff' : '#00ffff';
+    sctx.shadowBlur = convergence ? 18 : 10;
+    sctx.shadowColor = convergence ? '#fff' : '#0ff';
+    for(let i=0;i<history.length;i++){
+      const x = (i/(histLen-1))*sw;
+      const y = sh/2 - history[i]*sh*0.42;
+      if(i===0) sctx.moveTo(x,y); else sctx.lineTo(x,y);
+    }
+    sctx.stroke();
+    sctx.shadowBlur = 0;
+    sctx.fillStyle = 'rgba(0,255,255,0.65)';
+    sctx.font = '11px ui-monospace,monospace';
+    sctx.fillText('y = sin(2π·3t) · sin(2π·0.3t) · sin(2π·0.03t)', 10, 16);
+    sctx.fillStyle = convergence ? '#fff' : 'rgba(255,0,255,0.85)';
+    sctx.fillText(`NESTED PRODUCT ${(s1*s2*s3).toFixed(4)}  |  MAG ${mag.toFixed(3)}${convergence?'  ◉':''}`, 10, 32);
+
+    requestAnimationFrame(animate);
+  }
+  requestAnimationFrame(animate);
+})();
+</script>
+
+</body></html>

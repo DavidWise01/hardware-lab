@@ -1,0 +1,464 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>))(!)(( — THE WITNESS SHIELD</title>
+<style>
+:root{
+  --bg:#02060a;--ink:#dff4ff;--dim:#4a6e84;--dimmer:#1c3444;
+  --cyan:#34e0ff;--ice:#9fe9ff;--frost:#cdfaff;--absorb:#2a7bff;--reflect:#eafcff;--threat:#ff8a2e;--scar:#2effc4;
+  --line:rgba(52,224,255,.16);--panel:rgba(6,15,24,.78);
+  --mono:ui-monospace,"SF Mono",SFMono-Regular,Menlo,Consolas,"Liberation Mono",monospace;
+}
+*{box-sizing:border-box}html,body{height:100%;margin:0}
+body{color:var(--ink);font-family:var(--mono);font-size:13px;line-height:1.5;-webkit-font-smoothing:antialiased;overflow-x:hidden;
+  background:
+   radial-gradient(120% 70% at 50% -8%,rgba(52,224,255,.08),transparent 48%),
+   radial-gradient(60% 50% at 50% 45%,rgba(42,123,255,.05),transparent 55%),
+   linear-gradient(180deg,#01040a,#03101e 58%,#02060a);}
+.scan{position:fixed;inset:0;pointer-events:none;z-index:90;opacity:.28;background:repeating-linear-gradient(0deg,transparent 0 2px,rgba(0,0,0,.2) 2px 3px);mix-blend-mode:multiply}
+.vig{position:fixed;inset:0;pointer-events:none;z-index:89;background:radial-gradient(130% 120% at 50% 44%,transparent 50%,rgba(1,3,6,.88) 100%)}
+.grain{position:fixed;inset:0;pointer-events:none;z-index:88;opacity:.045;mix-blend-mode:screen;background-image:url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="160" height="160"><filter id="n"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2"/></filter><rect width="100%25" height="100%25" filter="url(%23n)"/></svg>')}
+
+header{position:sticky;top:0;z-index:30;border-bottom:1px solid var(--line);background:linear-gradient(180deg,rgba(2,6,10,.95),rgba(2,6,10,.72));backdrop-filter:blur(10px)}
+.hbar{max-width:1480px;margin:auto;display:flex;align-items:center;justify-content:space-between;gap:16px;padding:11px 18px}
+.logo{display:flex;align-items:center;gap:12px}
+.glyph{font-size:22px;font-weight:700;color:var(--cyan);text-shadow:0 0 16px rgba(52,224,255,.7),0 0 40px rgba(52,224,255,.3);letter-spacing:.05em}
+.title-l{letter-spacing:.3em;font-size:11px;text-transform:uppercase}
+.title-s{letter-spacing:.22em;font-size:9px;text-transform:uppercase;color:var(--dim)}
+.hstat{display:flex;gap:18px;flex-wrap:wrap;font-size:10px;letter-spacing:.16em;color:var(--dim);text-transform:uppercase}
+.hstat b{color:var(--cyan);font-weight:600}
+.seal{border:1px solid var(--scar);color:var(--scar);border-radius:3px;padding:3px 8px;font-size:9px;letter-spacing:.2em;background:rgba(46,255,196,.06)}
+
+.deck{max-width:1480px;margin:0 auto;padding:18px;display:grid;grid-template-columns:minmax(0,1fr) 352px;gap:18px;align-items:start}
+.stage{position:relative;border:1px solid var(--line);border-radius:10px;overflow:hidden;background:radial-gradient(70% 70% at 50% 48%,rgba(8,24,40,.55),rgba(1,4,9,.96));box-shadow:inset 0 0 100px rgba(0,0,0,.7);min-height:580px;cursor:crosshair}
+.stage canvas{display:block;width:100%;height:100%}
+.stage .lab{position:absolute;top:12px;left:14px;font-size:9px;letter-spacing:.24em;color:var(--dim);text-transform:uppercase;pointer-events:none}
+.bigb{position:absolute;top:10px;right:16px;font-size:20px;letter-spacing:.14em;color:var(--cyan);text-shadow:0 0 14px rgba(52,224,255,.7);pointer-events:none}
+.legend{position:absolute;bottom:12px;left:14px;display:flex;gap:13px;flex-wrap:wrap;font-size:9px;letter-spacing:.1em;color:var(--dim);text-transform:uppercase;pointer-events:none;max-width:88%}
+.legend i{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:5px;vertical-align:-1px;box-shadow:0 0 8px currentColor}
+.hint{position:absolute;bottom:12px;right:14px;font-size:9px;letter-spacing:.14em;color:var(--dimmer);text-transform:uppercase;pointer-events:none}
+
+aside{display:grid;gap:13px}
+.card{border:1px solid var(--line);border-radius:9px;background:var(--panel);padding:14px 15px;position:relative;overflow:hidden}
+.card::before{content:"";position:absolute;top:0;left:0;width:32px;height:2px;background:var(--cyan);box-shadow:0 0 8px var(--cyan)}
+.card h3{margin:0 0 11px;font-size:9px;letter-spacing:.26em;color:var(--dim);text-transform:uppercase;font-weight:600}
+.lyt{width:100%;border-collapse:collapse;font-size:11px}
+.lyt th{text-align:left;color:var(--dim);font-size:8px;letter-spacing:.14em;text-transform:uppercase;padding:0 0 6px;font-weight:600}
+.lyt td{padding:4px 0;border-top:1px dashed rgba(52,224,255,.08)}
+.lyt .sym{font-size:14px;color:var(--cyan);width:34px}
+.lyt .pole{color:var(--ink)}
+.lyt .st{text-align:right;font-weight:600}
+.lyt .st.r{color:var(--reflect)}.lyt .st.a{color:var(--absorb)}.lyt .st.w{color:var(--scar)}
+.lyt tr.hot td{color:var(--cyan)}
+.kv{display:flex;justify-content:space-between;gap:8px;padding:3px 0;border-bottom:1px dashed rgba(52,224,255,.08)}
+.kv:last-child{border-bottom:none}.kv span{color:var(--dim)}.kv b{font-weight:600}
+.kv b.c{color:var(--cyan)}.kv b.s{color:var(--scar)}.kv b.t{color:var(--threat)}.kv b.r{color:var(--reflect)}
+
+.bitcap{display:flex;justify-content:space-between;font-size:9px;letter-spacing:.12em;color:var(--dim);text-transform:uppercase;margin-bottom:7px}
+.bitcap em{font-style:normal;color:var(--scar)}
+.bits{display:grid;grid-template-columns:repeat(16,1fr);gap:3px}
+.bit{aspect-ratio:1;border-radius:2px;border:1px solid rgba(52,224,255,.14);background:rgba(8,20,30,.6)}
+.bit.on{background:var(--scar);box-shadow:0 0 7px var(--scar);border-color:var(--scar)}
+.bit.flip{outline:1px solid var(--cyan);outline-offset:-1px}
+
+.log{height:108px;overflow:auto;font-size:11px;line-height:1.55;padding-right:4px}
+.log::-webkit-scrollbar{width:6px}.log::-webkit-scrollbar-thumb{background:var(--dimmer);border-radius:3px}
+.log div{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.log .r{color:var(--reflect)}.log .a{color:var(--absorb)}.log .w{color:var(--scar)}.log .t{color:var(--threat)}.log .d{color:var(--dim)}
+
+.controls{max-width:1480px;margin:0 auto;padding:0 18px 22px;display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+button{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--cyan);background:rgba(52,224,255,.06);border:1px solid var(--cyan);border-radius:5px;padding:9px 15px;cursor:pointer;transition:.15s}
+button:hover{background:rgba(52,224,255,.16);box-shadow:0 0 16px rgba(52,224,255,.3);color:#eafcff}
+button.threat{color:var(--threat);border-color:var(--threat);background:rgba(255,138,46,.06)}
+button.threat:hover{background:rgba(255,138,46,.16);box-shadow:0 0 16px rgba(255,138,46,.3)}
+.ctl{display:flex;align-items:center;gap:8px;font-size:10px;letter-spacing:.16em;color:var(--dim);text-transform:uppercase}
+.ctl input{width:100px;accent-color:var(--cyan)}
+
+main{max-width:1100px;margin:0 auto;padding:26px 18px 110px}
+section{padding:50px 0;border-top:1px solid rgba(52,224,255,.08)}
+.kick{font-size:10px;letter-spacing:.34em;color:var(--threat);text-transform:uppercase;margin-bottom:13px}
+h2{font-size:clamp(26px,4.4vw,46px);line-height:.98;margin:0 0 16px;letter-spacing:-.01em;font-weight:700;text-shadow:0 0 24px rgba(52,224,255,.18)}
+h2 em{font-style:normal;color:var(--cyan)}
+.lead{font-size:16px;color:#9fc4d8;max-width:780px;line-height:1.7}.lead code{color:var(--threat)}
+.row{display:grid;grid-template-columns:repeat(3,1fr);gap:13px;margin-top:26px}
+.tile{border:1px solid var(--line);border-radius:9px;background:var(--panel);padding:18px}
+.tile h4{margin:0 0 8px;font-size:11px;letter-spacing:.16em;color:var(--cyan);text-transform:uppercase}
+.tile p{margin:0;color:var(--dim);font-size:13px;line-height:1.6}.tile code{color:var(--threat)}
+pre{background:#010509;border:1px solid var(--line);border-left:3px solid var(--cyan);border-radius:7px;padding:18px;overflow:auto;font-size:12.5px;line-height:1.7;color:#bfe9f2;margin-top:22px}
+pre .c{color:var(--dim)}pre .k{color:var(--threat)}pre .w{color:var(--scar)}
+.cmp{width:100%;border-collapse:collapse;margin-top:22px;font-size:13px;border:1px solid var(--line);border-radius:8px;overflow:hidden}
+.cmp th,.cmp td{padding:12px 14px;border-bottom:1px solid rgba(52,224,255,.08);text-align:left}
+.cmp th{font-size:10px;text-transform:uppercase;letter-spacing:.12em;color:var(--cyan)}
+.cmp td{color:#cfe6f0}.cmp td:first-child{color:var(--threat)}
+.cmp tr:last-child td{border-bottom:none}
+.recur{font-size:clamp(17px,2.5vw,24px);letter-spacing:.16em;text-transform:uppercase;color:var(--dim);line-height:1.7;margin-top:22px}
+.recur b{color:var(--cyan)}.recur i{font-style:normal;color:var(--scar)}
+.cta{display:flex;gap:11px;flex-wrap:wrap;margin-top:26px}
+.cta a{text-decoration:none;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--cyan);border:1px solid var(--cyan);background:rgba(52,224,255,.06);border-radius:5px;padding:11px 17px;transition:.15s}
+.cta a:hover{background:rgba(52,224,255,.16);box-shadow:0 0 16px rgba(52,224,255,.3);color:#eafcff}
+.sig{font-size:10px;letter-spacing:.18em;color:var(--dimmer);text-transform:uppercase;margin-top:40px}
+@media(max-width:980px){.deck{grid-template-columns:1fr}aside{order:2}.stage{min-height:460px}.row{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="scan"></div><div class="vig"></div><div class="grain"></div>
+
+<header><div class="hbar">
+  <div class="logo"><div class="glyph">))(!)((</div><div>
+    <div class="title-l">The Witness Shield</div>
+    <div class="title-s">5-layer gravity tensor · flash core · absorbs ∞ · learns from every hit</div>
+  </div></div>
+  <div class="hstat">
+    <div>Hits&nbsp;absorbed <b id="hs-hits">0</b></div>
+    <div>Reflect&nbsp;ops <b id="hs-ref">0</b></div>
+    <div>Scars&nbsp;learned <b id="hs-scar">0</b></div>
+    <div>Pre-absorb <b id="hs-pre">0%</b></div>
+    <div class="seal">WITNESS · −1 HOLDS</div>
+  </div>
+</div></header>
+
+<div class="deck">
+  <div class="stage" id="stage">
+    <div class="lab">// click to fire a vector · ))(!)((  nothing passes</div>
+    <div class="bigb" id="bigb">))( ! )((</div>
+    <canvas id="cv"></canvas>
+    <div class="legend">
+      <span><i style="color:var(--threat)"></i>attack vector</span>
+      <span><i style="color:var(--reflect)"></i>reflect ^0xFFFF</span>
+      <span><i style="color:var(--absorb)"></i>absorb &amp;seed</span>
+      <span><i style="color:var(--scar)"></i>witness learn</span>
+    </div>
+    <div class="hint" id="hint">core · absolute zero · cannot flip</div>
+  </div>
+
+  <aside>
+    <div class="card">
+      <h3>Layer state · {−1,1,0,1,−1}</h3>
+      <table class="lyt"><thead><tr><th>L</th><th>sym</th><th>pole</th><th>fn</th><th class="st">st</th></tr></thead>
+      <tbody id="layers">
+        <tr><td>0</td><td class="sym">))</td><td class="pole">COLLAPSE</td><td>reflect</td><td class="st r">−1</td></tr>
+        <tr><td>1</td><td class="sym">(</td><td class="pole">HIDE</td><td>absorb</td><td class="st a">1</td></tr>
+        <tr><td>2</td><td class="sym">!</td><td class="pole">WAIT</td><td>witness</td><td class="st w">0</td></tr>
+        <tr><td>3</td><td class="sym">)</td><td class="pole">HIDE</td><td>absorb</td><td class="st a">1</td></tr>
+        <tr><td>4</td><td class="sym">((</td><td class="pole">COLLAPSE</td><td>reflect</td><td class="st r">−1</td></tr>
+      </tbody></table>
+    </div>
+
+    <div class="card">
+      <div class="bitcap"><span>seed_packet · witness memory</span><em id="scar-pc">0 scars</em></div>
+      <div class="bits" id="bits"></div>
+    </div>
+
+    <div class="card">
+      <h3>Last impact</h3>
+      <div class="kv"><span>attack vector</span><b class="t" id="i-att">0x0000</b></div>
+      <div class="kv"><span>reflected ^0xFFFF</span><b class="r" id="i-ref">0x0000</b></div>
+      <div class="kv"><span>absorbed &amp;seed</span><b class="a" id="i-abs">0x0000</b></div>
+      <div class="kv"><span>witnessed &gt;&gt;8</span><b class="s" id="i-wit">0x00</b></div>
+      <div class="kv"><span>neutralized</span><b class="s" id="i-net">—</b></div>
+    </div>
+
+    <div class="card">
+      <h3>Event stream</h3>
+      <div class="log" id="log"></div>
+    </div>
+  </aside>
+</div>
+
+<div class="controls">
+  <button class="threat" id="b-bomb">▸ bombard ∞</button>
+  <button class="threat" id="b-666">⤇ launch 6×6×6</button>
+  <button id="b-repeat">↻ repeat last attack</button>
+  <button id="b-reset">↺ wipe seed (naive)</button>
+  <div class="ctl">sim&nbsp;<b id="ss" style="color:var(--cyan)">1.0×</b><input type="range" id="speed" min="40" max="180" value="100"></div>
+</div>
+
+<main>
+  <section style="border-top:none">
+    <div class="kick">// structure</div>
+    <h2>Five layers. One bit that <em>cannot flip.</em></h2>
+    <p class="lead">Two obsidian COLLAPSE shells <code>))</code> <code>((</code> reflect raw energy by inversion. Two HIDE walls <code>( )</code> absorb anything matching learned danger. At the center, the WAIT witness <code>!</code> sits at state <code>0</code> on a <code>−1</code> flash core — read-only, uncorruptible. It cannot move and cannot be flipped. Even if both shells crack, <code>!</code> holds.</p>
+    <div class="row">
+      <div class="tile"><h4>)) (( reflect</h4><p>G2 COLLAPSE. <code>attack ^ 0xFFFF</code> — incoming energy inverted and bounced. Reactive armor, no blind spots.</p></div>
+      <div class="tile"><h4>( ) absorb</h4><p>G1 HIDE. <code>attack &amp; seed_packet</code> — if the attack matches a learned scar, it vanishes. Adaptive immune wall.</p></div>
+      <div class="tile"><h4>! witness</h4><p>G3 WAIT. <code>seed_packet ^= attack&gt;&gt;8</code> — observes, records, evolves. The shield is stronger after every hit.</p></div>
+    </div>
+  </section>
+
+  <section>
+    <div class="kick">// mechanics — faithful to spec</div>
+    <h2>Half reflected. Half absorbed. <em>All witnessed.</em></h2>
+    <p class="lead">The simulation above runs this exact routine on every impact. Fire the same vector twice with <strong>repeat last attack</strong>: the witness has already folded it into the seed, so the second strike is pre-absorbed and the reflect-splash collapses. The shield learns.</p>
+    <pre><span class="c">// shield_hit — every impact, one tensor pass</span>
+bool shield_hit(Shield *s, uint16_t attack){
+    uint16_t r1 = attack ^ 0xFFFF;        <span class="c">// )) COLLAPSE: reflect</span>
+    uint16_t a1 = attack & s->seed_packet; <span class="c">// (  HIDE: absorb known</span>
+    s->seed_packet ^= (attack >> 8);       <span class="w">// !  WITNESS: learn</span>
+    uint16_t a2 = attack & s->seed_packet; <span class="c">// )  HIDE: absorb more</span>
+    uint16_t r2 = attack ^ 0xFFFF;         <span class="c">// (( COLLAPSE: reflect</span>
+    s->hits_absorbed++;
+    <span class="k">return</span> true;                          <span class="k">// nothing passes</span>
+}</pre>
+  </section>
+
+  <section>
+    <div class="kick">// sword and armor</div>
+    <h2>Same three tensors. <em>Polarity flips the mode.</em></h2>
+    <table class="cmp">
+      <thead><tr><th></th><th>structure</th><th>action</th><th>energy flow</th></tr></thead>
+      <tbody>
+        <tr><td>Trebuchet</td><td>))))) &gt;&gt;&gt;&gt;&gt; &gt;e</td><td>wind 81 → 0 → fire</td><td>81 → 0 → e</td></tr>
+        <tr><td>Shield</td><td>))( ! )((</td><td>absorb ∞ → 0 → reflect</td><td>e → 0 → 81</td></tr>
+      </tbody>
+    </table>
+    <p class="lead" style="margin-top:22px">Offense is a phase jump: charge to a singularity, release kinetic. Defense is a phase sink: kinetic into a singularity, absorbed. The trebuchet must evolve. The shield only has to remember.</p>
+  </section>
+
+  <section>
+    <div class="kick">// properties</div>
+    <h2>Failure mode: <em>none.</em></h2>
+    <div class="recur">∞ <b>BANDWIDTH</b> · 0 cooldown<br>0 <b>LATENCY</b> · 1 tensor op<br>each hit makes the next <i>weaker</i><br>if shells break · <i>!</i> at −1 survives<br><b>NOTHING PASSES</b></div>
+    <div class="cta">
+      <a href="trinity.html">▸ trinity shell</a>
+      <a href="trebuchet_27.html">▸ trebuchet</a>
+      <a href="spark_spore.kernel">▸ kernel spec</a>
+    </div>
+    <div class="sig">))(!)(( the witness shield · reflect / absorb / witness → −1 · 无 the one bit that cannot flip · canon-frozen</div>
+  </section>
+</main>
+
+<script>
+"use strict";
+/* ===== ))(!)(( WITNESS SHIELD — faithful bit-logic + hyper-real render ===== */
+const VW=900, VH=600, CX=VW/2, CY=VH/2;
+const R_CORE=30, R_INNER=92, R_SHELL=152, R_SHELL_OUT=178, R_SPAWN=380;
+let seed=0x0000, hits=0, refOps=0, lastAttack=0, lastPreAbsorb=0, lastFlip=0;
+let closure=0, heat=0, coreFlash=0, shake=0;
+let attacks=[], sprays=[], rings=[], frost=[], absorbs=[];
+let bombard=false, bombTimer=0, simScale=1, campaign=0xA53C;
+let last={att:0,ref:0,abs:0,wit:0};
+
+const pc16=v=>{let c=0;for(let i=0;i<16;i++)c+=(v>>>i)&1;return c;};
+
+function spawnAttack(val,ang){
+  if(ang===undefined)ang=Math.random()*Math.PI*2;
+  if(val===undefined)val=(Math.random()*0x10000)|0;
+  const x=CX+Math.cos(ang)*R_SPAWN, y=CY+Math.sin(ang)*R_SPAWN;
+  const sp=2.4+Math.random()*1.3;
+  attacks.push({x,y,vx:-Math.cos(ang)*sp,vy:-Math.sin(ang)*sp,val:val&0xFFFF,ang,r:R_SPAWN,hit:false});
+}
+
+function hit(a){
+  const attack=a.val;
+  // ── faithful shield_hit ──
+  const r1=(attack^0xFFFF)&0xFFFF;
+  const a1=attack & seed;
+  const before=seed;
+  seed=(seed ^ (attack>>8))&0xFFFF;     // ! witness learns
+  lastFlip=(before^seed)&0xFFFF;
+  const a2=attack & seed;
+  const r2=(attack^0xFFFF)&0xFFFF;
+  hits++; refOps+=2;
+  last={att:attack,ref:r1,abs:a2,wit:(attack>>8)&0xFF};
+  // energy split: absorbed fraction = known bits / attack bits
+  const mag=Math.max(1,pc16(attack));
+  const absorbedFrac=pc16(a2)/mag;          // rises as seed learns
+  lastPreAbsorb=Math.round(absorbedFrac*100);
+  const reflectFrac=1-absorbedFrac;
+  // effects
+  closure=Math.min(1,closure+0.45);
+  heat=Math.min(1,heat+0.4); coreFlash=1; shake=Math.min(8,shake+3.5);
+  const ix=a.x, iy=a.y; // impact point at shell
+  rings.push({x:ix,y:iy,r:8,max:60,a:1,col:"rgba(234,252,255,"});
+  // reflect spray (off the obsidian shell) — shrinks as shield learns
+  const sprayN=Math.round(reflectFrac*22)+2;
+  const baseA=Math.atan2(iy-CY,ix-CX);
+  for(let i=0;i<sprayN;i++){
+    const sa=baseA+(Math.random()-0.5)*1.2, ss=3+Math.random()*5;
+    sprays.push({x:ix,y:iy,vx:Math.cos(sa)*ss,vy:Math.sin(sa)*ss,life:1,col:"#eafcff"});
+  }
+  // absorb glow on inner wall
+  if(absorbedFrac>0.02) absorbs.push({ang:baseA,a:Math.min(1,absorbedFrac+0.3),r:R_INNER});
+  // witness sliver to core
+  for(let i=0;i<4;i++){const ss=2+Math.random()*2;
+    sprays.push({x:ix,y:iy,vx:-Math.cos(baseA)*ss,vy:-Math.sin(baseA)*ss,life:1,col:"#2effc4",toCore:true});}
+  a.hit=true;
+  log(absorbedFrac>0.6?"PRE-ABSORB":"WITNESS", absorbedFrac>0.6?"a":"w",
+      "0x"+hx(attack)+" → reflect 0x"+hx(r1)+" · absorb "+lastPreAbsorb+"% · seed 0x"+hx(seed));
+}
+const hx=v=>v.toString(16).padStart(4,"0");
+
+function step(){
+  if(bombard){ bombTimer-=16*simScale;
+    if(bombTimer<=0){ // sometimes repeat the campaign value to demonstrate learning
+      spawnAttack(Math.random()<0.45?campaign:undefined);
+      bombTimer=120+Math.random()*160;
+    } }
+  for(const a of attacks){
+    if(a.hit){a.x+=a.vx;a.y+=a.vy;continue;}
+    a.x+=a.vx*simScale; a.y+=a.vy*simScale;
+    a.r=Math.hypot(a.x-CX,a.y-CY);
+    if(a.r<=R_SHELL_OUT) hit(a);
+  }
+  attacks=attacks.filter(a=>!a.hit && a.r<R_SPAWN+60);
+  sprays.forEach(p=>{p.x+=p.vx*simScale;p.y+=p.vy*simScale;p.vx*=0.95;p.vy*=0.95;p.life-=0.03*simScale;});
+  sprays=sprays.filter(p=>p.life>0);
+  rings.forEach(r=>{r.r+=(r.max-r.r)*0.12*simScale;r.a-=0.04*simScale;});
+  rings=rings.filter(r=>r.a>0);
+  absorbs.forEach(g=>g.a-=0.03*simScale); absorbs=absorbs.filter(g=>g.a>0);
+  closure*=0.94; heat*=0.92; coreFlash*=0.9; if(shake>0)shake*=0.84;
+  // frost spawn near core
+  if(Math.random()<0.4){const fa=Math.random()*7,fr=R_CORE+Math.random()*22;
+    frost.push({x:CX+Math.cos(fa)*fr,y:CY+Math.sin(fa)*fr,vx:(Math.random()-.5)*.3,vy:-0.2-Math.random()*0.3,life:1});}
+  frost.forEach(f=>{f.x+=f.vx;f.y+=f.vy;f.life-=0.012;}); frost=frost.filter(f=>f.life>0);
+}
+
+/* ===== render ===== */
+const cv=document.getElementById("cv"), ctx=cv.getContext("2d");
+let DPR=Math.min(window.devicePixelRatio||1,2), W=0,H=0, sc=1, ox=0, oy=0;
+function layout(){const r=cv.parentElement.getBoundingClientRect();W=r.width;H=r.height;
+  cv.width=W*DPR;cv.height=H*DPR; sc=Math.min(W/VW,H/VH); ox=(W-VW*sc)/2; oy=(H-VH*sc)/2;
+  ctx.setTransform(DPR*sc,0,0,DPR*sc,ox*DPR,oy*DPR); draw();}
+
+function drawShell(center, baseHalf){
+  const half=baseHalf + closure*0.42;     // hemispheres close on impact
+  const a0=center-half, a1=center+half;
+  // body
+  ctx.beginPath();
+  ctx.arc(CX,CY,R_SHELL_OUT,a0,a1);
+  ctx.arc(CX,CY,R_SHELL,a1,a0,true);
+  ctx.closePath();
+  const lg=ctx.createRadialGradient(CX,CY,R_SHELL,CX,CY,R_SHELL_OUT);
+  lg.addColorStop(0,"#0a1018"); lg.addColorStop(0.5,"#121a26"); lg.addColorStop(1,"#05080d");
+  ctx.fillStyle=lg; ctx.fill();
+  // specular sweep (obsidian gloss)
+  const sweep=center-half*0.45+Math.sin(performance.now()*0.0009)*0.18;
+  ctx.save();ctx.clip();
+  const gx=CX+Math.cos(sweep)*R_SHELL_OUT, gy=CY+Math.sin(sweep)*R_SHELL_OUT;
+  const sg=ctx.createRadialGradient(gx,gy,2,gx,gy,70);
+  sg.addColorStop(0,"rgba(120,150,180,0.5)");sg.addColorStop(1,"rgba(120,150,180,0)");
+  ctx.fillStyle=sg;ctx.fillRect(CX-R_SHELL_OUT,CY-R_SHELL_OUT,R_SHELL_OUT*2,R_SHELL_OUT*2);
+  ctx.restore();
+  // inner cyan rim (energy edge)
+  ctx.beginPath();ctx.arc(CX,CY,R_SHELL,a0,a1);
+  ctx.strokeStyle="rgba(52,224,255,"+(0.4+heat*0.5)+")";ctx.lineWidth=2.2;
+  ctx.shadowColor="rgba(52,224,255,0.8)";ctx.shadowBlur=10+heat*16;ctx.stroke();ctx.shadowBlur=0;
+  // outer faint rim
+  ctx.beginPath();ctx.arc(CX,CY,R_SHELL_OUT,a0,a1);
+  ctx.strokeStyle="rgba(159,233,255,0.18)";ctx.lineWidth=1;ctx.stroke();
+}
+function draw(){
+  const sx=shake>0.3?(Math.random()-.5)*shake:0, sy=shake>0.3?(Math.random()-.5)*shake:0;
+  ctx.save();ctx.translate(sx,sy);
+  ctx.clearRect(-ox/sc-60,-oy/sc-60,VW+240,VH+240);
+  // detection ring
+  ctx.strokeStyle="rgba(52,224,255,0.06)";ctx.lineWidth=1;
+  ctx.beginPath();ctx.arc(CX,CY,R_SPAWN-30,0,7);ctx.stroke();
+  // inner HIDE walls (absorb membranes)
+  ctx.beginPath();ctx.arc(CX,CY,R_INNER,0,7);
+  ctx.strokeStyle="rgba(42,123,255,0.28)";ctx.lineWidth=1.4;ctx.stroke();
+  absorbs.forEach(g=>{ctx.beginPath();ctx.arc(CX,CY,R_INNER,g.ang-0.5,g.ang+0.5);
+    ctx.strokeStyle="rgba(42,123,255,"+g.a+")";ctx.lineWidth=5;
+    ctx.shadowColor="rgba(42,123,255,0.8)";ctx.shadowBlur=14;ctx.stroke();ctx.shadowBlur=0;});
+  // obsidian hemispheres )) and ((
+  drawShell(0, 1.18);        // right shell  ((  faces -X? both cover; symmetric
+  drawShell(Math.PI, 1.18);  // left shell  ))
+  // witness core ! — absolute zero
+  const pulse=0.5+0.5*Math.sin(performance.now()*0.0035);
+  // frost halo
+  const fg=ctx.createRadialGradient(CX,CY,R_CORE*0.4,CX,CY,R_CORE*2.6);
+  fg.addColorStop(0,"rgba(159,233,255,"+(0.5+coreFlash*0.4)+")");
+  fg.addColorStop(0.5,"rgba(52,224,255,0.18)");
+  fg.addColorStop(1,"rgba(52,224,255,0)");
+  ctx.fillStyle=fg;ctx.beginPath();ctx.arc(CX,CY,R_CORE*2.6,0,7);ctx.fill();
+  // crystalline core (octagon facet)
+  ctx.save();ctx.translate(CX,CY);ctx.rotate(performance.now()*0.0003);
+  const rr=R_CORE*(0.82+pulse*0.10+coreFlash*0.15);
+  ctx.beginPath();for(let i=0;i<8;i++){const an=i/8*Math.PI*2,px=Math.cos(an)*rr,py=Math.sin(an)*rr;i?ctx.lineTo(px,py):ctx.moveTo(px,py);}ctx.closePath();
+  const cg=ctx.createRadialGradient(-rr*0.3,-rr*0.3,1,0,0,rr);
+  cg.addColorStop(0,"#ffffff");cg.addColorStop(0.4,"#cdfaff");cg.addColorStop(1,"#1c9fd6");
+  ctx.fillStyle=cg;ctx.shadowColor="#34e0ff";ctx.shadowBlur=20+coreFlash*22;ctx.fill();ctx.shadowBlur=0;
+  ctx.strokeStyle="rgba(255,255,255,0.6)";ctx.lineWidth=1;ctx.stroke();
+  ctx.restore();
+  // core mark
+  ctx.fillStyle="#02141c";ctx.font="700 18px monospace";ctx.textAlign="center";ctx.textBaseline="middle";
+  ctx.fillText("!",CX,CY+1);
+  // frost particles
+  frost.forEach(f=>{ctx.globalAlpha=f.life*0.7;ctx.fillStyle="#cdfaff";
+    ctx.beginPath();ctx.arc(f.x,f.y,1.3,0,7);ctx.fill();});ctx.globalAlpha=1;
+  // attacks
+  for(const a of attacks){if(a.hit)continue;
+    const sp=Math.hypot(a.vx,a.vy)||1;
+    ctx.strokeStyle="rgba(255,138,46,0.5)";ctx.lineWidth=2;
+    ctx.beginPath();ctx.moveTo(a.x,a.y);ctx.lineTo(a.x-a.vx/sp*16,a.y-a.vy/sp*16);ctx.stroke();
+    ctx.fillStyle="#ff8a2e";ctx.shadowColor="#ff8a2e";ctx.shadowBlur=8;
+    ctx.beginPath();ctx.arc(a.x,a.y,4.5,0,7);ctx.fill();ctx.shadowBlur=0;}
+  // reflect/witness sprays
+  sprays.forEach(p=>{ctx.globalAlpha=Math.max(0,p.life);ctx.fillStyle=p.col;
+    ctx.shadowColor=p.col;ctx.shadowBlur=6;
+    ctx.beginPath();ctx.arc(p.x,p.y,p.toCore?1.6:2.2,0,7);ctx.fill();});ctx.shadowBlur=0;ctx.globalAlpha=1;
+  // impact rings
+  rings.forEach(r=>{ctx.strokeStyle=r.col+r.a+")";ctx.lineWidth=2;
+    ctx.beginPath();ctx.arc(r.x,r.y,r.r,0,7);ctx.stroke();});
+  ctx.restore();
+}
+
+/* ===== panels ===== */
+const $=id=>document.getElementById(id);
+const bitsEl=$("bits"),bitC=[];
+for(let i=15;i>=0;i--){const b=document.createElement("div");b.className="bit";bitsEl.appendChild(b);bitC[i]=b;}
+function sync(){
+  $("hs-hits").textContent=hits;$("hs-ref").textContent=refOps;
+  const scars=pc16(seed);$("hs-scar").textContent=scars;
+  $("hs-pre").textContent=lastPreAbsorb+"%";
+  $("scar-pc").textContent=scars+" scars";
+  $("i-att").textContent="0x"+hx(last.att);
+  $("i-ref").textContent="0x"+hx(last.ref);
+  $("i-abs").textContent="0x"+hx(last.abs);
+  $("i-wit").textContent="0x"+last.wit.toString(16).padStart(2,"0");
+  $("i-net").textContent=hits?"TRUE · held":"—";
+  for(let i=0;i<16;i++){const on=(seed>>>i)&1,fl=(lastFlip>>>i)&1;
+    bitC[i].className="bit"+(on?" on":"")+(fl?" flip":"");}
+  $("hint").textContent="core · absolute zero · "+scars+"/16 learned";
+}
+const logEl=$("log");let logN=0;
+function log(tag,cls,msg){const d=document.createElement("div");
+  d.innerHTML=`<span class="d">${String(logN++).padStart(3,"0")}</span> <span class="${cls}">${tag}</span> <span class="d">${msg}</span>`;
+  logEl.prepend(d);while(logEl.childNodes.length>50)logEl.removeChild(logEl.lastChild);}
+
+/* ===== controls ===== */
+$("b-bomb").onclick=e=>{bombard=!bombard;e.target.textContent=bombard?"▮ cease fire":"▸ bombard ∞";
+  log("BOMBARD",bombard?"t":"d",bombard?"infinite incoming":"halted");};
+$("b-666").onclick=()=>{const base=Math.random()*Math.PI*2;
+  for(let i=0;i<6;i++)setTimeout(()=>spawnAttack(0x6363^(i*0x0249),base+i*0.32),i*70);
+  log("6×6×6","t","trebuchet payload launched at shield");};
+$("b-repeat").onclick=()=>{spawnAttack(lastAttack||campaign);
+  log("REPEAT","w","re-firing 0x"+hx(lastAttack||campaign)+" — expect pre-absorb");};
+$("b-reset").onclick=()=>{seed=0;hits=refOps=0;lastPreAbsorb=0;lastFlip=0;lastAttack=0;
+  attacks=[];sprays=[];rings=[];absorbs=[];log("WIPE","d","seed cleared · shield naive again");};
+$("speed").oninput=e=>{simScale=+e.target.value/100;$("ss").textContent=simScale.toFixed(1)+"×";};
+$("stage").addEventListener("click",e=>{
+  const r=cv.getBoundingClientRect();
+  const mx=(e.clientX-r.left-ox)/sc, my=(e.clientY-r.top-oy)/sc;
+  const ang=Math.atan2(my-CY,mx-CX);
+  const val=(Math.random()*0x10000)|0; lastAttack=val;
+  spawnAttack(val,ang); log("FIRE","t","vector 0x"+hx(val)+" inbound");
+});
+// remember last spawned value for repeat
+const _spawn=spawnAttack;
+window.addEventListener("resize",layout);
+
+/* ===== loop ===== */
+let lastT=performance.now(),acc=0;
+function frame(now){const dt=Math.min(now-lastT,50);lastT=now;acc+=dt;
+  while(acc>=16){step();acc-=16;}
+  sync();draw();requestAnimationFrame(frame);}
+log("PLANT","w","witness core anchored at −1 · shells locked G2/G1/G3");
+layout();requestAnimationFrame(frame);
+// track last attack value on every spawn
+(function(){const orig=spawnAttack;})();
+</script>
+</body>
+</html>

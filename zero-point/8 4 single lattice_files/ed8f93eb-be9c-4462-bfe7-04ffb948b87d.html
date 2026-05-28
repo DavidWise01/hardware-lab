@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<!-- saved from url=(0165)https://1573080454479440.a.metaaiusercontent.com/html?artifact_uuid=ed8f93eb-be9c-4462-bfe7-04ffb948b87d&ext=1779462615&hash=Q5fpDAGTPK197Rvg7eOlNqyCktlt&theme=light -->
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>128-bit Photonic Processor — v5 Real Math</title>
+<style>
+  *{box-sizing:border-box}
+  html,body{height:100%;margin:0;background:#03060a;color:#cfeaff;font-family:Inter,system-ui,Segoe UI,Roboto,Helvetica,Arial,sans-serif;overflow:hidden}
+  .wrap{display:grid;grid-template-columns:330px 1fr;height:100%}
+  .side{
+    background:linear-gradient(180deg,rgba(8,14,26,.96),rgba(4,8,14,.96));
+    border-right:1px solid rgba(0,213,255,.15);
+    padding:18px 16px;display:flex;flex-direction:column;gap:16px;
+    backdrop-filter:blur(10px);z-index:5
+  }
+  .brand{display:flex;gap:12px;align-items:center}
+  .logo{width:38px;height:38px;border-radius:12px;background:
+    conic-gradient(from 210deg,#00d5ff,#7b5cff,#00ffa6,#ff3b7f,#00d5ff);
+    box-shadow:0 0 22px rgba(0,213,255,.45),inset 0 0 14px rgba(0,0,0,.6);position:relative}
+  .logo:after{content:"";position:absolute;inset:6px;border-radius:8px;background:#050a12;box-shadow:inset 0 0 12px rgba(0,213,255,.35)}
+  .brand h1{margin:0;font-size:16px;letter-spacing:1.3px;font-weight:800;color:#e9fbff}
+  .brand .sub{font-size:11px;letter-spacing:1px;color:#7fb7d6;margin-top:2px}
+  .group{background:rgba(6,12,22,.72);border:1px solid rgba(0,213,255,.14);border-radius:14px;padding:12px 12px 14px;box-shadow:inset 0 0 24px rgba(0,213,255,.04)}
+  .group-title{font-size:11px;color:#8bdfff;letter-spacing:1.3px;margin:2px 0 10px;opacity:.95}
+  .slider-row{margin:10px 0 14px}
+  .slider-row label{display:flex;justify-content:space-between;font-size:12px;color:#a7d7ee;margin-bottom:6px}
+  .slider-row label span{font-family:ui-monospace,Consolas,monospace;color:#e6fbff}
+  input[type=range]{width:100%;height:26px;-webkit-appearance:none;background:transparent;margin:0}
+  input[type=range]::-webkit-slider-runnable-track{height:6px;background:linear-gradient(90deg,rgba(0,213,255,.25),rgba(123,92,255,.25));border-radius:4px;border:1px solid rgba(0,213,255,.25)}
+  input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;height:16px;border-radius:50%;background:#00d5ff;border:1px solid rgba(255,255,255,.6);margin-top:-6px;box-shadow:0 0 12px rgba(0,213,255,.7);cursor:pointer}
+  input[type=range]::-moz-range-track{height:6px;background:linear-gradient(90deg,rgba(0,213,255,.25),rgba(123,92,255,.25));border-radius:4px;border:1px solid rgba(0,213,255,.25)}
+  input[type=range]::-moz-range-thumb{width:16px;height:16px;border-radius:50%;background:#00d5ff;border:1px solid rgba(255,255,255,.6);box-shadow:0 0 12px rgba(0,213,255,.7);cursor:pointer}
+  .btns{display:flex;gap:8px}
+  .btn{flex:1;padding:9px 10px;background:rgba(0,213,255,.08);border:1px solid rgba(0,213,255,.26);color:#c7f6ff;border-radius:10px;font-size:12px;cursor:pointer;transition:.18s;font-weight:600;letter-spacing:.3px}
+  .btn:hover{background:rgba(0,213,255,.16);box-shadow:0 0 12px rgba(0,213,255,.18) inset,0 0 10px rgba(0,213,255,.12)}
+  .btn.active{background:rgba(0,213,255,.24);color:#fff;box-shadow:0 0 16px rgba(0,213,255,.3) inset,0 0 14px rgba(0,213,255,.22);border-color:rgba(0,213,255,.5)}
+  .data-box .dw{font-family:ui-monospace,Consolas,monospace;font-size:13px;color:#e6fdff;letter-spacing:.5px;background:rgba(0,213,255,.06);border:1px dashed rgba(0,213,255,.22);padding:8px;border-radius:8px;text-align:center;margin-bottom:8px}
+  .data-box .row{font-size:11px;color:#7fb7d6;text-align:center;margin-bottom:10px}
+  .out>div{font-size:11px;color:#8bdfff;margin-bottom:5px}
+  .out code{display:block;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:11px;color:#fff;background:rgba(0,0,0,.38);border:1px solid rgba(0,213,255,.18);padding:8px 9px;border-radius:8px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;box-shadow:inset 0 0 14px rgba(0,213,255,.08);letter-spacing:.4px}
+
+  .stage{position:relative;background:radial-gradient(1200px 800px at 50% 40%,#0b172a 0%,#070d18 55%,#03050a 100%)}
+  canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
+  .footer{position:absolute;bottom:0;left:0;right:0;height:34px;display:flex;align-items:center;justify-content:center;font-size:11px;color:#6aa8c4;letter-spacing:.9px;background:linear-gradient(180deg,transparent,rgba(0,0,0,.55));pointer-events:none}
+  @media (max-width:920px){
+    .wrap{grid-template-columns:1fr}
+    .side{position:absolute;left:10px;top:10px;width:min(92vw,360px);max-height:62vh;overflow:auto;border-radius:14px;border:1px solid rgba(0,213,255,.18)}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <aside class="side">
+    <div class="brand">
+      <div class="logo"></div>
+      <div>
+        <h1>PHOTONIC CORE</h1>
+        <div class="sub">128-BIT • v5 REAL MATH</div>
+      </div>
+    </div>
+
+    <div class="group">
+      <div class="group-title">FIELD CONTROL</div>
+      <div class="slider-row">
+        <label>Containment <span id="contV">86%</span></label>
+        <input id="cont" type="range" min="0" max="100" value="86" step="1">
+      </div>
+      <div class="slider-row">
+        <label>Coupling <span id="coupV">72%</span></label>
+        <input id="coup" type="range" min="0" max="100" value="72" step="1">
+      </div>
+      <div class="slider-row">
+        <label>Output Gain <span id="outV">94%</span></label>
+        <input id="out" type="range" min="0" max="100" value="94" step="1">
+      </div>
+      <div class="btns">
+        <button class="btn" id="fineBtn">.01 FINE</button>
+        <button class="btn" id="boostBtn">×2 BOOST</button>
+      </div>
+    </div>
+
+    <div class="group data-box">
+      <div class="group-title">DATA WIDTH</div>
+      <div class="dw">128-BIT PHOTONIC CORE</div>
+      <div class="row">64 nodes / layer • 16 per quad • 8-0-8 stack</div>
+      <div class="out">
+        <div>Current output (hex)</div>
+        <code id="coreHex">A64A474711A26AEE4E9CAA55A171A9D3</code>
+      </div>
+    </div>
+  </aside>
+
+  <main class="stage">
+    <canvas id="c" width="1334" height="1164"></canvas>
+    <div class="footer">PHOTONIC PROCESSOR SIMULATION • 64 NODES × 16 LAYERS • DARK MODE</div>
+  </main>
+</div>
+
+<script>
+const canvas = document.getElementById('c');
+const ctx = canvas.getContext('2d');
+const cont = document.getElementById('cont');
+const coup = document.getElementById('coup');
+const out = document.getElementById('out');
+const contV = document.getElementById('contV');
+const coupV = document.getElementById('coupV');
+const outV = document.getElementById('outV');
+const fineBtn = document.getElementById('fineBtn');
+const boostBtn = document.getElementById('boostBtn');
+const coreHexEl = document.getElementById('coreHex');
+
+let containment = 86, coupling = 72, output = 94;
+let fine = false, boost = false;
+
+function updateLabels(){
+  contV.textContent = containment.toFixed(fine?2:0) + '%';
+  coupV.textContent = coupling.toFixed(fine?2:0) + '%';
+  outV.textContent = output.toFixed(fine?2:0) + '%';
+}
+cont.addEventListener('input', e=>{containment=parseFloat(e.target.value);updateLabels()});
+coup.addEventListener('input', e=>{coupling=parseFloat(e.target.value);updateLabels()});
+out.addEventListener('input', e=>{output=parseFloat(e.target.value);updateLabels()});
+fineBtn.addEventListener('click', ()=>{
+  fine=!fine;
+  fineBtn.classList.toggle('active', fine);
+  const step = fine ? '0.01' : '1';
+  [cont,coup,out].forEach(s=>s.step=step);
+  updateLabels();
+});
+boostBtn.addEventListener('click', ()=>{
+  boost=!boost;
+  boostBtn.classList.toggle('active', boost);
+});
+updateLabels();
+
+function resize(){
+  const dpr = Math.min(window.devicePixelRatio||1, 2);
+  canvas.width = canvas.clientWidth * dpr;
+  canvas.height = canvas.clientHeight * dpr;
+  ctx.setTransform(dpr,0,0,dpr,0,0);
+}
+window.addEventListener('resize', resize);
+resize();
+
+function roundRect(ctx,x,y,w,h,r){
+  r = Math.min(r,w/2,h/2);
+  ctx.beginPath();
+  ctx.moveTo(x+r,y);
+  ctx.arcTo(x+w,y,x+w,y+h,r);
+  ctx.arcTo(x+w,y+h,x,y+h,r);
+  ctx.arcTo(x,y+h,x,y,r);
+  ctx.arcTo(x,y,x+w,y,r);
+  ctx.closePath();
+}
+
+// starfield
+const stars = Array.from({length:180},()=>({x:Math.random(),y:Math.random(),s:Math.random()*1.2+0.2, a:Math.random()*0.5+0.2}));
+
+function draw(){
+  const W = canvas.clientWidth;
+  const H = canvas.clientHeight;
+  ctx.clearRect(0,0,W,H);
+
+  // background stars
+  ctx.save();
+  for(const st of stars){
+    ctx.globalAlpha = st.a * 0.6;
+    ctx.fillStyle = '#8bdfff';
+    ctx.beginPath();
+    ctx.arc(st.x*W, st.y*H, st.s, 0, Math.PI*2);
+    ctx.fill();
+  }
+  ctx.restore();
+
+  const cx = W*0.56;
+  const cy = H*0.48;
+  const t = performance.now()*0.001;
+
+  // calculate bit math
+  const amp = (coupling/100) * (0.5 + 0.5 * (containment/100));
+  const base1 = Math.floor((Math.sin(t*0.7 + 0)*0.5 + 0.5) * 0xFFFFFFFF) >>>0;
+  const base2 = Math.floor((Math.sin(t*0.9 + 1.1)*0.5 + 0.5) * 0xFFFFFFFF) >>>0;
+  const base3 = Math.floor((Math.sin(t*1.1 + 2.2)*0.5 + 0.5) * 0xFFFFFFFF) >>>0;
+  const base4 = Math.floor((Math.sin(t*1.3 + 3.3)*0.5 + 0.5) * 0xFFFFFFFF) >>>0;
+  const mk = b => {
+    let v = b * amp;
+    if(boost) v *= 2;
+    if(v > 0xFFFFFFFF) v = 0xFFFFFFFF;
+    return v >>> 0;
+  };
+  const q1 = mk(base1);
+  const q2 = mk(base2);
+  const q3 = mk(base3);
+  const q4 = mk(base4);
+  const core128 = (BigInt(q1) << 96n) | (BigInt(q2) << 64n) | (BigInt(q3) << 32n) | BigInt(q4);
+  const q1h = q1.toString(16).padStart(8,'0').toUpperCase();
+  const q2h = q2.toString(16).padStart(8,'0').toUpperCase();
+  const q3h = q3.toString(16).padStart(8,'0').toUpperCase();
+  const q4h = q4.toString(16).padStart(8,'0').toUpperCase();
+  const coreHex = core128.toString(16).padStart(32,'0').toUpperCase();
+  coreHexEl.textContent = coreHex;
+
+  // draw 8-0-8 stack (16 layers)
+  const colors = ['#00d5ff','#9b6bff','#00ffa6','#ff5c8a'];
+  ctx.lineWidth = 1;
+  for(let i=0;i<16;i++){
+    const layer = i<8 ? i-8 : i-7; // -8..-1, 1..8
+    const y = cy + layer*23;
+    const rx = 190 + Math.abs(layer)*9;
+    const ry = 34 + Math.abs(layer)*2.6;
+    // track
+    ctx.beginPath();
+    ctx.ellipse(cx, y, rx, ry, 0, 0, Math.PI*2);
+    ctx.strokeStyle = 'rgba(0,213,255,'+(0.05 + 0.06*(1-Math.abs(layer)/8))+')';
+    ctx.stroke();
+
+    // 64 nodes, 16 per quad
+    for(let n=0;n<64;n++){
+      const quad = n >> 4; // 0-3
+      const angle = (n/64)*Math.PI*2 + t*0.12*(layer>0?1:-1) + quad*0.02;
+      const x = cx + Math.cos(angle)*rx;
+      const yy = y + Math.sin(angle)*ry;
+      const q = [q1,q2,q3,q4][quad];
+      const bit = (q >>> (n % 32)) & 1;
+      const glow = 0.25 + 0.75*bit*(output/100);
+      ctx.globalAlpha = glow * (0.5 + 0.5*coupling/100);
+      ctx.fillStyle = colors[quad];
+      ctx.shadowColor = colors[quad];
+      ctx.shadowBlur = 6 + 8*bit;
+      ctx.beginPath();
+      ctx.arc(x, yy, 2.1 + bit*0.9, 0, Math.PI*2);
+      ctx.fill();
+    }
+    ctx.shadowBlur = 0;
+    ctx.globalAlpha = 1;
+  }
+
+  // center core
+  const coreRadius = 28 + 6*Math.sin(t*1.5);
+  const grd = ctx.createRadialGradient(cx, cy, 0, cx, cy, coreRadius*3);
+  grd.addColorStop(0, 'rgba(0,213,255,0.35)');
+  grd.addColorStop(0.3, 'rgba(123,92,255,0.22)');
+  grd.addColorStop(1, 'rgba(0,0,0,0)');
+  ctx.fillStyle = grd;
+  ctx.beginPath(); ctx.arc(cx,cy,coreRadius*3,0,Math.PI*2); ctx.fill();
+  ctx.fillStyle = '#00141f';
+  ctx.strokeStyle = 'rgba(0,213,255,0.7)';
+  ctx.lineWidth = 2;
+  ctx.beginPath(); ctx.arc(cx,cy,coreRadius,0,Math.PI*2); ctx.fill(); ctx.stroke();
+  ctx.fillStyle = '#00d5ff';
+  ctx.shadowColor = '#00d5ff'; ctx.shadowBlur = 16;
+  ctx.font = '700 12px ui-monospace,Consolas';
+  ctx.textAlign='center'; ctx.textBaseline='middle';
+  ctx.fillText('128b', cx, cy);
+  ctx.shadowBlur = 0;
+
+  // bit panel bottom center
+  const panelW = Math.min(520, W*0.92);
+  const panelH = 126;
+  const px = W/2 - panelW/2;
+  const py = H - panelH - 42;
+  ctx.save();
+  roundRect(ctx, px, py, panelW, panelH, 14);
+  ctx.fillStyle = 'rgba(4,12,22,0.9)';
+  ctx.fill();
+  ctx.strokeStyle = 'rgba(0,213,255,0.28)';
+  ctx.lineWidth = 1;
+  ctx.stroke();
+  ctx.shadowColor = '#00d5ff'; ctx.shadowBlur = 10;
+  ctx.font = '13px ui-monospace,Consolas,monospace';
+  ctx.textBaseline = 'top';
+  const lines = [
+    ['Q1[31:0] = 0x', q1h],
+    ['Q2[31:0] = 0x', q2h],
+    ['Q3[31:0] = 0x', q3h],
+    ['Q4[31:0] = 0x', q4h],
+    ['CORE[127:0] = 0x', coreHex],
+  ];
+  let ly = py + 14;
+  for(const [label, val] of lines){
+    ctx.fillStyle = '#00d5ff';
+    ctx.fillText(label, px+16, ly);
+    const lw = ctx.measureText(label).width;
+    ctx.fillStyle = '#ffffff';
+    ctx.shadowColor = '#ffffff'; ctx.shadowBlur = 5;
+    ctx.fillText(val, px+16+lw, ly);
+    ctx.shadowColor = '#00d5ff'; ctx.shadowBlur = 10;
+    ly += 20;
+  }
+  ctx.restore();
+
+  // bottom-left overlay
+  const xor = (q1 ^ q2 ^ q3 ^ q4) >>> 0;
+  const xorHex = xor.toString(16).padStart(8,'0').toUpperCase();
+  ctx.save();
+  ctx.font = '12px ui-monospace,Consolas';
+  ctx.fillStyle = 'rgba(0,213,255,0.92)';
+  ctx.shadowColor = '#00d5ff'; ctx.shadowBlur = 8;
+  ctx.textAlign = 'left';
+  ctx.fillText(`FRAME: 128b LIVE | Q1 ^ Q2 ^ Q3 ^ Q4 = 0x${xorHex}`, 18, H - 18);
+  ctx.restore();
+
+  requestAnimationFrame(draw);
+}
+draw();
+</script>
+
+</body></html>

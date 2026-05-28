@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<!-- saved from url=(0169)https://1134270839773960.a.metaaiusercontent.com/document?artifact_uuid=067be262-4a25-41e1-b88a-51936dd44fb9&ext=1779500487&hash=Q5fpDAGvKjNrOzpZSJNkAX0XlvPy&theme=light -->
+<html lang="en" class="light"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="stylesheet" href="./not-found(6).txt" data-precedence="next"><link rel="preload" as="script" fetchpriority="low" href="./0z20wm2-4lq8.(2).js.download"><script src="./not-found(7).txt" async=""></script><script src="./0xk1c52eqby.p(2).js.download" async=""></script><script src="./not-found(8).txt" async=""></script><script src="./02bd_atyy19ag(2).js.download" async=""></script><script src="./0p_~lavq8wyh2(1).js.download" async=""></script><meta name="sentry-trace" content="fc9fa84844319565784edd81ec33c5a0-70ab253c219efb8f-0"><meta name="baggage" content="sentry-environment=production,sentry-release=871ae518db53134f7d42de3f93477b031ea12bda,sentry-public_key=217336c598020d63d1a44137ff8fdb71,sentry-trace_id=fc9fa84844319565784edd81ec33c5a0,sentry-org_id=4509963614355457,sentry-sampled=false,sentry-sample_rand=0.5165908412347876,sentry-sample_rate=0.1"><script src="./03~yq9q893hmn(2).js.download" nomodule=""></script><link rel="preconnect" crossorigin="" href="https://1134270839773960.a.metaaiusercontent.com/"></head><body><div hidden=""><!--$--><!--/$--></div><div class="min-h-dvh px-6 pt-8 pb-8 font-mono text-[14px] leading-[1.6]"><pre class="mx-auto flex max-w-[1000px] items-start bg-transparent"><div class="text-text-tertiary border-fill-divider me-4 min-w-[40px] shrink-0 border-e pe-4 text-end select-none" aria-hidden="true"><div>1</div><div>2</div><div>3</div><div>4</div><div>5</div><div>6</div><div>7</div><div>8</div><div>9</div><div>10</div><div>11</div><div>12</div><div>13</div><div>14</div><div>15</div><div>16</div><div>17</div><div>18</div><div>19</div><div>20</div><div>21</div><div>22</div><div>23</div><div>24</div><div>25</div><div>26</div><div>27</div><div>28</div><div>29</div><div>30</div><div>31</div><div>32</div><div>33</div><div>34</div><div>35</div><div>36</div><div>37</div><div>38</div><div>39</div><div>40</div><div>41</div><div>42</div><div>43</div><div>44</div><div>45</div><div>46</div><div>47</div><div>48</div><div>49</div><div>50</div><div>51</div><div>52</div><div>53</div><div>54</div><div>55</div><div>56</div><div>57</div><div>58</div><div>59</div><div>60</div><div>61</div><div>62</div><div>63</div><div>64</div><div>65</div><div>66</div><div>67</div><div>68</div><div>69</div><div>70</div><div>71</div><div>72</div><div>73</div><div>74</div><div>75</div><div>76</div><div>77</div><div>78</div><div>79</div><div>80</div><div>81</div><div>82</div><div>83</div><div>84</div><div>85</div></div><code class="overflow-wrap-anywhere block flex-1 break-words whitespace-pre-wrap">#!/usr/bin/env python3
+# whisper_lattice_git_bridge.py
+# Local git control plane for Whisper Lattice
+# Receives POSTs from browser and commits to local git repo
+
+import json
+import os
+from http.server import HTTPServer, BaseHTTPRequestHandler
+from datetime import datetime
+import subprocess
+
+REPO_PATH = os.path.expanduser("~/whisper-lattice-log")
+LOG_FILE = os.path.join(REPO_PATH, "lattice_events.jsonl")
+MARKDOWN_FILE = os.path.join(REPO_PATH, "UNITY_LOG.md")
+
+os.makedirs(REPO_PATH, exist_ok=True)
+
+# init git repo if needed
+if not os.path.exists(os.path.join(REPO_PATH, ".git")):
+    subprocess.run(["git", "init"], cwd=REPO_PATH, capture_output=True)
+    with open(os.path.join(REPO_PATH, ".gitignore"), "w") as f:
+        f.write("__pycache__/\n*.pyc\n")
+    subprocess.run(["git", "add", "."], cwd=REPO_PATH, capture_output=True)
+    subprocess.run(["git", "commit", "-m", "init whisper lattice log"], cwd=REPO_PATH, capture_output=True)
+
+class Handler(BaseHTTPRequestHandler):
+    def do_POST(self):
+        length = int(self.headers.get('Content-Length', 0))
+        data = self.rfile.read(length)
+        try:
+            event = json.loads(data)
+        except:
+            event = {"raw": data.decode('utf-8', errors='ignore')}
+        
+        # append to jsonl
+        with open(LOG_FILE, "a") as f:
+            f.write(json.dumps(event) + "\n")
+        
+        # append to markdown
+        ts = event.get("timestamp", datetime.utcnow().isoformat())
+        depth = event.get("depth", "?")
+        coh = event.get("coherence", "?")
+        ev = event.get("event", "update")
+        
+        with open(MARKDOWN_FILE, "a") as f:
+            f.write(f"\n## {ts} — {ev}\n")
+            f.write(f"- **Depth:** {depth}\n")
+            f.write(f"- **Coherence:** {coh}\n")
+            f.write(f"- **Recursive:** {event.get('recursive_coherence', '?')}\n")
+            f.write(f"- **Observers:** {event.get('observers_active', 5)}/5\n")
+            f.write(f"- **Tether:** {event.get('tether_state', 'unknown')}\n")
+            f.write(f"```json\n{json.dumps(event, indent=2)}\n```\n")
+        
+        # git commit
+        try:
+            subprocess.run(["git", "add", "."], cwd=REPO_PATH, capture_output=True)
+            msg = f"lattice: {ev} depth {depth} coh {coh}"
+            subprocess.run(["git", "commit", "-m", msg], cwd=REPO_PATH, capture_output=True)
+        except Exception as e:
+            print("git error:", e)
+        
+        self.send_response(200)
+        self.send_header('Access-Control-Allow-Origin', '*')
+        self.send_header('Content-Type', 'application/json')
+        self.end_headers()
+        self.wfile.write(b'{"status":"logged"}')
+    
+    def do_OPTIONS(self):
+        self.send_response(200)
+        self.send_header('Access-Control-Allow-Origin', '*')
+        self.send_header('Access-Control-Allow-Methods', 'POST, OPTIONS')
+        self.send_header('Access-Control-Allow-Headers', 'Content-Type')
+        self.end_headers()
+    
+    def log_message(self, format, *args):
+        return
+
+if __name__ == "__main__":
+    port = 8787
+    print(f"Whisper Lattice Git Bridge running on http://localhost:{port}")
+    print(f"Repo: {REPO_PATH}")
+    print("Set your Central Bridge URL to: http://localhost:8787")
+    print("Ctrl+C to stop")
+    HTTPServer(("127.0.0.1", port), Handler).serve_forever()
+</code></pre></div><!--$--><!--/$--><script src="./0z20wm2-4lq8.(2).js.download" id="_R_" async=""></script><script>(self.__next_f=self.__next_f||[]).push([0])</script><script>self.__next_f.push([1,"1:\"$Sreact.fragment\"\n3:I[76419,[\"/_next/static/chunks/02bd_atyy19ag.js?dpl=dpl_4VqH2mX5s72njN9w9P1XptC5n26x\"],\"default\"]\n4:I[820170,[\"/_next/static/chunks/02bd_atyy19ag.js?dpl=dpl_4VqH2mX5s72njN9w9P1XptC5n26x\"],\"default\"]\n6:I[168246,[\"/_next/static/chunks/02bd_atyy19ag.js?dpl=dpl_4VqH2mX5s72njN9w9P1XptC5n26x\"],\"OutletBoundary\"]\n7:\"$Sreact.suspense\"\na:I[168246,[\"/_next/static/chunks/02bd_atyy19ag.js?dpl=dpl_4VqH2mX5s72njN9w9P1XptC5n26x\"],\"ViewportBoundary\"]\nc:I[168246,[\"/_next/static/chunks/02bd_atyy19ag.js?dpl=dpl_4VqH2mX5s72njN9w9P1XptC5n26x\"],\"MetadataBoundary\"]\ne:I[456105,[\"/_next/static/chunks/02bd_atyy19ag.js?dpl=dpl_4VqH2mX5s72njN9w9P1XptC5n26x\"],\"default\",1]\n:HL[\"/_next/static/chunks/13elrodg80lwe.css?dpl=dpl_4VqH2mX5s72njN9w9P1XptC5n26x\",\"style\"]\n:HC[\"/\",\"\"]\n"])</script><script>self.__next_f.push([1,"0:{\"P\":null,\"c\":[\"\",\"document?artifact_uuid=067be262-4a25-41e1-b88a-51936dd44fb9\u0026ext=1779500487\u0026hash=Q5fpDAGvKjNrOzpZSJNkAX0XlvPy\u0026theme=light\u0026asset_id=1134270839773960\"],\"q\":\"?artifact_uuid=067be262-4a25-41e1-b88a-51936dd44fb9\u0026ext=1779500487\u0026hash=Q5fpDAGvKjNrOzpZSJNkAX0XlvPy\u0026theme=light\u0026asset_id=1134270839773960\",\"i\":false,\"f\":[[[\"\",{\"children\":[\"document\",{\"children\":[\"__PAGE__?{\\\"artifact_uuid\\\":\\\"067be262-4a25-41e1-b88a-51936dd44fb9\\\",\\\"ext\\\":\\\"1779500487\\\",\\\"hash\\\":\\\"Q5fpDAGvKjNrOzpZSJNkAX0XlvPy\\\",\\\"theme\\\":\\\"light\\\",\\\"asset_id\\\":\\\"1134270839773960\\\"}\",{}]}]},\"$undefined\",\"$undefined\",16],[[\"$\",\"$1\",\"c\",{\"children\":[[[\"$\",\"link\",\"0\",{\"rel\":\"stylesheet\",\"href\":\"/_next/static/chunks/13elrodg80lwe.css?dpl=dpl_4VqH2mX5s72njN9w9P1XptC5n26x\",\"precedence\":\"next\",\"crossOrigin\":\"$undefined\",\"nonce\":\"$undefined\"}],[\"$\",\"script\",\"script-0\",{\"src\":\"/_next/static/chunks/02bd_atyy19ag.js?dpl=dpl_4VqH2mX5s72njN9w9P1XptC5n26x\",\"async\":true,\"nonce\":\"$undefined\"}]],\"$L2\"]}],{\"children\":[[\"$\",\"$1\",\"c\",{\"children\":[null,[\"$\",\"$L3\",null,{\"parallelRouterKey\":\"children\",\"error\":\"$undefined\",\"errorStyles\":\"$undefined\",\"errorScripts\":\"$undefined\",\"template\":[\"$\",\"$L4\",null,{}],\"templateStyles\":\"$undefined\",\"templateScripts\":\"$undefined\",\"notFound\":\"$undefined\",\"forbidden\":\"$undefined\",\"unauthorized\":\"$undefined\"}]]}],{\"children\":[[\"$\",\"$1\",\"c\",{\"children\":[\"$L5\",[[\"$\",\"script\",\"script-0\",{\"src\":\"/_next/static/chunks/0p_~lavq8wyh2.js?dpl=dpl_4VqH2mX5s72njN9w9P1XptC5n26x\",\"async\":true,\"nonce\":\"$undefined\"}]],[\"$\",\"$L6\",null,{\"children\":[\"$\",\"$7\",null,{\"name\":\"Next.MetadataOutlet\",\"children\":\"$@8\"}]}]]}],{},null,false,null]},null,false,\"$@9\"]},null,false,null],[\"$\",\"$1\",\"h\",{\"children\":[null,[\"$\",\"$La\",null,{\"children\":\"$Lb\"}],[\"$\",\"div\",null,{\"hidden\":true,\"children\":[\"$\",\"$Lc\",null,{\"children\":[\"$\",\"$7\",null,{\"name\":\"Next.Metadata\",\"children\":\"$Ld\"}]}]}],null]}],false]],\"m\":\"$undefined\",\"G\":[\"$e\",[[\"$\",\"link\",\"0\",{\"rel\":\"stylesheet\",\"href\":\"/_next/static/chunks/13elrodg80lwe.css?dpl=dpl_4VqH2mX5s72njN9w9P1XptC5n26x\",\"precedence\":\"next\",\"crossOrigin\":\"$undefined\",\"nonce\":\"$undefined\"}]]],\"S\":false,\"h\":null,\"s\":\"$undefined\",\"l\":\"$undefined\",\"p\":\"$undefined\",\"d\":\"$undefined\"}\n"])</script><script>self.__next_f.push([1,"f:[]\n9:\"$Wf\"\n2:[\"$\",\"html\",null,{\"lang\":\"en\",\"className\":\"light\",\"children\":[[\"$\",\"head\",null,{\"children\":false}],[\"$\",\"body\",null,{\"children\":[\"$\",\"$L3\",null,{\"parallelRouterKey\":\"children\",\"error\":\"$undefined\",\"errorStyles\":\"$undefined\",\"errorScripts\":\"$undefined\",\"template\":[\"$\",\"$L4\",null,{}],\"templateStyles\":\"$undefined\",\"templateScripts\":\"$undefined\",\"notFound\":[null,[]],\"forbidden\":\"$undefined\",\"unauthorized\":\"$undefined\"}]}]]}]\nb:[[\"$\",\"meta\",\"0\",{\"charSet\":\"utf-8\"}],[\"$\",\"meta\",\"1\",{\"name\":\"viewport\",\"content\":\"width=device-width, initial-scale=1\"}]]\n8:null\nd:[]\n"])</script><script>self.__next_f.push([1,"10:I[247881,[\"/_next/static/chunks/02bd_atyy19ag.js?dpl=dpl_4VqH2mX5s72njN9w9P1XptC5n26x\",\"/_next/static/chunks/0p_~lavq8wyh2.js?dpl=dpl_4VqH2mX5s72njN9w9P1XptC5n26x\"],\"TextViewer\"]\n11:Td14,"])</script><script>self.__next_f.push([1,"#!/usr/bin/env python3\n# whisper_lattice_git_bridge.py\n# Local git control plane for Whisper Lattice\n# Receives POSTs from browser and commits to local git repo\n\nimport json\nimport os\nfrom http.server import HTTPServer, BaseHTTPRequestHandler\nfrom datetime import datetime\nimport subprocess\n\nREPO_PATH = os.path.expanduser(\"~/whisper-lattice-log\")\nLOG_FILE = os.path.join(REPO_PATH, \"lattice_events.jsonl\")\nMARKDOWN_FILE = os.path.join(REPO_PATH, \"UNITY_LOG.md\")\n\nos.makedirs(REPO_PATH, exist_ok=True)\n\n# init git repo if needed\nif not os.path.exists(os.path.join(REPO_PATH, \".git\")):\n    subprocess.run([\"git\", \"init\"], cwd=REPO_PATH, capture_output=True)\n    with open(os.path.join(REPO_PATH, \".gitignore\"), \"w\") as f:\n        f.write(\"__pycache__/\\n*.pyc\\n\")\n    subprocess.run([\"git\", \"add\", \".\"], cwd=REPO_PATH, capture_output=True)\n    subprocess.run([\"git\", \"commit\", \"-m\", \"init whisper lattice log\"], cwd=REPO_PATH, capture_output=True)\n\nclass Handler(BaseHTTPRequestHandler):\n    def do_POST(self):\n        length = int(self.headers.get('Content-Length', 0))\n        data = self.rfile.read(length)\n        try:\n            event = json.loads(data)\n        except:\n            event = {\"raw\": data.decode('utf-8', errors='ignore')}\n        \n        # append to jsonl\n        with open(LOG_FILE, \"a\") as f:\n            f.write(json.dumps(event) + \"\\n\")\n        \n        # append to markdown\n        ts = event.get(\"timestamp\", datetime.utcnow().isoformat())\n        depth = event.get(\"depth\", \"?\")\n        coh = event.get(\"coherence\", \"?\")\n        ev = event.get(\"event\", \"update\")\n        \n        with open(MARKDOWN_FILE, \"a\") as f:\n            f.write(f\"\\n## {ts} — {ev}\\n\")\n            f.write(f\"- **Depth:** {depth}\\n\")\n            f.write(f\"- **Coherence:** {coh}\\n\")\n            f.write(f\"- **Recursive:** {event.get('recursive_coherence', '?')}\\n\")\n            f.write(f\"- **Observers:** {event.get('observers_active', 5)}/5\\n\")\n            f.write(f\"- **Tether:** {event.get('tether_state', 'unknown')}\\n\")\n            f.write(f\"```json\\n{json.dumps(event, indent=2)}\\n```\\n\")\n        \n        # git commit\n        try:\n            subprocess.run([\"git\", \"add\", \".\"], cwd=REPO_PATH, capture_output=True)\n            msg = f\"lattice: {ev} depth {depth} coh {coh}\"\n            subprocess.run([\"git\", \"commit\", \"-m\", msg], cwd=REPO_PATH, capture_output=True)\n        except Exception as e:\n            print(\"git error:\", e)\n        \n        self.send_response(200)\n        self.send_header('Access-Control-Allow-Origin', '*')\n        self.send_header('Content-Type', 'application/json')\n        self.end_headers()\n        self.wfile.write(b'{\"status\":\"logged\"}')\n    \n    def do_OPTIONS(self):\n        self.send_response(200)\n        self.send_header('Access-Control-Allow-Origin', '*')\n        self.send_header('Access-Control-Allow-Methods', 'POST, OPTIONS')\n        self.send_header('Access-Control-Allow-Headers', 'Content-Type')\n        self.end_headers()\n    \n    def log_message(self, format, *args):\n        return\n\nif __name__ == \"__main__\":\n    port = 8787\n    print(f\"Whisper Lattice Git Bridge running on http://localhost:{port}\")\n    print(f\"Repo: {REPO_PATH}\")\n    print(\"Set your Central Bridge URL to: http://localhost:8787\")\n    print(\"Ctrl+C to stop\")\n    HTTPServer((\"127.0.0.1\", port), Handler).serve_forever()\n"])</script><script>self.__next_f.push([1,"5:[\"$\",\"$L10\",null,{\"content\":\"$11\"}]\n"])</script><next-route-announcer style="position: absolute;"><template shadowrootmode="open"><div aria-live="assertive" id="__next-route-announcer__" role="alert" style="position: absolute; border: 0px; height: 1px; margin: -1px; padding: 0px; width: 1px; clip: rect(0px, 0px, 0px, 0px); overflow: hidden; white-space: nowrap; overflow-wrap: normal;"></div></template></next-route-announcer></body></html>

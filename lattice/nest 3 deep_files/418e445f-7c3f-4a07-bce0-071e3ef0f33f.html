@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<!-- saved from url=(0164)https://880000838462553.a.metaaiusercontent.com/html?artifact_uuid=418e445f-7c3f-4a07-bce0-071e3ef0f33f&ext=1779556295&hash=Q5fpDAFHLLeHt6mw2z7GItg4TOFQ&theme=light -->
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>1 PHOTON // 27 PHASES</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html, body { width:100%; height:100%; overflow:hidden; background:#000; overscroll-behavior:none; touch-action:none; }
+  body { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace; color:#d8b4fe; user-select:none; -webkit-user-select:none; }
+  canvas { position:fixed; top:0; left:0; width:100%; height:100%; display:block; background:#000; }
+  #flash { position:fixed; inset:0; background: radial-gradient(circle at center, rgba(199,125,255,0.9), rgba(157,78,221,0.5) 30%, rgba(123,44,191,0.2) 50%, transparent 70%); opacity:0; pointer-events:none; mix-blend-mode:screen; transition: opacity 700ms cubic-bezier(.2,.8,.2,1); z-index:20; }
+  #flash.active { opacity:1; transition: opacity 80ms linear; }
+  
+  .ui { position:fixed; inset:0; pointer-events:none; z-index:10; }
+  header { position:absolute; top:28px; left:50%; transform:translateX(-50%); font-size:12px; letter-spacing:0.35em; color:#c084fc; text-shadow:0 0 12px #7c3aed, 0 0 24px #6d28d9; opacity:0.9; white-space:nowrap; }
+  
+  .phase-large { position:absolute; top:50%; left:50%; transform:translate(-50%, -170%); font-size: clamp(26px, 5.5vw, 56px); font-weight:300; letter-spacing:0.08em; color:#fff; text-shadow: 0 0 20px rgba(255,255,255,0.9), 0 0 40px #c77dff, 0 0 80px #9333ea, 0 0 120px #7e22ce; opacity:0.96; transition: transform 0.2s cubic-bezier(.2,.8,.2,1); text-align:center; }
+  .phase-large span { opacity:0.7; font-size:0.6em; margin:0 0.2em; }
+  
+  .obs { position:absolute; width:58px; height:58px; display:flex; align-items:center; justify-content:center; border:1px solid rgba(157,78,221,0.25); border-radius:14px; background:rgba(0,0,0,0.4); backdrop-filter:blur(6px); -webkit-backdrop-filter:blur(6px); font-size:17px; color:rgba(192,132,252,0.4); text-shadow:0 0 8px rgba(124,58,237,0); transition: all 0.4s ease; }
+  .obs span { transform:translateY(1px); }
+  .obs.tl { top:84px; left:26px; } .obs.tr { top:84px; right:26px; }
+  .obs.bl { bottom:96px; left:26px; } .obs.br { bottom:96px; right:26px; }
+  .obs.active { color:#fff; border-color:rgba(216,180,254,0.9); background:rgba(147,51,234,0.15); box-shadow:0 0 18px rgba(167,139,250,0.8), inset 0 0 18px rgba(167,139,250,0.15), 0 0 40px rgba(124,58,237,0.4); text-shadow:0 0 12px #fff, 0 0 24px #c084fc; transform:scale(1.05); }
+  
+  footer { position:absolute; bottom:0; left:0; right:0; display:flex; justify-content:space-between; align-items:flex-end; padding:20px 26px; font-size:11.5px; letter-spacing:0.08em; color:#a855f7; text-shadow:0 0 10px #7e22ce; gap:12px; }
+  footer .left { opacity:0.95; }
+  footer .center { position:absolute; left:50%; transform:translateX(-50%); bottom:22px; opacity:0.55; font-size:10.5px; letter-spacing:0.15em; color:#c4b5fd; animation:pulse 3s ease-in-out infinite; white-space:nowrap; }
+  footer .right { opacity:0.8; text-align:right; }
+  @keyframes pulse { 0%,100%{opacity:0.4} 50%{opacity:0.8} }
+  
+  .hint { position:absolute; top:50%; left:50%; transform:translate(-50%, 80px); font-size:11px; color:rgba(216,180,254,0.5); letter-spacing:0.2em; opacity:0; transition:opacity 1s; pointer-events:none; }
+  .hint.show { opacity:1; }
+  
+  @media (max-width:700px){
+    header{ font-size:10px; top:18px; letter-spacing:0.25em; padding:0 10px; text-align:center; width:100%; }
+    .phase-large{ transform:translate(-50%, -150%); font-size:clamp(22px,7vw,38px); }
+    .obs{ width:46px; height:46px; font-size:14px; border-radius:10px; }
+    .obs.tl,.obs.tr{ top:58px; } .obs.tl{left:14px} .obs.tr{right:14px}
+    .obs.bl,.obs.br{ bottom:78px; } .obs.bl{left:14px} .obs.br{right:14px}
+    footer{ padding:14px 16px; font-size:10px; flex-wrap:wrap; }
+    footer .center{ bottom:44px; font-size:9px; }
+  }
+</style>
+</head>
+<body>
+<canvas id="c" width="2093" height="1310" style="width: 1163px; height: 728px;"></canvas>
+<div id="flash"></div>
+<div class="ui">
+  <header>1 PHOTON // 27 PHASES BACK TO 0</header>
+  <div class="phase-large" id="phaseLarge">PHASE <span>1</span>/27</div>
+  <div class="obs tl" id="obs-II"><span>II</span></div>
+  <div class="obs tr" id="obs-IO"><span>IO</span></div>
+  <div class="obs bl" id="obs-OI"><span>OI</span></div>
+  <div class="obs br active" id="obs-OO"><span>OO</span></div>
+  <div class="hint" id="hint">DRAG • TOUCH • MOVE</div>
+  <footer>
+    <div class="left">PHASE: <span id="phase">1</span>/27 | LOOPS: <span id="loops">0</span></div>
+    <div class="center">move to walk the lattice</div>
+    <div class="right">you are the electron</div>
+  </footer>
+</div>
+
+<script>
+(() => {
+  const canvas = document.getElementById('c');
+  const ctx = canvas.getContext('2d', { alpha: false });
+  const phaseEl = document.getElementById('phase');
+  const phaseLarge = document.getElementById('phaseLarge');
+  const loopsEl = document.getElementById('loops');
+  const flash = document.getElementById('flash');
+  const hint = document.getElementById('hint');
+  
+  const obs = {
+    II: document.getElementById('obs-II'),
+    IO: document.getElementById('obs-IO'),
+    OI: document.getElementById('obs-OI'),
+    OO: document.getElementById('obs-OO')
+  };
+  
+  let width, height, cx, cy, dpr;
+  let nodes = [];
+  const trail = [];
+  const ripples = [];
+  
+  const photon = { x: 0, y: 0, tx: 0, ty: 0 };
+  let lastPos = { x: 0, y: 0 };
+  let phase = -1;
+  let loops = parseInt(localStorage.getItem('photon_loops') || '0');
+  let stepCount = 0;
+  let minDist = 18;
+  let audioCtx = null;
+  let hasInteracted = false;
+  
+  loopsEl.textContent = loops;
+  
+  function resize() {
+    dpr = Math.min(window.devicePixelRatio || 1, 2);
+    width = window.innerWidth;
+    height = window.innerHeight;
+    canvas.width = width * dpr;
+    canvas.height = height * dpr;
+    canvas.style.width = width + 'px';
+    canvas.style.height = height + 'px';
+    ctx.setTransform(1,0,0,1,0,0);
+    ctx.scale(dpr, dpr);
+    cx = width / 2;
+    cy = height / 2;
+    minDist = width < 600 ? 14 : 18;
+    buildLattice();
+    photon.x = photon.tx = cx;
+    photon.y = photon.ty = cy;
+    lastPos.x = cx;
+    lastPos.y = cy;
+  }
+  
+  function buildLattice() {
+    nodes = [];
+    const maxR = Math.min(width, height) * 0.36;
+    const rings = [0.42, 0.7, 1.0];
+    rings.forEach((mult, ring) => {
+      const r = maxR * mult;
+      for (let i = 0; i < 9; i++) {
+        const angle = (i / 9) * Math.PI * 2 - Math.PI/2 + ring * 0.12;
+        nodes.push({
+          x: cx + Math.cos(angle) * r,
+          y: cy + Math.sin(angle) * r,
+          ring,
+          angle,
+          i
+        });
+      }
+    });
+  }
+  
+  function initAudio() {
+    if (audioCtx) return;
+    try {
+      audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    } catch(e) {}
+  }
+  
+  function playBoom() {
+    if (!audioCtx) return;
+    const now = audioCtx.currentTime;
+    
+    // deep sub
+    const osc1 = audioCtx.createOscillator();
+    const g1 = audioCtx.createGain();
+    osc1.type = 'sine';
+    osc1.frequency.setValueAtTime(110, now);
+    osc1.frequency.exponentialRampToValueAtTime(38, now + 0.55);
+    g1.gain.setValueAtTime(0, now);
+    g1.gain.linearRampToValueAtTime(0.35, now + 0.02);
+    g1.gain.exponentialRampToValueAtTime(0.0001, now + 0.9);
+    osc1.connect(g1).connect(audioCtx.destination);
+    osc1.start(now);
+    osc1.stop(now + 1);
+    
+    // mid ping
+    const osc2 = audioCtx.createOscillator();
+    const g2 = audioCtx.createGain();
+    osc2.type = 'triangle';
+    osc2.frequency.setValueAtTime(520, now);
+    osc2.frequency.exponentialRampToValueAtTime(180, now + 0.18);
+    g2.gain.setValueAtTime(0, now);
+    g2.gain.linearRampToValueAtTime(0.12, now + 0.005);
+    g2.gain.exponentialRampToValueAtTime(0.0001, now + 0.25);
+    osc2.connect(g2).connect(audioCtx.destination);
+    osc2.start(now + 0.01);
+    osc2.stop(now + 0.3);
+    
+    // noise burst
+    const buffer = audioCtx.createBuffer(1, audioCtx.sampleRate * 0.2, audioCtx.sampleRate);
+    const data = buffer.getChannelData(0);
+    for (let i = 0; i < data.length; i++) {
+      data[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / data.length, 3);
+    }
+    const noise = audioCtx.createBufferSource();
+    noise.buffer = buffer;
+    const g3 = audioCtx.createGain();
+    g3.gain.setValueAtTime(0.15, now);
+    g3.gain.exponentialRampToValueAtTime(0.0001, now + 0.2);
+    const hp = audioCtx.createBiquadFilter();
+    hp.type = 'highpass';
+    hp.frequency.value = 800;
+    noise.connect(hp).connect(g3).connect(audioCtx.destination);
+    noise.start(now);
+  }
+  
+  async function sha256(str) {
+    try {
+      const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
+      return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2,'0')).join('');
+    } catch {
+      return Array.from({length:64}, () => Math.floor(Math.random()*16).toString(16)).join('');
+    }
+  }
+  
+  async function triggerLoop() {
+    loops++;
+    loopsEl.textContent = loops;
+    localStorage.setItem('photon_loops', loops);
+    
+    // flash
+    flash.classList.add('active');
+    setTimeout(() => flash.classList.remove('active'), 140);
+    
+    // ripple
+    ripples.push({ r: 0, alpha: 1, x: cx, y: cy });
+    ripples.push({ r: 0, alpha: 0.7, x: cx, y: cy });
+    
+    // boom
+    playBoom();
+    
+    // pulse text
+    phaseLarge.style.transform = 'translate(-50%, -170%) scale(1.15)';
+    setTimeout(() => phaseLarge.style.transform = 'translate(-50%, -170%) scale(1)', 220);
+    
+    const ts = new Date().toISOString();
+    const payload = `1PHOTON|27PHASES|loop=${loops}|ts=${ts}`;
+    const hash = await sha256(payload);
+    
+    const log = JSON.parse(localStorage.getItem('photon_log') || '[]');
+    log.push({ ts, loops, hash });
+    if (log.length > 100) log.shift();
+    localStorage.setItem('photon_log', JSON.stringify(log));
+    
+    console.log(`%c◉ LOOP ${loops} → 0`, 'color:#c77dff;font-weight:bold;font-size:14px;');
+    console.log(`%c${ts}\nhash: ${hash.slice(0,16)}…${hash.slice(-8)}`, 'color:#9d4edd;font-family:monospace;');
+  }
+  
+  function addTrailPoint() {
+    const dx = photon.x - lastPos.x;
+    const dy = photon.y - lastPos.y;
+    if (Math.hypot(dx, dy) < minDist && stepCount > 0) return;
+    
+    stepCount++;
+    const prevPhase = phase;
+    phase = (phase + 1) % 27;
+    
+    trail.push({ x: photon.x, y: photon.y, phase });
+    if (trail.length > 27) trail.shift();
+    
+    lastPos.x = photon.x;
+    lastPos.y = photon.y;
+    
+    const displayPhase = phase + 1;
+    phaseEl.textContent = displayPhase;
+    phaseLarge.innerHTML = `PHASE <span>${displayPhase}</span>/27`;
+    
+    if (prevPhase === 26) {
+      triggerLoop();
+    }
+    
+    if (!hasInteracted) {
+      hasInteracted = true;
+      hint.classList.remove('show');
+    }
+  }
+  
+  function updateObservers() {
+    const left = photon.x < cx;
+    const top = photon.y < cy;
+    obs.II.classList.toggle('active', left && top);
+    obs.IO.classList.toggle('active', !left && top);
+    obs.OI.classList.toggle('active', left && !top);
+    obs.OO.classList.toggle('active', !left && !top);
+  }
+  
+  function draw() {
+    ctx.fillStyle = '#000';
+    ctx.fillRect(0, 0, width, height);
+    
+    // subtle interference grid
+    ctx.save();
+    ctx.globalAlpha = 0.035;
+    ctx.strokeStyle = '#7c3aed';
+    ctx.lineWidth = 1;
+    const grid = 56;
+    const ox = photon.x * 0.05;
+    const oy = photon.y * 0.05;
+    for (let x = -grid + (ox % grid); x < width + grid; x += grid) {
+      ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x + oy*0.1, height); ctx.stroke();
+    }
+    for (let y = -grid + (oy % grid); y < height + grid; y += grid) {
+      ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(width, y + ox*0.1); ctx.stroke();
+    }
+    ctx.restore();
+    
+    // photon field
+    const fieldGrad = ctx.createRadialGradient(photon.x, photon.y, 0, photon.x, photon.y, 320);
+    fieldGrad.addColorStop(0, 'rgba(192,132,252,0.18)');
+    fieldGrad.addColorStop(0.3, 'rgba(147,51,234,0.08)');
+    fieldGrad.addColorStop(1, 'rgba(0,0,0,0)');
+    ctx.fillStyle = fieldGrad;
+    ctx.beginPath(); ctx.arc(photon.x, photon.y, 320, 0, Math.PI*2); ctx.fill();
+    
+    // ripples
+    for (let i = ripples.length - 1; i >= 0; i--) {
+      const r = ripples[i];
+      r.r += 3.2;
+      r.alpha *= 0.97;
+      if (r.alpha < 0.02) { ripples.splice(i,1); continue; }
+      ctx.beginPath();
+      ctx.arc(r.x, r.y, r.r, 0, Math.PI*2);
+      ctx.strokeStyle = `rgba(199,125,255,${r.alpha * 0.6})`;
+      ctx.lineWidth = 2;
+      ctx.shadowBlur = 24;
+      ctx.shadowColor = '#9333ea';
+      ctx.stroke();
+    }
+    ctx.shadowBlur = 0;
+    
+    // lattice connections faint
+    ctx.save();
+    ctx.globalAlpha = 0.08;
+    ctx.strokeStyle = '#a855f7';
+    ctx.lineWidth = 1;
+    nodes.forEach(n => {
+      const next = nodes[(n.ring*9 + ((n.i+1)%9))];
+      ctx.beginPath(); ctx.moveTo(n.x, n.y); ctx.lineTo(next.x, next.y); ctx.stroke();
+    });
+    ctx.restore();
+    
+    // nodes
+    const t = Date.now() * 0.0015;
+    nodes.forEach(n => {
+      const dist = Math.hypot(photon.x - n.x, photon.y - n.y);
+      const active = dist < 44;
+      const pulse = Math.sin(t * 2 + n.angle) * 0.5 + 0.5;
+      const size = active ? 5.5 + pulse*2 : 2.8 + pulse*1.2;
+      
+      ctx.beginPath();
+      ctx.arc(n.x, n.y, size + 5, 0, Math.PI*2);
+      ctx.fillStyle = active ? 'rgba(255,255,255,0.08)' : 'rgba(157,78,221,0.05)';
+      ctx.fill();
+      
+      ctx.beginPath();
+      ctx.arc(n.x, n.y, size, 0, Math.PI*2);
+      ctx.fillStyle = active ? '#fff' : '#9d4edd';
+      ctx.shadowBlur = active ? 22 : 14;
+      ctx.shadowColor = active ? '#e9d5ff' : '#7c3aed';
+      ctx.globalAlpha = active ? 1 : 0.75;
+      ctx.fill();
+    });
+    ctx.shadowBlur = 0;
+    ctx.globalAlpha = 1;
+    
+    // trail
+    if (trail.length > 1) {
+      ctx.lineCap = 'round';
+      ctx.lineJoin = 'round';
+      for (let i = 1; i < trail.length; i++) {
+        const p0 = trail[i-1];
+        const p1 = trail[i];
+        const tn = i / (trail.length - 1);
+        const alpha = 0.15 + tn * 0.85;
+        
+        ctx.beginPath();
+        ctx.moveTo(p0.x, p0.y);
+        ctx.lineTo(p1.x, p1.y);
+        const r = Math.floor(180 + tn * 75);
+        const g = Math.floor(120 + tn * 135);
+        ctx.strokeStyle = `rgba(${r}, ${g}, 255, ${alpha})`;
+        ctx.lineWidth = 1.5 + tn * 4.5;
+        ctx.shadowBlur = 12 + tn * 8;
+        ctx.shadowColor = '#c084fc';
+        ctx.stroke();
+      }
+      ctx.shadowBlur = 0;
+      
+      trail.forEach((p, i) => {
+        const tn = i / (trail.length - 1);
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, 1.8 + tn * 2.5, 0, Math.PI*2);
+        ctx.fillStyle = `rgba(255,255,255,${0.25 + tn*0.75})`;
+        ctx.shadowBlur = 8;
+        ctx.shadowColor = '#d8b4fe';
+        ctx.fill();
+      });
+      ctx.shadowBlur = 0;
+    }
+    
+    // photon
+    photon.x += (photon.tx - photon.x) * 0.18;
+    photon.y += (photon.ty - photon.y) * 0.18;
+    
+    const pulseSize = 7 + Math.sin(Date.now()*0.008) * 1.2;
+    ctx.beginPath();
+    ctx.arc(photon.x, photon.y, pulseSize + 12, 0, Math.PI*2);
+    ctx.fillStyle = 'rgba(168,85,247,0.12)';
+    ctx.fill();
+    
+    ctx.beginPath();
+    ctx.arc(photon.x, photon.y, pulseSize + 5, 0, Math.PI*2);
+    ctx.fillStyle = 'rgba(216,180,254,0.25)';
+    ctx.shadowBlur = 30;
+    ctx.shadowColor = '#9333ea';
+    ctx.fill();
+    
+    ctx.beginPath();
+    ctx.arc(photon.x, photon.y, pulseSize, 0, Math.PI*2);
+    ctx.fillStyle = '#fff';
+    ctx.shadowBlur = 22;
+    ctx.shadowColor = '#e9d5ff';
+    ctx.fill();
+    ctx.shadowBlur = 0;
+    
+    // auto-add trail when moving
+    if (Math.hypot(photon.x - photon.tx, photon.y - photon.ty) > 2 || Math.hypot(photon.x - lastPos.x, photon.y - lastPos.y) > minDist) {
+      if (Date.now() % 70 < 16) addTrailPoint();
+    }
+    
+    updateObservers();
+    requestAnimationFrame(draw);
+  }
+  
+  function pointerMove(x, y) {
+    photon.tx = Math.max(20, Math.min(width - 20, x));
+    photon.ty = Math.max(20, Math.min(height - 20, y));
+    if (!hasInteracted) addTrailPoint();
+  }
+  
+  canvas.addEventListener('pointermove', e => { initAudio(); pointerMove(e.clientX, e.clientY); });
+  canvas.addEventListener('pointerdown', e => { initAudio(); pointerMove(e.clientX, e.clientY); addTrailPoint(); });
+  canvas.addEventListener('touchmove', e => { e.preventDefault(); const t = e.touches[0]; if(t) pointerMove(t.clientX, t.clientY); }, {passive:false});
+  
+  window.addEventListener('resize', resize);
+  
+  // init
+  resize();
+  phaseEl.textContent = '1';
+  setTimeout(() => hint.classList.add('show'), 800);
+  setTimeout(() => { if(!hasInteracted) hint.classList.remove('show'); }, 5000);
+  
+  // seed initial trail point
+  setTimeout(() => { phase = 0; trail.push({x:cx, y:cy, phase:0}); lastPos.x=cx; lastPos.y=cy; }, 100);
+  
+  draw();
+  
+  console.log('%c1 PHOTON // 27 PHASES', 'color:#c77dff;font-size:20px;font-weight:700;text-shadow:0 0 20px #7c3aed;');
+  console.log('%cYou are the electron. Move to walk the lattice.', 'color:#9d4edd;');
+})();
+</script>
+
+</body></html>

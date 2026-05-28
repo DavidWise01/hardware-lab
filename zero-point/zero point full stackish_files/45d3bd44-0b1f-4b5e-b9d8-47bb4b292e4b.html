@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<!-- saved from url=(0164)https://861041180365693.a.metaaiusercontent.com/html?artifact_uuid=45d3bd44-0b1f-4b5e-b9d8-47bb4b292e4b&ext=1779462616&hash=Q5fpDAFcqSxTzsi0mBUXDMdg4zmP&theme=light -->
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Photonic Processor — 128-bit Core</title>
+<style>
+:root{
+  --bg:#03050a;
+  --panel:#0a101c;
+  --panel-2:#0e1524;
+  --line:#1b263b;
+  --text:#cde7ff;
+  --muted:#7c90ae;
+  --cyan:#5ee7ff;
+  --mag:#ff5ee7;
+  --yel:#ffe45e;
+  --grn:#5eff8a;
+}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{
+  margin:0;
+  background:var(--bg);
+  color:var(--text);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+  display:flex;
+  flex-direction:column;
+}
+header{
+  padding:16px 20px;
+  border-bottom:1px solid var(--line);
+  background:linear-gradient(180deg,#08101e 0%,#04070e 100%);
+  position:sticky;top:0;z-index:10;
+}
+header h1{
+  margin:0;
+  font-size:16px;
+  letter-spacing:2.5px;
+  font-weight:600;
+  color:#e9f6ff;
+}
+header .sub{
+  margin-top:6px;
+  font-size:12px;
+  color:var(--muted);
+  letter-spacing:1px;
+}
+.main{
+  flex:1;
+  display:grid;
+  grid-template-columns:300px 1fr 260px;
+  gap:14px;
+  padding:14px;
+  min-height:0;
+}
+@media (max-width:1100px){
+  .main{grid-template-columns:1fr; grid-template-rows:auto 1fr auto;}
+}
+.panel{
+  background:var(--panel);
+  border:1px solid var(--line);
+  border-radius:14px;
+  padding:14px;
+  box-shadow:0 0 0 1px #000 inset, 0 10px 30px rgba(0,0,0,.35);
+}
+.panel h3{
+  margin:0 0 10px;
+  font-size:11px;
+  text-transform:uppercase;
+  letter-spacing:1.4px;
+  color:#9edfff;
+}
+.slider{margin:14px 0 16px}
+.slider label{
+  display:flex;justify-content:space-between;align-items:center;
+  font-size:12px;margin-bottom:6px;color:#b8d6f0;
+}
+.slider label .val{opacity:.9}
+input[type=range]{
+  width:100%;appearance:none;height:28px;background:transparent;cursor:pointer;
+}
+input[type=range]::-webkit-slider-runnable-track{height:4px;background:#132036;border-radius:999px;border:1px solid #1e2d45}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;height:16px;margin-top:-7px;background:#0d1728;border:1px solid #5ee7ff;border-radius:50%;box-shadow:0 0 10px #5ee7ff55}
+input[type=range]::-moz-range-track{height:4px;background:#132036;border-radius:999px;border:1px solid #1e2d45}
+input[type=range]::-moz-range-thumb{width:16px;height:16px;background:#0d1728;border:1px solid #5ee7ff;border-radius:50%;box-shadow:0 0 10px #5ee7ff55}
+.check{display:flex;align-items:center;gap:9px;margin:10px 0;font-size:12px;color:#b9d6ef}
+.check input{accent-color:#5ee7ff;width:16px;height:16px}
+.data-width{margin-top:18px;padding-top:12px;border-top:1px dashed #1e2d45}
+.data-width .row{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:8px 10px;margin-bottom:8px;
+  background:var(--panel-2);border:1px solid #162436;border-radius:10px;font-size:12px;
+}
+.badge{font-size:10px;padding:2px 6px;border:1px solid #28405f;border-radius:999px;color:#9dcfff;opacity:.8}
+.core-wrap{position:relative;min-height:520px}
+canvas#core{
+  width:100%;height:100%;min-height:520px;
+  display:block;
+  background:
+    radial-gradient(900px 500px at 50% 22%, #0a1a2e 0%, #07111f 45%, #03050a 80%);
+  border:1px solid var(--line);
+  border-radius:14px;
+}
+.right .layers{display:flex;flex-direction:column;gap:6px;max-height:70vh;overflow:auto;padding-right:4px}
+.layer{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:8px 10px;background:var(--panel-2);border:1px solid #15243a;border-radius:10px;
+  font-size:12px;color:#c6def5;cursor:default;transition:.2s;
+}
+.layer:hover{border-color:#274061}
+.layer.active{border-color:#5ee7ff;box-shadow:0 0 0 1px #5ee7ff33 inset, 0 0 18px #5ee7ff22}
+.layer .name{letter-spacing:1px}
+footer{
+  padding:10px 14px;border-top:1px solid var(--line);
+  background:#050a14;color:#9cb9d6;font-size:12px;text-align:center;
+}
+.hint{font-size:11px;color:#7f9bb8;margin-top:6px;line-height:1.4}
+</style>
+</head>
+<body>
+<header>
+  <h1>PHOTONIC PROCESSOR CORE</h1>
+  <div class="sub">16 LAYERS / 64 NODES PER LAYER / 32b×4 = 128b</div>
+</header>
+
+<div class="main">
+  <aside class="panel left">
+    <h3>Field Controls</h3>
+    <div class="slider">
+      <label><span>Containment %</span><span class="val" id="containVal">98.00</span></label>
+      <input id="contain" type="range" min="90" max="99.99" value="98" step="0.01">
+    </div>
+    <div class="slider">
+      <label><span>Coupling % <span id="boostTag" class="badge" style="margin-left:6px; display:none">(×2)</span></span><span class="val" id="coupleVal">2.00</span></label>
+      <input id="couple" type="range" min="0.10" max="10" value="2" step="0.01">
+    </div>
+    <div class="slider">
+      <label><span>Twist Speed</span><span class="val" id="twistVal">0.50</span></label>
+      <input id="twist" type="range" min="0" max="2" value="0.5" step="0.01">
+    </div>
+
+    <div class="data-width">
+      <h3>Data Width</h3>
+      <div class="row"><span>Per Quadrant</span><strong>32-bit</strong></div>
+      <div class="row"><span>Per Layer</span><strong>128-bit (4×32)</strong></div>
+      <div class="check"><input id="fine" type="checkbox" checked=""><label for="fine">Enable .01 fine mode</label></div>
+      <div class="check"><input id="boost" type="checkbox"><label for="boost">×2 boost (or)</label></div>
+      <div class="hint">Fine mode sets Containment step 0.01 and Coupling step 0.01. Coarse: 0.1 and 1.</div>
+    </div>
+  </aside>
+
+  <div class="core-wrap">
+    <canvas id="core" width="876" height="962"></canvas>
+  </div>
+
+  <aside class="panel right">
+    <h3>Layer Stack · 8-0-8</h3>
+    <div class="layers" id="layers"><div class="layer" title="Q1-Q4: 32b each (16 nodes × 2b)"><span class="name">L16</span><span class="badge">· 128b</span></div><div class="layer" title="Q1-Q4: 32b each (16 nodes × 2b)"><span class="name">L15</span><span class="badge">· 128b</span></div><div class="layer" title="Q1-Q4: 32b each (16 nodes × 2b)"><span class="name">L14</span><span class="badge">· 128b</span></div><div class="layer" title="Q1-Q4: 32b each (16 nodes × 2b)"><span class="name">L13</span><span class="badge">· 128b</span></div><div class="layer" title="Q1-Q4: 32b each (16 nodes × 2b)"><span class="name">L12</span><span class="badge">· 128b</span></div><div class="layer" title="Q1-Q4: 32b each (16 nodes × 2b)"><span class="name">L11</span><span class="badge">· 128b</span></div><div class="layer" title="Q1-Q4: 32b each (16 nodes × 2b)"><span class="name">L10</span><span class="badge">· 128b</span></div><div class="layer" title="Q1-Q4: 32b each (16 nodes × 2b)"><span class="name">L09</span><span class="badge">· 128b</span></div><div class="layer" title="Q1-Q4: 32b each (16 nodes × 2b)"><span class="name">L08</span><span class="badge">· 128b</span></div><div class="layer" title="Q1-Q4: 32b each (16 nodes × 2b)"><span class="name">L07</span><span class="badge">· 128b</span></div><div class="layer" title="Q1-Q4: 32b each (16 nodes × 2b)"><span class="name">L06</span><span class="badge">· 128b</span></div><div class="layer active" title="Q1-Q4: 32b each (16 nodes × 2b)"><span class="name">L05</span><span class="badge">· 128b</span></div><div class="layer" title="Q1-Q4: 32b each (16 nodes × 2b)"><span class="name">L04</span><span class="badge">· 128b</span></div><div class="layer" title="Q1-Q4: 32b each (16 nodes × 2b)"><span class="name">L03</span><span class="badge">· 128b</span></div><div class="layer" title="Q1-Q4: 32b each (16 nodes × 2b)"><span class="name">L02</span><span class="badge">· 128b</span></div><div class="layer" title="Q1-Q4: 32b each (16 nodes × 2b)"><span class="name">L01</span><span class="badge">· 128b</span></div></div>
+    <div class="hint" style="margin-top:10px">64 emitters/layer = 16 per quadrant. Hover for mapping.</div>
+  </aside>
+</div>
+
+<footer>Core Law: 64 colors enter (16×4, 32b per quad). One 128-bit white report exits. Contain 98.00%. Release 2.00%.</footer>
+
+<script>
+const canvas = document.getElementById('core');
+const ctx = canvas.getContext('2d');
+const contain = document.getElementById('contain');
+const couple = document.getElementById('couple');
+const twist = document.getElementById('twist');
+const fine = document.getElementById('fine');
+const boost = document.getElementById('boost');
+const containVal = document.getElementById('containVal');
+const coupleVal = document.getElementById('coupleVal');
+const twistVal = document.getElementById('twistVal');
+const boostTag = document.getElementById('boostTag');
+const layersEl = document.getElementById('layers');
+
+const quadColors = ['#5ee7ff','#ff5ee7','#ffe45e','#5eff8a'];
+
+// Build right layer list: 16 layers, each · 128b
+for(let l=16;l>=1;l--){
+  const div = document.createElement('div');
+  div.className = 'layer';
+  div.title = 'Q1-Q4: 32b each (16 nodes × 2b)';
+  div.innerHTML = `<span class="name">L${String(l).padStart(2,'0')}</span><span class="badge">· 128b</span>`;
+  layersEl.appendChild(div);
+}
+const layerNodes = Array.from(document.querySelectorAll('.layer'));
+
+function applyFine(){
+  if(fine.checked){
+    contain.step = '0.01';
+    couple.step = '0.01';
+  }else{
+    contain.step = '0.1';
+    couple.step = '1';
+  }
+}
+applyFine();
+
+function updateDisplays(){
+  containVal.textContent = parseFloat(contain.value).toFixed(2);
+  coupleVal.textContent = parseFloat(couple.value).toFixed(2);
+  twistVal.textContent = parseFloat(twist.value).toFixed(2);
+  boostTag.style.display = boost.checked ? 'inline-block' : 'none';
+}
+[contain, couple, twist].forEach(el=>el.addEventListener('input', updateDisplays));
+boost.addEventListener('change', updateDisplays);
+fine.addEventListener('change', ()=>{ applyFine(); updateDisplays(); });
+updateDisplays();
+
+function resize(){
+  const rect = canvas.getBoundingClientRect();
+  const dpr = Math.max(1, window.devicePixelRatio || 1);
+  const w = Math.floor(rect.width * dpr);
+  const h = Math.floor(rect.height * dpr);
+  if(canvas.width !== w || canvas.height !== h){
+    canvas.width = w; canvas.height = h;
+  }
+}
+window.addEventListener('resize', resize);
+
+let t = 0;
+function draw(){
+  resize();
+  const w = canvas.width;
+  const h = canvas.height;
+  const dpr = window.devicePixelRatio || 1;
+  const cw = w/dpr, ch = h/dpr;
+  ctx.save();
+  ctx.scale(dpr,dpr);
+  ctx.clearRect(0,0,cw,ch);
+
+  const cx = cw/2;
+  const cy = ch/2 + 12;
+  const containment = parseFloat(contain.value)/100;
+  const couplingBase = parseFloat(couple.value)/100;
+  const coupling = couplingBase * (boost.checked ? 2 : 1);
+  const twistSpeed = parseFloat(twist.value);
+
+  t += 0.016 * (0.3 + twistSpeed);
+
+  // central white conduit
+  const coreTop = cy - 260;
+  const coreBot = cy + 260;
+  const coreGrad = ctx.createLinearGradient(cx, coreTop, cx, coreBot);
+  coreGrad.addColorStop(0, 'rgba(255,255,255,0.95)');
+  coreGrad.addColorStop(0.5, `rgba(94,231,255,${0.25 + containment*0.55})`);
+  coreGrad.addColorStop(1, 'rgba(255,255,255,0.15)');
+  ctx.strokeStyle = coreGrad;
+  ctx.lineWidth = 2.5;
+  ctx.shadowColor = '#5ee7ff';
+  ctx.shadowBlur = 18 + containment*20;
+  ctx.beginPath();
+  ctx.moveTo(cx, coreTop);
+  ctx.lineTo(cx, coreBot);
+  ctx.stroke();
+  ctx.shadowBlur = 0;
+
+  // highlight traveling layer
+  const activeIdx = Math.floor((performance.now()/700) % 16);
+  layerNodes.forEach((el,i)=> el.classList.toggle('active', i===activeIdx));
+
+  // 16 layers in 8-0-8 stack
+  for(let i=0;i<16;i++){
+    const isTop = i < 8;
+    const idx = isTop ? i : i-8;
+    const gap = 34;
+    const y = isTop ? (cy - gap - (7-idx)*28) : (cy + gap + idx*28);
+    const radius = 210 - idx*9;
+    const rot = t*0.6 + i*0.11;
+
+    // layer ring
+    ctx.strokeStyle = `rgba(94,231,255,${0.12 + containment*0.28})`;
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.ellipse(cx, y, radius, radius*0.29, 0, 0, Math.PI*2);
+    ctx.stroke();
+
+    // 64 emitters = 16 per quadrant
+    for(let n=0;n<64;n++){
+      const q = (n/16)|0; // 0..3
+      const ang = (n/64)*Math.PI*2 + rot + q*0.015;
+      const x = cx + Math.cos(ang)*radius;
+      const ny = y + Math.sin(ang)*radius*0.29;
+
+      // beam toward core
+      const beamAlpha = Math.min(0.85, 0.05 + coupling*0.9);
+      ctx.strokeStyle = quadColors[q] + Math.floor(beamAlpha*255).toString(16).padStart(2,'0');
+      ctx.lineWidth = 0.7 + (boost.checked?0.4:0);
+      ctx.beginPath();
+      ctx.moveTo(x, ny);
+      const tx = cx + Math.cos(ang)*10;
+      const ty = y + (cy - y)*0.06;
+      ctx.lineTo(tx, ty);
+      ctx.stroke();
+
+      // node glow
+      ctx.shadowColor = quadColors[q];
+      ctx.shadowBlur = 6 + containment*10 + (boost.checked?5:0);
+      ctx.fillStyle = quadColors[q];
+      ctx.globalAlpha = 0.9;
+      ctx.beginPath();
+      ctx.arc(x, ny, 2.1, 0, Math.PI*2);
+      ctx.fill();
+      ctx.globalAlpha = 1;
+      ctx.shadowBlur = 0;
+    }
+
+    // subtle 128b label on right side of each ring
+    ctx.fillStyle = 'rgba(160,200,230,0.22)';
+    ctx.font = '10px ui-monospace';
+    ctx.fillText('128b', cx + radius + 8, y + 3);
+  }
+
+  // top white report (output)
+  ctx.shadowColor = '#ffffff';
+  ctx.shadowBlur = 28 + coupling*30;
+  ctx.fillStyle = '#ffffff';
+  ctx.beginPath();
+  ctx.arc(cx, coreTop - 8, 3.5 + coupling*18, 0, Math.PI*2);
+  ctx.fill();
+  ctx.shadowBlur = 0;
+
+  // bottom intake glow
+  ctx.fillStyle = 'rgba(94,231,255,0.25)';
+  ctx.beginPath();
+  ctx.arc(cx, coreBot + 10, 12 + containment*8, 0, Math.PI*2);
+  ctx.fill();
+
+  // overlay text bottom-left
+  ctx.fillStyle = 'rgba(127,191,255,0.9)';
+  ctx.font = '12px ui-monospace, Menlo, monospace';
+  const prec = fine.checked ? '.01' : '.1';
+  const bst = boost.checked ? 'ON' : 'OFF';
+  ctx.fillText(`FRAME: 128b × 16 layers = 2048b photonic word | precision ${prec} | boost ${bst}`, 14, ch - 14);
+
+  // quadrant legend top-right
+  ctx.fillStyle = 'rgba(180,210,240,0.7)';
+  ctx.font = '11px ui-monospace';
+  ctx.fillText('Q1  Q2  Q3  Q4  : 32b each (16×2b)', cw - 260, 24);
+  for(let q=0;q<4;q++){
+    ctx.fillStyle = quadColors[q];
+    ctx.fillRect(cw - 262 + q*38, 32, 28, 3);
+  }
+
+  ctx.restore();
+  requestAnimationFrame(draw);
+}
+requestAnimationFrame(draw);
+</script>
+
+</body></html>

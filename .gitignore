@@ -1,0 +1,13 @@
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+New Text Document.txt
+
+# Editors
+.vscode/
+*.swp
+
+# Python
+__pycache__/
+*.pyc

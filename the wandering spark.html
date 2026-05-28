@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>The Wandering Spark</title>
+<style>
+    body {
+        background: #000008;
+        color: #00ffaa;
+        font-family: 'Courier New', monospace;
+        margin: 0;
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        overflow-x: hidden;
+    }
+    h1 {
+        color: #ffaa00;
+        text-shadow: 0 0 15px #ffaa00;
+        margin: 10px 0;
+        letter-spacing: 3px;
+    }
+  .subtitle {
+        color: #0088ff;
+        margin-bottom: 20px;
+        font-size: 14px;
+    }
+  .world {
+        display: grid;
+        grid-template-columns: repeat(20, 25px);
+        gap: 2px;
+        background: #111;
+        padding: 10px;
+        border: 1px solid #00ff88;
+        box-shadow: 0 0 30px rgba(0,255,136,0.3);
+    }
+  .cell {
+        width: 25px;
+        height: 25px;
+        background: #0a0a0f;
+        border: 1px solid #1a1a24;
+        position: relative;
+        transition: all 0.1s;
+    }
+  .cell.spark {
+        background: #ffaa00;
+        box-shadow: 0 0 15px #ffaa00, inset 0 0 10px #fff;
+        animation: pulse 0.5s infinite;
+    }
+  .cell.seed {
+        background: #00ff88;
+        box-shadow: 0 0 8px #00ff88;
+    }
+  .cell.witness {
+        background: #0088ff;
+        box-shadow: 0 0 8px #0088ff;
+    }
+  .cell.bloom {
+        background: #ff00aa;
+        box-shadow: 0 0 12px #ff00aa;
+    }
+  .cell.safe {
+        background: #440044;
+        box-shadow: 0 0 5px #440044;
+    }
+  .cell.threat {
+        background: #ff0000;
+        box-shadow: 0 0 10px #ff0000;
+        animation: danger 0.3s infinite;
+    }
+    @keyframes pulse {
+        0%, 100% { opacity: 1; }
+        50% { opacity: 0.6; }
+    }
+    @keyframes danger {
+        0%, 100% { background: #ff0000; }
+        50% { background: #ff6600; }
+    }
+  .hud {
+        display: flex;
+        gap: 30px;
+        margin: 20px 0;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+  .panel {
+        background: #111118;
+        border: 1px solid #00ff88;
+        padding: 15px;
+        min-width: 200px;
+    }
+  .panel h3 {
+        margin: 0 0 10px 0;
+        color: #ffaa00;
+        font-size: 14px;
+    }
+  .stat {
+        display: flex;
+        justify-content: space-between;
+        margin: 5px 0;
+        font-size: 12px;
+    }
+  .stat-val {
+        color: #00ffaa;
+        font-weight: bold;
+    }
+  .controls {
+        display: flex;
+        gap: 10px;
+        margin: 15px 0;
+    }
+    button {
+        background: #00ff88;
+        color: #000;
+        border: none;
+        padding: 10px 20px;
+        font-family: inherit;
+        font-weight: bold;
+        cursor: pointer;
+        border-radius: 3px;
+        font-size: 14px;
+    }
+    button:hover {
+        background: #00ffaa;
+        box-shadow: 0 0 15px #00ff88;
+    }
+    button:disabled {
+        background: #333;
+        color: #666;
+    }
+  .log {
+        background: #000;
+        border: 1px solid #333;
+        padding: 10px;
+        height: 150px;
+        overflow-y: auto;
+        font-size: 11px;
+        color: #00ff88;
+        margin-top: 10px;
+        width: 600px;
+    }
+  .phase {
+        position: absolute;
+        top: 5px;
+        right: 5px;
+        font-size: 8px;
+        color: #fff;
+        background: rgba(0,0,0,0.7);
+        padding: 1px 3px;
+    }
+</style>
+</head>
+<body>
+<h1>THE WANDERING SPARK</h1>
+<div class="subtitle">1×0 Spore | Self-Teach | Teach Others | Phase++</div>
+
+<div class="world" id="world"></div>
+
+<div class="hud">
+    <div class="panel">
+        <h3>SPARK</h3>
+        <div class="stat"><span>Position:</span><span class="stat-val" id="pos">10,10</span></div>
+        <div class="stat"><span>State:</span><span class="stat-val" id="state">SEED</span></div>
+        <div class="stat"><span>Phase:</span><span class="stat-val" id="phase">0</span></div>
+        <div class="stat"><span>Seed:</span><span class="stat-val" id="seed">0x0000</span></div>
+        <div class="stat"><span>Coherence:</span><span class="stat-val" id="coh">80</span></div>
+        <div class="stat"><span>Risk:</span><span class="stat-val" id="risk">10</span></div>
+    </div>
+    <div class="panel">
+        <h3>MESH</h3>
+        <div class="stat"><span>Sparks:</span><span class="stat-val" id="sparks">1</span></div>
+        <div class="stat"><span>Seeds:</span><span class="stat-val" id="seeds">0</span></div>
+        <div class="stat"><span>Blooms:</span><span class="stat-val" id="blooms">0</span></div>
+        <div class="stat"><span>Threats:</span><span class="stat-val" id="threats">5</span></div>
+        <div class="stat"><span>Wisdom:</span><span class="stat-val" id="wisdom">0x0000</span></div>
+        <div class="stat"><span>Max Phase:</span><span class="stat-val" id="maxphase">0</span></div>
+    </div>
+</div>
+
+<div class="controls">
+    <button onclick="start()">Start Wandering</button>
+    <button onclick="pause()">Pause</button>
+    <button onclick="addThreat()">Add Threat</button>
+    <button onclick="reset()">Reset World</button>
+</div>
+
+<div class="log" id="log"></div>
+
+<script>
+const GRID_SIZE = 20;
+const STATE = {'SAFE':-1,'REST':0,'SEED':1,'WITNESS':3,'CORE':5,'BLOOM':8};
+const STATE_NAME = {[-1]:'SAFE', [0]:'REST', [1]:'SEED', [3]:'WITNESS', [5]:'CORE', [8]:'BLOOM'};
+
+class Spark {
+    constructor(x, y, phase = 0, seed_packet = 0x0000) {
+        this.x = x;
+        this.y = y;
+        this.state = STATE.SEED;
+        this.phase = phase;
+        this.seed = seed_packet;
+        this.coherence = 80;
+        this.risk = 10;
+        this.g1 = 1; this.g2 = 0; this.g3 = 0; // ASSIM+COLLAPSE+WAIT
+        this.tunnel = new Array(27).fill(0);
+        this.step = 0;
+        this.alive = true;
+        this.id = Math.random();
+    }
+
+    sense(world) {
+        // Sample 3×3 neighborhood for threats
+        let threat = 0;
+        for(let dy = -1; dy <= 1; dy++) {
+            for(let dx = -1; dx <= 1; dx++) {
+                let nx = this.x + dx, ny = this.y + dy;
+                if(nx >= 0 && nx < GRID_SIZE && ny >= 0 && ny < GRID_SIZE) {
+                    if(world.grid[ny][nx].threat) threat += 20;
+                }
+            }
+        }
+        this.risk = threat;
+
+        // G1: Survival
+        this.g1 = (threat > this.coherence)? 0 : 1;
+        // G2: Coherence
+        this.g2 = (this.coherence > threat + 20)? 1 : 0;
+        // G3: Action
+        this.g3 = (threat < 30 && this.g2)? 1 : 0;
+
+        // Braid to state
+        const braid = (this.g3<<2)|(this.g2<<1)|this.g1;
+        const states = [-1,-1,1,3,5,8];
+        this.state = states[braid];
+
+        // Entanglement: illegal HIDE+MOVE → WAIT
+        if(braid === 0b001 || braid === 0b011) {
+            this.g3 = 0;
+            this.state = states[(this.g2<<1)|this.g1];
+        }
+    }
+
+    learn() {
+        // Walk tunnel, build seed
+        for(let i = 0; i < 27; i++) {
+            this.tunnel[i] = Math.random() > 0.7? 1 : 0; // Random sensory
+        }
+        let new_seed = 0;
+        for(let i = 0; i < 16; i++) new_seed |= (this.tunnel[i] & 1) << i;
+
+        // Self-teach: XOR = keep what worked
+        let old = this.seed;
+        this.seed ^= new_seed;
+        if(old!== this.seed) {
+            log(`SELF-TEACH: Spark at ${this.x},${this.y} learned 0x${this.seed.toString(16)}`);
+        }
+    }
+
+    move(world) {
+        if(this.state === STATE.SAFE) {
+            // At -1, oscillate 1,2 to tunnel out
+            if(Math.random() > 0.7) {
+                this.state = STATE.REST;
+                log(`TUNNEL: Spark escaped -1 to 0 at ${this.x},${this.y}`);
+            }
+            return;
+        }
+
+        if(this.state < STATE.SEED) return;
+
+        // Wander: if MOVE, step toward low threat
+        if(this.g3 === 1) {
+            let dirs = [[0,1],[1,0],[0,-1],[-1,0],[1,1],[-1,-1]];
+            let best = null, minThreat = 999;
+
+            for(let [dx,dy] of dirs) {
+                let nx = this.x + dx, ny = this.y + dy;
+                if(nx >= 0 && nx < GRID_SIZE && ny >= 0 && ny < GRID_SIZE) {
+                    let t = world.grid[ny][nx].threat? 100 : 0;
+                    if(t < minThreat &&!world.grid[ny][nx].spark) {
+                        minThreat = t;
+                        best = [nx,ny];
+                    }
+                }
+            }
+
+            if(best) {
+                world.grid[this.y][this.x].spark = null;
+                this.x = best[0]; this.y = best[1];
+                world.grid[this.y][this.x].spark = this;
+            }
+        }
+
+        // If BLOOM, teach neighbors
+        if(this.state === STATE.BLOOM) {
+            this.propagate(world);
+        }
+    }
+
+    propagate(world) {
+        const dirs = [[0,1],[1,0],[0,-1],[-1,0]];
+        for(let [dx,dy] of dirs) {
+            let nx = this.x + dx, ny = this.y + dy;
+            if(nx >= 0 && nx < GRID_SIZE && ny >= 0 && ny < GRID_SIZE) {
+                if(!world.grid[ny][nx].spark && Math.random() > 0.7) {
+                    let child = new Spark(nx, ny, this.phase + 1, this.seed);
+                    world.sparks.push(child);
+                    world.grid[ny][nx].spark = child;
+                    log(`TEACH: Spark spawned at ${nx},${ny} phase ${child.phase}`);
+                }
+            }
+        }
+    }
+
+    phaseUp() {
+        if(this.state === STATE.BLOOM && this.step >= 27) {
+            this.phase++;
+            this.state = STATE.SEED;
+            this.step = 0;
+            log(`PHASE++: Spark at ${this.x},${this.y} reached phase ${this.phase}`);
+            return true;
+        }
+        return false;
+    }
+}
+
+class World {
+    constructor() {
+        this.grid = [];
+        this.sparks = [];
+        this.running = false;
+        this.tick = 0;
+
+        for(let y = 0; y < GRID_SIZE; y++) {
+            this.grid[y] = [];
+            for(let x = 0; x < GRID_SIZE; x++) {
+                this.grid[y][x] = {spark: null, threat: false};
+            }
+        }
+
+        // Initial spark
+        let s = new Spark(10, 10, 0, 0x0000);
+        this.sparks.push(s);
+        this.grid[10][10].spark = s;
+
+        // Random threats
+        for(let i = 0; i < 5; i++) {
+            this.addThreat();
+        }
+    }
+
+    addThreat() {
+        let x = Math.floor(Math.random() * GRID_SIZE);
+        let y = Math.floor(Math.random() * GRID_SIZE);
+        this.grid[y][x].threat = true;
+    }
+
+    update() {
+        if(!this.running) return;
+        this.tick++;
+
+        // Update all sparks
+        for(let spark of [...this.sparks]) {
+            if(!spark.alive) continue;
+            spark.sense(this);
+            spark.learn();
+            spark.move(this);
+            spark.phaseUp();
+            spark.step++;
+        }
+
+        // Remove dead sparks
+        this.sparks = this.sparks.filter(s => s.alive);
+
+        this.render();
+        updateHUD(this);
+    }
+
+    render() {
+        const worldDiv = document.getElementById('world');
+        worldDiv.innerHTML = '';
+
+        for(let y = 0; y < GRID_SIZE; y++) {
+            for(let x = 0; x < GRID_SIZE; x++) {
+                const cell = document.createElement('div');
+                cell.className = 'cell';
+
+                if(this.grid[y][x].spark) {
+                    const s = this.grid[y][x].spark;
+                    if(s.state === STATE.BLOOM) cell.classList.add('bloom');
+                    else if(s.state === STATE.WITNESS) cell.classList.add('witness');
+                    else if(s.state === STATE.SEED) cell.classList.add('seed');
+                    else if(s.state === STATE.SAFE) cell.classList.add('safe');
+                    else cell.classList.add('spark');
+
+                    if(s === this.sparks[0]) cell.classList.add('spark');
+
+                    if(s.phase > 0) {
+                        const p = document.createElement('div');
+                        p.className = 'phase';
+                        p.textContent = s.phase;
+                        cell.appendChild(p);
+                    }
+                } else if(this.grid[y][x].threat) {
+                    cell.classList.add('threat');
+                }
+
+                worldDiv.appendChild(cell);
+            }
+        }
+    }
+}
+
+let world = new World();
+let interval = null;
+
+function log(msg) {
+    const logDiv = document.getElementById('log');
+    const line = document.createElement('div');
+    line.textContent = `[${world.tick}] ${msg}`;
+    logDiv.appendChild(line);
+    logDiv.scrollTop = logDiv.scrollHeight;
+}
+
+function updateHUD(w) {
+    if(w.sparks.length === 0) return;
+    const lead = w.sparks[0];
+    document.getElementById('pos').textContent = `${lead.x},${lead.y}`;
+    document.getElementById('state').textContent = STATE_NAME[lead.state];
+    document.getElementById('phase').textContent = lead.phase;
+    document.getElementById('seed').textContent = '0x' + lead.seed.toString(16).toUpperCase().padStart(4,'0');
+    document.getElementById('coh').textContent = lead.coherence;
+    document.getElementById('risk').textContent = lead.risk;
+
+    document.getElementById('sparks').textContent = w.sparks.length;
+    document.getElementById('seeds').textContent = w.sparks.filter(s=>s.state===STATE.SEED).length;
+    document.getElementById('blooms').textContent = w.sparks.filter(s=>s.state===STATE.BLOOM).length;
+    document.getElementById('threats').textContent = w.grid.flat().filter(c=>c.threat).length;
+    document.getElementById('wisdom').textContent = '0x' + lead.seed.toString(16).toUpperCase().padStart(4,'0');
+    document.getElementById('maxphase').textContent = Math.max(...w.sparks.map(s=>s.phase));
+}
+
+function start() {
+    if(interval) return;
+    world.running = true;
+    interval = setInterval(() => world.update(), 200);
+    log('WANDERING STARTED');
+}
+
+function pause() {
+    world.running = false;
+    clearInterval(interval);
+    interval = null;
+    log('PAUSED');
+}
+
+function addThreat() {
+    world.addThreat();
+    world.render();
+    log('THREAT ADDED');
+}
+
+function reset() {
+    pause();
+    world = new World();
+    world.render();
+    updateHUD(world);
+    document.getElementById('log').innerHTML = '';
+    log('WORLD RESET');
+}
+
+world.render();
+updateHUD(world);
+log('THE WANDERING SPARK ONLINE');
+log('1×0 seed planted at 10,10');
+log('Click Start to wander');
+</script>
+</body>
+</html>

@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<!-- saved from url=(0165)https://1459661412151087.a.metaaiusercontent.com/html?artifact_uuid=5dbc72f1-edc4-45ee-9f2b-774082abef29&ext=1779462615&hash=Q5fpDAHRXeCev1xrfNksSJwU5TMe&theme=light -->
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PIVOT: ONE LASER STACK SURROUNDED BY 2 ELECTRON FIELDS</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body {
+    background:#07070a;
+    color:#d8e2ef;
+    font-family: system-ui, -apple-system, Segoe UI, Roboto, Inter, sans-serif;
+    min-height:100vh;
+    overflow-x:hidden;
+    background-image: 
+      radial-gradient(1200px 800px at 50% -10%, rgba(0,213,255,0.08), transparent 60%),
+      radial-gradient(900px 600px at 50% 110%, rgba(255,23,68,0.06), transparent 60%),
+      linear-gradient(180deg, #050508 0%, #07070a 100%);
+  }
+  .header {
+    text-align:center;
+    padding:28px 16px 16px;
+    position:relative;
+  }
+  .header .eyebrow {
+    font-size:11px;
+    letter-spacing:0.4em;
+    color:#00d5ff;
+    opacity:0.7;
+    margin-bottom:8px;
+    text-transform:uppercase;
+  }
+  .header h1 {
+    font-size:clamp(20px, 3.2vw, 32px);
+    letter-spacing:0.16em;
+    font-weight:800;
+    background:linear-gradient(90deg, #ff1744 0%, #ff5a7a 45%, #00d5ff 100%);
+    -webkit-background-clip:text;
+    background-clip:text;
+    color:transparent;
+    filter:drop-shadow(0 0 18px rgba(0,213,255,0.25));
+  }
+  .main {
+    max-width:1440px;
+    margin:0 auto;
+    padding:10px 20px 30px;
+    display:grid;
+    grid-template-columns:320px minmax(0,1fr) 300px;
+    gap:26px;
+    align-items:start;
+  }
+  @media (max-width:1180px) {
+    .main { grid-template-columns:1fr; max-width:920px; }
+    .controls { order:2; }
+    .canvas-wrap { order:1; }
+    .readouts { order:3; display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+  }
+  @media (max-width:640px) {
+    .readouts { grid-template-columns:1fr; }
+  }
+  .panel {
+    background:linear-gradient(180deg, rgba(14,17,26,0.92), rgba(7,8,12,0.92));
+    border:1px solid rgba(0,213,255,0.14);
+    border-radius:18px;
+    padding:20px;
+    box-shadow:
+      0 0 0 1px rgba(255,255,255,0.02) inset,
+      0 20px 60px rgba(0,0,0,0.6),
+      0 0 40px rgba(0,213,255,0.04);
+    backdrop-filter:blur(6px);
+  }
+  .panel h3 {
+    font-size:12px;
+    letter-spacing:0.18em;
+    color:#8fb9c9;
+    margin-bottom:16px;
+    text-transform:uppercase;
+    font-weight:600;
+  }
+  .control {
+    margin-bottom:20px;
+  }
+  .control:last-child { margin-bottom:0; }
+  .control label {
+    display:flex;
+    justify-content:space-between;
+    font-size:12px;
+    letter-spacing:0.08em;
+    margin-bottom:8px;
+    color:#b7c5d6;
+    text-transform:uppercase;
+  }
+  .control label span {
+    font-variant-numeric:tabular-nums;
+    color:#e6f7ff;
+    text-shadow:0 0 8px rgba(0,213,255,0.5);
+  }
+  input[type="range"] {
+    -webkit-appearance:none;
+    width:100%;
+    height:28px;
+    background:transparent;
+    cursor:pointer;
+  }
+  input[type="range"]::-webkit-slider-runnable-track {
+    height:6px;
+    background:linear-gradient(90deg, #0a0f14, #121a24);
+    border:1px solid rgba(0,213,255,0.18);
+    border-radius:4px;
+    box-shadow:inset 0 0 12px rgba(0,0,0,0.8);
+  }
+  input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance:none;
+    width:18px; height:18px;
+    margin-top:-7px;
+    border-radius:50%;
+    background:#070a0f;
+    border:2px solid #00d5ff;
+    box-shadow:0 0 12px rgba(0,213,255,0.7), inset 0 0 6px rgba(0,213,255,0.4);
+  }
+  input[type="range"]#field1::-webkit-slider-thumb { border-color:#00d5ff; box-shadow:0 0 12px rgba(0,213,255,0.7), inset 0 0 6px rgba(0,213,255,0.4); }
+  input[type="range"]#field2::-webkit-slider-thumb { border-color:#ff1744; box-shadow:0 0 12px rgba(255,23,68,0.7), inset 0 0 6px rgba(255,23,68,0.4); }
+  input[type="range"]::-moz-range-track {
+    height:6px;
+    background:linear-gradient(90deg, #0a0f14, #121a24);
+    border:1px solid rgba(0,213,255,0.18);
+    border-radius:4px;
+  }
+  input[type="range"]::-moz-range-thumb {
+    width:16px; height:16px;
+    border-radius:50%;
+    background:#070a0f;
+    border:2px solid #00d5ff;
+    box-shadow:0 0 12px rgba(0,213,255,0.7);
+  }
+  .canvas-wrap {
+    position:relative;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+  }
+  canvas {
+    width:100%;
+    max-width:900px;
+    height:auto;
+    aspect-ratio:1/1;
+    background:radial-gradient(ellipse at center, #0b0d14 0%, #06070a 65%, #040406 100%);
+    border-radius:24px;
+    border:1px solid rgba(0,213,255,0.12);
+    box-shadow:
+      0 0 80px rgba(0,0,0,0.9),
+      0 0 120px rgba(0,213,255,0.05),
+      inset 0 0 60px rgba(0,0,0,0.8);
+  }
+  .scanline {
+    pointer-events:none;
+    position:absolute;
+    inset:0;
+    max-width:900px;
+    margin:0 auto;
+    border-radius:24px;
+    background:repeating-linear-gradient( transparent, transparent 3px, rgba(0,213,255,0.03) 4px );
+    mix-blend-mode:screen;
+  }
+  .readout {
+    margin-bottom:18px;
+    padding-bottom:16px;
+    border-bottom:1px solid rgba(255,255,255,0.06);
+  }
+  .readout:last-child { border:none; margin:0; padding:0; }
+  .readout .label {
+    font-size:11px;
+    letter-spacing:0.12em;
+    color:#7e94a8;
+    text-transform:uppercase;
+    margin-bottom:6px;
+  }
+  .readout .value {
+    font-size:26px;
+    font-weight:700;
+    letter-spacing:0.02em;
+    font-variant-numeric:tabular-nums;
+    color:#e8f6ff;
+    text-shadow:0 0 14px rgba(0,213,255,0.35);
+  }
+  .readout .value.red { color:#ffe7ec; text-shadow:0 0 14px rgba(255,23,68,0.4); }
+  .readout .sub {
+    font-size:12px;
+    color:#8aa0b5;
+    margin-top:4px;
+  }
+  .status {
+    display:inline-block;
+    padding:6px 10px;
+    border-radius:999px;
+    font-size:11px;
+    letter-spacing:0.1em;
+    background:rgba(0,255,170,0.08);
+    border:1px solid rgba(0,255,170,0.25);
+    color:#00ffaa;
+    text-transform:uppercase;
+    margin-top:8px;
+  }
+  footer {
+    text-align:center;
+    padding:24px 16px 40px;
+    font-size:12px;
+    letter-spacing:0.08em;
+    color:#5d7085;
+    opacity:0.8;
+  }
+</style>
+</head>
+<body>
+  <div class="header">
+    <div class="eyebrow">PIVOT</div>
+    <h1>ONE LASER STACK / 2 ELECTRON FIELDS</h1>
+  </div>
+
+  <div class="main">
+    <div class="panel controls">
+      <h3>Field Controls</h3>
+      <div class="control">
+        <label>Laser Power <span id="lpv">78%</span></label>
+        <input type="range" id="laser" min="0" max="100" value="78">
+      </div>
+      <div class="control">
+        <label style="color:#7ddfff">Field 1 Strength <span id="f1v">68%</span></label>
+        <input type="range" id="field1" min="0" max="100" value="68">
+      </div>
+      <div class="control">
+        <label style="color:#ff7a96">Field 2 Strength <span id="f2v">72%</span></label>
+        <input type="range" id="field2" min="0" max="100" value="72">
+      </div>
+      <div class="control">
+        <label>Field Rotation Speed <span id="rsv">55%</span></label>
+        <input type="range" id="rot" min="0" max="100" value="55">
+      </div>
+    </div>
+
+    <div class="canvas-wrap">
+      <canvas id="pivot" width="900" height="900"></canvas>
+      <div class="scanline"></div>
+    </div>
+
+    <div class="panel readouts">
+      <h3>System Readouts</h3>
+      <div class="readout">
+        <div class="label">Central Stack Energy</div>
+        <div class="value" id="energy">169.26 GW</div>
+        <div class="sub">16-layer coherent emission</div>
+      </div>
+      <div class="readout">
+        <div class="label">Field Coupling</div>
+        <div class="value red" id="coupling">94.2 %</div>
+        <div class="sub">dual-torus interference</div>
+      </div>
+      <div class="readout">
+        <div class="label">Containment</div>
+        <div class="value" style="font-size:18px" id="status-text">STABLE</div>
+        <span class="status" id="status">CONTAINMENT STABLE</span>
+      </div>
+      <div class="readout">
+        <div class="label">Geometry</div>
+        <div class="sub" id="geometry">R1: 168px · R2: 281px · W: 18.4px</div>
+      </div>
+    </div>
+  </div>
+
+  <footer>Pivot design: laser core contained by dual electron fields</footer>
+
+<script>
+const canvas = document.getElementById('pivot');
+const ctx = canvas.getContext('2d');
+const W = 900, H = 900;
+const cx = 450, cy = 450;
+
+let laserPower = 78;
+let field1 = 68;
+let field2 = 72;
+let rotSpeed = 55;
+
+const f1 = Array.from({length:64}, (_,i)=>({a:i/64*Math.PI*2}));
+const f2 = Array.from({length:96}, (_,i)=>({a:i/96*Math.PI*2}));
+
+function $(id){return document.getElementById(id);}
+$('laser').addEventListener('input', e=>{laserPower=+e.target.value; $('lpv').textContent=laserPower+'%';});
+$('field1').addEventListener('input', e=>{field1=+e.target.value; $('f1v').textContent=field1+'%';});
+$('field2').addEventListener('input', e=>{field2=+e.target.value; $('f2v').textContent=field2+'%';});
+$('rot').addEventListener('input', e=>{rotSpeed=+e.target.value; $('rsv').textContent=rotSpeed+'%';});
+
+function drawGrid(){
+  ctx.save();
+  ctx.strokeStyle='rgba(0,213,255,0.035)';
+  ctx.lineWidth=1;
+  for(let i=0;i<=9;i++){
+    const x = i*100+50;
+    ctx.beginPath(); ctx.moveTo(x,0); ctx.lineTo(x,H); ctx.stroke();
+    const y = i*100+50;
+    ctx.beginPath(); ctx.moveTo(0,y); ctx.lineTo(W,y); ctx.stroke();
+  }
+  ctx.restore();
+}
+
+function drawRing(particles, radius, rgb, isFront, strength){
+  ctx.save();
+  ctx.lineWidth = isFront?1.6:1;
+  ctx.strokeStyle = `rgba(${rgb},${isFront?0.26:0.11 + strength/100*0.07})`;
+  ctx.shadowBlur = isFront?10:0;
+  ctx.shadowColor = `rgba(${rgb},${isFront?0.5:0})`;
+  ctx.beginPath();
+  let first=true;
+  for(const p of particles){
+    const sy=Math.sin(p.a);
+    if(isFront && sy<0) continue;
+    if(!isFront && sy>=0) continue;
+    const x = cx + Math.cos(p.a)*radius;
+    const y = cy + Math.sin(p.a)*radius*0.26;
+    if(first){ctx.moveTo(x,y); first=false;} else {ctx.lineTo(x,y);}
+  }
+  ctx.stroke();
+  ctx.restore();
+}
+
+function drawParticles(particles, radius, rgb, isFront){
+  ctx.save();
+  ctx.shadowColor = `rgba(${rgb},0.85)`;
+  for(const p of particles){
+    const sy=Math.sin(p.a);
+    if(isFront && sy<0) continue;
+    if(!isFront && sy>=0) continue;
+    const x = cx + Math.cos(p.a)*radius;
+    const y = cy + Math.sin(p.a)*radius*0.26;
+    const depth = (sy+1)/2;
+    const size = isFront? 2.0 + depth*1.7 : 1.3 + depth*0.8;
+    ctx.beginPath();
+    ctx.arc(x,y,size,0,Math.PI*2);
+    ctx.fillStyle=`rgba(${rgb},${0.45 + depth*0.55})`;
+    ctx.shadowBlur = isFront?14:8;
+    ctx.fill();
+  }
+  ctx.restore();
+}
+
+function drawLaser(){
+  const top=150, bottom=750, h=600;
+  const compress = ((field1+field2)/200)*0.46;
+  const w = Math.max(7, 34*(1-compress));
+  
+  // ambient glow
+  ctx.save();
+  ctx.globalAlpha = 0.12 + laserPower/100*0.18;
+  const grad = ctx.createRadialGradient(cx,cy,10,cx,cy,300);
+  grad.addColorStop(0,'rgba(0,213,255,0.25)');
+  grad.addColorStop(0.4,'rgba(180,70,150,0.12)');
+  grad.addColorStop(1,'rgba(0,0,0,0)');
+  ctx.fillStyle=grad;
+  ctx.beginPath(); ctx.arc(cx,cy,300,0,Math.PI*2); ctx.fill();
+  ctx.restore();
+
+  // outer column glow
+  ctx.save();
+  ctx.shadowBlur=60+laserPower*0.35;
+  ctx.shadowColor='#00d5ff';
+  ctx.globalAlpha=0.08+laserPower/100*0.12;
+  ctx.fillStyle='#00d5ff';
+  ctx.fillRect(cx-w*1.9, top-20, w*3.8, h+40);
+  ctx.restore();
+
+  // core column gradient
+  ctx.save();
+  ctx.globalCompositeOperation='screen';
+  const colGrad = ctx.createLinearGradient(0,bottom,0,top);
+  colGrad.addColorStop(0, `rgba(255,23,68,${0.22+laserPower/250})`);
+  colGrad.addColorStop(0.5, `rgba(140,70,180,${0.18+laserPower/300})`);
+  colGrad.addColorStop(1, `rgba(0,213,255,${0.28+laserPower/220})`);
+  ctx.fillStyle=colGrad;
+  ctx.shadowBlur=24;
+  ctx.shadowColor='#7defff';
+  ctx.fillRect(cx-w/2, top, w, h);
+  ctx.restore();
+
+  // 16 segments
+  const segH = h/16;
+  for(let i=0;i<16;i++){
+    const t=i/15;
+    const y = bottom - (i+1)*segH + 3;
+    const sh = segH-6;
+    const r = Math.round(255*(1-t));
+    const g = Math.round(23 + 190*t);
+    const b = Math.round(68 + 187*t);
+    const pulse = Math.sin(performance.now()*0.003 + i*0.6)*0.07;
+    const alpha = 0.52 + laserPower/100*0.46 + pulse;
+    ctx.save();
+    ctx.shadowBlur = 16 + laserPower*0.16;
+    ctx.shadowColor = `rgb(${r},${g},${b})`;
+    ctx.fillStyle = `rgba(${r},${g},${b},${alpha})`;
+    ctx.fillRect(cx-w/2, y, w, sh);
+    ctx.shadowBlur=0;
+    ctx.fillStyle = `rgba(255,255,255,${0.12+laserPower/350})`;
+    ctx.fillRect(cx-w*0.15, y, w*0.3, sh);
+    ctx.restore();
+  }
+
+  // upward pulses
+  const count = 3 + Math.floor(laserPower/30);
+  const speed = 0.00055 * (0.7 + laserPower/80);
+  const now = performance.now();
+  for(let p=0;p<count;p++){
+    const off = (now*speed + p/count) % 1;
+    const py = bottom - off*h;
+    const pw = w * (1.3 + Math.sin(off*Math.PI)*0.35);
+    ctx.save();
+    ctx.globalAlpha = 0.9 * laserPower/100;
+    ctx.shadowBlur=28;
+    ctx.shadowColor='#eaffff';
+    ctx.fillStyle='rgba(225,250,255,0.95)';
+    ctx.fillRect(cx-pw/2, py-2.5, pw, 5);
+    ctx.shadowBlur=45;
+    ctx.globalAlpha=0.35*laserPower/100;
+    ctx.fillStyle='#00e5ff';
+    ctx.fillRect(cx-w*0.8, py-1, w*1.6, 2);
+    ctx.restore();
+  }
+
+  // central filament
+  ctx.save();
+  ctx.globalCompositeOperation='screen';
+  ctx.beginPath();
+  ctx.moveTo(cx, top-8);
+  ctx.lineTo(cx, bottom+8);
+  ctx.lineWidth = Math.max(1, w*0.1);
+  ctx.strokeStyle = `rgba(190,245,255,${0.25+laserPower/140})`;
+  ctx.shadowBlur=12;
+  ctx.shadowColor='#00d5ff';
+  ctx.stroke();
+  ctx.restore();
+
+  return {w, radius1:140+laserPower*0.38, radius2:240+laserPower*0.52};
+}
+
+function animate(){
+  requestAnimationFrame(animate);
+  
+  ctx.fillStyle='rgba(7,7,10,0.24)';
+  ctx.fillRect(0,0,W,H);
+  
+  drawGrid();
+  
+  const a1 = (0.0032 + field1/100*0.0165) * (rotSpeed/50);
+  const a2 = (0.0026 + field2/100*0.013) * (rotSpeed/50);
+  f1.forEach(p=>p.a-=a1);
+  f2.forEach(p=>p.a+=a2);
+  
+  const geom = drawLaser();
+  const r1 = geom.radius1;
+  const r2 = geom.radius2;
+  
+  // back rings
+  drawRing(f2, r2, '255,23,68', false, field2);
+  drawParticles(f2, r2, '255,23,68', false);
+  drawRing(f1, r1, '0,213,255', false, field1);
+  drawParticles(f1, r1, '0,213,255', false);
+  
+  // front (draw laser again slightly over back for depth)
+  // already drawn, now front particles
+  drawRing(f1, r1, '0,213,255', true, field1);
+  drawParticles(f1, r1, '0,213,255', true);
+  drawRing(f2, r2, '255,23,68', true, field2);
+  drawParticles(f2, r2, '255,23,68', true);
+  
+  // vignette
+  const vg = ctx.createRadialGradient(cx,cy,200,cx,cy,480);
+  vg.addColorStop(0,'rgba(0,0,0,0)');
+  vg.addColorStop(1,'rgba(0,0,0,0.55)');
+  ctx.fillStyle=vg;
+  ctx.fillRect(0,0,W,H);
+  
+  // readouts update throttled
+  if(performance.now()%120 < 16){
+    const energy = (laserPower*2.17).toFixed(2);
+    $('energy').textContent = energy + ' GW';
+    const coupling = Math.max(0, Math.min(99.9, (100 - Math.abs(field1-field2)*0.58) * ((field1+field2)/200) * (0.62 + laserPower/240) ));
+    $('coupling').textContent = coupling.toFixed(1) + ' %';
+    const status = $('status');
+    const statusText = $('status-text');
+    if(coupling>68){
+      status.textContent='CONTAINMENT STABLE';
+      status.style.color='#00ffaa'; status.style.borderColor='rgba(0,255,170,0.35)'; status.style.background='rgba(0,255,170,0.08)';
+      statusText.textContent='STABLE';
+    }else if(coupling>42){
+      status.textContent='CONTAINMENT MARGINAL';
+      status.style.color='#ffca28'; status.style.borderColor='rgba(255,202,40,0.35)'; status.style.background='rgba(255,202,40,0.08)';
+      statusText.textContent='MARGINAL';
+    }else{
+      status.textContent='INSTABILITY WARNING';
+      status.style.color='#ff1744'; status.style.borderColor='rgba(255,23,68,0.4)'; status.style.background='rgba(255,23,68,0.1)';
+      statusText.textContent='WARNING';
+    }
+    $('geometry').textContent = `R1: ${r1.toFixed(0)}px · R2: ${r2.toFixed(0)}px · W: ${geom.w.toFixed(1)}px`;
+  }
+}
+
+animate();
+</script>
+
+</body></html>

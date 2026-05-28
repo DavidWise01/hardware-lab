@@ -1,0 +1,253 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Toroid & Coil Bench</title>
+<style>
+:root{
+  --bg:#0c0f15;--panel:#141a24;--panel2:#0f141d;--ink:#eaf0f7;--body:#a9b6c6;--dim:#6a788d;--dimmer:#28323f;
+  --cu:#e8915a;--cu2:#ffb380;--acc:#5ed6ff;--ok:#7cffb0;--warn:#ffd166;--bad:#ff6b81;
+  --line:rgba(120,150,180,.13);
+  --mono:ui-monospace,"SF Mono",SFMono-Regular,Menlo,Consolas,monospace;
+  --sans:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;
+}
+*{box-sizing:border-box}
+body{margin:0;background:linear-gradient(180deg,#0d1017,#0c0f15 60%,#0a0d12);color:var(--ink);
+  font-family:var(--sans);font-size:14px;line-height:1.55;-webkit-font-smoothing:antialiased;min-height:100vh}
+header{position:sticky;top:0;z-index:20;border-bottom:1px solid var(--line);background:rgba(12,15,21,.92);backdrop-filter:blur(12px)}
+.hbar{max-width:1080px;margin:auto;display:flex;align-items:center;justify-content:space-between;gap:14px;padding:12px 20px}
+.brand{font-family:var(--mono);font-weight:600;letter-spacing:.1em;font-size:13px;color:var(--cu);text-transform:uppercase}
+.brand b{color:var(--ink)}
+.sub{font-family:var(--mono);font-size:10px;color:var(--dim);letter-spacing:.08em;text-transform:uppercase}
+.tabs{display:flex;gap:4px;flex-wrap:wrap;max-width:1080px;margin:auto;padding:0 14px}
+.tab{font-family:var(--mono);font-size:11px;letter-spacing:.05em;text-transform:uppercase;color:var(--dim);
+  background:transparent;border:none;border-bottom:2px solid transparent;padding:11px 13px;cursor:pointer;transition:.12s}
+.tab:hover{color:var(--body)}.tab.active{color:var(--cu);border-bottom-color:var(--cu)}
+main{max-width:1080px;margin:0 auto;padding:24px 20px 90px}
+.panelwrap{display:none}.panelwrap.active{display:block;animation:fade .18s ease}
+@keyframes fade{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+h2{font-size:19px;margin:0 0 4px;font-weight:600}
+.desc{color:var(--dim);font-size:13px;margin:0 0 18px;font-family:var(--mono);line-height:1.5}
+.layout{display:grid;grid-template-columns:1fr 360px;gap:20px;align-items:start}
+@media(max-width:820px){.layout{grid-template-columns:1fr}}
+.field{margin-bottom:14px}
+label{display:block;font-family:var(--mono);font-size:10px;letter-spacing:.07em;text-transform:uppercase;color:var(--dim);margin-bottom:6px}
+.inwrap{display:flex;align-items:stretch;border:1px solid var(--line);border-radius:8px;overflow:hidden;background:var(--panel2)}
+.inwrap:focus-within{border-color:var(--cu);box-shadow:0 0 0 3px rgba(232,145,90,.12)}
+input,select{width:100%;font-family:var(--mono);font-size:14px;color:var(--ink);background:transparent;border:none;padding:10px 12px}
+input:focus,select:focus{outline:none}
+.unit{font-family:var(--mono);font-size:12px;color:var(--dim);padding:10px 12px;border-left:1px solid var(--line);background:rgba(255,255,255,.02);white-space:nowrap}
+select{background:var(--panel2);border:1px solid var(--line);border-radius:8px}
+.result{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:18px;position:sticky;top:78px}
+.result h3{margin:0 0 12px;font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--dim)}
+.big{font-family:var(--mono);font-size:42px;font-weight:700;line-height:1;color:var(--cu);margin:2px 0}
+.big .u{font-size:18px;color:var(--body);font-weight:500}
+.subval{font-family:var(--mono);font-size:13px;color:var(--body);margin-top:4px}
+.kv{display:flex;justify-content:space-between;gap:10px;padding:9px 0;border-bottom:1px dashed var(--line);font-family:var(--mono);font-size:12.5px}
+.kv:last-child{border-bottom:none}.kv .k{color:var(--dim)}.kv .v{color:var(--ink);text-align:right}
+.kv .v.warn{color:var(--warn)}.kv .v.bad{color:var(--bad)}.kv .v.ok{color:var(--ok)}
+.flag{margin-top:12px;font-family:var(--mono);font-size:11px;line-height:1.5;padding:10px 12px;border-radius:8px;border:1px solid var(--line)}
+.flag.est{color:var(--warn);border-color:rgba(255,209,102,.3);background:rgba(255,209,102,.06)}
+.flag.ok{color:var(--ok);border-color:rgba(124,255,176,.3);background:rgba(124,255,176,.06)}
+.note{font-family:var(--mono);font-size:11px;color:var(--dim);margin-top:16px;line-height:1.6;border-left:2px solid var(--dimmer);padding-left:12px}
+.preset{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px}
+.chip{font-family:var(--mono);font-size:10px;letter-spacing:.04em;color:var(--cu);border:1px solid var(--line);
+  background:rgba(232,145,90,.06);border-radius:18px;padding:6px 10px;cursor:pointer;transition:.12s}
+.chip:hover{background:rgba(232,145,90,.16)}
+svg{display:block;margin:0 auto}
+.diagwrap{border:1px solid var(--line);border-radius:12px;background:var(--panel2);padding:14px;margin-bottom:14px}
+</style>
+</head>
+<body>
+<header>
+  <div class="hbar"><div class="brand">⊚ Toroid &amp; Coil <b>Bench</b></div>
+    <div class="sub">offline · formulas verified</div></div>
+  <div class="tabs" id="tabs"></div>
+</header>
+<main id="main"></main>
+
+<script>
+"use strict";
+const $=s=>document.querySelector(s);
+const TOOLS=[];
+function field(label,id,val,unit,opts){
+  if(opts){ // select
+    return `<div class="field"><label>${label}</label>
+      <select id="${id}">${opts.map(o=>`<option value="${o.v}" ${o.v==val?"selected":""}>${o.t}</option>`).join("")}</select></div>`;
+  }
+  return `<div class="field"><label>${label}</label>
+    <div class="inwrap"><input type="number" id="${id}" value="${val}" step="any"><span class="unit">${unit}</span></div></div>`;
+}
+
+/* common core presets: AL in nH/turn^2 */
+const CORES=[
+  {t:"T50-6 iron (AL 4.0)",v:4.0},
+  {t:"T50-2 iron (AL 4.9)",v:4.9},
+  {t:"T37-6 iron (AL 3.0)",v:3.0},
+  {t:"T68-2 iron (AL 5.7)",v:5.7},
+  {t:"FT50-43 ferrite (AL 523)",v:523},
+  {t:"FT37-43 ferrite (AL 420)",v:420},
+  {t:"FT82-43 ferrite (AL 557)",v:557},
+  {t:"FT50-61 ferrite (AL 69)",v:69},
+];
+
+/* ---- TAB 1: turns from target L (AL method, EXACT) ---- */
+TOOLS.push({id:"turns",name:"Turns ⟶ L (AL)",render(el){
+  el.innerHTML=`<h2>Turns for a target inductance</h2>
+    <p class="desc">The AL method. If you know your core's A<sub>L</sub> (from its datasheet), this is exact: N = √(L / A<sub>L</sub>).</p>
+    <div class="layout"><div>
+      <div class="preset" id="t-presets"></div>
+      ${field("core A_L","t-al",4.0,"nH/N²")}
+      ${field("target inductance","t-L",1.0,"µH")}
+      <div class="note">A<sub>L</sub> is the core's inductance per turn squared, printed on the datasheet (here in nH/turn²). Iron-powder cores are single-digit; type-43 ferrite is hundreds. The result is rounded to whole turns, and the achieved inductance shows what those exact turns actually give.</div>
+    </div>
+    <div class="result"><h3>turns required</h3>
+      <div class="big" id="t-N">—<span class="u"> turns</span></div>
+      <div class="subval" id="t-exact"></div>
+      <div class="kv"><span class="k">achieved L (rounded)</span><span class="v" id="t-achieved">—</span></div>
+      <div class="kv"><span class="k">error vs target</span><span class="v" id="t-err">—</span></div>
+      <div class="flag ok">A<sub>L</sub> method — exact for a known core.</div>
+    </div></div>`;
+  const ps=el.querySelector("#t-presets");
+  CORES.forEach(c=>{const b=document.createElement("span");b.className="chip";b.textContent=c.t.split(" (")[0];
+    b.title=c.t;b.onclick=()=>{el.querySelector("#t-al").value=c.v;calc();};ps.appendChild(b);});
+  function calc(){
+    const AL=+el.querySelector("#t-al").value, L=+el.querySelector("#t-L").value;
+    if(AL>0&&L>0){
+      const Nexact=Math.sqrt(L*1000/AL), N=Math.round(Nexact);
+      const achieved=AL*N*N/1000;
+      el.querySelector("#t-N").innerHTML=`${N}<span class="u"> turns</span>`;
+      el.querySelector("#t-exact").textContent=`exact: ${Nexact.toFixed(2)} turns`;
+      el.querySelector("#t-achieved").textContent=`${achieved.toFixed(3)} µH`;
+      const err=(achieved-L)/L*100;
+      const e=el.querySelector("#t-err");e.textContent=`${err>=0?"+":""}${err.toFixed(1)}%`;
+      e.className="v "+(Math.abs(err)<3?"ok":Math.abs(err)<8?"warn":"bad");
+    }
+  }
+  el.querySelectorAll("input").forEach(i=>i.oninput=calc);calc();
+}});
+
+/* ---- TAB 2: L from turns (AL) ---- */
+TOOLS.push({id:"Lfromn",name:"L ⟵ Turns",render(el){
+  el.innerHTML=`<h2>Inductance from a winding</h2>
+    <p class="desc">You wound N turns on a known core — what inductance did you get? L = A<sub>L</sub>·N².</p>
+    <div class="layout"><div>
+      <div class="preset" id="l-presets"></div>
+      ${field("core A_L","l-al",523,"nH/N²")}
+      ${field("turns","l-N",16,"turns")}
+    </div>
+    <div class="result"><h3>inductance</h3>
+      <div class="big" id="l-out">—</div>
+      <div class="kv"><span class="k">reactance @ 1 MHz</span><span class="v" id="l-x1">—</span></div>
+      <div class="kv"><span class="k">reactance @ 10 MHz</span><span class="v" id="l-x10">—</span></div>
+      <div class="flag ok">A<sub>L</sub> method — exact for a known core.</div>
+    </div></div>`;
+  const ps=el.querySelector("#l-presets");
+  CORES.forEach(c=>{const b=document.createElement("span");b.className="chip";b.textContent=c.t.split(" (")[0];
+    b.title=c.t;b.onclick=()=>{el.querySelector("#l-al").value=c.v;calc();};ps.appendChild(b);});
+  function fmtL(uH){return uH>=1000?`${(uH/1000).toFixed(3)} <span class="u">mH</span>`:uH>=1?`${uH.toFixed(3)} <span class="u">µH</span>`:`${(uH*1000).toFixed(1)} <span class="u">nH</span>`;}
+  function Xl(uH,f){const X=2*Math.PI*f*uH*1e-6;return X>=1000?`${(X/1000).toFixed(2)} kΩ`:`${X.toFixed(1)} Ω`;}
+  function calc(){const AL=+el.querySelector("#l-al").value,N=+el.querySelector("#l-N").value;
+    const uH=AL*N*N/1000;
+    el.querySelector("#l-out").innerHTML=fmtL(uH);
+    el.querySelector("#l-x1").textContent=Xl(uH,1e6);
+    el.querySelector("#l-x10").textContent=Xl(uH,10e6);}
+  el.querySelectorAll("input").forEach(i=>i.oninput=calc);calc();
+}});
+
+/* ---- TAB 3: geometry estimate (ESTIMATE) ---- */
+TOOLS.push({id:"geom",name:"Geometry est.",render(el){
+  el.innerHTML=`<h2>A<sub>L</sub> from core geometry</h2>
+    <p class="desc">No datasheet? Estimate from physical dimensions + material permeability. L = µ₀µ<sub>r</sub>N²·h·ln(OD/ID) / 2π.</p>
+    <div class="layout"><div>
+      ${field("relative permeability µ_r","g-mu",850,"")}
+      ${field("outer diameter OD","g-od",12.7,"mm")}
+      ${field("inner diameter ID","g-id",7.15,"mm")}
+      ${field("height h","g-h",4.9,"mm")}
+      ${field("turns N","g-N",16,"turns")}
+      <div class="note">µ<sub>r</sub> examples: type-43 ferrite ≈ 850, type-61 ≈ 125, iron powder type-6 ≈ 8, type-2 ≈ 10. This assumes a rectangular cross-section and a single µ<sub>r</sub> value.</div>
+    </div>
+    <div class="result"><h3>estimated</h3>
+      <div class="kv"><span class="k">A_L (per N²)</span><span class="v" id="g-al">—</span></div>
+      <div class="big" id="g-L">—</div>
+      <div class="subval">for N = <span id="g-Nv">16</span> turns</div>
+      <div class="flag est">⚠ Estimate only. Real µ<sub>r</sub> varies with frequency, flux density, and temperature — often ±20% or more. Use the datasheet A<sub>L</sub> when you have it.</div>
+    </div></div>`;
+  function calc(){
+    const mu=+el.querySelector("#g-mu").value,OD=+el.querySelector("#g-od").value/1000,
+      ID=+el.querySelector("#g-id").value/1000,h=+el.querySelector("#g-h").value/1000,N=+el.querySelector("#g-N").value;
+    if(OD>ID&&ID>0&&h>0&&mu>0){
+      const mu0=4*Math.PI*1e-7;
+      const AL1=mu0*mu*h*Math.log(OD/ID)/(2*Math.PI); // L per turn^2, in H
+      const AL_nH=AL1*1e9;
+      const uH=AL1*N*N*1e6;
+      el.querySelector("#g-al").textContent=`${AL_nH.toFixed(1)} nH/N²`;
+      el.querySelector("#g-L").innerHTML=uH>=1?`${uH.toFixed(2)} <span class="u">µH</span>`:`${(uH*1000).toFixed(0)} <span class="u">nH</span>`;
+      el.querySelector("#g-Nv").textContent=N;
+    }
+  }
+  el.querySelectorAll("input").forEach(i=>i.oninput=calc);calc();
+}});
+
+/* ---- TAB 4: wire & fill ---- */
+TOOLS.push({id:"wire",name:"Wire & Fill",render(el){
+  el.innerHTML=`<h2>Wire length &amp; single-layer fill</h2>
+    <p class="desc">How much wire to cut, and whether your turns fit in one layer on the core's inner circumference.</p>
+    <div class="layout"><div>
+      ${field("outer diameter OD","w-od",12.7,"mm")}
+      ${field("inner diameter ID","w-id",7.15,"mm")}
+      ${field("height h","w-h",4.9,"mm")}
+      ${field("turns N","w-N",16,"turns")}
+      ${field("wire gauge","w-awg",26,"",[
+        {v:0.32,t:"30 AWG (0.27mm)"},{v:0.36,t:"28 AWG (0.34mm)"},{v:0.45,t:"26 AWG (0.43mm)"},
+        {v:0.55,t:"24 AWG (0.53mm)"},{v:0.66,t:"22 AWG (0.65mm)"},{v:0.81,t:"20 AWG (0.81mm)"}])}
+      ${field("lead allowance (each end)","w-lead",25,"mm")}
+      <div class="note">Turn length uses the core cross-section perimeter ≈ 2·(width + height), width = (OD−ID)/2. Single-layer max turns = inner circumference ÷ wire outer diameter. Real winding needs slightly more; treat as a close estimate plus your leads.</div>
+    </div>
+    <div class="result"><h3>wire needed</h3>
+      <div class="big" id="w-total">—</div>
+      <div class="kv"><span class="k">per turn</span><span class="v" id="w-perturn">—</span></div>
+      <div class="kv"><span class="k">winding only</span><span class="v" id="w-wind">—</span></div>
+      <div class="kv"><span class="k">+ leads (2×)</span><span class="v" id="w-leadv">—</span></div>
+      <hr style="border:none;border-top:1px dashed var(--line);margin:12px 0">
+      <div class="kv"><span class="k">max single-layer turns</span><span class="v" id="w-max">—</span></div>
+      <div class="kv"><span class="k">your N fits?</span><span class="v" id="w-fit">—</span></div>
+    </div></div>`;
+  function calc(){
+    const OD=+el.querySelector("#w-od").value,ID=+el.querySelector("#w-id").value,h=+el.querySelector("#w-h").value,
+      N=+el.querySelector("#w-N").value,wd=+el.querySelector("#w-awg").value,lead=+el.querySelector("#w-lead").value;
+    const wWidth=(OD-ID)/2;
+    const perTurn=2*(wWidth+h);          // mm
+    const wind=perTurn*N;                // mm
+    const total=wind+2*lead;             // mm
+    el.querySelector("#w-perturn").textContent=`${perTurn.toFixed(1)} mm`;
+    el.querySelector("#w-wind").textContent=`${(wind/10).toFixed(1)} cm`;
+    el.querySelector("#w-leadv").textContent=`${(2*lead/10).toFixed(1)} cm`;
+    el.querySelector("#w-total").innerHTML=`${(total/10).toFixed(1)} <span class="u">cm</span>`;
+    const maxN=Math.floor(Math.PI*ID/wd);
+    el.querySelector("#w-max").textContent=`${maxN} turns`;
+    const fit=el.querySelector("#w-fit");
+    if(N<=maxN){fit.textContent=`✓ yes (${maxN-N} spare)`;fit.className="v ok";}
+    else{fit.textContent=`✗ no — needs 2 layers`;fit.className="v bad";}
+  }
+  el.querySelectorAll("input,select").forEach(i=>i.oninput=calc);calc();
+}});
+
+/* ---- tab wiring ---- */
+const tabsEl=$("#tabs"),mainEl=$("#main"),panels={};
+TOOLS.forEach(tool=>{
+  const tab=document.createElement("button");tab.className="tab";tab.textContent=tool.name;
+  tab.onclick=()=>activate(tool.id);tabsEl.appendChild(tab);
+  const wrap=document.createElement("div");wrap.className="panelwrap";mainEl.appendChild(wrap);
+  panels[tool.id]={tab,wrap,tool,built:false};
+});
+function activate(id){
+  Object.values(panels).forEach(p=>{p.tab.classList.toggle("active",p.tool.id===id);p.wrap.classList.toggle("active",p.tool.id===id);});
+  const p=panels[id];if(!p.built){p.tool.render(p.wrap);p.built=true;}location.hash=id;
+}
+const start=(location.hash||"").replace("#","");
+activate(panels[start]?start:TOOLS[0].id);
+</script>
+</body>
+</html>

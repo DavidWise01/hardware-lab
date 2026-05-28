@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<!-- saved from url=(0166)https://27628071860129614.a.metaaiusercontent.com/html?artifact_uuid=ad30bb84-b98c-4394-8b4e-69715aaef448&ext=1779462615&hash=Q5fpDAHN2JRqnCq8UTuuDQo0Z8p1&theme=light -->
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PHOTONIC CORE — 6×10 Harmonic Matrix</title>
+<style>
+  :root{
+    --bg:#05070a;
+    --panel:#0b111a;
+    --glass:rgba(255,255,255,0.04);
+    --border:rgba(148,197,255,0.12);
+    --text:#d7ecff;
+    --muted:#8aa4c0;
+    --cyan:#00e5ff;
+    --mag:#ff2a6d;
+    --vio:#7b61ff;
+    --green:#7bff9d;
+  }
+  *{box-sizing:border-box}
+  html,body{height:100%}
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--text);
+    font:14px/1.4 Inter,system-ui,-apple-system,Segoe UI,Roboto,Ubuntu;
+    overflow:hidden;
+    background-image:
+      radial-gradient(1200px 800px at 15% -10%, rgba(0,229,255,0.08), transparent 60%),
+      radial-gradient(1000px 700px at 85% 110%, rgba(123,97,255,0.09), transparent 55%),
+      radial-gradient(800px 600px at 50% 50%, rgba(255,42,109,0.05), transparent 60%);
+  }
+  .app{height:100%;display:flex;flex-direction:column}
+  header{
+    display:flex;align-items:center;justify-content:space-between;
+    padding:18px 24px;
+    border-bottom:1px solid var(--border);
+    background:linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.01));
+    backdrop-filter: blur(12px);
+    position:relative;
+  }
+  header:before{
+    content:"";position:absolute;inset:0;pointer-events:none;
+    background:linear-gradient(90deg, transparent, rgba(0,229,255,0.15), transparent);
+    mask:linear-gradient(#000, transparent 70%);
+  }
+  h1{
+    margin:0;
+    font-weight:700;
+    letter-spacing:.18em;
+    font-size:clamp(14px,2.1vw,20px);
+    color:#e8fbff;
+    text-shadow:0 0 18px rgba(0,229,255,.35),0 0 40px rgba(123,97,255,.2);
+  }
+  .status{
+    display:flex;gap:14px;align-items:center;
+    font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+    font-size:11px;color:#9edfff;opacity:.85;
+  }
+  .dot{width:8px;height:8px;border-radius:50%;background:var(--cyan);box-shadow:0 0 12px var(--cyan);animation:pulse 2s infinite}
+  @keyframes pulse{0%,100%{opacity:.6}50%{opacity:1}}
+
+  main{
+    flex:1;min-height:0;
+    display:grid;
+    grid-template-columns: minmax(560px,1.2fr) 420px;
+    gap:22px;
+    padding:22px;
+    max-width:1680px;
+    width:100%;
+    margin:0 auto;
+  }
+  @media (max-width:1100px){
+    main{grid-template-columns:1fr;overflow:auto}
+    body{overflow:auto}
+    .controls{max-height:none!important}
+  }
+
+  .viz{
+    position:relative;
+    border:1px solid var(--border);
+    border-radius:24px;
+    background:linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01));
+    backdrop-filter: blur(8px);
+    box-shadow:0 20px 60px rgba(0,0,0,.5), inset 0 1px 0 rgba(255,255,255,.04);
+    display:flex;align-items:center;justify-content:center;
+    min-height:640px;
+    overflow:hidden;
+  }
+  .viz:before{
+    content:"";position:absolute;inset:-30%;
+    background:conic-gradient(from 0deg, transparent 0 70%, rgba(0,229,255,.08), transparent 85%);
+    animation:spin 18s linear infinite;filter:blur(30px);opacity:.5;
+  }
+  @keyframes spin{to{transform:rotate(360deg)}}
+  canvas{
+    width:min(86vmin,800px);height:auto;aspect-ratio:1/1;display:block;
+    filter:drop-shadow(0 0 40px rgba(0,229,255,.08));
+  }
+  .core-stats{
+    position:absolute;bottom:14px;left:50%;transform:translateX(-50%);
+    display:flex;gap:14px;padding:8px 12px;
+    background:rgba(3,8,14,.65);border:1px solid var(--border);
+    border-radius:12px;backdrop-filter:blur(10px);
+    font-family:ui-monospace,monospace;font-size:11px;color:#bfeaff;
+    box-shadow:0 8px 24px rgba(0,0,0,.45);
+  }
+  .core-stats span{opacity:.9}
+  .controls{
+    display:flex;flex-direction:column;gap:14px;
+    max-height:calc(100vh - 120px);overflow:auto;padding-right:6px;
+  }
+  .controls::-webkit-scrollbar{width:8px}
+  .controls::-webkit-scrollbar-thumb{background:rgba(148,197,255,.15);border-radius8px}
+  .card{
+    position:relative;
+    padding:16px 16px 14px;
+    border:1px solid var(--border);
+    border-radius:18px;
+    background:linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.02));
+    backdrop-filter:blur(14px);
+    box-shadow:0 10px 30px rgba(0,0,0,.35), inset 0 1px 0 rgba(255,255,255,.05);
+    overflow:hidden;
+  }
+  .card:after{
+    content:"";position:absolute;inset:0;pointer-events:none;
+    background:radial-gradient(400px 120px at 0% 0%, rgba(0,229,255,.08), transparent 60%);
+    opacity:.6;
+  }
+  .card h3{
+    margin:0 0 12px;
+    font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:#b8dcff;font-weight:700;
+  }
+  .system .row{
+    display:grid;grid-template-columns:96px 1fr 48px;gap:10px;align-items:center;margin:10px 0;
+  }
+  .row label{font-size:12px;color:#9bb7d3}
+  .row output{font-family:ui-monospace,monospace;font-size:12px;color:#c8f6ff;text-align:right}
+
+  input[type=range]{
+    -webkit-appearance:none;appearance:none;width:100%;height:28px;background:transparent;cursor:pointer;
+  }
+  input[type=range]::-webkit-slider-runnable-track{
+    height:6px;border-radius:6px;
+    background:linear-gradient(90deg, rgba(0,229,255,.35), rgba(123,97,255,.35));
+    box-shadow:inset 0 0 10px rgba(0,0,0,.5);
+  }
+  input[type=range]::-webkit-slider-thumb{
+    -webkit-appearance:none;margin-top:-5px;width:16px;height:16px;border-radius:50%;
+    background:#06141c;border:2px solid #7deaff;box-shadow:0 0 14px rgba(0,229,255,.6);
+  }
+  input[type=range]::-moz-range-track{height:6px;border-radius:6px;background:linear-gradient(90deg, rgba(0,229,255,.35), rgba(123,97,255,.35))}
+  input[type=range]::-moz-range-thumb{width:16px;height:16px;border-radius:50%;background:#06141c;border:2px solid #7deaff;box-shadow:0 0 14px rgba(0,229,255,.6)}
+
+  .tone{
+    transition:transform .15s ease, box-shadow .2s ease, border-color .2s ease;
+  }
+  .tone.active{
+    border-color:rgba(0,229,255,.5);
+    box-shadow:0 0 0 1px rgba(0,229,255,.2) inset, 0 0 28px rgba(0,229,255,.15);
+    transform:translateY(-1px);
+  }
+  .tone-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+  .tone-title{display:flex;align-items:baseline;gap:8px}
+  .tone-title b{font-size:18px;color:#eaffff;letter-spacing:.01em}
+  .tone-title span{font-size:11px;color:#7fb6d6;letter-spacing:.12em;text-transform:uppercase}
+  .play{
+    width:34px;height:34px;border-radius:11px;border:1px solid rgba(0,229,255,.35);
+    background:radial-gradient(60% 60% at 50% 30%, rgba(0,229,255,.28), rgba(0,0,0,.2));
+    color:#bff6ff;cursor:pointer;box-shadow:0 0 16px rgba(0,229,255,.22) inset;
+    transition:.15s;display:grid;place-items:center;font-size:14px;
+  }
+  .play:hover{transform:scale(1.06);box-shadow:0 0 22px rgba(0,229,255,.4) inset}
+  .play:active{transform:scale(.97)}
+  .slider-wrap{margin:6px 0 10px}
+  .ticks{display:flex;justify-content:space-between;margin-top:-4px;padding:0 2px}
+  .ticks span{width:1px;height:4px;background:rgba(148,197,255,.25);display:block}
+  .readout{
+    font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+    font-size:12.5px;color:#a8e7ff;
+    background:rgba(0,0,0,.35);border:1px solid var(--border);
+    padding:8px 10px;border-radius:10px;letter-spacing:.02em;
+    display:flex;justify-content:space-between;align-items:center;
+  }
+  .readout i{font-style:normal;color:#77c7ff}
+  .harmonize .btns{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .btn{
+    padding:10px 12px;border-radius:12px;border:1px solid var(--border);
+    background:linear-gradient(180deg, rgba(123,97,255,.18), rgba(0,229,255,.12));
+    color:#e6f9ff;font-weight:600;letter-spacing:.02em;cursor:pointer;
+    transition:.15s;position:relative;overflow:hidden;
+  }
+  .btn:hover{transform:translateY(-1px);box-shadow:0 8px 22px rgba(0,229,255,.15)}
+  .btn:active{transform:translateY(0)}
+  .btn.stop{grid-column:1/-1;background:linear-gradient(180deg, rgba(255,42,109,.22), rgba(255,42,109,.08));border-color:rgba(255,42,109,.35);color:#ffdfea}
+  .legend{display:flex;gap:10px;margin-top:8px;font-size:11px;color:#8fb4d3}
+  .legend b{color:#bfe4ff}
+</style>
+</head>
+<body>
+<div class="app">
+  <header>
+    <h1>PHOTONIC CORE — 6×10 HARMONIC MATRIX</h1>
+    <div class="status"><span class="dot"></span> COHERENCE LOCK • STANDBY</div>
+  </header>
+
+  <main>
+    <section class="viz">
+      <canvas id="core" width="800" height="800"></canvas>
+      <div class="core-stats">
+        <span id="stat-active">528 Hz MI • Sub 1</span>
+        <span>•</span>
+        <span id="stat-inner">INNER 0.90 rad/s</span>
+        <span>•</span>
+        <span id="stat-outer">OUTER 0.54 rad/s</span>
+      </div>
+    </section>
+
+    <section class="controls">
+      <div class="card system">
+        <h3>System</h3>
+        <div class="row">
+          <label>Laser Power</label>
+          <input id="pwr" type="range" min="0" max="100" value="75">
+          <output id="pwr-o">75%</output>
+        </div>
+        <div class="row">
+          <label>Field 1</label>
+          <input id="fld1" type="range" min="0" max="100" value="50">
+          <output id="fld1-o">50%</output>
+        </div>
+        <div class="row">
+          <label>Field 2</label>
+          <input id="fld2" type="range" min="0" max="100" value="50">
+          <output id="fld2-o">50%</output>
+        </div>
+        <div class="legend"><span><b>CYAN</b> inner 64e⁻</span><span><b>MAGENTA</b> outer 96e⁻</span></div>
+      </div>
+
+      <div id="tones"><div class="card tone" data-index="0">
+      <div class="tone-head">
+        <div class="tone-title"><b>396 Hz</b> <span>UT</span></div>
+        <button class="play" title="Play">▶</button>
+      </div>
+      <div class="slider-wrap">
+        <input type="range" min="1" max="10" step="1" value="1">
+        <div class="ticks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>
+      </div>
+      <div class="readout"><span>Sub 1: 396.0 Hz / 13.560 MHz</span><i>READY</i></div>
+    </div><div class="card tone" data-index="1">
+      <div class="tone-head">
+        <div class="tone-title"><b>417 Hz</b> <span>RE</span></div>
+        <button class="play" title="Play">▶</button>
+      </div>
+      <div class="slider-wrap">
+        <input type="range" min="1" max="10" step="1" value="1">
+        <div class="ticks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>
+      </div>
+      <div class="readout"><span>Sub 1: 417.0 Hz / 14.279 MHz</span><i>READY</i></div>
+    </div><div class="card tone active" data-index="2">
+      <div class="tone-head">
+        <div class="tone-title"><b>528 Hz</b> <span>MI</span></div>
+        <button class="play" title="Play">▶</button>
+      </div>
+      <div class="slider-wrap">
+        <input type="range" min="1" max="10" step="1" value="1">
+        <div class="ticks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>
+      </div>
+      <div class="readout"><span>Sub 1: 528.0 Hz / 18.080 MHz</span><i>READY</i></div>
+    </div><div class="card tone" data-index="3">
+      <div class="tone-head">
+        <div class="tone-title"><b>639 Hz</b> <span>FA</span></div>
+        <button class="play" title="Play">▶</button>
+      </div>
+      <div class="slider-wrap">
+        <input type="range" min="1" max="10" step="1" value="1">
+        <div class="ticks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>
+      </div>
+      <div class="readout"><span>Sub 1: 639.0 Hz / 21.881 MHz</span><i>READY</i></div>
+    </div><div class="card tone" data-index="4">
+      <div class="tone-head">
+        <div class="tone-title"><b>741 Hz</b> <span>SO</span></div>
+        <button class="play" title="Play">▶</button>
+      </div>
+      <div class="slider-wrap">
+        <input type="range" min="1" max="10" step="1" value="1">
+        <div class="ticks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>
+      </div>
+      <div class="readout"><span>Sub 1: 741.0 Hz / 25.374 MHz</span><i>READY</i></div>
+    </div><div class="card tone" data-index="5">
+      <div class="tone-head">
+        <div class="tone-title"><b>852 Hz</b> <span>LA</span></div>
+        <button class="play" title="Play">▶</button>
+      </div>
+      <div class="slider-wrap">
+        <input type="range" min="1" max="10" step="1" value="1">
+        <div class="ticks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>
+      </div>
+      <div class="readout"><span>Sub 1: 852.0 Hz / 29.175 MHz</span><i>READY</i></div>
+    </div></div>
+
+      <div class="card harmonize">
+        <h3>Harmonize</h3>
+        <div class="btns">
+          <button class="btn" id="play6">Play 6 Fundamentals</button>
+          <button class="btn" id="seq60">Sequence All 60</button>
+          <button class="btn stop" id="stop">Stop All</button>
+        </div>
+      </div>
+    </section>
+  </main>
+</div>
+
+<script>
+(() => {
+  const tones = [
+    {f:396,name:'UT', audio:[396,198,132,99,79.2,66,56.571,49.5,44,39.6], plasma:[13.56,6.78,4.52,3.39,2.712,2.26,1.937,1.695,1.507,1.356], col:'#ff2a6d'},
+    {f:417,name:'RE', audio:[417,208.5,139,104.25,83.4,69.5,59.571,52.125,46.333,41.7], plasma:[14.279,7.14,4.76,3.57,2.856,2.38,2.04,1.785,1.587,1.428], col:'#ff7b3d'},
+    {f:528,name:'MI', audio:[528,264,176,132,105.6,88,75.429,66,58.667,52.8], plasma:[18.08,9.04,6.027,4.52,3.616,3.013,2.583,2.26,2.009,1.808], col:'#7bff9d'},
+    {f:639,name:'FA', audio:[639,319.5,213,159.75,127.8,106.5,91.286,79.875,71,63.9], plasma:[21.881,10.94,7.294,5.47,4.376,3.647,3.126,2.735,2.431,2.188], col:'#00e5ff'},
+    {f:741,name:'SO', audio:[741,370.5,247,185.25,148.2,123.5,105.857,92.625,82.333,74.1], plasma:[25.374,12.687,8.458,6.343,5.075,4.229,3.625,3.172,2.819,2.537], col:'#7b61ff'},
+    {f:852,name:'LA', audio:[852,426,284,213,170.4,142,121.714,106.5,94.667,85.2], plasma:[29.175,14.587,9.725,7.294,5.835,4.862,4.168,3.647,3.242,2.917], col:'#ff7aed'},
+  ];
+
+  // System controls
+  const pwr = document.getElementById('pwr');
+  const fld1 = document.getElementById('fld1');
+  const fld2 = document.getElementById('fld2');
+  const pwrO = document.getElementById('pwr-o');
+  const f1O = document.getElementById('fld1-o');
+  const f2O = document.getElementById('fld2-o');
+  let laserPower = 0.75, field1 = 0.5, field2 = 0.5;
+  pwr.addEventListener('input', e=>{laserPower = e.target.value/100; pwrO.textContent = e.target.value+'%';});
+  fld1.addEventListener('input', e=>{field1 = e.target.value/100; f1O.textContent = e.target.value+'%';});
+  fld2.addEventListener('input', e=>{field2 = e.target.value/100; f2O.textContent = e.target.value+'%';});
+
+  // Build tone cards
+  const tonesWrap = document.getElementById('tones');
+  tones.forEach((t,ti)=>{
+    const card = document.createElement('div');
+    card.className='card tone';
+    card.dataset.index=ti;
+    card.innerHTML = `
+      <div class="tone-head">
+        <div class="tone-title"><b>${t.f} Hz</b> <span>${t.name}</span></div>
+        <button class="play" title="Play">▶</button>
+      </div>
+      <div class="slider-wrap">
+        <input type="range" min="1" max="10" step="1" value="1">
+        <div class="ticks">${'<span></span>'.repeat(10)}</div>
+      </div>
+      <div class="readout"><span>Sub 1: ${t.audio[0].toFixed(1)} Hz / ${t.plasma[0].toFixed(3)} MHz</span><i>READY</i></div>
+    `;
+    tonesWrap.appendChild(card);
+    const slider = card.querySelector('input');
+    const readout = card.querySelector('.readout span');
+    const btn = card.querySelector('.play');
+    const updateUI = (idx)=>{
+      const a = t.audio[idx], p = t.plasma[idx];
+      readout.textContent = `Sub ${idx+1}: ${a.toFixed(1)} Hz / ${p.toFixed(3)} MHz`;
+      innerSpeed = p*0.05;
+      outerSpeed = p*0.03;
+      updateStats(ti, idx);
+      highlight(ti);
+    };
+    slider.addEventListener('input', e=> updateUI(parseInt(e.target.value)-1));
+    btn.addEventListener('click', ()=>{
+      const idx = parseInt(slider.value)-1;
+      playTone(t.audio[idx], 1.5);
+      updateUI(idx);
+      coreBoost = 1;
+    });
+  });
+
+  function highlight(ti){
+    document.querySelectorAll('.tone').forEach((c,i)=>c.classList.toggle('active', i===ti));
+  }
+  function highlightAll(temp=2000){
+    document.querySelectorAll('.tone').forEach(c=>c.classList.add('active'));
+    setTimeout(()=>document.querySelectorAll('.tone').forEach(c=>c.classList.remove('active')), temp);
+  }
+
+  // Stats
+  const statActive = document.getElementById('stat-active');
+  const statInner = document.getElementById('stat-inner');
+  const statOuter = document.getElementById('stat-outer');
+  function updateStats(ti, si){
+    const t = tones[ti];
+    statActive.textContent = `${t.f} Hz ${t.name} • Sub ${si+1}`;
+    statInner.textContent = `INNER ${innerSpeed.toFixed(2)} rad/s`;
+    statOuter.textContent = `OUTER ${outerSpeed.toFixed(2)} rad/s`;
+  }
+
+  // Audio
+  let audioCtx, activeNodes=[], seqTimeouts=[];
+  function ensureAudio(){
+    if(!audioCtx) audioCtx = new (window.AudioContext||window.webkitAudioContext)();
+    if(audioCtx.state==='suspended') audioCtx.resume();
+  }
+  function playTone(freq, dur=1.5, when=0){
+    ensureAudio();
+    const osc = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+    osc.type='sine';
+    osc.frequency.value = freq;
+    const now = audioCtx.currentTime + when;
+    const vol = 0.14 * (0.4 + laserPower*0.8);
+    gain.gain.setValueAtTime(0, now);
+    gain.gain.linearRampToValueAtTime(vol, now+0.02);
+    gain.gain.exponentialRampToValueAtTime(0.001, now+dur);
+    osc.connect(gain).connect(audioCtx.destination);
+    osc.start(now);
+    osc.stop(now+dur+0.05);
+    const node={osc,gain};
+    activeNodes.push(node);
+    osc.onended=()=>{ const i=activeNodes.indexOf(node); if(i>-1) activeNodes.splice(i,1); };
+  }
+  function stopAll(){
+    seqTimeouts.forEach(clearTimeout); seqTimeouts=[];
+    activeNodes.forEach(n=>{ try{ n.gain.gain.cancelScheduledValues(0); n.gain.gain.setTargetAtTime(0, audioCtx.currentTime, 0.02); n.osc.stop(audioCtx.currentTime+0.05);}catch{} });
+    activeNodes=[];
+  }
+  document.getElementById('stop').onclick = stopAll;
+  document.getElementById('play6').onclick = ()=>{
+    stopAll(); ensureAudio(); highlightAll(2400);
+    tones.forEach(t=> playTone(t.audio[0], 2.2));
+    innerSpeed = tones[2].plasma[0]*0.05;
+    outerSpeed = tones[2].plasma[0]*0.03;
+    updateStats(2,0); coreBoost=1;
+  };
+  document.getElementById('seq60').onclick = ()=>{
+    stopAll(); ensureAudio();
+    let step=0;
+    tones.forEach((t,ti)=>{
+      t.audio.forEach((f,si)=>{
+        const id = setTimeout(()=>{
+          highlight(ti);
+          const p = t.plasma[si];
+          innerSpeed = p*0.05; outerSpeed = p*0.03;
+          updateStats(ti,si);
+          playTone(f, 0.11);
+          coreBoost = Math.max(coreBoost, 0.6);
+          // sync slider UI
+          const card = document.querySelector(`.tone[data-index="${ti}"]`);
+          if(card){ card.querySelector('input').value = si+1; card.querySelector('.readout span').textContent = `Sub ${si+1}: ${f.toFixed(1)} Hz / ${p.toFixed(3)} MHz`; }
+        }, step*120);
+        seqTimeouts.push(id);
+        step++;
+      });
+    });
+  };
+
+  // Canvas visualization
+  const canvas = document.getElementById('core');
+  const ctx = canvas.getContext('2d');
+  const W=800,H=800,cx=400,cy=400;
+  let innerSpeed = tones[2].plasma[0]*0.05;
+  let outerSpeed = tones[2].plasma[0]*0.03;
+  let innerRot=0, outerRot=0, coreBoost=0;
+
+  const innerParticles = Array.from({length:64}, (_,i)=>({a:i*Math.PI*2/64}));
+  const outerParticles = Array.from({length:96}, (_,i)=>({a:i*Math.PI*2/96}));
+
+  function roundRect(ctx,x,y,w,h,r){
+    const rr=Math.min(r,w/2,h/2);
+    ctx.beginPath();
+    ctx.moveTo(x+rr,y);
+    ctx.arcTo(x+w,y,x+w,y+h,rr);
+    ctx.arcTo(x+w,y+h,x,y+h,rr);
+    ctx.arcTo(x,y+h,x,y,rr);
+    ctx.arcTo(x,y,x+w,y,rr);
+    ctx.closePath();
+  }
+
+  let last=performance.now();
+  function animate(t){
+    requestAnimationFrame(animate);
+    const dt = Math.min(0.033, (t-last)/1000); last=t;
+    innerRot += innerSpeed * dt;
+    outerRot -= outerSpeed * dt;
+    coreBoost *= 0.92;
+
+    // fade
+    ctx.fillStyle='rgba(5,7,10,0.18)';
+    ctx.fillRect(0,0,W,H);
+
+    ctx.save();
+    ctx.translate(cx,cy);
+
+    // outer field halo
+    const r1 = 140 + Math.sin(t*0.0012)*field1*14;
+    const r2 = 240 + Math.cos(t*0.0009)*field2*18;
+    ctx.strokeStyle='rgba(0,229,255,0.07)'; ctx.lineWidth=1;
+    ctx.beginPath(); ctx.arc(0,0,r1,0,Math.PI*2); ctx.stroke();
+    ctx.strokeStyle='rgba(255,42,109,0.07)';
+    ctx.beginPath(); ctx.arc(0,0,r2,0,Math.PI*2); ctx.stroke();
+
+    // central laser stack - 16 segments
+    for(let i=0;i<16;i++){
+      const y = -182 + i*23;
+      const pulse = 0.6 + 0.4*Math.sin(t*0.003 + i*0.37);
+      const h = 16 * (0.7 + laserPower*0.6*pulse + coreBoost*0.3);
+      const w = 10 + laserPower*7 + coreBoost*4;
+      const hue = 190 + i*4 + field1*50;
+      ctx.shadowBlur = 24*laserPower + coreBoost*20;
+      ctx.shadowColor = `hsla(${hue},100%,60%,${0.75*laserPower+0.25})`;
+      ctx.fillStyle = `hsla(${hue},100%,${55+laserPower*18}%,0.92)`;
+      roundRect(ctx, -w/2, y-h/2, w, h, 5);
+      ctx.fill();
+    }
+    ctx.shadowBlur=0;
+
+    // core glow
+    const coreR = 28 + laserPower*10 + coreBoost*12;
+    const grad = ctx.createRadialGradient(0,0,0, 0,0,coreR*2);
+    grad.addColorStop(0, `rgba(200,250,255,${0.85*laserPower+0.15})`);
+    grad.addColorStop(0.3, `rgba(80,190,255,${0.35*laserPower+0.1})`);
+    grad.addColorStop(1, 'rgba(0,0,0,0)');
+    ctx.fillStyle=grad;
+    ctx.beginPath(); ctx.arc(0,0,coreR*2,0,Math.PI*2); ctx.fill();
+
+    // inner electrons cyan
+    ctx.shadowBlur=14; ctx.shadowColor='#00e5ff';
+    innerParticles.forEach(p=>{
+      const ang = p.a + innerRot;
+      const x = Math.cos(ang)*r1;
+      const y = Math.sin(ang)*r1;
+      ctx.fillStyle='rgba(140,250,255,0.95)';
+      ctx.beginPath(); ctx.arc(x,y,1.7+laserPower*0.9,0,Math.PI*2); ctx.fill();
+    });
+
+    // outer electrons red
+    ctx.shadowColor='#ff2a6d';
+    outerParticles.forEach(p=>{
+      const ang = p.a + outerRot;
+      const x = Math.cos(ang)*r2;
+      const y = Math.sin(ang)*r2;
+      ctx.fillStyle='rgba(255,140,180,0.95)';
+      ctx.beginPath(); ctx.arc(x,y,1.8+laserPower*0.7,0,Math.PI*2); ctx.fill();
+    });
+    ctx.shadowBlur=0;
+
+    // crosshair
+    ctx.strokeStyle='rgba(180,230,255,0.08)'; ctx.lineWidth=1;
+    ctx.beginPath(); ctx.moveTo(-300,0); ctx.lineTo(300,0); ctx.moveTo(0,-300); ctx.lineTo(0,300); ctx.stroke();
+
+    ctx.restore();
+  }
+  // init background
+  ctx.fillStyle='#05070a'; ctx.fillRect(0,0,W,H);
+  requestAnimationFrame(animate);
+
+  // initial highlight
+  highlight(2);
+  updateStats(2,0);
+})();
+</script>
+
+</body></html>

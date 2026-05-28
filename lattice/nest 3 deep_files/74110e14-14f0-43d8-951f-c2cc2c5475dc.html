@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<!-- saved from url=(0165)https://2137748440409006.a.metaaiusercontent.com/html?artifact_uuid=74110e14-14f0-43d8-951f-c2cc2c5475dc&ext=1779509747&hash=Q5fpDAGbetefuqAKvBT_k8FskLWi&theme=light -->
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WHISPER LATTICE // RECURSIVE MEMORY ENGINE</title>
+<script src="./saved_resource"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com/">
+<link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin="">
+<link href="./css2(3)" rel="stylesheet">
+<style>
+  :root { color-scheme: dark; }
+  body { font-family: 'Inter', system-ui, -apple-system, sans-serif; background: #050508; overscroll-behavior: none; }
+  .mono { font-family: 'JetBrains Mono', monospace; }
+  .grid-bg { background-image: radial-gradient(circle at 1px 1px, rgba(113,113,122,0.12) 1px, transparent 0); background-size: 28px 28px; }
+  .lattice-pulse { animation: lattice-pulse 1.8s ease-in-out infinite; }
+  @keyframes lattice-pulse { 0%,100% { filter: drop-shadow(0 0 0px rgba(139,92,246,0)) } 50% { filter: drop-shadow(0 0 28px rgba(139,92,246,0.65)) } }
+  .glow-violet { filter: drop-shadow(0 0 10px rgba(139,92,246,0.7)) drop-shadow(0 0 20px rgba(139,92,246,0.3)); }
+  .glow-emerald { filter: drop-shadow(0 0 10px rgba(16,185,129,0.8)) drop-shadow(0 0 18px rgba(16,185,129,0.4)); }
+  .glow-amber { filter: drop-shadow(0 0 10px rgba(245,158,11,0.8)) drop-shadow(0 0 18px rgba(245,158,11,0.4)); }
+  .scope-grid { background-image: linear-gradient(rgba(39,39,42,0.7) 1px, transparent 1px), linear-gradient(90deg, rgba(39,39,42,0.7) 1px, transparent 1px); background-size: 20px 20px; }
+  .scrollbar-thin::-webkit-scrollbar { width: 4px; height: 4px; } .scrollbar-thin::-webkit-scrollbar-thumb { background: #3f3f46; border-radius: 2px; }
+  input[type=range] { -webkit-appearance: none; appearance: none; height: 4px; background: #27272a; border-radius: 2px; outline: none; }
+  input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; width: 16px; height: 16px; border-radius: 50%; background: #e4e4e7; border: 2px solid #09090b; box-shadow: 0 0 8px rgba(139,92,246,0.6), inset 0 0 4px rgba(0,0,0,0.5); cursor: pointer; margin-top: -6px; }
+  input[type=range]::-moz-range-thumb { width: 16px; height: 16px; border-radius: 50%; background: #e4e4e7; border: 2px solid #09090b; box-shadow: 0 0 8px rgba(139,92,246,0.6); cursor: pointer; }
+  input[type=range]::-webkit-slider-runnable-track { height: 4px; background: linear-gradient(90deg, #18181b, #3f3f46); border-radius: 2px; }
+  .btn-active { background: rgb(109 40 217 / 0.3) !important; color: #ddd6fe !important; border-color: rgb(124 58 237 / 0.5) !important; box-shadow: inset 0 0 12px rgba(139,92,246,0.15); }
+</style>
+<style>*, ::before, ::after{--tw-border-spacing-x:0;--tw-border-spacing-y:0;--tw-translate-x:0;--tw-translate-y:0;--tw-rotate:0;--tw-skew-x:0;--tw-skew-y:0;--tw-scale-x:1;--tw-scale-y:1;--tw-pan-x: ;--tw-pan-y: ;--tw-pinch-zoom: ;--tw-scroll-snap-strictness:proximity;--tw-gradient-from-position: ;--tw-gradient-via-position: ;--tw-gradient-to-position: ;--tw-ordinal: ;--tw-slashed-zero: ;--tw-numeric-figure: ;--tw-numeric-spacing: ;--tw-numeric-fraction: ;--tw-ring-inset: ;--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-color:rgb(59 130 246 / 0.5);--tw-ring-offset-shadow:0 0 #0000;--tw-ring-shadow:0 0 #0000;--tw-shadow:0 0 #0000;--tw-shadow-colored:0 0 #0000;--tw-blur: ;--tw-brightness: ;--tw-contrast: ;--tw-grayscale: ;--tw-hue-rotate: ;--tw-invert: ;--tw-saturate: ;--tw-sepia: ;--tw-drop-shadow: ;--tw-backdrop-blur: ;--tw-backdrop-brightness: ;--tw-backdrop-contrast: ;--tw-backdrop-grayscale: ;--tw-backdrop-hue-rotate: ;--tw-backdrop-invert: ;--tw-backdrop-opacity: ;--tw-backdrop-saturate: ;--tw-backdrop-sepia: ;--tw-contain-size: ;--tw-contain-layout: ;--tw-contain-paint: ;--tw-contain-style: }::backdrop{--tw-border-spacing-x:0;--tw-border-spacing-y:0;--tw-translate-x:0;--tw-translate-y:0;--tw-rotate:0;--tw-skew-x:0;--tw-skew-y:0;--tw-scale-x:1;--tw-scale-y:1;--tw-pan-x: ;--tw-pan-y: ;--tw-pinch-zoom: ;--tw-scroll-snap-strictness:proximity;--tw-gradient-from-position: ;--tw-gradient-via-position: ;--tw-gradient-to-position: ;--tw-ordinal: ;--tw-slashed-zero: ;--tw-numeric-figure: ;--tw-numeric-spacing: ;--tw-numeric-fraction: ;--tw-ring-inset: ;--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-color:rgb(59 130 246 / 0.5);--tw-ring-offset-shadow:0 0 #0000;--tw-ring-shadow:0 0 #0000;--tw-shadow:0 0 #0000;--tw-shadow-colored:0 0 #0000;--tw-blur: ;--tw-brightness: ;--tw-contrast: ;--tw-grayscale: ;--tw-hue-rotate: ;--tw-invert: ;--tw-saturate: ;--tw-sepia: ;--tw-drop-shadow: ;--tw-backdrop-blur: ;--tw-backdrop-brightness: ;--tw-backdrop-contrast: ;--tw-backdrop-grayscale: ;--tw-backdrop-hue-rotate: ;--tw-backdrop-invert: ;--tw-backdrop-opacity: ;--tw-backdrop-saturate: ;--tw-backdrop-sepia: ;--tw-contain-size: ;--tw-contain-layout: ;--tw-contain-paint: ;--tw-contain-style: }/* ! tailwindcss v3.4.17 | MIT License | https://tailwindcss.com */*,::after,::before{box-sizing:border-box;border-width:0;border-style:solid;border-color:#e5e7eb}::after,::before{--tw-content:''}:host,html{line-height:1.5;-webkit-text-size-adjust:100%;-moz-tab-size:4;tab-size:4;font-family:ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";font-feature-settings:normal;font-variation-settings:normal;-webkit-tap-highlight-color:transparent}body{margin:0;line-height:inherit}hr{height:0;color:inherit;border-top-width:1px}abbr:where([title]){-webkit-text-decoration:underline dotted;text-decoration:underline dotted}h1,h2,h3,h4,h5,h6{font-size:inherit;font-weight:inherit}a{color:inherit;text-decoration:inherit}b,strong{font-weight:bolder}code,kbd,pre,samp{font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;font-feature-settings:normal;font-variation-settings:normal;font-size:1em}small{font-size:80%}sub,sup{font-size:75%;line-height:0;position:relative;vertical-align:baseline}sub{bottom:-.25em}sup{top:-.5em}table{text-indent:0;border-color:inherit;border-collapse:collapse}button,input,optgroup,select,textarea{font-family:inherit;font-feature-settings:inherit;font-variation-settings:inherit;font-size:100%;font-weight:inherit;line-height:inherit;letter-spacing:inherit;color:inherit;margin:0;padding:0}button,select{text-transform:none}button,input:where([type=button]),input:where([type=reset]),input:where([type=submit]){-webkit-appearance:button;background-color:transparent;background-image:none}:-moz-focusring{outline:auto}:-moz-ui-invalid{box-shadow:none}progress{vertical-align:baseline}::-webkit-inner-spin-button,::-webkit-outer-spin-button{height:auto}[type=search]{-webkit-appearance:textfield;outline-offset:-2px}::-webkit-search-decoration{-webkit-appearance:none}::-webkit-file-upload-button{-webkit-appearance:button;font:inherit}summary{display:list-item}blockquote,dd,dl,figure,h1,h2,h3,h4,h5,h6,hr,p,pre{margin:0}fieldset{margin:0;padding:0}legend{padding:0}menu,ol,ul{list-style:none;margin:0;padding:0}dialog{padding:0}textarea{resize:vertical}input::placeholder,textarea::placeholder{opacity:1;color:#9ca3af}[role=button],button{cursor:pointer}:disabled{cursor:default}audio,canvas,embed,iframe,img,object,svg,video{display:block;vertical-align:middle}img,video{max-width:100%;height:auto}[hidden]:where(:not([hidden=until-found])){display:none}.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0, 0, 0, 0);white-space:nowrap;border-width:0}.pointer-events-none{pointer-events:none}.fixed{position:fixed}.absolute{position:absolute}.relative{position:relative}.sticky{position:sticky}.inset-0{inset:0px}.bottom-0{bottom:0px}.bottom-1{bottom:0.25rem}.left-0{left:0px}.left-3{left:0.75rem}.left-\[2px\]{left:2px}.right-0{right:0px}.right-2{right:0.5rem}.top-0{top:0px}.top-2{top:0.5rem}.top-\[2px\]{top:2px}.-z-10{z-index:-10}.z-10{z-index:10}.z-40{z-index:40}.mx-auto{margin-left:auto;margin-right:auto}.-mr-1{margin-right:-0.25rem}.mb-1\.5{margin-bottom:0.375rem}.mb-2{margin-bottom:0.5rem}.mb-3{margin-bottom:0.75rem}.ml-2{margin-left:0.5rem}.ml-6{margin-left:1.5rem}.ml-auto{margin-left:auto}.mt-1{margin-top:0.25rem}.mt-1\.5{margin-top:0.375rem}.mt-2{margin-top:0.5rem}.mt-3{margin-top:0.75rem}.flex{display:flex}.inline-flex{display:inline-flex}.grid{display:grid}.hidden{display:none}.aspect-square{aspect-ratio:1 / 1}.h-1\.5{height:0.375rem}.h-2{height:0.5rem}.h-2\.5{height:0.625rem}.h-5{height:1.25rem}.h-6{height:1.5rem}.h-7{height:1.75rem}.h-8{height:2rem}.h-9{height:2.25rem}.h-\[120px\]{height:120px}.h-\[2px\]{height:2px}.h-\[6px\]{height:6px}.h-full{height:100%}.h-\[11\.877382533019691px\]{height:11.877382533019691px}.h-\[13\.804009010912008px\]{height:13.804009010912008px}.h-\[13\.963923450114327px\]{height:13.963923450114327px}.h-\[15\.929807370494366px\]{height:15.929807370494366px}.h-\[17px\]{height:17px}.h-\[19\.13673542225905px\]{height:19.13673542225905px}.h-\[21\.08631509183784px\]{height:21.08631509183784px}.h-\[21\.244346793528212px\]{height:21.244346793528212px}.h-\[23\.14144941952492px\]{height:23.14144941952492px}.h-\[24\.139336275658593px\]{height:24.139336275658593px}.h-\[26\.058744770874497px\]{height:26.058744770874497px}.h-\[27\.723481869682296px\]{height:27.723481869682296px}.h-\[27\.85468110296578px\]{height:27.85468110296578px}.h-\[28px\]{height:28px}.h-\[7\.026279633694888px\]{height:7.026279633694888px}.h-\[7\.162829836658693px\]{height:7.162829836658693px}.h-\[8\.887125206261038px\]{height:8.887125206261038px}.max-h-\[200px\]{max-height:200px}.min-h-screen{min-height:100vh}.w-1\.5{width:0.375rem}.w-11{width:2.75rem}.w-2{width:0.5rem}.w-2\.5{width:0.625rem}.w-3{width:0.75rem}.w-5{width:1.25rem}.w-full{width:100%}.w-6{width:1.5rem}.w-\[8px\]{width:8px}.min-w-0{min-width:0px}.max-w-\[1920px\]{max-width:1920px}.max-w-\[600px\]{max-width:600px}.flex-1{flex:1 1 0%}.shrink-0{flex-shrink:0}@keyframes ping{75%, 100%{transform:scale(2);opacity:0}}.animate-ping{animation:ping 1s cubic-bezier(0, 0, 0.2, 1) infinite}@keyframes pulse{50%{opacity:.5}}.animate-pulse{animation:pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite}.cursor-pointer{cursor:pointer}.grid-cols-1{grid-template-columns:repeat(1, minmax(0, 1fr))}.grid-cols-2{grid-template-columns:repeat(2, minmax(0, 1fr))}.grid-cols-3{grid-template-columns:repeat(3, minmax(0, 1fr))}.grid-cols-4{grid-template-columns:repeat(4, minmax(0, 1fr))}.flex-wrap{flex-wrap:wrap}.items-start{align-items:flex-start}.items-end{align-items:flex-end}.items-center{align-items:center}.items-baseline{align-items:baseline}.justify-center{justify-content:center}.justify-between{justify-content:space-between}.gap-1{gap:0.25rem}.gap-1\.5{gap:0.375rem}.gap-2{gap:0.5rem}.gap-3{gap:0.75rem}.gap-4{gap:1rem}.gap-6{gap:1.5rem}.gap-\[3px\]{gap:3px}.gap-2\.5{gap:0.625rem}.space-y-1\.5 > :not([hidden]) ~ :not([hidden]){--tw-space-y-reverse:0;margin-top:calc(0.375rem * calc(1 - var(--tw-space-y-reverse)));margin-bottom:calc(0.375rem * var(--tw-space-y-reverse))}.space-y-2\.5 > :not([hidden]) ~ :not([hidden]){--tw-space-y-reverse:0;margin-top:calc(0.625rem * calc(1 - var(--tw-space-y-reverse)));margin-bottom:calc(0.625rem * var(--tw-space-y-reverse))}.space-y-3 > :not([hidden]) ~ :not([hidden]){--tw-space-y-reverse:0;margin-top:calc(0.75rem * calc(1 - var(--tw-space-y-reverse)));margin-bottom:calc(0.75rem * var(--tw-space-y-reverse))}.space-y-3\.5 > :not([hidden]) ~ :not([hidden]){--tw-space-y-reverse:0;margin-top:calc(0.875rem * calc(1 - var(--tw-space-y-reverse)));margin-bottom:calc(0.875rem * var(--tw-space-y-reverse))}.space-y-4 > :not([hidden]) ~ :not([hidden]){--tw-space-y-reverse:0;margin-top:calc(1rem * calc(1 - var(--tw-space-y-reverse)));margin-bottom:calc(1rem * var(--tw-space-y-reverse))}.overflow-hidden{overflow:hidden}.overflow-visible{overflow:visible}.overflow-y-auto{overflow-y:auto}.truncate{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.rounded{border-radius:0.25rem}.rounded-\[16px\]{border-radius:16px}.rounded-\[20px\]{border-radius:20px}.rounded-full{border-radius:9999px}.rounded-lg{border-radius:0.5rem}.rounded-md{border-radius:0.375rem}.rounded-xl{border-radius:0.75rem}.border{border-width:1px}.border-b{border-bottom-width:1px}.border-l{border-left-width:1px}.border-t{border-top-width:1px}.border-emerald-900\/50{border-color:rgb(6 78 59 / 0.5)}.border-red-900\/50{border-color:rgb(127 29 29 / 0.5)}.border-violet-900\/50{border-color:rgb(76 29 149 / 0.5)}.border-zinc-800{--tw-border-opacity:1;border-color:rgb(39 39 42 / var(--tw-border-opacity, 1))}.border-zinc-800\/60{border-color:rgb(39 39 42 / 0.6)}.border-zinc-800\/80{border-color:rgb(39 39 42 / 0.8)}.border-amber-900\/50{border-color:rgb(120 53 15 / 0.5)}.border-zinc-900{--tw-border-opacity:1;border-color:rgb(24 24 27 / var(--tw-border-opacity, 1))}.bg-\[\#050508\]{--tw-bg-opacity:1;background-color:rgb(5 5 8 / var(--tw-bg-opacity, 1))}.bg-amber-500{--tw-bg-opacity:1;background-color:rgb(245 158 11 / var(--tw-bg-opacity, 1))}.bg-amber-500\/80{background-color:rgb(245 158 11 / 0.8)}.bg-amber-600{--tw-bg-opacity:1;background-color:rgb(217 119 6 / var(--tw-bg-opacity, 1))}.bg-black\/70{background-color:rgb(0 0 0 / 0.7)}.bg-emerald-500{--tw-bg-opacity:1;background-color:rgb(16 185 129 / var(--tw-bg-opacity, 1))}.bg-emerald-500\/80{background-color:rgb(16 185 129 / 0.8)}.bg-emerald-950\/50{background-color:rgb(2 44 34 / 0.5)}.bg-red-950\/40{background-color:rgb(69 10 10 / 0.4)}.bg-violet-500{--tw-bg-opacity:1;background-color:rgb(139 92 246 / var(--tw-bg-opacity, 1))}.bg-violet-600{--tw-bg-opacity:1;background-color:rgb(124 58 237 / var(--tw-bg-opacity, 1))}.bg-violet-950\/50{background-color:rgb(46 16 101 / 0.5)}.bg-zinc-200{--tw-bg-opacity:1;background-color:rgb(228 228 231 / var(--tw-bg-opacity, 1))}.bg-zinc-600{--tw-bg-opacity:1;background-color:rgb(82 82 91 / var(--tw-bg-opacity, 1))}.bg-zinc-700{--tw-bg-opacity:1;background-color:rgb(63 63 70 / var(--tw-bg-opacity, 1))}.bg-zinc-800{--tw-bg-opacity:1;background-color:rgb(39 39 42 / var(--tw-bg-opacity, 1))}.bg-zinc-900{--tw-bg-opacity:1;background-color:rgb(24 24 27 / var(--tw-bg-opacity, 1))}.bg-zinc-900\/30{background-color:rgb(24 24 27 / 0.3)}.bg-zinc-900\/40{background-color:rgb(24 24 27 / 0.4)}.bg-zinc-950{--tw-bg-opacity:1;background-color:rgb(9 9 11 / var(--tw-bg-opacity, 1))}.bg-zinc-950\/60{background-color:rgb(9 9 11 / 0.6)}.bg-zinc-950\/70{background-color:rgb(9 9 11 / 0.7)}.bg-zinc-950\/80{background-color:rgb(9 9 11 / 0.8)}.bg-amber-950\/50{background-color:rgb(69 26 3 / 0.5)}.bg-gradient-to-r{background-image:linear-gradient(to right, var(--tw-gradient-stops))}.from-amber-600{--tw-gradient-from:#d97706 var(--tw-gradient-from-position);--tw-gradient-to:rgb(217 119 6 / 0) var(--tw-gradient-to-position);--tw-gradient-stops:var(--tw-gradient-from), var(--tw-gradient-to)}.from-emerald-600{--tw-gradient-from:#059669 var(--tw-gradient-from-position);--tw-gradient-to:rgb(5 150 105 / 0) var(--tw-gradient-to-position);--tw-gradient-stops:var(--tw-gradient-from), var(--tw-gradient-to)}.from-violet-600{--tw-gradient-from:#7c3aed var(--tw-gradient-from-position);--tw-gradient-to:rgb(124 58 237 / 0) var(--tw-gradient-to-position);--tw-gradient-stops:var(--tw-gradient-from), var(--tw-gradient-to)}.from-zinc-600{--tw-gradient-from:#52525b var(--tw-gradient-from-position);--tw-gradient-to:rgb(82 82 91 / 0) var(--tw-gradient-to-position);--tw-gradient-stops:var(--tw-gradient-from), var(--tw-gradient-to)}.to-amber-400{--tw-gradient-to:#fbbf24 var(--tw-gradient-to-position)}.to-emerald-400{--tw-gradient-to:#34d399 var(--tw-gradient-to-position)}.to-fuchsia-400{--tw-gradient-to:#e879f9 var(--tw-gradient-to-position)}.to-zinc-300{--tw-gradient-to:#d4d4d8 var(--tw-gradient-to-position)}.fill-amber-300{fill:#fcd34d}.fill-amber-400{fill:#fbbf24}.fill-emerald-300{fill:#6ee7b7}.fill-emerald-400{fill:#34d399}.fill-violet-300{fill:#c4b5fd}.fill-zinc-500{fill:#71717a}.p-3{padding:0.75rem}.p-3\.5{padding:0.875rem}.p-4{padding:1rem}.p-\[1px\]{padding:1px}.p-2{padding:0.5rem}.px-1\.5{padding-left:0.375rem;padding-right:0.375rem}.px-2{padding-left:0.5rem;padding-right:0.5rem}.px-2\.5{padding-left:0.625rem;padding-right:0.625rem}.px-3{padding-left:0.75rem;padding-right:0.75rem}.px-4{padding-left:1rem;padding-right:1rem}.py-0\.5{padding-top:0.125rem;padding-bottom:0.125rem}.py-1\.5{padding-top:0.375rem;padding-bottom:0.375rem}.py-3{padding-top:0.75rem;padding-bottom:0.75rem}.py-1{padding-top:0.25rem;padding-bottom:0.25rem}.pb-2{padding-bottom:0.5rem}.pb-4{padding-bottom:1rem}.pl-6{padding-left:1.5rem}.pr-1{padding-right:0.25rem}.pt-1{padding-top:0.25rem}.pt-2{padding-top:0.5rem}.text-center{text-align:center}.text-2xl{font-size:1.5rem;line-height:2rem}.text-\[10px\]{font-size:10px}.text-\[11px\]{font-size:11px}.text-\[13px\]{font-size:13px}.text-\[16px\]{font-size:16px}.text-\[9px\]{font-size:9px}.text-xs{font-size:0.75rem;line-height:1rem}.text-\[12px\]{font-size:12px}.font-medium{font-weight:500}.font-semibold{font-weight:600}.leading-relaxed{line-height:1.625}.leading-snug{line-height:1.375}.tracking-\[0\.18em\]{letter-spacing:0.18em}.tracking-\[0\.2em\]{letter-spacing:0.2em}.tracking-tight{letter-spacing:-0.025em}.tracking-wider{letter-spacing:0.05em}.tracking-widest{letter-spacing:0.1em}.text-amber-300{--tw-text-opacity:1;color:rgb(252 211 77 / var(--tw-text-opacity, 1))}.text-emerald-300{--tw-text-opacity:1;color:rgb(110 231 183 / var(--tw-text-opacity, 1))}.text-emerald-400{--tw-text-opacity:1;color:rgb(52 211 153 / var(--tw-text-opacity, 1))}.text-red-300{--tw-text-opacity:1;color:rgb(252 165 165 / var(--tw-text-opacity, 1))}.text-violet-200{--tw-text-opacity:1;color:rgb(221 214 254 / var(--tw-text-opacity, 1))}.text-violet-300{--tw-text-opacity:1;color:rgb(196 181 253 / var(--tw-text-opacity, 1))}.text-white{--tw-text-opacity:1;color:rgb(255 255 255 / var(--tw-text-opacity, 1))}.text-zinc-100{--tw-text-opacity:1;color:rgb(244 244 245 / var(--tw-text-opacity, 1))}.text-zinc-200{--tw-text-opacity:1;color:rgb(228 228 231 / var(--tw-text-opacity, 1))}.text-zinc-300{--tw-text-opacity:1;color:rgb(212 212 216 / var(--tw-text-opacity, 1))}.text-zinc-400{--tw-text-opacity:1;color:rgb(161 161 170 / var(--tw-text-opacity, 1))}.text-zinc-500{--tw-text-opacity:1;color:rgb(113 113 122 / var(--tw-text-opacity, 1))}.text-zinc-600{--tw-text-opacity:1;color:rgb(82 82 91 / var(--tw-text-opacity, 1))}.text-amber-400\/80{color:rgb(251 191 36 / 0.8)}.text-emerald-400\/80{color:rgb(52 211 153 / 0.8)}.placeholder-zinc-600::placeholder{--tw-placeholder-opacity:1;color:rgb(82 82 91 / var(--tw-placeholder-opacity, 1))}.opacity-40{opacity:0.4}.opacity-\[0\.3\]{opacity:0.3}.shadow-\[0_0_8px_rgba\(16\2c 185\2c 129\2c 0\.6\)\]{--tw-shadow:0 0 8px rgba(16,185,129,0.6);--tw-shadow-colored:0 0 8px var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.shadow-\[inset_0_1px_0_0_rgba\(255\2c 255\2c 255\2c 0\.03\)\]{--tw-shadow:inset 0 1px 0 0 rgba(255,255,255,0.03);--tw-shadow-colored:inset 0 1px 0 0 var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.shadow-inner{--tw-shadow:inset 0 2px 4px 0 rgb(0 0 0 / 0.05);--tw-shadow-colored:inset 0 2px 4px 0 var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.shadow-md{--tw-shadow:0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);--tw-shadow-colored:0 4px 6px -1px var(--tw-shadow-color), 0 2px 4px -2px var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.shadow-\[0_0_6px_rgba\(16\2c 185\2c 129\2c 0\.5\)\]{--tw-shadow:0 0 6px rgba(16,185,129,0.5);--tw-shadow-colored:0 0 6px var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.shadow-\[0_0_6px_rgba\(217\2c 119\2c 6\2c 0\.4\)\]{--tw-shadow:0 0 6px rgba(217,119,6,0.4);--tw-shadow-colored:0 0 6px var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.shadow-\[0_0_8px_rgba\(245\2c 158\2c 11\2c 0\.7\)\]{--tw-shadow:0 0 8px rgba(245,158,11,0.7);--tw-shadow-colored:0 0 8px var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.backdrop-blur-2xl{--tw-backdrop-blur:blur(40px);-webkit-backdrop-filter:var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia);backdrop-filter:var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia)}.backdrop-blur-md{--tw-backdrop-blur:blur(12px);-webkit-backdrop-filter:var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia);backdrop-filter:var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia)}.backdrop-blur-xl{--tw-backdrop-blur:blur(24px);-webkit-backdrop-filter:var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia);backdrop-filter:var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia)}.transition{transition-property:color, background-color, border-color, fill, stroke, opacity, box-shadow, transform, filter, -webkit-text-decoration-color, -webkit-backdrop-filter;transition-property:color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter;transition-property:color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter, -webkit-text-decoration-color, -webkit-backdrop-filter;transition-timing-function:cubic-bezier(0.4, 0, 0.2, 1);transition-duration:150ms}.transition-\[width\]{transition-property:width;transition-timing-function:cubic-bezier(0.4, 0, 0.2, 1);transition-duration:150ms}.transition-all{transition-property:all;transition-timing-function:cubic-bezier(0.4, 0, 0.2, 1);transition-duration:150ms}.duration-100{transition-duration:100ms}.duration-300{transition-duration:300ms}.selection\:bg-violet-500\/30 *::selection{background-color:rgb(139 92 246 / 0.3)}.selection\:text-violet-100 *::selection{--tw-text-opacity:1;color:rgb(237 233 254 / var(--tw-text-opacity, 1))}.selection\:bg-violet-500\/30::selection{background-color:rgb(139 92 246 / 0.3)}.selection\:text-violet-100::selection{--tw-text-opacity:1;color:rgb(237 233 254 / var(--tw-text-opacity, 1))}.hover\:border-zinc-800:hover{--tw-border-opacity:1;border-color:rgb(39 39 42 / var(--tw-border-opacity, 1))}.hover\:bg-red-900\/40:hover{background-color:rgb(127 29 29 / 0.4)}.hover\:bg-violet-500:hover{--tw-bg-opacity:1;background-color:rgb(139 92 246 / var(--tw-bg-opacity, 1))}.hover\:bg-violet-900\/50:hover{background-color:rgb(76 29 149 / 0.5)}.hover\:bg-zinc-800:hover{--tw-bg-opacity:1;background-color:rgb(39 39 42 / var(--tw-bg-opacity, 1))}.hover\:bg-zinc-900\/60:hover{background-color:rgb(24 24 27 / 0.6)}.hover\:bg-zinc-900\/70:hover{background-color:rgb(24 24 27 / 0.7)}.focus\:border-violet-800:focus{--tw-border-opacity:1;border-color:rgb(91 33 182 / var(--tw-border-opacity, 1))}.focus\:outline-none:focus{outline:2px solid transparent;outline-offset:2px}.focus\:ring-1:focus{--tw-ring-offset-shadow:var(--tw-ring-inset) 0 0 0 var(--tw-ring-offset-width) var(--tw-ring-offset-color);--tw-ring-shadow:var(--tw-ring-inset) 0 0 0 calc(1px + var(--tw-ring-offset-width)) var(--tw-ring-color);box-shadow:var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow, 0 0 #0000)}.focus\:ring-violet-900\/50:focus{--tw-ring-color:rgb(76 29 149 / 0.5)}.group:hover .group-hover\:border-violet-900\/50{border-color:rgb(76 29 149 / 0.5)}.group:hover .group-hover\:text-violet-300{--tw-text-opacity:1;color:rgb(196 181 253 / var(--tw-text-opacity, 1))}.group:hover .group-hover\:text-white{--tw-text-opacity:1;color:rgb(255 255 255 / var(--tw-text-opacity, 1))}.peer:checked ~ .peer-checked\:translate-x-5{--tw-translate-x:1.25rem;transform:translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))}.peer:checked ~ .peer-checked\:bg-violet-600{--tw-bg-opacity:1;background-color:rgb(124 58 237 / var(--tw-bg-opacity, 1))}.peer:checked ~ .peer-checked\:bg-white{--tw-bg-opacity:1;background-color:rgb(255 255 255 / var(--tw-bg-opacity, 1))}@media (min-width: 640px){.sm\:block{display:block}.sm\:gap-5{gap:1.25rem}.sm\:p-4{padding:1rem}.sm\:p-5{padding:1.25rem}.sm\:px-4{padding-left:1rem;padding-right:1rem}.sm\:px-6{padding-left:1.5rem;padding-right:1.5rem}.sm\:text-\[15px\]{font-size:15px}.sm\:text-xs{font-size:0.75rem;line-height:1rem}}@media (min-width: 768px){.md\:col-span-2{grid-column:span 2 / span 2}.md\:grid-cols-2{grid-template-columns:repeat(2, minmax(0, 1fr))}}@media (min-width: 1024px){.lg\:flex{display:flex}.lg\:gap-4{gap:1rem}.lg\:p-5{padding:1.25rem}.lg\:px-5{padding-left:1.25rem;padding-right:1.25rem}}@media (min-width: 1280px){.xl\:col-span-1{grid-column:span 1 / span 1}.xl\:col-span-3{grid-column:span 3 / span 3}.xl\:col-span-4{grid-column:span 4 / span 4}.xl\:col-span-5{grid-column:span 5 / span 5}.xl\:grid-cols-1{grid-template-columns:repeat(1, minmax(0, 1fr))}.xl\:grid-cols-12{grid-template-columns:repeat(12, minmax(0, 1fr))}}@media (min-width: 1536px){.\32xl\:col-span-3{grid-column:span 3 / span 3}.\32xl\:col-span-4{grid-column:span 4 / span 4}.\32xl\:col-span-5{grid-column:span 5 / span 5}}</style></head>
+<body class="text-zinc-200 min-h-screen selection:bg-violet-500/30 selection:text-violet-100">
+<div class="fixed inset-0 -z-10">
+  <div class="absolute inset-0 bg-[#050508]"></div>
+  <div class="absolute inset-0" style="background: radial-gradient(1000px 600px at 15% 0%, rgba(109,40,217,0.12), transparent 60%), radial-gradient(800px 500px at 85% 20%, rgba(16,185,129,0.08), transparent 50%), radial-gradient(600px 400px at 50% 100%, rgba(245,158,11,0.06), transparent 50%);"></div>
+</div>
+
+<header class="sticky top-0 z-40 backdrop-blur-2xl bg-zinc-950/70 border-b border-zinc-800/80">
+  <div class="max-w-[1920px] mx-auto px-4 sm:px-6 py-3 flex items-center gap-4">
+    <div class="flex items-center gap-3">
+      <div class="relative w-2.5 h-2.5">
+        <div class="absolute inset-0 rounded-full bg-violet-500 animate-ping opacity-40"></div>
+        <div class="relative w-2.5 h-2.5 rounded-full bg-violet-500"></div>
+      </div>
+      <h1 class="mono text-[13px] sm:text-[15px] font-semibold tracking-[0.18em] text-zinc-100">WHISPER LATTICE // RECURSIVE MEMORY</h1>
+    </div>
+    <div class="hidden lg:flex items-center gap-6 ml-6 pl-6 border-l border-zinc-800">
+      <div class="flex items-center gap-2">
+        <span id="light-bridge" class="w-2 h-2 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.6)]"></span>
+        <span class="text-[11px] tracking-widest text-zinc-400">BRIDGE</span>
+      </div>
+      <div class="flex items-center gap-2">
+        <span id="light-perpetuate" class="w-2 h-2 rounded-full transition-all bg-zinc-600"></span>
+        <span class="text-[11px] tracking-widest text-zinc-400">PERPETUATE</span>
+      </div>
+      <div class="flex items-center gap-2">
+        <span id="light-lasing" class="w-2 h-2 rounded-full transition-all bg-zinc-700"></span>
+        <span class="text-[11px] tracking-widest text-zinc-400">LASING</span>
+      </div>
+    <div class="ml-auto flex items-center gap-3 sm:gap-5 mono text-[11px] sm:text-xs">
+      <div class="hidden sm:block text-zinc-500">IDEAS: <span id="cnt-ideas" class="text-zinc-200">247</span></div>
+      <div class="hidden sm:block text-zinc-500">CYCLES: <span id="cnt-cycles" class="text-zinc-200">1,432</span></div>
+      <div class="text-zinc-500">UPTIME: <span id="cnt-uptime" class="text-emerald-400">17:34:56</span></div>
+    </div>
+  </div>
+</div></header>
+
+<main class="max-w-[1920px] mx-auto p-3 sm:p-4 lg:p-5 grid grid-cols-1 xl:grid-cols-12 gap-3 lg:gap-4">
+  <!-- LEFT: LATTICE -->
+  <section class="xl:col-span-5 2xl:col-span-5">
+    <div class="relative rounded-[20px] border border-zinc-800 bg-zinc-950/70 backdrop-blur-xl shadow-[inset_0_1px_0_0_rgba(255,255,255,0.03)] overflow-hidden h-full">
+      <div class="absolute inset-0 grid-bg opacity-[0.3] pointer-events-none"></div>
+      <div class="relative px-4 py-3 border-b border-zinc-800/80 flex items-center justify-between">
+        <h2 class="text-[11px] tracking-[0.2em] text-zinc-400 font-medium">LATTICE / OBSERVERS</h2>
+        <div class="flex items-center gap-2 text-[10px] mono">
+          <span class="text-zinc-500">THRESHOLD</span>
+          <span id="thresh-ind" class="px-1.5 py-0.5 rounded border text-[10px] mono bg-zinc-900 border-zinc-800 text-zinc-400">STANDBY</span>
+        </div>
+      </div>
+      <div class="relative p-3 sm:p-5">
+        <div class="aspect-square w-full max-w-[600px] mx-auto relative">
+          <svg id="lattice-svg" viewBox="0 0 600 600" class="w-full h-full overflow-visible">
+            <defs>
+              <radialgradient id="coreGlow" cx="50%" cy="50%">
+                <stop offset="0%" stop-color="#8b5cf6" stop-opacity="0.8"></stop>
+                <stop offset="60%" stop-color="#8b5cf6" stop-opacity="0.2"></stop>
+                <stop offset="100%" stop-color="#8b5cf6" stop-opacity="0"></stop>
+              </radialgradient>
+              <filter id="softGlow" x="-50%" y="-50%" width="200%" height="200%">
+                <fegaussianblur stdDeviation="12" result="blur"></fegaussianblur>
+                <fecomposite in="SourceGraphic" in2="blur" operator="over"></fecomposite>
+              </filter>
+            </defs>
+            <g id="tethers" opacity="0.7249864611671887">
+              <!-- pentagon -->
+              <line x1="300" y1="110" x2="480.7" y2="241.3" stroke="#8b5cf6" stroke-width="2.017828131072547" stroke-opacity="0.7749864611671886"></line>
+              <line x1="480.7" y1="241.3" x2="411.7" y2="453.7" stroke="#8b5cf6" stroke-width="2.017828131072547" stroke-opacity="0.7749864611671886"></line>
+              <line x1="411.7" y1="453.7" x2="188.3" y2="453.7" stroke="#8b5cf6" stroke-width="2.017828131072547" stroke-opacity="0.7749864611671886"></line>
+              <line x1="188.3" y1="453.7" x2="119.3" y2="241.3" stroke="#8b5cf6" stroke-width="2.017828131072547" stroke-opacity="0.7749864611671886"></line>
+              <line x1="119.3" y1="241.3" x2="300" y2="110" stroke="#8b5cf6" stroke-width="2.017828131072547" stroke-opacity="0.7749864611671886"></line>
+              <!-- spokes -->
+              <line x1="300" y1="110" x2="300" y2="300" stroke="#3f3f46" stroke-width="1" stroke-dasharray="3 4" stroke-opacity="0.4035656262145094"></line>
+              <line x1="480.7" y1="241.3" x2="300" y2="300" stroke="#3f3f46" stroke-width="1" stroke-dasharray="3 4" stroke-opacity="0.4035656262145094"></line>
+              <line x1="411.7" y1="453.7" x2="300" y2="300" stroke="#3f3f46" stroke-width="1" stroke-dasharray="3 4" stroke-opacity="0.4035656262145094"></line>
+              <line x1="188.3" y1="453.7" x2="300" y2="300" stroke="#3f3f46" stroke-width="1" stroke-dasharray="3 4" stroke-opacity="0.4035656262145094"></line>
+              <line x1="119.3" y1="241.3" x2="300" y2="300" stroke="#3f3f46" stroke-width="1" stroke-dasharray="3 4" stroke-opacity="0.4035656262145094"></line>
+            </g>
+            <g id="particles"><circle r="1.6" fill="#a78bfa" opacity="0.6428416699053585" cx="292.41414919166147" cy="310.43818504244973"></circle><circle r="1.6" fill="#a78bfa" opacity="0.6428416699053585" cx="396.12304290896515" cy="432.2659954799279"></circle><circle r="1.6" fill="#a78bfa" opacity="0.6428416699053585" cx="300" cy="134.67633694422543"></circle><circle r="1.6" fill="#a78bfa" opacity="0.6428416699053585" cx="359.58869851195993" cy="153.29826294753926"></circle><circle r="1.6" fill="#a78bfa" opacity="0.6428416699053585" cx="251.99149036980234" cy="366.06005309007503"></circle><circle r="1.6" fill="#a78bfa" opacity="0.6428416699053585" cx="325.82987294773204" cy="291.6092222355735"></circle><circle r="1.6" fill="#a78bfa" opacity="0.6428416699053585" cx="222.17168518806739" cy="407.09231859081507"></circle><circle r="1.6" fill="#a78bfa" opacity="0.6428416699053585" cx="398.93936596878706" cy="436.14127618086457"></circle><circle r="1.6" fill="#a78bfa" opacity="0.6428416699053585" cx="150.64779602216254" cy="337.7966938421351"></circle><circle r="1.6" fill="#a78bfa" opacity="0.6428416699053585" cx="447.68713111145576" cy="342.9222224916926"></circle><circle r="1.6" fill="#a78bfa" opacity="0.6428416699053585" cx="465.4719474079481" cy="288.1759184137944"></circle><circle r="1.6" fill="#a78bfa" opacity="0.6428416699053585" cx="305.56438600471637" cy="114.04318695306729"></circle><circle r="1.6" fill="#a78bfa" opacity="0.6428416699053585" cx="284.3816023366917" cy="321.4910270443195"></circle><circle r="1.6" fill="#a78bfa" opacity="0.6428416699053585" cx="133.91481207899255" cy="230.68060417281836"></circle><circle r="1.6" fill="#a78bfa" opacity="0.6428416699053585" cx="240.69851057595847" cy="153.0895714520014"></circle><circle r="1.6" fill="#a78bfa" opacity="0.6428416699053585" cx="131.37118212750113" cy="245.221297127196"></circle><circle r="1.6" fill="#a78bfa" opacity="0.6428416699053585" cx="372.05216031332435" cy="399.1442886316737"></circle><circle r="1.6" fill="#a78bfa" opacity="0.6428416699053585" cx="300" cy="165.25238775112038"></circle></g>
+            <circle cx="300" cy="300" r="65" fill="url(#coreGlow)" opacity="0.15"></circle>
+            <circle cx="300" cy="300" r="22" fill="#09090b" stroke="#3f3f46" stroke-width="1.5"></circle>
+            <circle cx="300" cy="300" r="14" fill="#18181b" stroke="#52525b" stroke-width="1"></circle>
+            <text x="300" y="304" text-anchor="middle" class="mono text-[9px] fill-zinc-500">CORE</text>
+            <!-- Observers -->
+            <g transform="translate(300,110)">
+              <circle r="44" fill="#0a0a0f" stroke="#27272a" stroke-width="2"></circle>
+              <circle r="36" fill="#111113" stroke="#7c3aed" stroke-width="1.5" class="glow-violet"></circle>
+              <text y="4" text-anchor="middle" class="mono text-[11px] fill-violet-300">O1</text>
+            </g>
+            <g transform="translate(480.7,241.3)">
+              <circle r="44" fill="#0a0a0f" stroke="#27272a" stroke-width="2"></circle>
+              <circle r="36" fill="#111113" stroke="#7c3aed" stroke-width="1.5" class="glow-violet"></circle>
+              <text y="4" text-anchor="middle" class="mono text-[11px] fill-violet-300">O2</text>
+            </g>
+            <g transform="translate(119.3,241.3)">
+              <circle r="44" fill="#0a0a0f" stroke="#27272a" stroke-width="2"></circle>
+              <circle r="36" fill="#111113" stroke="#7c3aed" stroke-width="1.5" class="glow-violet"></circle>
+              <text y="4" text-anchor="middle" class="mono text-[11px] fill-violet-300">O3</text>
+            </g>
+            <!-- O4 bottom-left GREEN (N) -->
+            <g transform="translate(188.3,453.7)">
+              <circle r="48" fill="#0a0a0f" stroke="#14532d" stroke-width="2" opacity="0.9"></circle>
+              <circle r="40" fill="#0b1210" stroke="#10b981" stroke-width="2" class="glow-emerald" id="obs4-ring"></circle>
+              <text y="-6" text-anchor="middle" class="mono text-[10px] fill-emerald-400 tracking-wider">N</text>
+              <text id="obs4-n" y="12" text-anchor="middle" class="mono text-[16px] font-semibold fill-emerald-300">0.09</text>
+            </g>
+            <!-- O5 bottom-right AMBER (phi) -->
+            <g transform="translate(411.7,453.7)">
+              <circle r="48" fill="#0a0a0f" stroke="#78350f" stroke-width="2" opacity="0.9"></circle>
+              <circle r="40" fill="#12100b" stroke="#f59e0b" stroke-width="2" class="glow-amber" id="obs5-ring"></circle>
+              <text y="-6" text-anchor="middle" class="mono text-[10px] fill-amber-400 tracking-wider">φ</text>
+              <text id="obs5-phi" y="12" text-anchor="middle" class="mono text-[16px] font-semibold fill-amber-300">1.15</text>
+            </g>
+          </svg>
+          <div class="absolute bottom-0 left-0 right-0 flex justify-center pb-2 pointer-events-none">
+            <div class="flex items-center gap-4 px-3 py-1.5 rounded-full bg-zinc-950/80 border border-zinc-800 backdrop-blur-md">
+              <div class="flex items-center gap-1.5"><span class="w-1.5 h-1.5 rounded-full bg-violet-500"></span><span class="text-[10px] mono text-zinc-500">LATTICE</span></div>
+              <div class="flex items-center gap-1.5"><span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span><span class="text-[10px] mono text-zinc-500">N INV</span></div>
+              <div class="flex items-center gap-1.5"><span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span><span class="text-[10px] mono text-zinc-500">PHOTON</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CENTER: LASER CORE -->
+  <section class="xl:col-span-4 2xl:col-span-4">
+    <div class="relative rounded-[20px] border border-zinc-800 bg-zinc-950/70 backdrop-blur-xl shadow-[inset_0_1px_0_0_rgba(255,255,255,0.03)] overflow-hidden h-full">
+      <div class="px-4 py-3 border-b border-zinc-800/80 flex items-center justify-between">
+        <h2 class="text-[11px] tracking-[0.2em] text-zinc-400 font-medium">LASER CORE // Yb:FIBER</h2>
+        <div class="flex items-center gap-2">
+          <span class="text-[10px] mono px-2 py-0.5 rounded bg-emerald-950/50 text-emerald-400 border border-emerald-900/50">CW</span>
+          <span class="text-[10px] mono px-2 py-0.5 rounded bg-zinc-900 text-zinc-400 border border-zinc-800">1064nm</span>
+        </div>
+      </div>
+
+      <div class="p-4 space-y-4">
+        <!-- Oscilloscope -->
+        <div class="relative rounded-xl overflow-hidden border border-zinc-800 bg-black/70">
+          <div class="absolute top-2 left-3 flex items-center gap-3 text-[10px] mono z-10">
+            <div class="flex items-center gap-1"><span class="w-3 h-[2px] bg-emerald-500"></span><span class="text-zinc-500">N</span></div>
+            <div class="flex items-center gap-1"><span class="w-3 h-[2px] bg-amber-500"></span><span class="text-zinc-500">φ</span></div>
+            <div class="text-zinc-600">5.0s WINDOW</div>
+          </div>
+          <canvas id="scope" width="800" height="240" class="w-full h-[120px] scope-grid"></canvas>
+          <div class="absolute bottom-1 right-2 text-[9px] mono text-zinc-600">60 FPS</div>
+        </div>
+
+        <!-- 4 Metrics -->
+        <div class="grid grid-cols-2 gap-3">
+          <div class="group relative rounded-xl border border-zinc-800 bg-zinc-900/40 p-3 hover:bg-zinc-900/60 transition">
+            <div class="flex items-start justify-between">
+              <div class="text-[10px] tracking-widest text-zinc-500">POPULATION INVERSION</div>
+              <div class="w-1.5 h-1.5 rounded-full bg-emerald-500/80 animate-pulse"></div>
+            </div>
+            <div class="mt-2 flex items-baseline gap-2">
+              <div class="text-[10px] text-zinc-500">N =</div>
+              <div id="n-val" class="mono text-2xl font-medium text-emerald-300 tracking-tight">0.087</div>
+            </div>
+            <div class="mt-3 h-[6px] rounded-full bg-zinc-950 border border-zinc-800 overflow-hidden p-[1px]">
+              <div id="bar-n" class="h-full rounded-full bg-gradient-to-r from-emerald-600 to-emerald-400 transition-[width] duration-100" style="width: 8.65384%;"></div>
+            </div>
+            <div class="mt-1.5 flex justify-between text-[9px] mono text-zinc-600"><span>0.0</span><span>1.0</span></div>
+          </div>
+
+          <div class="group relative rounded-xl border border-zinc-800 bg-zinc-900/40 p-3 hover:bg-zinc-900/60 transition">
+            <div class="flex items-start justify-between">
+              <div class="text-[10px] tracking-widest text-zinc-500">PHOTON FLUX</div>
+              <div class="w-1.5 h-1.5 rounded-full bg-amber-500/80 animate-pulse"></div>
+            </div>
+            <div class="mt-2 flex items-baseline gap-2">
+              <div class="text-[10px] text-zinc-500">φ =</div>
+              <div id="phi-val" class="mono text-2xl font-medium text-amber-300 tracking-tight">1.153</div>
+            </div>
+            <div class="mt-3 h-[6px] rounded-full bg-zinc-950 border border-zinc-800 overflow-hidden p-[1px]">
+              <div id="bar-phi" class="h-full rounded-full bg-gradient-to-r from-amber-600 to-amber-400 transition-[width] duration-100" style="width: 96.0913%;"></div>
+            </div>
+            <div class="mt-1.5 flex justify-between text-[9px] mono text-zinc-600"><span>0.0</span><span>1.2</span></div>
+          </div>
+
+          <div class="relative rounded-xl border border-zinc-800 bg-zinc-900/40 p-3">
+            <div class="text-[10px] tracking-widest text-zinc-500">NET GAIN</div>
+            <div class="mt-2 flex items-baseline gap-2">
+              <div class="text-[10px] text-zinc-500">g₀N - loss =</div>
+              <div id="gain-val" class="mono text-2xl font-medium text-violet-300 tracking-tight">-0.00</div>
+            </div>
+            <div class="mt-3 h-[6px] rounded-full bg-zinc-950 border border-zinc-800 overflow-hidden p-[1px]">
+              <div id="bar-gain" class="h-full rounded-full bg-gradient-to-r from-violet-600 to-fuchsia-400 transition-[width] duration-100" style="width: 16.6667%;"></div>
+            </div>
+            <div class="mt-1.5 flex justify-between text-[9px] mono text-zinc-600"><span>-1</span><span>THR</span><span>+5</span></div>
+          </div>
+
+          <div class="relative rounded-xl border border-zinc-800 bg-zinc-900/40 p-3">
+            <div class="text-[10px] tracking-widest text-zinc-500">STIM RATE</div>
+            <div class="mt-2 flex items-baseline gap-2">
+              <div class="text-[10px] text-zinc-500">Rs·N·φ =</div>
+              <div id="stim-val" class="mono text-2xl font-medium text-zinc-200 tracking-tight">848</div>
+            </div>
+            <div class="mt-3 h-[6px] rounded-full bg-zinc-950 border border-zinc-800 overflow-hidden p-[1px]">
+              <div id="bar-stim" class="h-full rounded-full bg-gradient-to-r from-zinc-600 to-zinc-300 transition-[width] duration-100" style="width: 10.6024%;"></div>
+            </div>
+            <div class="mt-1.5 flex justify-between text-[9px] mono text-zinc-600"><span>0</span><span>8k</span></div>
+          </div>
+        </div>
+
+        <!-- Controls -->
+        <div class="rounded-xl border border-zinc-800 bg-zinc-900/30 p-3.5 space-y-4">
+          <div class="flex items-center justify-between">
+            <h3 class="text-[11px] tracking-widest text-zinc-400">CAVITY CONTROLS</h3>
+            <div class="text-[10px] mono text-zinc-500">Yb³⁺ : silica | τ = 0.85ms</div>
+          </div>
+          
+          <div class="space-y-3.5">
+            <div>
+              <div class="flex items-center justify-between mb-1.5">
+                <label class="text-[11px] text-zinc-400">PUMP RATE Rp</label>
+                <div class="flex items-center gap-2"><span id="rp-val" class="mono text-xs text-violet-300">5,200</span><span class="text-[10px] text-zinc-600">s⁻¹</span></div>
+              </div>
+              <input id="rp-slider" type="range" min="1000" max="10000" step="50" value="4800" class="w-full">
+              <div class="flex justify-between text-[9px] mono text-zinc-600 mt-1"><span>1k</span><span>THR ~3.2k</span><span>10k</span></div>
+            </div>
+            <div>
+              <div class="flex items-center justify-between mb-1.5">
+                <label class="text-[11px] text-zinc-400">CAVITY LOSS</label>
+                <div class="flex items-center gap-2"><span id="loss-val" class="mono text-xs text-zinc-300">0.45</span></div>
+              </div>
+              <input id="loss-slider" type="range" min="0.1" max="1.0" step="0.01" value="0.45" class="w-full">
+            </div>
+            <div>
+              <div class="flex items-center justify-between mb-1.5">
+                <label class="text-[11px] text-zinc-400">SEED EPS</label>
+                <div class="flex items-center gap-2"><span id="eps-val" class="mono text-xs text-zinc-300">2.0e-6</span></div>
+              </div>
+              <input id="eps-slider" type="range" min="0" max="100" step="1" value="50" class="w-full">
+            </div>
+          </div>
+
+          <div class="grid grid-cols-3 gap-2 pt-1">
+            <button id="btn-reset" class="h-9 rounded-lg bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 text-[11px] tracking-widest text-zinc-300 transition">RESET</button>
+            <button id="btn-threshold" class="h-9 rounded-lg bg-violet-950/50 hover:bg-violet-900/50 border border-violet-900/50 text-[11px] tracking-widest text-violet-200 transition">THRESHOLD TEST</button>
+            <button id="btn-kill" class="h-9 rounded-lg bg-red-950/40 hover:bg-red-900/40 border border-red-900/50 text-[11px] tracking-widest text-red-300 transition">KILL BEAM</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- RIGHT: CONTROL -->
+  <section class="xl:col-span-3 2xl:col-span-3">
+    <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-1 gap-3 lg:gap-4 h-full">
+      <!-- Perpetuate -->
+      <div class="relative rounded-[20px] border border-zinc-800 bg-zinc-950/70 backdrop-blur-xl p-4">
+        <div class="flex items-center justify-between mb-3">
+          <h3 class="text-[11px] tracking-[0.2em] text-zinc-400">PERPETUATE</h3>
+          <label class="relative inline-flex cursor-pointer">
+            <input id="toggle-perpetuate" type="checkbox" class="sr-only peer">
+            <div class="w-11 h-6 bg-zinc-800 rounded-full peer-checked:bg-violet-600 transition-all duration-300 shadow-inner"></div>
+            <div class="absolute left-[2px] top-[2px] w-5 h-5 bg-zinc-200 rounded-full transition-all duration-300 peer-checked:translate-x-5 peer-checked:bg-white shadow-md"></div>
+          </label>
+        </div>
+        <div class="space-y-3">
+          <div>
+            <div class="text-[10px] text-zinc-500 mb-1.5">INTERVAL</div>
+            <div class="grid grid-cols-4 gap-1.5">
+              <button data-int="20000" class="p-int btn-active px-2 py-1.5 rounded-md bg-zinc-900 border border-zinc-800 text-[11px] mono hover:bg-zinc-800">20s</button>
+              <button data-int="40000" class="p-int px-2 py-1.5 rounded-md bg-zinc-900 border border-zinc-800 text-[11px] mono hover:bg-zinc-800">40s</button>
+              <button data-int="60000" class="p-int px-2 py-1.5 rounded-md bg-zinc-900 border border-zinc-800 text-[11px] mono hover:bg-zinc-800">60s</button>
+              <button data-int="120000" class="p-int px-2 py-1.5 rounded-md bg-zinc-900 border border-zinc-800 text-[11px] mono hover:bg-zinc-800">120s</button>
+            </div>
+          </div>
+          <div>
+            <div class="text-[10px] text-zinc-500 mb-1.5">MODE</div>
+            <div class="grid grid-cols-3 gap-1.5">
+              <button data-mode="Commons" class="p-mode px-2 py-1.5 rounded-md bg-zinc-900 border border-zinc-800 text-[11px] hover:bg-zinc-800">Commons</button>
+              <button data-mode="Memory" class="p-mode px-2 py-1.5 rounded-md bg-zinc-900 border border-zinc-800 text-[11px] hover:bg-zinc-800">Memory</button>
+              <button data-mode="Hybrid" class="p-mode btn-active px-2 py-1.5 rounded-md bg-zinc-900 border border-zinc-800 text-[11px] hover:bg-zinc-800">Hybrid</button>
+            </div>
+          <div class="pt-2 border-t border-zinc-800/60">
+            <div class="text-[10px] text-zinc-500">LAST CYCLE</div>
+            <div id="last-cycle" class="mono text-[11px] text-violet-300 mt-1 leading-relaxed">LOOK → QUESTION → ANSWER → EXPLAIN</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Injector -->
+      <div class="relative rounded-[20px] border border-zinc-800 bg-zinc-950/70 backdrop-blur-xl p-4">
+        <h3 class="text-[11px] tracking-[0.2em] text-zinc-400 mb-3">IDEA INJECTOR</h3>
+        <div class="flex gap-2">
+          <input id="idea-input" type="text" placeholder="Enter seed hypothesis..." class="flex-1 h-9 px-3 rounded-lg bg-zinc-950 border border-zinc-800 text-[13px] placeholder-zinc-600 focus:outline-none focus:border-violet-800 focus:ring-1 focus:ring-violet-900/50 transition">
+          <button id="btn-inject" class="h-9 px-3 rounded-lg bg-violet-600 hover:bg-violet-500 text-white text-[11px] font-medium tracking-widest transition">INJECT</button>
+        </div>
+        <button id="btn-commons" class="mt-2 w-full h-8 rounded-lg bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 text-[11px] tracking-widest text-zinc-300 transition flex items-center justify-center gap-1.5">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"></path></svg>
+          COMMONS PULL
+        </button>
+        <div id="idea-chips" class="flex flex-wrap gap-1.5 mt-3"><span class="inline-flex items-center px-2 py-1 rounded-md bg-zinc-900 border border-zinc-800 text-[11px] text-zinc-300">Yb-doped silica phase</span><span class="inline-flex items-center px-2 py-1 rounded-md bg-zinc-900 border border-zinc-800 text-[11px] text-zinc-300">Cavity Q-switch timing</span><span class="inline-flex items-center px-2 py-1 rounded-md bg-zinc-900 border border-zinc-800 text-[11px] text-zinc-300">Whisper mode coupling</span></div>
+      </div>
+
+      <!-- Memory Tree -->
+      <div class="relative rounded-[20px] border border-zinc-800 bg-zinc-950/70 backdrop-blur-xl p-4 md:col-span-2 xl:col-span-1">
+        <div class="flex items-center justify-between mb-3">
+          <h3 class="text-[11px] tracking-[0.2em] text-zinc-400">MEMORY TREE</h3>
+          <span class="text-[10px] mono px-1.5 py-0.5 rounded bg-zinc-900 border border-zinc-800 text-zinc-500">DEPTH 0-4</span>
+        </div>
+        <div id="memory-list" class="space-y-1.5 max-h-[200px] overflow-y-auto scrollbar-thin pr-1 -mr-1"><div class="group flex items-start gap-2.5 p-2 rounded-lg hover:bg-zinc-900/70 border border-zinc-900 hover:border-zinc-800 transition cursor-pointer"><div class="shrink-0 w-6 text-center"><span class="inline-flex w-5 h-5 items-center justify-center rounded bg-zinc-900 border border-zinc-800 text-[10px] mono text-zinc-500 group-hover:text-violet-300 group-hover:border-violet-900/50">3</span></div>
+      <div class="min-w-0 flex-1"><div class="text-[12px] leading-snug truncate text-zinc-200 group-hover:text-white">Recursive photon echo alignment</div>
+      <div class="mt-1 flex items-center gap-2 text-[10px] mono"><span class="text-emerald-400/80">N 0.847</span><span class="text-zinc-600">·</span><span class="text-amber-400/80">φ 0.623</span></div></div></div><div class="group flex items-start gap-2.5 p-2 rounded-lg hover:bg-zinc-900/70 border border-zinc-900 hover:border-zinc-800 transition cursor-pointer"><div class="shrink-0 w-6 text-center"><span class="inline-flex w-5 h-5 items-center justify-center rounded bg-zinc-900 border border-zinc-800 text-[10px] mono text-zinc-500 group-hover:text-violet-300 group-hover:border-violet-900/50">2</span></div>
+      <div class="min-w-0 flex-1"><div class="text-[12px] leading-snug truncate text-zinc-200 group-hover:text-white">Lattice tether phase matching</div>
+      <div class="mt-1 flex items-center gap-2 text-[10px] mono"><span class="text-emerald-400/80">N 0.721</span><span class="text-zinc-600">·</span><span class="text-amber-400/80">φ 0.512</span></div></div></div><div class="group flex items-start gap-2.5 p-2 rounded-lg hover:bg-zinc-900/70 border border-zinc-900 hover:border-zinc-800 transition cursor-pointer"><div class="shrink-0 w-6 text-center"><span class="inline-flex w-5 h-5 items-center justify-center rounded bg-zinc-900 border border-zinc-800 text-[10px] mono text-zinc-500 group-hover:text-violet-300 group-hover:border-violet-900/50">4</span></div>
+      <div class="min-w-0 flex-1"><div class="text-[12px] leading-snug truncate text-zinc-200 group-hover:text-white">Yb³⁺ upper-state lifetime</div>
+      <div class="mt-1 flex items-center gap-2 text-[10px] mono"><span class="text-emerald-400/80">N 0.912</span><span class="text-zinc-600">·</span><span class="text-amber-400/80">φ 0.881</span></div></div></div><div class="group flex items-start gap-2.5 p-2 rounded-lg hover:bg-zinc-900/70 border border-zinc-900 hover:border-zinc-800 transition cursor-pointer"><div class="shrink-0 w-6 text-center"><span class="inline-flex w-5 h-5 items-center justify-center rounded bg-zinc-900 border border-zinc-800 text-[10px] mono text-zinc-500 group-hover:text-violet-300 group-hover:border-violet-900/50">1</span></div>
+      <div class="min-w-0 flex-1"><div class="text-[12px] leading-snug truncate text-zinc-200 group-hover:text-white">Seed injection jitter</div>
+      <div class="mt-1 flex items-center gap-2 text-[10px] mono"><span class="text-emerald-400/80">N 0.543</span><span class="text-zinc-600">·</span><span class="text-amber-400/80">φ 0.210</span></div></div></div><div class="group flex items-start gap-2.5 p-2 rounded-lg hover:bg-zinc-900/70 border border-zinc-900 hover:border-zinc-800 transition cursor-pointer"><div class="shrink-0 w-6 text-center"><span class="inline-flex w-5 h-5 items-center justify-center rounded bg-zinc-900 border border-zinc-800 text-[10px] mono text-zinc-500 group-hover:text-violet-300 group-hover:border-violet-900/50">2</span></div>
+      <div class="min-w-0 flex-1"><div class="text-[12px] leading-snug truncate text-zinc-200 group-hover:text-white">Commons pull: coherence</div>
+      <div class="mt-1 flex items-center gap-2 text-[10px] mono"><span class="text-emerald-400/80">N 0.765</span><span class="text-zinc-600">·</span><span class="text-amber-400/80">φ 0.445</span></div></div></div></div>
+      </div>
+
+      <!-- System -->
+      <div class="relative rounded-[20px] border border-zinc-800 bg-zinc-950/70 backdrop-blur-xl p-4 md:col-span-2 xl:col-span-1">
+        <h3 class="text-[11px] tracking-[0.2em] text-zinc-400 mb-3">SYSTEM</h3>
+        <div class="space-y-2.5 text-[11px] mono">
+          <div class="flex justify-between"><span class="text-zinc-500">Bridge</span><span class="text-emerald-400 flex items-center gap-1.5">http://localhost:8787 <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span></span></div>
+          <div class="flex justify-between"><span class="text-zinc-500">Log path</span><span class="text-zinc-400 truncate ml-2">C:\Users\Dave\whisper-lattice\</span></div>
+          <div class="flex items-center gap-2 pt-1">
+            <button id="btn-export-jsonl" class="h-7 px-2.5 rounded-md bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 text-[10px] tracking-widest">EXPORT JSONL</button>
+            <button id="btn-export-csv" class="h-7 px-2.5 rounded-md bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 text-[10px] tracking-widest">EXPORT CSV</button>
+            <div class="ml-auto text-[10px] text-zinc-600">LOCALSTORAGE</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div></section>
+</main>
+
+<!-- BOTTOM TIMELINE -->
+<footer class="max-w-[1920px] mx-auto px-3 sm:px-4 lg:px-5 pb-4">
+  <div class="relative rounded-[16px] border border-zinc-800 bg-zinc-950/60 backdrop-blur-xl p-3">
+    <div class="flex items-center justify-between mb-2">
+      <h3 class="text-[10px] tracking-[0.2em] text-zinc-500">CYCLE TIMELINE // LAST 50</h3>
+      <div class="flex items-center gap-3 text-[10px] mono">
+        <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-zinc-700"></span><span class="text-zinc-600">BELOW</span></span>
+        <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-amber-600"></span><span class="text-zinc-600">THRESHOLD</span></span>
+        <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-emerald-500"></span><span class="text-zinc-600">LASING</span></span>
+      </div>
+    </div>
+    <div id="timeline" class="flex items-end gap-[3px] h-9 overflow-hidden"><div class="w-[8px] h-[17px] rounded-full bg-emerald-500 shadow-[0_0_6px_rgba(16,185,129,0.5)] transition-all duration-300" title="11:15:49 PM · gain 0.50 · init"></div><div class="w-[8px] h-[24.139336275658593px] rounded-full bg-emerald-500 shadow-[0_0_6px_rgba(16,185,129,0.5)] transition-all duration-300" title="11:14:49 PM · gain 1.47 · init"></div><div class="w-[8px] h-[28px] rounded-full bg-emerald-500 shadow-[0_0_6px_rgba(16,185,129,0.5)] transition-all duration-300" title="11:13:49 PM · gain 2.29 · init"></div><div class="w-[8px] h-[28px] rounded-full bg-emerald-500 shadow-[0_0_6px_rgba(16,185,129,0.5)] transition-all duration-300" title="11:12:49 PM · gain 2.83 · init"></div><div class="w-[8px] h-[28px] rounded-full bg-emerald-500 shadow-[0_0_6px_rgba(16,185,129,0.5)] transition-all duration-300" title="11:11:49 PM · gain 3.00 · init"></div><div class="w-[8px] h-[28px] rounded-full bg-emerald-500 shadow-[0_0_6px_rgba(16,185,129,0.5)] transition-all duration-300" title="11:10:49 PM · gain 2.77 · init"></div><div class="w-[8px] h-[28px] rounded-full bg-emerald-500 shadow-[0_0_6px_rgba(16,185,129,0.5)] transition-all duration-300" title="11:09:49 PM · gain 2.19 · init"></div><div class="w-[8px] h-[23.14144941952492px] rounded-full bg-emerald-500 shadow-[0_0_6px_rgba(16,185,129,0.5)] transition-all duration-300" title="11:08:49 PM · gain 1.34 · init"></div><div class="w-[8px] h-[15.929807370494366px] rounded-full bg-emerald-500 shadow-[0_0_6px_rgba(16,185,129,0.5)] transition-all duration-300" title="11:07:49 PM · gain 0.35 · init"></div><div class="w-[8px] h-[8.887125206261038px] rounded-full bg-zinc-700 transition-all duration-300" title="11:06:49 PM · gain -0.61 · init"></div><div class="w-[8px] h-[6px] rounded-full bg-zinc-700 transition-all duration-300" title="11:05:49 PM · gain -1.39 · init"></div><div class="w-[8px] h-[6px] rounded-full bg-zinc-700 transition-all duration-300" title="11:04:49 PM · gain -1.88 · init"></div><div class="w-[8px] h-[6px] rounded-full bg-zinc-700 transition-all duration-300" title="11:03:49 PM · gain -1.99 · init"></div><div class="w-[8px] h-[6px] rounded-full bg-zinc-700 transition-all duration-300" title="11:02:49 PM · gain -1.71 · init"></div><div class="w-[8px] h-[6px] rounded-full bg-zinc-700 transition-all duration-300" title="11:01:49 PM · gain -1.08 · init"></div><div class="w-[8px] h-[11.877382533019691px] rounded-full bg-zinc-700 transition-all duration-300" title="11:00:49 PM · gain -0.20 · init"></div><div class="w-[8px] h-[19.13673542225905px] rounded-full bg-emerald-500 shadow-[0_0_6px_rgba(16,185,129,0.5)] transition-all duration-300" title="10:59:49 PM · gain 0.79 · init"></div><div class="w-[8px] h-[26.058744770874497px] rounded-full bg-emerald-500 shadow-[0_0_6px_rgba(16,185,129,0.5)] transition-all duration-300" title="10:58:49 PM · gain 1.74 · init"></div><div class="w-[8px] h-[28px] rounded-full bg-emerald-500 shadow-[0_0_6px_rgba(16,185,129,0.5)] transition-all duration-300" title="10:57:49 PM · gain 2.48 · init"></div><div class="w-[8px] h-[28px] rounded-full bg-emerald-500 shadow-[0_0_6px_rgba(16,185,129,0.5)] transition-all duration-300" title="10:56:49 PM · gain 2.92 · init"></div><div class="w-[8px] h-[28px] rounded-full bg-emerald-500 shadow-[0_0_6px_rgba(16,185,129,0.5)] transition-all duration-300" title="10:55:49 PM · gain 2.97 · init"></div><div class="w-[8px] h-[28px] rounded-full bg-emerald-500 shadow-[0_0_6px_rgba(16,185,129,0.5)] transition-all duration-300" title="10:54:49 PM · gain 2.64 · init"></div><div class="w-[8px] h-[27.723481869682296px] rounded-full bg-emerald-500 shadow-[0_0_6px_rgba(16,185,129,0.5)] transition-all duration-300" title="10:53:49 PM · gain 1.96 · init"></div><div class="w-[8px] h-[21.08631509183784px] rounded-full bg-emerald-500 shadow-[0_0_6px_rgba(16,185,129,0.5)] transition-all duration-300" title="10:52:49 PM · gain 1.06 · init"></div><div class="w-[8px] h-[13.804009010912008px] rounded-full bg-amber-600 shadow-[0_0_6px_rgba(217,119,6,0.4)] transition-all duration-300" title="10:51:49 PM · gain 0.06 · init"></div><div class="w-[8px] h-[7.026279633694888px] rounded-full bg-zinc-700 transition-all duration-300" title="10:50:49 PM · gain -0.86 · init"></div><div class="w-[8px] h-[6px] rounded-full bg-zinc-700 transition-all duration-300" title="10:49:49 PM · gain -1.57 · init"></div><div class="w-[8px] h-[6px] rounded-full bg-zinc-700 transition-all duration-300" title="10:48:49 PM · gain -1.95 · init"></div><div class="w-[8px] h-[6px] rounded-full bg-zinc-700 transition-all duration-300" title="10:47:49 PM · gain -1.95 · init"></div><div class="w-[8px] h-[6px] rounded-full bg-zinc-700 transition-all duration-300" title="10:46:49 PM · gain -1.56 · init"></div><div class="w-[8px] h-[7.162829836658693px] rounded-full bg-zinc-700 transition-all duration-300" title="10:45:49 PM · gain -0.84 · init"></div><div class="w-[8px] h-[13.963923450114327px] rounded-full bg-amber-600 shadow-[0_0_6px_rgba(217,119,6,0.4)] transition-all duration-300" title="10:44:49 PM · gain 0.09 · init"></div><div class="w-[8px] h-[21.244346793528212px] rounded-full bg-emerald-500 shadow-[0_0_6px_rgba(16,185,129,0.5)] transition-all duration-300" title="10:43:49 PM · gain 1.08 · init"></div><div class="w-[8px] h-[27.85468110296578px] rounded-full bg-emerald-500 shadow-[0_0_6px_rgba(16,185,129,0.5)] transition-all duration-300" title="10:42:49 PM · gain 1.98 · init"></div><div class="w-[8px] h-[28px] rounded-full bg-emerald-500 shadow-[0_0_6px_rgba(16,185,129,0.5)] transition-all duration-300" title="10:41:49 PM · gain 2.65 · init"></div><div class="w-[8px] h-[28px] rounded-full bg-emerald-500 shadow-[0_0_6px_rgba(16,185,129,0.5)] transition-all duration-300" title="10:40:49 PM · gain 2.98 · init"></div><div class="w-[8px] h-[28px] rounded-full bg-emerald-500 shadow-[0_0_6px_rgba(16,185,129,0.5)] transition-all duration-300" title="10:39:49 PM · gain 2.91 · init"></div><div class="w-[8px] h-[28px] rounded-full bg-emerald-500 shadow-[0_0_6px_rgba(16,185,129,0.5)] transition-all duration-300" title="10:38:49 PM · gain 2.47 · init"></div><div class="w-[8px] h-[6px] rounded-full bg-zinc-900"></div><div class="w-[8px] h-[6px] rounded-full bg-zinc-900"></div><div class="w-[8px] h-[6px] rounded-full bg-zinc-900"></div><div class="w-[8px] h-[6px] rounded-full bg-zinc-900"></div><div class="w-[8px] h-[6px] rounded-full bg-zinc-900"></div><div class="w-[8px] h-[6px] rounded-full bg-zinc-900"></div><div class="w-[8px] h-[6px] rounded-full bg-zinc-900"></div><div class="w-[8px] h-[6px] rounded-full bg-zinc-900"></div><div class="w-[8px] h-[6px] rounded-full bg-zinc-900"></div><div class="w-[8px] h-[6px] rounded-full bg-zinc-900"></div><div class="w-[8px] h-[6px] rounded-full bg-zinc-900"></div><div class="w-[8px] h-[6px] rounded-full bg-zinc-900"></div></div>
+  </div>
+</footer>
+
+<script>
+(() => {
+  const $ = id => document.getElementById(id);
+  // State
+  const defaultState = {
+    N: 0.124, phi: 0.008,
+    params: { Rp: 4800, loss: 0.45, eps: 2e-6, g0: 5.2, Rs: 8.5, tau: 0.85 },
+    cycles: 1432, ideas: 247,
+    uptimeStart: Date.now() - (4*3600+12*60+33)*1000,
+    perpetuate: false, pInterval: 20000, pMode: 'Hybrid',
+    lastCycle: 'LOOK → QUESTION → ANSWER → EXPLAIN',
+    memory: [], timeline: [],
+    ideasList: ['Yb-doped silica phase', 'Cavity Q-switch timing', 'Whisper mode coupling'],
+    lastPerp: 0
+  };
+  let state = JSON.parse(localStorage.getItem('wl_state_v2') || 'null') || defaultState;
+  if (!state.memory.length) {
+    // seed memory
+    state.memory = [
+      {depth:3,title:'Recursive photon echo alignment',N:0.847,phi:0.623,t:Date.now()-120000},
+      {depth:2,title:'Lattice tether phase matching',N:0.721,phi:0.512,t:Date.now()-240000},
+      {depth:4,title:'Yb³⁺ upper-state lifetime',N:0.912,phi:0.881,t:Date.now()-360000},
+      {depth:1,title:'Seed injection jitter',N:0.543,phi:0.210,t:Date.now()-480000},
+      {depth:2,title:'Commons pull: coherence',N:0.765,phi:0.445,t:Date.now()-600000},
+    ];
+    state.timeline = Array.from({length:38},(_,i)=>({gain: Math.sin(i*0.4)*2.5+0.5, idea:'init', t:Date.now()-i*60000}));
+  }
+  
+  // History for scope
+  const nHist = new Array(300).fill(0);
+  const pHist = new Array(300).fill(0);
+  let lastFrame = performance.now();
+  
+  // Canvas
+  const scope = $('scope');
+  const sctx = scope.getContext('2d');
+  
+  // Particles
+  const particlesG = $('particles');
+  const tetherLines = [
+    {x1:300,y1:110,x2:480.7,y2:241.3},{x1:480.7,y1:241.3,x2:411.7,y2:453.7},
+    {x1:411.7,y1:453.7,x2:188.3,y2:453.7},{x1:188.3,y1:453.7,x2:119.3,y2:241.3},
+    {x1:119.3,y1:241.3,x2:300,y2:110},{x1:300,y1:110,x2:300,y2:300},
+    {x1:480.7,y1:241.3,x2:300,y2:300},{x1:411.7,y1:453.7,x2:300,y2:300},
+    {x1:188.3,y1:453.7,x2:300,y2:300},{x1:119.3,y1:241.3,x2:300,y2:300},
+  ];
+  const particles = [];
+  for(let i=0;i<18;i++){
+    const c = document.createElementNS('http://www.w3.org/2000/svg','circle');
+    c.setAttribute('r','1.8'); c.setAttribute('fill','#a78bfa'); c.setAttribute('opacity','0');
+    particlesG.appendChild(c);
+    particles.push({el:c, line: Math.floor(Math.random()*tetherLines.length), t: Math.random(), dir: Math.random()<0.5?1:-1, speed: 0.003+Math.random()*0.004});
+  }
+
+  // UI Init
+  $('rp-slider').value = state.params.Rp;
+  $('loss-slider').value = state.params.loss;
+  $('eps-slider').value = 50;
+  $('rp-val').textContent = state.params.Rp.toLocaleString();
+  $('loss-val').textContent = state.params.loss.toFixed(2);
+  $('eps-val').textContent = state.params.eps.toExponential(1);
+  $('toggle-perpetuate').checked = state.perpetuate;
+  $('last-cycle').textContent = state.lastCycle;
+  document.querySelectorAll('.p-int').forEach(b=>b.classList.toggle('btn-active', +b.dataset.int===state.pInterval));
+  document.querySelectorAll('.p-mode').forEach(b=>b.classList.toggle('btn-active', b.dataset.mode===state.pMode));
+
+  function save(){ localStorage.setItem('wl_state_v2', JSON.stringify(state)); }
+  function fmtTime(ms){ const s=Math.floor(ms/1000); const h=String(Math.floor(s/3600)).padStart(2,'0'); const m=String(Math.floor(s%3600/60)).padStart(2,'0'); const sec=String(s%60).padStart(2,'0'); return `${h}:${m}:${sec}`; }
+
+  function stepPhysics(dt){
+    const p = state.params;
+    const pump = p.Rp/5000;
+    const dN = pump*(1-state.N) - state.N/p.tau - p.Rs*state.N*state.phi;
+    const dPhi = (p.g0*state.N - p.loss)*state.phi + p.eps*state.N;
+    state.N = Math.max(0, Math.min(1, state.N + dN*dt));
+    state.phi = Math.max(0, Math.min(2, state.phi + dPhi*dt));
+    // clamp small values to avoid denorm
+    if(state.phi < 1e-6) state.phi = 1e-6;
+  }
+
+  function drawScope(){
+    const w=800,h=240;
+    sctx.clearRect(0,0,w,h);
+    // grid already via css, draw traces
+    sctx.lineWidth=2;
+    // N
+    sctx.beginPath(); sctx.strokeStyle='#10b981';
+    for(let i=0;i<nHist.length;i++){
+      const x = (i/(nHist.length-1))*w;
+      const y = h-20 - nHist[i]*180;
+      if(i===0) sctx.moveTo(x,y); else sctx.lineTo(x,y);
+    }
+    sctx.stroke();
+    // phi
+    sctx.beginPath(); sctx.strokeStyle='#f59e0b';
+    for(let i=0;i<pHist.length;i++){
+      const x = (i/(pHist.length-1))*w;
+      const y = h-20 - Math.min(pHist[i]/1.2,1)*180;
+      if(i===0) sctx.moveTo(x,y); else sctx.lineTo(x,y);
+    }
+    sctx.stroke();
+    // threshold line
+    const nth = state.params.loss/state.params.g0;
+    const yth = h-20 - nth*180;
+    sctx.setLineDash([4,4]); sctx.strokeStyle='rgba(139,92,246,0.5)'; sctx.lineWidth=1;
+    sctx.beginPath(); sctx.moveTo(0,yth); sctx.lineTo(w,yth); sctx.stroke(); sctx.setLineDash([]);
+  }
+
+  function updateUI(){
+    const netGain = state.params.g0*state.N - state.params.loss;
+    const stim = state.params.Rs*state.N*state.phi;
+    // numbers
+    $('n-val').textContent = state.N.toFixed(3);
+    $('phi-val').textContent = state.phi.toFixed(3);
+    $('gain-val').textContent = (netGain>=0?'+':'')+netGain.toFixed(2);
+    $('stim-val').textContent = Math.round(stim*1000).toLocaleString();
+    // bars
+    $('bar-n').style.width = (state.N*100)+'%';
+    $('bar-phi').style.width = Math.min(100, state.phi/1.2*100)+'%';
+    $('bar-gain').style.width = Math.max(0, Math.min(100, (netGain+1)/6*100))+'%';
+    $('bar-stim').style.width = Math.min(100, stim/8*100)+'%';
+    // observers
+    $('obs4-n').textContent = state.N.toFixed(2);
+    $('obs5-phi').textContent = state.phi.toFixed(2);
+    // tether glow
+    const intensity = Math.min(1, stim*0.8 + Math.max(0,netGain)*0.2);
+    $('tethers').setAttribute('opacity', 0.25 + intensity*0.7);
+    document.querySelectorAll('#tethers line').forEach((ln,i)=>{
+      const isViolet = i<5;
+      ln.setAttribute('stroke', isViolet ? '#8b5cf6' : '#3f3f46');
+      ln.setAttribute('stroke-opacity', isViolet ? 0.3+intensity*0.7 : 0.2+intensity*0.3);
+      ln.setAttribute('stroke-width', isViolet ? 1+intensity*1.5 : 1);
+    });
+    // lasing
+    const lasing = netGain > 0;
+    $('light-lasing').className = 'w-2 h-2 rounded-full transition-all ' + (lasing ? 'bg-amber-500 shadow-[0_0_8px_rgba(245,158,11,0.7)] animate-pulse' : 'bg-zinc-700');
+    $('thresh-ind').textContent = lasing ? 'LASING' : 'STANDBY';
+    $('thresh-ind').className = 'px-1.5 py-0.5 rounded border text-[10px] mono ' + (lasing ? 'bg-amber-950/50 border-amber-900/50 text-amber-300' : 'bg-zinc-900 border-zinc-800 text-zinc-400');
+    $('lattice-svg').classList.toggle('lattice-pulse', lasing && intensity>0.5);
+    // perpetuate light
+    $('light-perpetuate').className = 'w-2 h-2 rounded-full transition-all ' + (state.perpetuate ? 'bg-violet-500 shadow-[0_0_8px_rgba(139,92,246,0.6)] animate-pulse' : 'bg-zinc-600');
+    // particles
+    particles.forEach(p=>{
+      p.t += p.dir * p.speed * (0.5 + intensity*1.5);
+      if(p.t>1 || p.t<0){ p.dir*=-1; p.t = Math.max(0,Math.min(1,p.t)); p.line = Math.floor(Math.random()*tetherLines.length); }
+      const L = tetherLines[p.line];
+      const x = L.x1 + (L.x2-L.x1)*p.t;
+      const y = L.y1 + (L.y2-L.y1)*p.t;
+      p.el.setAttribute('cx', x); p.el.setAttribute('cy', y);
+      p.el.setAttribute('opacity', 0.1 + intensity*0.8);
+      p.el.setAttribute('fill', lasing ? '#fbbf24' : '#a78bfa');
+      p.el.setAttribute('r', lasing ? '2.2' : '1.6');
+    });
+  }
+
+  function renderMemory(){
+    const list = $('memory-list'); list.innerHTML='';
+    state.memory.slice(0,10).forEach(m=>{
+      const d = document.createElement('div');
+      d.className = 'group flex items-start gap-2.5 p-2 rounded-lg hover:bg-zinc-900/70 border border-zinc-900 hover:border-zinc-800 transition cursor-pointer';
+      d.innerHTML = `<div class="shrink-0 w-6 text-center"><span class="inline-flex w-5 h-5 items-center justify-center rounded bg-zinc-900 border border-zinc-800 text-[10px] mono text-zinc-500 group-hover:text-violet-300 group-hover:border-violet-900/50">${m.depth}</span></div>
+      <div class="min-w-0 flex-1"><div class="text-[12px] leading-snug truncate text-zinc-200 group-hover:text-white">${m.title}</div>
+      <div class="mt-1 flex items-center gap-2 text-[10px] mono"><span class="text-emerald-400/80">N ${m.N.toFixed(3)}</span><span class="text-zinc-600">·</span><span class="text-amber-400/80">φ ${m.phi.toFixed(3)}</span></div></div>`;
+      list.appendChild(d);
+    });
+  }
+  function renderChips(){
+    const wrap = $('idea-chips'); wrap.innerHTML='';
+    state.ideasList.slice(0,3).forEach(t=>{
+      const s = document.createElement('span');
+      s.className='inline-flex items-center px-2 py-1 rounded-md bg-zinc-900 border border-zinc-800 text-[11px] text-zinc-300';
+      s.textContent = t;
+      wrap.appendChild(s);
+    });
+  }
+  function renderTimeline(){
+    const tl = $('timeline'); tl.innerHTML='';
+    const data = state.timeline.slice(-50);
+    data.forEach(pt=>{
+      const g = pt.gain;
+      let cls='bg-zinc-700';
+      if(g>0.2) cls='bg-emerald-500 shadow-[0_0_6px_rgba(16,185,129,0.5)]';
+      else if(g>-0.1) cls='bg-amber-600 shadow-[0_0_6px_rgba(217,119,6,0.4)]';
+      const dot = document.createElement('div');
+      dot.className = `w-[8px] h-[${6+Math.max(0,Math.min(1,(g+1)/3))*22}px] rounded-full ${cls} transition-all duration-300`;
+      dot.title = `${new Date(pt.t).toLocaleTimeString()} · gain ${g.toFixed(2)} · ${pt.idea}`;
+      tl.appendChild(dot);
+    });
+    // fill to 50
+    for(let i=data.length;i<50;i++){
+      const d=document.createElement('div'); d.className='w-[8px] h-[6px] rounded-full bg-zinc-900'; tl.appendChild(d);
+    }
+  }
+  function tickCounters(){
+    $('cnt-ideas').textContent = state.ideas.toLocaleString();
+    $('cnt-cycles').textContent = state.cycles.toLocaleString();
+    $('cnt-uptime').textContent = fmtTime(Date.now()-state.uptimeStart);
+  }
+
+  function doCycle(title, source='manual'){
+    state.cycles++; state.ideas++;
+    const node = {depth: Math.floor(Math.random()*4)+1, title, N: state.N, phi: state.phi, t: Date.now(), src: source};
+    state.memory.unshift(node); if(state.memory.length>200) state.memory.pop();
+    state.timeline.push({gain: state.params.g0*state.N - state.params.loss, idea:title, t:Date.now()}); if(state.timeline.length>50) state.timeline.shift();
+    const phases = ['LOOK → QUESTION → ANSWER → EXPLAIN','SEED → PUMP → AMPLIFY → EMIT','RECALL → WEIGHT → REINFORCE → STORE','INJECT → COUPLE → LASE → MEMORIZE'];
+    state.lastCycle = phases[Math.floor(Math.random()*phases.length)];
+    $('last-cycle').textContent = state.lastCycle;
+    if(!state.ideasList.includes(title)) { state.ideasList.unshift(title); state.ideasList = state.ideasList.slice(0,12); }
+    renderMemory(); renderChips(); renderTimeline(); tickCounters(); save();
+    // slight pump kick
+    state.params.Rp = Math.min(10000, state.params.Rp + 80);
+    $('rp-slider').value = state.params.Rp; $('rp-val').textContent = Math.round(state.params.Rp).toLocaleString();
+  }
+
+  // Main loop
+  function loop(now){
+    const dt = Math.min(0.033, (now-lastFrame)/1000); lastFrame=now;
+    stepPhysics(0.016);
+    nHist.push(state.N); if(nHist.length>300) nHist.shift();
+    pHist.push(state.phi); if(pHist.length>300) pHist.shift();
+    if(Math.floor(now/50) % 2 ===0) drawScope();
+    updateUI();
+    // perpetuate
+    if(state.perpetuate && now - state.lastPerp > state.pInterval){
+      state.lastPerp = now;
+      const src = state.pMode;
+      let title = 'Hybrid recall';
+      if(src==='Commons' || (src==='Hybrid' && Math.random()<0.5)){
+        const commons = ['Whispering gallery mode','Yb³⁺ Stark manifold','Four-wave mixing','Photon echo','Cavity ring-down','Coherent population trapping','Raman scattering','Mode locking'];
+        title = commons[Math.floor(Math.random()*commons.length)];
+      } else {
+        title = state.memory[Math.floor(Math.random()*Math.min(5,state.memory.length))]?.title || 'Memory reactivation';
+      }
+      doCycle(title, 'perpetuate');
+      // auto-adjust pump toward threshold
+      const targetN = state.params.loss/state.params.g0*1.15;
+      const err = targetN - state.N;
+      state.params.Rp = Math.max(1000, Math.min(10000, state.params.Rp + err*800));
+      $('rp-slider').value = state.params.Rp; $('rp-val').textContent = Math.round(state.params.Rp).toLocaleString();
+    }
+    requestAnimationFrame(loop);
+  }
+
+  // Events
+  $('rp-slider').addEventListener('input', e=>{ state.params.Rp=+e.target.value; $('rp-val').textContent=(+e.target.value).toLocaleString(); save(); });
+  $('loss-slider').addEventListener('input', e=>{ state.params.loss=+e.target.value; $('loss-val').textContent=(+e.target.value).toFixed(2); save(); });
+  $('eps-slider').addEventListener('input', e=>{ const v=+e.target.value; const eps = Math.pow(10, -7 + (v/100)*2); state.params.eps=eps; $('eps-val').textContent=eps.toExponential(1); save(); });
+  $('btn-reset').onclick = ()=>{ state.N=0.05; state.phi=0.001; };
+  $('btn-threshold').onclick = ()=>{ const old=state.params.Rp; state.params.Rp=9200; $('rp-slider').value=9200; $('rp-val').textContent='9,200'; setTimeout(()=>{state.params.Rp=old; $('rp-slider').value=old; $('rp-val').textContent=old.toLocaleString();},2000); };
+  $('btn-kill').onclick = ()=>{ state.params.loss=0.98; state.params.Rp=1100; state.phi*=0.15; $('loss-slider').value=0.98; $('loss-val').textContent='0.98'; $('rp-slider').value=1100; $('rp-val').textContent='1,100'; };
+  $('toggle-perpetuate').onchange = e=>{ state.perpetuate=e.target.checked; save(); };
+  document.querySelectorAll('.p-int').forEach(b=>b.onclick=()=>{ document.querySelectorAll('.p-int').forEach(x=>x.classList.remove('btn-active')); b.classList.add('btn-active'); state.pInterval=+b.dataset.int; save(); });
+  document.querySelectorAll('.p-mode').forEach(b=>b.onclick=()=>{ document.querySelectorAll('.p-mode').forEach(x=>x.classList.remove('btn-active')); b.classList.add('btn-active'); state.pMode=b.dataset.mode; save(); });
+  $('btn-inject').onclick = ()=>{ const v=$('idea-input').value.trim(); if(!v) return; doCycle(v,'inject'); $('idea-input').value=''; };
+  $('idea-input').addEventListener('keydown', e=>{ if(e.key==='Enter') $('btn-inject').click(); });
+  $('btn-commons').onclick = ()=>{ const commons=['Whisper mode coupling','Yb fiber ASE suppression','Distributed feedback','Photon lifetime','Coherence collapse']; doCycle(commons[Math.floor(Math.random()*commons.length)], 'commons'); };
+  $('btn-export-jsonl').onclick = ()=>{ const blob=new Blob([state.memory.map(m=>JSON.stringify(m)).join('\n')],{type:'application/jsonl'}); const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='whisper-lattice-memory.jsonl'; a.click(); };
+  $('btn-export-csv').onclick = ()=>{ const rows=['depth,title,N,phi,t']; state.memory.forEach(m=>rows.push(`${m.depth},"${m.title.replace(/"/g,'""')}",${m.N.toFixed(4)},${m.phi.toFixed(4)},${m.t}`)); const blob=new Blob([rows.join('\n')],{type:'text/csv'}); const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='whisper-lattice-memory.csv'; a.click(); };
+
+  // Init renders
+  renderMemory(); renderChips(); renderTimeline(); tickCounters(); updateUI();
+  setInterval(tickCounters, 1000);
+  setInterval(save, 5000);
+  requestAnimationFrame(loop);
+
+  // subtle intro pump
+  setTimeout(()=>{ state.params.Rp=5200; $('rp-slider').value=5200; $('rp-val').textContent='5,200'; }, 800);
+})();
+</script>
+
+</body></html>

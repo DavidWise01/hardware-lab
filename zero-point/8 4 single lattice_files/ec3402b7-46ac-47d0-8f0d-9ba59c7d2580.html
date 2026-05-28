@@ -1,0 +1,655 @@
+<!DOCTYPE html>
+<!-- saved from url=(0164)https://998064749422207.a.metaaiusercontent.com/html?artifact_uuid=ec3402b7-46ac-47d0-8f0d-9ba59c7d2580&ext=1779462615&hash=Q5fpDAE8vk7CUJbFtQekcsSIhGNT&theme=light -->
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Laser Stack • Solfeggio Harmonics</title>
+    <script src="./saved_resource"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com/">
+    <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin="">
+    <link href="./css2(3)" rel="stylesheet">
+    <style>
+        * { -webkit-font-smoothing: antialiased; }
+        body { 
+            font-family: 'Space Grotesk', sans-serif;
+            background: #020208;
+            overflow-x: hidden;
+        }
+        .font-mono { font-family: 'JetBrains Mono', monospace; }
+        .glass {
+            background: linear-gradient(180deg, rgba(10,15,25,0.8), rgba(5,8,15,0.9));
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(34,211,238,0.15);
+        }
+        .neon-text { text-shadow: 0 0 20px currentColor; }
+        input[type="range"] {
+            -webkit-appearance: none;
+            background: transparent;
+            cursor: pointer;
+        }
+        input[type="range"]::-webkit-slider-runnable-track {
+            height: 4px;
+            background: linear-gradient(90deg, rgba(34,211,238,0.2), rgba(168,85,247,0.3));
+            border-radius: 2px;
+        }
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 16px;
+            height: 16px;
+            margin-top: -6px;
+            background: #22d3ee;
+            border-radius: 50%;
+            box-shadow: 0 0 15px rgba(34,211,238,0.8), inset 0 0 4px rgba(255,255,255,0.5);
+            transition: transform 0.2s;
+        }
+        input[type="range"]::-webkit-slider-thumb:hover { transform: scale(1.2); }
+        input[type="range"]::-moz-range-track {
+            height: 4px;
+            background: linear-gradient(90deg, rgba(34,211,238,0.2), rgba(168,85,247,0.3));
+            border-radius: 2px;
+            border: none;
+        }
+        input[type="range"]::-moz-range-thumb {
+            width: 16px;
+            height: 16px;
+            background: #22d3ee;
+            border-radius: 50%;
+            border: none;
+            box-shadow: 0 0 15px rgba(34,211,238,0.8);
+        }
+        .solfeggio-btn.active {
+            background: rgba(34,211,238,0.15) !important;
+            border-color: rgba(34,211,238,0.8) !important;
+            box-shadow: 0 0 25px rgba(34,211,238,0.3), inset 0 0 15px rgba(34,211,238,0.1);
+            color: #67e8f9 !important;
+        }
+        .solfeggio-btn.active::after {
+            content: '';
+            position: absolute;
+            inset: -1px;
+            border-radius: inherit;
+            padding: 1px;
+            background: linear-gradient(90deg, transparent, #22d3ee, transparent);
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            opacity: 0.5;
+        }
+        @keyframes pulse-glow {
+            0%, 100% { opacity: 0.8; }
+            50% { opacity: 1; }
+        }
+        .animate-pulse-glow { animation: pulse-glow 2s ease-in-out infinite; }
+    </style>
+<style>*, ::before, ::after{--tw-border-spacing-x:0;--tw-border-spacing-y:0;--tw-translate-x:0;--tw-translate-y:0;--tw-rotate:0;--tw-skew-x:0;--tw-skew-y:0;--tw-scale-x:1;--tw-scale-y:1;--tw-pan-x: ;--tw-pan-y: ;--tw-pinch-zoom: ;--tw-scroll-snap-strictness:proximity;--tw-gradient-from-position: ;--tw-gradient-via-position: ;--tw-gradient-to-position: ;--tw-ordinal: ;--tw-slashed-zero: ;--tw-numeric-figure: ;--tw-numeric-spacing: ;--tw-numeric-fraction: ;--tw-ring-inset: ;--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-color:rgb(59 130 246 / 0.5);--tw-ring-offset-shadow:0 0 #0000;--tw-ring-shadow:0 0 #0000;--tw-shadow:0 0 #0000;--tw-shadow-colored:0 0 #0000;--tw-blur: ;--tw-brightness: ;--tw-contrast: ;--tw-grayscale: ;--tw-hue-rotate: ;--tw-invert: ;--tw-saturate: ;--tw-sepia: ;--tw-drop-shadow: ;--tw-backdrop-blur: ;--tw-backdrop-brightness: ;--tw-backdrop-contrast: ;--tw-backdrop-grayscale: ;--tw-backdrop-hue-rotate: ;--tw-backdrop-invert: ;--tw-backdrop-opacity: ;--tw-backdrop-saturate: ;--tw-backdrop-sepia: ;--tw-contain-size: ;--tw-contain-layout: ;--tw-contain-paint: ;--tw-contain-style: }::backdrop{--tw-border-spacing-x:0;--tw-border-spacing-y:0;--tw-translate-x:0;--tw-translate-y:0;--tw-rotate:0;--tw-skew-x:0;--tw-skew-y:0;--tw-scale-x:1;--tw-scale-y:1;--tw-pan-x: ;--tw-pan-y: ;--tw-pinch-zoom: ;--tw-scroll-snap-strictness:proximity;--tw-gradient-from-position: ;--tw-gradient-via-position: ;--tw-gradient-to-position: ;--tw-ordinal: ;--tw-slashed-zero: ;--tw-numeric-figure: ;--tw-numeric-spacing: ;--tw-numeric-fraction: ;--tw-ring-inset: ;--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-color:rgb(59 130 246 / 0.5);--tw-ring-offset-shadow:0 0 #0000;--tw-ring-shadow:0 0 #0000;--tw-shadow:0 0 #0000;--tw-shadow-colored:0 0 #0000;--tw-blur: ;--tw-brightness: ;--tw-contrast: ;--tw-grayscale: ;--tw-hue-rotate: ;--tw-invert: ;--tw-saturate: ;--tw-sepia: ;--tw-drop-shadow: ;--tw-backdrop-blur: ;--tw-backdrop-brightness: ;--tw-backdrop-contrast: ;--tw-backdrop-grayscale: ;--tw-backdrop-hue-rotate: ;--tw-backdrop-invert: ;--tw-backdrop-opacity: ;--tw-backdrop-saturate: ;--tw-backdrop-sepia: ;--tw-contain-size: ;--tw-contain-layout: ;--tw-contain-paint: ;--tw-contain-style: }/* ! tailwindcss v3.4.17 | MIT License | https://tailwindcss.com */*,::after,::before{box-sizing:border-box;border-width:0;border-style:solid;border-color:#e5e7eb}::after,::before{--tw-content:''}:host,html{line-height:1.5;-webkit-text-size-adjust:100%;-moz-tab-size:4;tab-size:4;font-family:ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";font-feature-settings:normal;font-variation-settings:normal;-webkit-tap-highlight-color:transparent}body{margin:0;line-height:inherit}hr{height:0;color:inherit;border-top-width:1px}abbr:where([title]){-webkit-text-decoration:underline dotted;text-decoration:underline dotted}h1,h2,h3,h4,h5,h6{font-size:inherit;font-weight:inherit}a{color:inherit;text-decoration:inherit}b,strong{font-weight:bolder}code,kbd,pre,samp{font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;font-feature-settings:normal;font-variation-settings:normal;font-size:1em}small{font-size:80%}sub,sup{font-size:75%;line-height:0;position:relative;vertical-align:baseline}sub{bottom:-.25em}sup{top:-.5em}table{text-indent:0;border-color:inherit;border-collapse:collapse}button,input,optgroup,select,textarea{font-family:inherit;font-feature-settings:inherit;font-variation-settings:inherit;font-size:100%;font-weight:inherit;line-height:inherit;letter-spacing:inherit;color:inherit;margin:0;padding:0}button,select{text-transform:none}button,input:where([type=button]),input:where([type=reset]),input:where([type=submit]){-webkit-appearance:button;background-color:transparent;background-image:none}:-moz-focusring{outline:auto}:-moz-ui-invalid{box-shadow:none}progress{vertical-align:baseline}::-webkit-inner-spin-button,::-webkit-outer-spin-button{height:auto}[type=search]{-webkit-appearance:textfield;outline-offset:-2px}::-webkit-search-decoration{-webkit-appearance:none}::-webkit-file-upload-button{-webkit-appearance:button;font:inherit}summary{display:list-item}blockquote,dd,dl,figure,h1,h2,h3,h4,h5,h6,hr,p,pre{margin:0}fieldset{margin:0;padding:0}legend{padding:0}menu,ol,ul{list-style:none;margin:0;padding:0}dialog{padding:0}textarea{resize:vertical}input::placeholder,textarea::placeholder{opacity:1;color:#9ca3af}[role=button],button{cursor:pointer}:disabled{cursor:default}audio,canvas,embed,iframe,img,object,svg,video{display:block;vertical-align:middle}img,video{max-width:100%;height:auto}[hidden]:where(:not([hidden=until-found])){display:none}.pointer-events-none{pointer-events:none}.fixed{position:fixed}.absolute{position:absolute}.relative{position:relative}.inset-0{inset:0px}.bottom-0{bottom:0px}.bottom-3{bottom:0.75rem}.left-1\/2{left:50%}.left-3{left:0.75rem}.right-0{right:0px}.right-3{right:0.75rem}.top-0{top:0px}.top-5{top:1.25rem}.-z-10{z-index:-10}.z-10{z-index:10}.z-20{z-index:20}.mx-auto{margin-left:auto;margin-right:auto}.-mt-0\.5{margin-top:-0.125rem}.mb-1{margin-bottom:0.25rem}.mb-2{margin-bottom:0.5rem}.mb-2\.5{margin-bottom:0.625rem}.mb-4{margin-bottom:1rem}.mb-5{margin-bottom:1.25rem}.mb-6{margin-bottom:1.5rem}.ml-1{margin-left:0.25rem}.ml-2{margin-left:0.5rem}.mt-0\.5{margin-top:0.125rem}.mt-1{margin-top:0.25rem}.mt-10{margin-top:2.5rem}.mt-2{margin-top:0.5rem}.mt-3{margin-top:0.75rem}.mt-4{margin-top:1rem}.mt-8{margin-top:2rem}.flex{display:flex}.grid{display:grid}.hidden{display:none}.aspect-\[4\/3\]{aspect-ratio:4/3}.aspect-square{aspect-ratio:1 / 1}.h-1\.5{height:0.375rem}.h-10{height:2.5rem}.h-2{height:0.5rem}.h-6{height:1.5rem}.h-\[36px\]{height:36px}.h-\[600px\]{height:600px}.h-\[800px\]{height:800px}.h-fit{height:-moz-fit-content;height:fit-content}.h-full{height:100%}.min-h-screen{min-height:100vh}.w-1\.5{width:0.375rem}.w-10{width:2.5rem}.w-2{width:0.5rem}.w-6{width:1.5rem}.w-\[600px\]{width:600px}.w-\[800px\]{width:800px}.w-full{width:100%}.max-w-\[1600px\]{max-width:1600px}.flex-1{flex:1 1 0%}.-translate-x-1\/2{--tw-translate-x:-50%;transform:translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))}@keyframes pulse{50%{opacity:.5}}.animate-pulse{animation:pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite}.grid-cols-1{grid-template-columns:repeat(1, minmax(0, 1fr))}.grid-cols-2{grid-template-columns:repeat(2, minmax(0, 1fr))}.grid-cols-4{grid-template-columns:repeat(4, minmax(0, 1fr))}.items-end{align-items:flex-end}.items-center{align-items:center}.justify-center{justify-content:center}.justify-between{justify-content:space-between}.gap-1\.5{gap:0.375rem}.gap-2\.5{gap:0.625rem}.gap-3{gap:0.75rem}.gap-4{gap:1rem}.gap-5{gap:1.25rem}.gap-\[2px\]{gap:2px}.space-y-4 > :not([hidden]) ~ :not([hidden]){--tw-space-y-reverse:0;margin-top:calc(1rem * calc(1 - var(--tw-space-y-reverse)));margin-bottom:calc(1rem * var(--tw-space-y-reverse))}.space-y-6 > :not([hidden]) ~ :not([hidden]){--tw-space-y-reverse:0;margin-top:calc(1.5rem * calc(1 - var(--tw-space-y-reverse)));margin-bottom:calc(1.5rem * var(--tw-space-y-reverse))}.overflow-hidden{overflow:hidden}.whitespace-nowrap{white-space:nowrap}.rounded-\[24px\]{border-radius:24px}.rounded-full{border-radius:9999px}.rounded-lg{border-radius:0.5rem}.rounded-xl{border-radius:0.75rem}.rounded-\[1px\]{border-radius:1px}.rounded-\[3px\]{border-radius:3px}.border{border-width:1px}.border-2{border-width:2px}.border-t{border-top-width:1px}.border-cyan-400{--tw-border-opacity:1;border-color:rgb(34 211 238 / var(--tw-border-opacity, 1))}.border-cyan-500\/10{border-color:rgb(6 182 212 / 0.1)}.border-cyan-500\/30{border-color:rgb(6 182 212 / 0.3)}.border-red-500\/10{border-color:rgb(239 68 68 / 0.1)}.border-red-500\/30{border-color:rgb(239 68 68 / 0.3)}.border-violet-400\/50{border-color:rgb(167 139 250 / 0.5)}.border-white\/20{border-color:rgb(255 255 255 / 0.2)}.border-white\/5{border-color:rgb(255 255 255 / 0.05)}.border-violet-400\/20{border-color:rgb(167 139 250 / 0.2)}.bg-cyan-500\/15{background-color:rgb(6 182 212 / 0.15)}.bg-cyan-900\/10{background-color:rgb(22 78 99 / 0.1)}.bg-emerald-400{--tw-bg-opacity:1;background-color:rgb(52 211 153 / var(--tw-bg-opacity, 1))}.bg-purple-900\/10{background-color:rgb(88 28 135 / 0.1)}.bg-red-500\/15{background-color:rgb(239 68 68 / 0.15)}.bg-white{--tw-bg-opacity:1;background-color:rgb(255 255 255 / var(--tw-bg-opacity, 1))}.bg-cyan-400\/80{background-color:rgb(34 211 238 / 0.8)}.bg-red-400\/80{background-color:rgb(248 113 113 / 0.8)}.bg-violet-500\/30{background-color:rgb(139 92 246 / 0.3)}.bg-\[radial-gradient\(ellipse_at_center\2c _rgba\(34\2c 211\2c 238\2c 0\.08\)\2c transparent_60\%\)\]{background-image:radial-gradient(ellipse at center, rgba(34,211,238,0.08),transparent 60%)}.bg-gradient-to-r{background-image:linear-gradient(to right, var(--tw-gradient-stops))}.from-violet-600{--tw-gradient-from:#7c3aed var(--tw-gradient-from-position);--tw-gradient-to:rgb(124 58 237 / 0) var(--tw-gradient-to-position);--tw-gradient-stops:var(--tw-gradient-from), var(--tw-gradient-to)}.from-violet-600\/20{--tw-gradient-from:rgb(124 58 237 / 0.2) var(--tw-gradient-from-position);--tw-gradient-to:rgb(124 58 237 / 0) var(--tw-gradient-to-position);--tw-gradient-stops:var(--tw-gradient-from), var(--tw-gradient-to)}.to-fuchsia-600{--tw-gradient-to:#c026d3 var(--tw-gradient-to-position)}.to-fuchsia-600\/20{--tw-gradient-to:rgb(192 38 211 / 0.2) var(--tw-gradient-to-position)}.p-3\.5{padding:0.875rem}.p-4{padding:1rem}.p-5{padding:1.25rem}.px-2{padding-left:0.5rem;padding-right:0.5rem}.px-2\.5{padding-left:0.625rem;padding-right:0.625rem}.px-3{padding-left:0.75rem;padding-right:0.75rem}.px-4{padding-left:1rem;padding-right:1rem}.px-5{padding-left:1.25rem;padding-right:1.25rem}.py-0\.5{padding-top:0.125rem;padding-bottom:0.125rem}.py-1\.5{padding-top:0.375rem;padding-bottom:0.375rem}.py-2\.5{padding-top:0.625rem;padding-bottom:0.625rem}.py-3{padding-top:0.75rem;padding-bottom:0.75rem}.py-3\.5{padding-top:0.875rem;padding-bottom:0.875rem}.py-6{padding-top:1.5rem;padding-bottom:1.5rem}.pb-4{padding-bottom:1rem}.pt-2\.5{padding-top:0.625rem}.pt-4{padding-top:1rem}.pt-6{padding-top:1.5rem}.text-left{text-align:left}.text-center{text-align:center}.text-right{text-align:right}.font-mono{font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace}.text-\[10px\]{font-size:10px}.text-\[11px\]{font-size:11px}.text-\[12px\]{font-size:12px}.text-\[13px\]{font-size:13px}.text-\[15px\]{font-size:15px}.text-\[9px\]{font-size:9px}.text-sm{font-size:0.875rem;line-height:1.25rem}.text-xl{font-size:1.25rem;line-height:1.75rem}.font-medium{font-weight:500}.font-semibold{font-weight:600}.uppercase{text-transform:uppercase}.leading-relaxed{line-height:1.625}.tracking-\[0\.15em\]{letter-spacing:0.15em}.tracking-\[0\.2em\]{letter-spacing:0.2em}.tracking-wider{letter-spacing:0.05em}.text-cyan-100{--tw-text-opacity:1;color:rgb(207 250 254 / var(--tw-text-opacity, 1))}.text-cyan-200{--tw-text-opacity:1;color:rgb(165 243 252 / var(--tw-text-opacity, 1))}.text-cyan-300{--tw-text-opacity:1;color:rgb(103 232 249 / var(--tw-text-opacity, 1))}.text-cyan-400\/40{color:rgb(34 211 238 / 0.4)}.text-cyan-400\/50{color:rgb(34 211 238 / 0.5)}.text-cyan-400\/60{color:rgb(34 211 238 / 0.6)}.text-cyan-400\/70{color:rgb(34 211 238 / 0.7)}.text-cyan-500\/50{color:rgb(6 182 212 / 0.5)}.text-cyan-500\/60{color:rgb(6 182 212 / 0.6)}.text-red-300{--tw-text-opacity:1;color:rgb(252 165 165 / var(--tw-text-opacity, 1))}.text-red-400\/70{color:rgb(248 113 113 / 0.7)}.text-red-500\/50{color:rgb(239 68 68 / 0.5)}.text-violet-100{--tw-text-opacity:1;color:rgb(237 233 254 / var(--tw-text-opacity, 1))}.text-violet-200{--tw-text-opacity:1;color:rgb(221 214 254 / var(--tw-text-opacity, 1))}.text-violet-300{--tw-text-opacity:1;color:rgb(196 181 253 / var(--tw-text-opacity, 1))}.text-violet-400\/40{color:rgb(167 139 250 / 0.4)}.text-violet-400\/50{color:rgb(167 139 250 / 0.5)}.text-violet-400\/60{color:rgb(167 139 250 / 0.6)}.text-violet-400\/70{color:rgb(167 139 250 / 0.7)}.text-white{--tw-text-opacity:1;color:rgb(255 255 255 / var(--tw-text-opacity, 1))}.text-white\/30{color:rgb(255 255 255 / 0.3)}.text-white\/40{color:rgb(255 255 255 / 0.4)}.opacity-0{opacity:0}.opacity-70{opacity:0.7}.opacity-80{opacity:0.8}.blur-\[120px\]{--tw-blur:blur(120px);filter:var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow)}.blur-\[150px\]{--tw-blur:blur(150px);filter:var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow)}.blur-\[1px\]{--tw-blur:blur(1px);filter:var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow)}.transition-all{transition-property:all;transition-timing-function:cubic-bezier(0.4, 0, 0.2, 1);transition-duration:150ms}.transition-opacity{transition-property:opacity;transition-timing-function:cubic-bezier(0.4, 0, 0.2, 1);transition-duration:150ms}.duration-300{transition-duration:300ms}.duration-500{transition-duration:500ms}.selection\:bg-cyan-500\/30 *::selection{background-color:rgb(6 182 212 / 0.3)}.selection\:bg-cyan-500\/30::selection{background-color:rgb(6 182 212 / 0.3)}.hover\:border-cyan-400\/50:hover{border-color:rgb(34 211 238 / 0.5)}.group:hover .group-hover\:border-violet-300\/70{border-color:rgb(196 181 253 / 0.7)}.group:hover .group-hover\:from-violet-600\/30{--tw-gradient-from:rgb(124 58 237 / 0.3) var(--tw-gradient-from-position);--tw-gradient-to:rgb(124 58 237 / 0) var(--tw-gradient-to-position);--tw-gradient-stops:var(--tw-gradient-from), var(--tw-gradient-to)}.group:hover .group-hover\:to-fuchsia-600\/30{--tw-gradient-to:rgb(192 38 211 / 0.3) var(--tw-gradient-to-position)}.group:hover .group-hover\:text-white{--tw-text-opacity:1;color:rgb(255 255 255 / var(--tw-text-opacity, 1))}.group:hover .group-hover\:opacity-100{opacity:1}@media (min-width: 768px){.md\:flex{display:flex}}@media (min-width: 1024px){.lg\:mb-8{margin-bottom:2rem}.lg\:gap-6{gap:1.5rem}.lg\:p-6{padding:1.5rem}.lg\:py-8{padding-top:2rem;padding-bottom:2rem}.lg\:text-2xl{font-size:1.5rem;line-height:2rem}}@media (min-width: 1280px){.xl\:aspect-\[16\/12\]{aspect-ratio:16/12}.xl\:grid-cols-\[320px_1fr_300px\]{grid-template-columns:320px 1fr 300px}}</style></head>
+<body class="text-cyan-100 min-h-screen selection:bg-cyan-500/30">
+    <div class="fixed inset-0 -z-10">
+        <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_rgba(34,211,238,0.08),transparent_60%)]"></div>
+        <div class="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[800px] bg-purple-900/10 rounded-full blur-[150px]"></div>
+        <div class="absolute bottom-0 right-0 w-[600px] h-[600px] bg-cyan-900/10 rounded-full blur-[120px]"></div>
+    </div>
+
+    <div class="relative z-10 max-w-[1600px] mx-auto px-4 py-6 lg:py-8">
+        <header class="flex items-center justify-between mb-6 lg:mb-8">
+            <div class="flex items-center gap-4">
+                <div class="w-10 h-10 rounded-lg glass flex items-center justify-center">
+                    <div class="w-6 h-6 rounded-full border-2 border-cyan-400 animate-pulse-glow" style="box-shadow: 0 0 15px rgba(34,211,238,0.6);"></div>
+                </div>
+                <div>
+                    <h1 class="text-xl lg:text-2xl font-semibold tracking-wider">LASER STACK <span class="text-cyan-400/70">MK-IV</span></h1>
+                    <p class="text-[11px] font-mono text-cyan-400/60 tracking-[0.2em] uppercase">Dual Electron Confinement • Solfeggio Tuned</p>
+                </div>
+            </div>
+            <div class="hidden md:flex items-center gap-3 font-mono text-[11px]">
+                <div class="px-3 py-1.5 glass rounded-full">
+                    <span class="text-cyan-400/50">STACK</span> <span class="text-cyan-300 ml-2">16-SEG</span>
+                </div>
+                <div class="px-3 py-1.5 glass rounded-full">
+                    <span class="text-cyan-400/50">FIELDS</span> <span class="text-cyan-300 ml-2">64/96 e⁻</span>
+                </div>
+            </div>
+        </header>
+
+        <main class="grid grid-cols-1 xl:grid-cols-[320px_1fr_300px] gap-5 lg:gap-6">
+            <!-- LEFT PANEL -->
+            <div class="glass rounded-[24px] p-5 lg:p-6 h-fit">
+                <div class="flex items-center justify-between mb-5">
+                    <h2 class="text-sm font-semibold tracking-[0.15em] text-cyan-200">CONTROLS</h2>
+                    <div class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" style="box-shadow: 0 0 10px #10b981;"></div>
+                </div>
+
+                <div class="space-y-6">
+                    <div>
+                        <div class="flex justify-between mb-2">
+                            <label class="text-[11px] font-mono tracking-wider text-cyan-400/70">LASER POWER</label>
+                            <span id="laserVal" class="text-[11px] font-mono text-cyan-300">65%</span>
+                        </div>
+                        <input id="laserPower" type="range" min="0" max="100" value="65" class="w-full">
+                    </div>
+
+                    <div>
+                        <div class="flex justify-between mb-2">
+                            <label class="text-[11px] font-mono tracking-wider text-cyan-400/70">FIELD 1 STRENGTH</label>
+                            <span id="field1Val" class="text-[11px] font-mono text-cyan-300">60%</span>
+                        </div>
+                        <input id="field1" type="range" min="0" max="100" value="60" class="w-full">
+                        <p class="text-[10px] text-cyan-500/50 mt-1 font-mono">INNER • 64 ELECTRONS</p>
+                    </div>
+
+                    <div>
+                        <div class="flex justify-between mb-2">
+                            <label class="text-[11px] font-mono tracking-wider text-red-400/70">FIELD 2 STRENGTH</label>
+                            <span id="field2Val" class="text-[11px] font-mono text-red-300">55%</span>
+                        </div>
+                        <input id="field2" type="range" min="0" max="100" value="55" class="w-full">
+                        <p class="text-[10px] text-red-500/50 mt-1 font-mono">OUTER • 96 ELECTRONS</p>
+                    </div>
+                </div>
+
+                <div class="mt-8 pt-6 border-t border-cyan-500/10">
+                    <h3 class="text-[12px] font-semibold tracking-[0.2em] text-violet-300 mb-1 neon-text">SOLFEGGIO HARMONICS</h3>
+                    <p class="text-[10px] font-mono text-violet-400/50 mb-4">PLASMA FREQUENCY MAPPING</p>
+                    
+                    <div class="grid grid-cols-2 gap-2.5">
+                        <button data-freq="396" class="solfeggio-btn group relative px-3 py-3 glass rounded-xl text-left hover:border-cyan-400/50 transition-all duration-300 active">
+                            <div class="text-[15px] font-medium text-cyan-100 group-hover:text-white">396<span class="text-[11px] ml-1 opacity-70">Hz</span></div>
+                            <div class="text-[9px] font-mono text-cyan-500/60 mt-0.5">UT • 13.56MHz</div>
+                        </button>
+                        <button data-freq="417" class="solfeggio-btn group relative px-3 py-3 glass rounded-xl text-left hover:border-cyan-400/50 transition-all duration-300">
+                            <div class="text-[15px] font-medium text-cyan-100 group-hover:text-white">417<span class="text-[11px] ml-1 opacity-70">Hz</span></div>
+                            <div class="text-[9px] font-mono text-cyan-500/60 mt-0.5">RE • 27.12MHz</div>
+                        </button>
+                        <button data-freq="528" class="solfeggio-btn group relative px-3 py-3 glass rounded-xl text-left hover:border-cyan-400/50 transition-all duration-300">
+                            <div class="text-[15px] font-medium text-cyan-100 group-hover:text-white">528<span class="text-[11px] ml-1 opacity-70">Hz</span></div>
+                            <div class="text-[9px] font-mono text-cyan-500/60 mt-0.5">MI • 40.68MHz</div>
+                        </button>
+                        <button data-freq="639" class="solfeggio-btn group relative px-3 py-3 glass rounded-xl text-left hover:border-cyan-400/50 transition-all duration-300">
+                            <div class="text-[15px] font-medium text-cyan-100 group-hover:text-white">639<span class="text-[11px] ml-1 opacity-70">Hz</span></div>
+                            <div class="text-[9px] font-mono text-cyan-500/60 mt-0.5">FA • 54.24MHz</div>
+                        </button>
+                        <button data-freq="741" class="solfeggio-btn group relative px-3 py-3 glass rounded-xl text-left hover:border-cyan-400/50 transition-all duration-300">
+                            <div class="text-[15px] font-medium text-cyan-100 group-hover:text-white">741<span class="text-[11px] ml-1 opacity-70">Hz</span></div>
+                            <div class="text-[9px] font-mono text-cyan-500/60 mt-0.5">SOL • 67.80MHz</div>
+                        </button>
+                        <button data-freq="852" class="solfeggio-btn group relative px-3 py-3 glass rounded-xl text-left hover:border-cyan-400/50 transition-all duration-300">
+                            <div class="text-[15px] font-medium text-cyan-100 group-hover:text-white">852<span class="text-[11px] ml-1 opacity-70">Hz</span></div>
+                            <div class="text-[9px] font-mono text-cyan-500/60 mt-0.5">LA • 81.36MHz</div>
+                        </button>
+                    </div>
+
+                    <button id="harmonize" class="relative w-full mt-4 group overflow-hidden">
+                        <div class="absolute inset-0 bg-gradient-to-r from-violet-600 to-fuchsia-600 opacity-80 group-hover:opacity-100 transition-opacity rounded-xl blur-[1px]"></div>
+                        <div class="absolute inset-0 bg-gradient-to-r from-violet-600/20 to-fuchsia-600/20 group-hover:from-violet-600/30 group-hover:to-fuchsia-600/30 transition-all rounded-xl"></div>
+                        <div class="relative px-4 py-3.5 rounded-xl border border-violet-400/50 group-hover:border-violet-300/70 transition-all">
+                            <div class="flex items-center justify-center gap-2.5">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" class="text-violet-100">
+                                    <path d="M9 18V5l12-2v13"></path><circle cx="6" cy="18" r="3"></circle><circle cx="18" cy="16" r="3"></circle>
+                                </svg>
+                                <span class="text-[13px] font-semibold tracking-[0.15em] text-white">HARMONIZE ALL</span>
+                            </div>
+                        </div>
+                    </button>
+                    <p class="text-[9px] text-center font-mono text-violet-400/40 mt-2 tracking-wider">PLAYS 6-TONE CHORD • VISUAL INTERFERENCE</p>
+                </div>
+            </div>
+
+            <!-- CENTER VISUALIZATION -->
+            <div class="glass rounded-[24px] p-4 lg:p-6 relative overflow-hidden">
+                <div id="harmonizeStatus" class="absolute top-5 left-1/2 -translate-x-1/2 z-20 px-5 py-2.5 glass rounded-full border-white/20 opacity-0 pointer-events-none transition-all duration-500">
+                    <div class="flex items-center gap-2.5">
+                        <div class="w-1.5 h-1.5 rounded-full bg-white animate-pulse"></div>
+                        <span class="text-[11px] font-mono tracking-[0.15em] text-white whitespace-nowrap">HARMONIZING: 396+417+528+639+741+852 Hz</span>
+                    </div>
+                </div>
+                
+                <div class="relative aspect-[4/3] xl:aspect-[16/12] w-full">
+                    <canvas id="viz" class="w-full h-full rounded-xl" width="1732" height="1299"></canvas>
+                    <div class="absolute bottom-3 left-3 right-3 flex justify-between items-end pointer-events-none">
+                        <div class="px-2.5 py-1.5 glass rounded-lg">
+                            <div class="text-[9px] font-mono text-cyan-400/60">PLASMA</div>
+                            <div id="plasmaReadout" class="text-[13px] font-mono text-cyan-200 -mt-0.5">13.56 MHz</div>
+                        </div>
+                        <div class="px-2.5 py-1.5 glass rounded-lg text-right">
+                            <div class="text-[9px] font-mono text-violet-400/60">MODE</div>
+                            <div id="modeReadout" class="text-[13px] font-mono text-violet-200 -mt-0.5">UT • 396 Hz</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- RIGHT PANEL -->
+            <div class="glass rounded-[24px] p-5 lg:p-6 h-fit">
+                <h3 class="text-sm font-semibold tracking-[0.15em] text-cyan-200 mb-5">FIELD TELEMETRY</h3>
+                
+                <div class="space-y-4">
+                    <div class="glass rounded-xl p-3.5 border-cyan-500/10">
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="text-[11px] font-mono text-cyan-400/70">INNER FIELD</span>
+                            <span class="text-[10px] px-2 py-0.5 rounded-full bg-cyan-500/15 text-cyan-300 border border-cyan-500/30">64 e⁻</span>
+                        </div>
+                        <div class="h-[36px] flex items-end gap-[2px]" id="field1-bars"><div class="flex-1 bg-cyan-400/80 rounded-[1px]" style="height: 54.2276%; box-shadow: rgba(34, 211, 238, 0.5) 0px 0px 6px;"></div><div class="flex-1 bg-cyan-400/80 rounded-[1px]" style="height: 21.5668%; box-shadow: rgba(34, 211, 238, 0.5) 0px 0px 6px;"></div><div class="flex-1 bg-cyan-400/80 rounded-[1px]" style="height: 20.7059%; box-shadow: rgba(34, 211, 238, 0.5) 0px 0px 6px;"></div><div class="flex-1 bg-cyan-400/80 rounded-[1px]" style="height: 25.8693%; box-shadow: rgba(34, 211, 238, 0.5) 0px 0px 6px;"></div><div class="flex-1 bg-cyan-400/80 rounded-[1px]" style="height: 35.5596%; box-shadow: rgba(34, 211, 238, 0.5) 0px 0px 6px;"></div><div class="flex-1 bg-cyan-400/80 rounded-[1px]" style="height: 47.9373%; box-shadow: rgba(34, 211, 238, 0.5) 0px 0px 6px;"></div><div class="flex-1 bg-cyan-400/80 rounded-[1px]" style="height: 56.5709%; box-shadow: rgba(34, 211, 238, 0.5) 0px 0px 6px;"></div><div class="flex-1 bg-cyan-400/80 rounded-[1px]" style="height: 25.3429%; box-shadow: rgba(34, 211, 238, 0.5) 0px 0px 6px;"></div><div class="flex-1 bg-cyan-400/80 rounded-[1px]" style="height: 31.6455%; box-shadow: rgba(34, 211, 238, 0.5) 0px 0px 6px;"></div><div class="flex-1 bg-cyan-400/80 rounded-[1px]" style="height: 29.3129%; box-shadow: rgba(34, 211, 238, 0.5) 0px 0px 6px;"></div><div class="flex-1 bg-cyan-400/80 rounded-[1px]" style="height: 47.3117%; box-shadow: rgba(34, 211, 238, 0.5) 0px 0px 6px;"></div><div class="flex-1 bg-cyan-400/80 rounded-[1px]" style="height: 59.8301%; box-shadow: rgba(34, 211, 238, 0.5) 0px 0px 6px;"></div><div class="flex-1 bg-cyan-400/80 rounded-[1px]" style="height: 21.3639%; box-shadow: rgba(34, 211, 238, 0.5) 0px 0px 6px;"></div><div class="flex-1 bg-cyan-400/80 rounded-[1px]" style="height: 21.5382%; box-shadow: rgba(34, 211, 238, 0.5) 0px 0px 6px;"></div><div class="flex-1 bg-cyan-400/80 rounded-[1px]" style="height: 38.5318%; box-shadow: rgba(34, 211, 238, 0.5) 0px 0px 6px;"></div><div class="flex-1 bg-cyan-400/80 rounded-[1px]" style="height: 63.9348%; box-shadow: rgba(34, 211, 238, 0.5) 0px 0px 6px;"></div><div class="flex-1 bg-cyan-400/80 rounded-[1px]" style="height: 31.7189%; box-shadow: rgba(34, 211, 238, 0.5) 0px 0px 6px;"></div><div class="flex-1 bg-cyan-400/80 rounded-[1px]" style="height: 64.9314%; box-shadow: rgba(34, 211, 238, 0.5) 0px 0px 6px;"></div><div class="flex-1 bg-cyan-400/80 rounded-[1px]" style="height: 42.3437%; box-shadow: rgba(34, 211, 238, 0.5) 0px 0px 6px;"></div><div class="flex-1 bg-cyan-400/80 rounded-[1px]" style="height: 42.4455%; box-shadow: rgba(34, 211, 238, 0.5) 0px 0px 6px;"></div><div class="flex-1 bg-cyan-400/80 rounded-[1px]" style="height: 59.59%; box-shadow: rgba(34, 211, 238, 0.5) 0px 0px 6px;"></div><div class="flex-1 bg-cyan-400/80 rounded-[1px]" style="height: 48.7165%; box-shadow: rgba(34, 211, 238, 0.5) 0px 0px 6px;"></div><div class="flex-1 bg-cyan-400/80 rounded-[1px]" style="height: 39.6826%; box-shadow: rgba(34, 211, 238, 0.5) 0px 0px 6px;"></div><div class="flex-1 bg-cyan-400/80 rounded-[1px]" style="height: 51.3178%; box-shadow: rgba(34, 211, 238, 0.5) 0px 0px 6px;"></div><div class="flex-1 bg-cyan-400/80 rounded-[1px]" style="height: 20.5175%; box-shadow: rgba(34, 211, 238, 0.5) 0px 0px 6px;"></div><div class="flex-1 bg-cyan-400/80 rounded-[1px]" style="height: 58.7607%; box-shadow: rgba(34, 211, 238, 0.5) 0px 0px 6px;"></div><div class="flex-1 bg-cyan-400/80 rounded-[1px]" style="height: 32.1734%; box-shadow: rgba(34, 211, 238, 0.5) 0px 0px 6px;"></div><div class="flex-1 bg-cyan-400/80 rounded-[1px]" style="height: 57.5526%; box-shadow: rgba(34, 211, 238, 0.5) 0px 0px 6px;"></div><div class="flex-1 bg-cyan-400/80 rounded-[1px]" style="height: 46.2599%; box-shadow: rgba(34, 211, 238, 0.5) 0px 0px 6px;"></div><div class="flex-1 bg-cyan-400/80 rounded-[1px]" style="height: 63.8356%; box-shadow: rgba(34, 211, 238, 0.5) 0px 0px 6px;"></div><div class="flex-1 bg-cyan-400/80 rounded-[1px]" style="height: 30.389%; box-shadow: rgba(34, 211, 238, 0.5) 0px 0px 6px;"></div><div class="flex-1 bg-cyan-400/80 rounded-[1px]" style="height: 24.4173%; box-shadow: rgba(34, 211, 238, 0.5) 0px 0px 6px;"></div></div>
+                        <div class="mt-2 flex justify-between text-[10px] font-mono">
+                            <span class="text-cyan-500/50">COHERENCE</span>
+                            <span id="coherence1" class="text-cyan-300">94.0%</span>
+                        </div>
+                    </div>
+
+                    <div class="glass rounded-xl p-3.5 border-red-500/10">
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="text-[11px] font-mono text-red-400/70">OUTER FIELD</span>
+                            <span class="text-[10px] px-2 py-0.5 rounded-full bg-red-500/15 text-red-300 border border-red-500/30">96 e⁻</span>
+                        </div>
+                        <div class="h-[36px] flex items-end gap-[2px]" id="field2-bars"><div class="flex-1 bg-red-400/80 rounded-[1px]" style="height: 24.3794%; box-shadow: rgba(248, 113, 113, 0.5) 0px 0px 6px;"></div><div class="flex-1 bg-red-400/80 rounded-[1px]" style="height: 30.7591%; box-shadow: rgba(248, 113, 113, 0.5) 0px 0px 6px;"></div><div class="flex-1 bg-red-400/80 rounded-[1px]" style="height: 45.4786%; box-shadow: rgba(248, 113, 113, 0.5) 0px 0px 6px;"></div><div class="flex-1 bg-red-400/80 rounded-[1px]" style="height: 32.03%; box-shadow: rgba(248, 113, 113, 0.5) 0px 0px 6px;"></div><div class="flex-1 bg-red-400/80 rounded-[1px]" style="height: 45.4493%; box-shadow: rgba(248, 113, 113, 0.5) 0px 0px 6px;"></div><div class="flex-1 bg-red-400/80 rounded-[1px]" style="height: 23.5903%; box-shadow: rgba(248, 113, 113, 0.5) 0px 0px 6px;"></div><div class="flex-1 bg-red-400/80 rounded-[1px]" style="height: 56.0987%; box-shadow: rgba(248, 113, 113, 0.5) 0px 0px 6px;"></div><div class="flex-1 bg-red-400/80 rounded-[1px]" style="height: 46.6217%; box-shadow: rgba(248, 113, 113, 0.5) 0px 0px 6px;"></div><div class="flex-1 bg-red-400/80 rounded-[1px]" style="height: 16.5919%; box-shadow: rgba(248, 113, 113, 0.5) 0px 0px 6px;"></div><div class="flex-1 bg-red-400/80 rounded-[1px]" style="height: 60.2497%; box-shadow: rgba(248, 113, 113, 0.5) 0px 0px 6px;"></div><div class="flex-1 bg-red-400/80 rounded-[1px]" style="height: 18.0529%; box-shadow: rgba(248, 113, 113, 0.5) 0px 0px 6px;"></div><div class="flex-1 bg-red-400/80 rounded-[1px]" style="height: 38.282%; box-shadow: rgba(248, 113, 113, 0.5) 0px 0px 6px;"></div><div class="flex-1 bg-red-400/80 rounded-[1px]" style="height: 37.7036%; box-shadow: rgba(248, 113, 113, 0.5) 0px 0px 6px;"></div><div class="flex-1 bg-red-400/80 rounded-[1px]" style="height: 54.658%; box-shadow: rgba(248, 113, 113, 0.5) 0px 0px 6px;"></div><div class="flex-1 bg-red-400/80 rounded-[1px]" style="height: 57.9512%; box-shadow: rgba(248, 113, 113, 0.5) 0px 0px 6px;"></div><div class="flex-1 bg-red-400/80 rounded-[1px]" style="height: 23.018%; box-shadow: rgba(248, 113, 113, 0.5) 0px 0px 6px;"></div><div class="flex-1 bg-red-400/80 rounded-[1px]" style="height: 27.9787%; box-shadow: rgba(248, 113, 113, 0.5) 0px 0px 6px;"></div><div class="flex-1 bg-red-400/80 rounded-[1px]" style="height: 18.5507%; box-shadow: rgba(248, 113, 113, 0.5) 0px 0px 6px;"></div><div class="flex-1 bg-red-400/80 rounded-[1px]" style="height: 35.4667%; box-shadow: rgba(248, 113, 113, 0.5) 0px 0px 6px;"></div><div class="flex-1 bg-red-400/80 rounded-[1px]" style="height: 56.3308%; box-shadow: rgba(248, 113, 113, 0.5) 0px 0px 6px;"></div><div class="flex-1 bg-red-400/80 rounded-[1px]" style="height: 39.8604%; box-shadow: rgba(248, 113, 113, 0.5) 0px 0px 6px;"></div><div class="flex-1 bg-red-400/80 rounded-[1px]" style="height: 35.9003%; box-shadow: rgba(248, 113, 113, 0.5) 0px 0px 6px;"></div><div class="flex-1 bg-red-400/80 rounded-[1px]" style="height: 26.0499%; box-shadow: rgba(248, 113, 113, 0.5) 0px 0px 6px;"></div><div class="flex-1 bg-red-400/80 rounded-[1px]" style="height: 29.7488%; box-shadow: rgba(248, 113, 113, 0.5) 0px 0px 6px;"></div><div class="flex-1 bg-red-400/80 rounded-[1px]" style="height: 51.1964%; box-shadow: rgba(248, 113, 113, 0.5) 0px 0px 6px;"></div><div class="flex-1 bg-red-400/80 rounded-[1px]" style="height: 30.2801%; box-shadow: rgba(248, 113, 113, 0.5) 0px 0px 6px;"></div><div class="flex-1 bg-red-400/80 rounded-[1px]" style="height: 34.1679%; box-shadow: rgba(248, 113, 113, 0.5) 0px 0px 6px;"></div><div class="flex-1 bg-red-400/80 rounded-[1px]" style="height: 24.3508%; box-shadow: rgba(248, 113, 113, 0.5) 0px 0px 6px;"></div><div class="flex-1 bg-red-400/80 rounded-[1px]" style="height: 36.7674%; box-shadow: rgba(248, 113, 113, 0.5) 0px 0px 6px;"></div><div class="flex-1 bg-red-400/80 rounded-[1px]" style="height: 17.1042%; box-shadow: rgba(248, 113, 113, 0.5) 0px 0px 6px;"></div><div class="flex-1 bg-red-400/80 rounded-[1px]" style="height: 29.2279%; box-shadow: rgba(248, 113, 113, 0.5) 0px 0px 6px;"></div><div class="flex-1 bg-red-400/80 rounded-[1px]" style="height: 54.4454%; box-shadow: rgba(248, 113, 113, 0.5) 0px 0px 6px;"></div><div class="flex-1 bg-red-400/80 rounded-[1px]" style="height: 23.6401%; box-shadow: rgba(248, 113, 113, 0.5) 0px 0px 6px;"></div><div class="flex-1 bg-red-400/80 rounded-[1px]" style="height: 17.0661%; box-shadow: rgba(248, 113, 113, 0.5) 0px 0px 6px;"></div><div class="flex-1 bg-red-400/80 rounded-[1px]" style="height: 55.8891%; box-shadow: rgba(248, 113, 113, 0.5) 0px 0px 6px;"></div><div class="flex-1 bg-red-400/80 rounded-[1px]" style="height: 26.1864%; box-shadow: rgba(248, 113, 113, 0.5) 0px 0px 6px;"></div><div class="flex-1 bg-red-400/80 rounded-[1px]" style="height: 24.5675%; box-shadow: rgba(248, 113, 113, 0.5) 0px 0px 6px;"></div><div class="flex-1 bg-red-400/80 rounded-[1px]" style="height: 61.6535%; box-shadow: rgba(248, 113, 113, 0.5) 0px 0px 6px;"></div><div class="flex-1 bg-red-400/80 rounded-[1px]" style="height: 30.1626%; box-shadow: rgba(248, 113, 113, 0.5) 0px 0px 6px;"></div><div class="flex-1 bg-red-400/80 rounded-[1px]" style="height: 54.4181%; box-shadow: rgba(248, 113, 113, 0.5) 0px 0px 6px;"></div></div>
+                        <div class="mt-2 flex justify-between text-[10px] font-mono">
+                            <span class="text-red-500/50">COHERENCE</span>
+                            <span id="coherence2" class="text-red-300">90.3%</span>
+                        </div>
+                    </div>
+
+                    <div class="glass rounded-xl p-3.5">
+                        <div class="text-[11px] font-mono text-violet-400/70 mb-2.5">STACK CORE</div>
+                        <div class="grid grid-cols-4 gap-1.5" id="stack-grid"><div class="aspect-square rounded-[3px] bg-violet-500/30 border border-violet-400/20" style="box-shadow: rgba(139, 92, 246, 0.2) 0px 0px 8px inset; background: rgba(139, 92, 246, 0.15);"></div><div class="aspect-square rounded-[3px] bg-violet-500/30 border border-violet-400/20" style="box-shadow: rgba(139, 92, 246, 0.2) 0px 0px 8px inset; background: rgba(139, 92, 246, 0.15);"></div><div class="aspect-square rounded-[3px] bg-violet-500/30 border border-violet-400/20" style="box-shadow: rgba(167, 139, 250, 0.6) 0px 0px 10px, rgba(139, 92, 246, 0.4) 0px 0px 8px inset; background: rgba(167, 139, 250, 0.5);"></div><div class="aspect-square rounded-[3px] bg-violet-500/30 border border-violet-400/20" style="box-shadow: rgba(167, 139, 250, 0.6) 0px 0px 10px, rgba(139, 92, 246, 0.4) 0px 0px 8px inset; background: rgba(167, 139, 250, 0.5);"></div><div class="aspect-square rounded-[3px] bg-violet-500/30 border border-violet-400/20" style="box-shadow: rgba(167, 139, 250, 0.6) 0px 0px 10px, rgba(139, 92, 246, 0.4) 0px 0px 8px inset; background: rgba(167, 139, 250, 0.5);"></div><div class="aspect-square rounded-[3px] bg-violet-500/30 border border-violet-400/20" style="box-shadow: rgba(139, 92, 246, 0.2) 0px 0px 8px inset; background: rgba(139, 92, 246, 0.15);"></div><div class="aspect-square rounded-[3px] bg-violet-500/30 border border-violet-400/20" style="box-shadow: rgba(167, 139, 250, 0.6) 0px 0px 10px, rgba(139, 92, 246, 0.4) 0px 0px 8px inset; background: rgba(167, 139, 250, 0.5);"></div><div class="aspect-square rounded-[3px] bg-violet-500/30 border border-violet-400/20" style="box-shadow: rgba(139, 92, 246, 0.2) 0px 0px 8px inset; background: rgba(139, 92, 246, 0.15);"></div><div class="aspect-square rounded-[3px] bg-violet-500/30 border border-violet-400/20" style="box-shadow: rgba(167, 139, 250, 0.6) 0px 0px 10px, rgba(139, 92, 246, 0.4) 0px 0px 8px inset; background: rgba(167, 139, 250, 0.5);"></div><div class="aspect-square rounded-[3px] bg-violet-500/30 border border-violet-400/20" style="box-shadow: rgba(139, 92, 246, 0.2) 0px 0px 8px inset; background: rgba(139, 92, 246, 0.15);"></div><div class="aspect-square rounded-[3px] bg-violet-500/30 border border-violet-400/20" style="box-shadow: rgba(139, 92, 246, 0.2) 0px 0px 8px inset; background: rgba(139, 92, 246, 0.15);"></div><div class="aspect-square rounded-[3px] bg-violet-500/30 border border-violet-400/20" style="box-shadow: rgba(139, 92, 246, 0.2) 0px 0px 8px inset; background: rgba(139, 92, 246, 0.15);"></div><div class="aspect-square rounded-[3px] bg-violet-500/30 border border-violet-400/20" style="box-shadow: rgba(167, 139, 250, 0.6) 0px 0px 10px, rgba(139, 92, 246, 0.4) 0px 0px 8px inset; background: rgba(167, 139, 250, 0.5);"></div><div class="aspect-square rounded-[3px] bg-violet-500/30 border border-violet-400/20" style="box-shadow: rgba(167, 139, 250, 0.6) 0px 0px 10px, rgba(139, 92, 246, 0.4) 0px 0px 8px inset; background: rgba(167, 139, 250, 0.5);"></div><div class="aspect-square rounded-[3px] bg-violet-500/30 border border-violet-400/20" style="box-shadow: rgba(139, 92, 246, 0.2) 0px 0px 8px inset; background: rgba(139, 92, 246, 0.15);"></div><div class="aspect-square rounded-[3px] bg-violet-500/30 border border-violet-400/20" style="box-shadow: rgba(167, 139, 250, 0.6) 0px 0px 10px, rgba(139, 92, 246, 0.4) 0px 0px 8px inset; background: rgba(167, 139, 250, 0.5);"></div></div>
+                        <div class="mt-3 pt-2.5 border-t border-white/5 flex justify-between text-[10px] font-mono">
+                            <span class="text-white/40">TEMP</span>
+                            <span class="text-violet-300">2,847 K</span>
+                        </div>
+                    </div>
+
+                    <div class="pt-4 border-t border-white/5">
+                        <div class="text-[10px] font-mono text-white/30 leading-relaxed">
+                            Solfeggio tones mapped to industrial plasma bands (13.56–81.36 MHz ISM). Each preset adjusts confinement fields for harmonic resonance.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <footer class="text-center mt-10 pb-4">
+            <p class="text-[11px] font-mono tracking-[0.2em] text-cyan-400/40 uppercase">Six tones, two fields, one stack — harmonized</p>
+        </footer>
+    </div>
+
+    <script>
+        // Audio System
+        let audioCtx = null;
+        let activeOscillators = [];
+        const solfeggioMap = {
+            396: { f1: 60, f2: 55, laser: 65, plasma: '13.56 MHz', name: 'UT' },
+            417: { f1: 65, f2: 60, laser: 70, plasma: '27.12 MHz', name: 'RE' },
+            528: { f1: 70, f2: 65, laser: 75, plasma: '40.68 MHz', name: 'MI' },
+            639: { f1: 75, f2: 70, laser: 80, plasma: '54.24 MHz', name: 'FA' },
+            741: { f1: 80, f2: 75, laser: 85, plasma: '67.80 MHz', name: 'SOL' },
+            852: { f1: 85, f2: 80, laser: 90, plasma: '81.36 MHz', name: 'LA' }
+        };
+
+        function ensureAudio() {
+            if (!audioCtx) {
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            }
+            if (audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
+            return audioCtx;
+        }
+
+        document.body.addEventListener('click', ensureAudio, { once: true });
+        document.body.addEventListener('touchstart', ensureAudio, { once: true });
+
+        function playTone(freq, duration = 2) {
+            const ctx = ensureAudio();
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+            const filter = ctx.createBiquadFilter();
+            
+            osc.type = 'sine';
+            osc.frequency.value = freq;
+            filter.type = 'lowpass';
+            filter.frequency.value = 2000;
+            filter.Q.value = 1;
+            
+            gain.gain.setValueAtTime(0, ctx.currentTime);
+            gain.gain.linearRampToValueAtTime(0.25, ctx.currentTime + 0.03);
+            gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + duration);
+            
+            osc.connect(filter).connect(gain).connect(ctx.destination);
+            osc.start();
+            osc.stop(ctx.currentTime + duration);
+        }
+
+        function playHarmony() {
+            const ctx = ensureAudio();
+            stopHarmony();
+            
+            const master = ctx.createGain();
+            master.gain.value = 0.85;
+            master.connect(ctx.destination);
+            
+            const freqs = [396, 417, 528, 639, 741, 852];
+            freqs.forEach((f, i) => {
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+                const pan = ctx.createStereoPanner();
+                
+                osc.type = 'sine';
+                osc.frequency.value = f;
+                pan.panning.value = (i - 2.5) * 0.3;
+                gain.gain.setValueAtTime(0, ctx.currentTime);
+                gain.gain.linearRampToValueAtTime(0.13, ctx.currentTime + 0.5);
+                gain.gain.linearRampToValueAtTime(0.13, ctx.currentTime + 5);
+                gain.gain.linearRampToValueAtTime(0, ctx.currentTime + 6);
+                
+                osc.connect(gain).connect(pan).connect(master);
+                osc.start();
+                osc.stop(ctx.currentTime + 6.2);
+                activeOscillators.push(osc);
+            });
+        }
+
+        function stopHarmony() {
+            activeOscillators.forEach(o => { try { o.stop(); } catch(e){} });
+            activeOscillators = [];
+        }
+
+        // Controls
+        const laserSlider = document.getElementById('laserPower');
+        const field1Slider = document.getElementById('field1');
+        const field2Slider = document.getElementById('field2');
+        const laserVal = document.getElementById('laserVal');
+        const field1Val = document.getElementById('field1Val');
+        const field2Val = document.getElementById('field2Val');
+        const plasmaReadout = document.getElementById('plasmaReadout');
+        const modeReadout = document.getElementById('modeReadout');
+        const harmonizeStatus = document.getElementById('harmonizeStatus');
+
+        let laserPower = 65, field1Strength = 60, field2Strength = 55;
+        let harmonizing = false, harmonizeStart = 0;
+
+        function updateSliders() {
+            laserVal.textContent = laserPower + '%';
+            field1Val.textContent = field1Strength + '%';
+            field2Val.textContent = field2Strength + '%';
+            document.getElementById('coherence1').textContent = (85 + field1Strength * 0.15).toFixed(1) + '%';
+            document.getElementById('coherence2').textContent = (82 + field2Strength * 0.15).toFixed(1) + '%';
+        }
+
+        laserSlider.addEventListener('input', e => { laserPower = +e.target.value; updateSliders(); });
+        field1Slider.addEventListener('input', e => { field1Strength = +e.target.value; updateSliders(); });
+        field2Slider.addEventListener('input', e => { field2Strength = +e.target.value; updateSliders(); });
+
+        // Solfeggio buttons
+        document.querySelectorAll('.solfeggio-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const freq = +btn.dataset.freq;
+                const cfg = solfeggioMap[freq];
+                
+                document.querySelectorAll('.solfeggio-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                
+                field1Strength = cfg.f1;
+                field2Strength = cfg.f2;
+                laserPower = cfg.laser;
+                
+                field1Slider.value = cfg.f1;
+                field2Slider.value = cfg.f2;
+                laserSlider.value = cfg.laser;
+                updateSliders();
+                
+                plasmaReadout.textContent = cfg.plasma;
+                modeReadout.textContent = `${cfg.name} • ${freq} Hz`;
+                
+                playTone(freq, 2);
+            });
+        });
+
+        document.getElementById('harmonize').addEventListener('click', () => {
+            playHarmony();
+            harmonizing = true;
+            harmonizeStart = performance.now();
+            harmonizeStatus.style.opacity = '1';
+            harmonizeStatus.style.transform = 'translate(-50%, 0)';
+            
+            // Visual pulse all buttons
+            document.querySelectorAll('.solfeggio-btn').forEach((b,i) => {
+                setTimeout(() => {
+                    b.classList.add('active');
+                    setTimeout(() => b.classList.remove('active'), 800);
+                }, i * 100);
+            });
+
+            setTimeout(() => {
+                harmonizing = false;
+                harmonizeStatus.style.opacity = '0';
+            }, 6000);
+        });
+
+        // Initialize telemetry bars
+        const f1bars = document.getElementById('field1-bars');
+        const f2bars = document.getElementById('field2-bars');
+        for(let i=0;i<32;i++){
+            const b=document.createElement('div');
+            b.className='flex-1 bg-cyan-400/80 rounded-[1px]';
+            b.style.height=Math.random()*100+'%';
+            b.style.boxShadow='0 0 6px rgba(34,211,238,0.5)';
+            f1bars.appendChild(b);
+        }
+        for(let i=0;i<40;i++){
+            const b=document.createElement('div');
+            b.className='flex-1 bg-red-400/80 rounded-[1px]';
+            b.style.height=Math.random()*100+'%';
+            b.style.boxShadow='0 0 6px rgba(248,113,113,0.5)';
+            f2bars.appendChild(b);
+        }
+        const stackGrid=document.getElementById('stack-grid');
+        for(let i=0;i<16;i++){
+            const c=document.createElement('div');
+            c.className='aspect-square rounded-[3px] bg-violet-500/30 border border-violet-400/20';
+            c.style.boxShadow='inset 0 0 8px rgba(139,92,246,0.3)';
+            stackGrid.appendChild(c);
+        }
+
+        // Visualization
+        const canvas = document.getElementById('viz');
+        const ctx = canvas.getContext('2d');
+        let dpr = Math.min(window.devicePixelRatio || 1, 2);
+        
+        function resize() {
+            const rect = canvas.getBoundingClientRect();
+            canvas.width = rect.width * dpr;
+            canvas.height = rect.height * dpr;
+            ctx.setTransform(1,0,0,1,0,0);
+            ctx.scale(dpr, dpr);
+        }
+        window.addEventListener('resize', resize);
+        resize();
+
+        // Electron fields
+        const field1Electrons = Array.from({length: 64}, (_,i) => ({
+            angle: (i/64) * Math.PI * 2 + Math.random()*0.2,
+            speed: 0.008 + Math.random()*0.004,
+            radiusJitter: Math.random()*6,
+            size: 1.5 + Math.random()*1.2
+        }));
+        const field2Electrons = Array.from({length: 96}, (_,i) => ({
+            angle: (i/96) * Math.PI * 2 + Math.random()*0.2,
+            speed: 0.005 + Math.random()*0.003,
+            radiusJitter: Math.random()*8,
+            size: 1.2 + Math.random()*1
+        }));
+
+        function animate(t) {
+            const rect = canvas.getBoundingClientRect();
+            const w = rect.width, h = rect.height;
+            const cx = w/2, cy = h/2 + 10;
+            const time = t * 0.001;
+            
+            ctx.clearRect(0,0,w,h);
+            
+            // Background glow
+            const bgGrad = ctx.createRadialGradient(cx, cy, 0, cx, cy, Math.min(w,h)*0.5);
+            bgGrad.addColorStop(0, 'rgba(34,211,238,0.03)');
+            bgGrad.addColorStop(0.5, 'rgba(139,92,246,0.02)');
+            bgGrad.addColorStop(1, 'rgba(0,0,0,0)');
+            ctx.fillStyle = bgGrad;
+            ctx.fillRect(0,0,w,h);
+
+            const pulse = harmonizing ? 1 + Math.sin(time*8)*0.12 : 1;
+            const baseR1 = Math.min(w,h)*0.22;
+            const baseR2 = Math.min(w,h)*0.35;
+            const r1 = baseR1 * pulse;
+            const r2 = baseR2 * pulse;
+
+            // Outer field ring
+            ctx.beginPath();
+            ctx.arc(cx, cy, r2, 0, Math.PI*2);
+            ctx.strokeStyle = `rgba(248,113,113,${0.15 + field2Strength/500})`;
+            ctx.lineWidth = 2;
+            ctx.shadowBlur = 20;
+            ctx.shadowColor = 'rgba(248,113,113,0.5)';
+            ctx.stroke();
+            ctx.shadowBlur = 0;
+
+            // Inner field ring
+            ctx.beginPath();
+            ctx.arc(cx, cy, r1, 0, Math.PI*2);
+            ctx.strokeStyle = `rgba(34,211,238,${0.2 + field1Strength/400})`;
+            ctx.lineWidth = 2;
+            ctx.shadowBlur = 20;
+            ctx.shadowColor = 'rgba(34,211,238,0.6)';
+            ctx.stroke();
+            ctx.shadowBlur = 0;
+
+            // Field 2 electrons (96, red)
+            field2Electrons.forEach(e => {
+                e.angle += e.speed * (0.5 + field2Strength/80);
+                const r = r2 + Math.sin(time*2 + e.angle*3)*e.radiusJitter*0.3;
+                const x = cx + Math.cos(e.angle + time*0.3) * r;
+                const y = cy + Math.sin(e.angle + time*0.3) * r;
+                
+                ctx.beginPath();
+                ctx.arc(x, y, e.size, 0, Math.PI*2);
+                const alpha = 0.6 + Math.sin(time*3 + e.angle*5)*0.3;
+                ctx.fillStyle = `rgba(251,113,133,${alpha})`;
+                ctx.shadowBlur = 12;
+                ctx.shadowColor = 'rgba(251,113,133,0.9)';
+                ctx.fill();
+            });
+            ctx.shadowBlur = 0;
+
+            // Field 1 electrons (64, cyan)
+            field1Electrons.forEach(e => {
+                e.angle += e.speed * (0.7 + field1Strength/70);
+                const r = r1 + Math.sin(time*2.5 + e.angle*4)*e.radiusJitter*0.25;
+                const x = cx + Math.cos(-e.angle + time*0.5) * r;
+                const y = cy + Math.sin(-e.angle + time*0.5) * r;
+                
+                ctx.beginPath();
+                ctx.arc(x, y, e.size*1.1, 0, Math.PI*2);
+                const alpha = 0.7 + Math.sin(time*4 + e.angle*6)*0.3;
+                ctx.fillStyle = `rgba(103,232,249,${alpha})`;
+                ctx.shadowBlur = 14;
+                ctx.shadowColor = 'rgba(34,211,238,1)';
+                ctx.fill();
+            });
+            ctx.shadowBlur = 0;
+
+            // Central 16-segment laser stack
+            const stackHeight = 160;
+            const segH = stackHeight / 16;
+            for(let i=0;i<16;i++){
+                const y = cy - stackHeight/2 + i*segH + segH/2;
+                const width = 22 + i*1.8 + Math.sin(time*2 + i*0.5)*2;
+                const intensity = laserPower/100;
+                const hue = harmonizing && Math.sin(time*20 + i)>0 ? 0 : 190 + i*4;
+                const sat = harmonizing ? 0 : 85;
+                const light = 55 + intensity*25 + (harmonizing?20:0);
+                
+                // Glow
+                ctx.beginPath();
+                ctx.rect(cx - width/2 - 4, y - segH/2 + 1, width + 8, segH - 2);
+                ctx.fillStyle = `hsla(${hue}, ${sat}%, ${light}%, ${0.15 + intensity*0.2})`;
+                ctx.shadowBlur = 25 + intensity*15;
+                ctx.shadowColor = `hsl(${hue}, ${sat}%, ${light}%)`;
+                ctx.fill();
+                ctx.shadowBlur = 0;
+                
+                // Core segment
+                const grad = ctx.createLinearGradient(cx-width/2, y, cx+width/2, y);
+                grad.addColorStop(0, `hsla(${hue}, ${sat}%, ${light-10}%, 0.9)`);
+                grad.addColorStop(0.5, `hsla(${hue}, ${sat}%, ${light+10}%, 1)`);
+                grad.addColorStop(1, `hsla(${hue}, ${sat}%, ${light-10}%, 0.9)`);
+                ctx.fillStyle = grad;
+                ctx.fillRect(cx - width/2, y - segH/2 + 2, width, segH - 4);
+                
+                // Center line
+                ctx.fillStyle = `rgba(255,255,255,${0.3 + intensity*0.4})`;
+                ctx.fillRect(cx - width/2, y-0.5, width, 1);
+            }
+
+            // Core
+            const coreGrad = ctx.createRadialGradient(cx, cy, 0, cx, cy, 28);
+            coreGrad.addColorStop(0, `rgba(255,255,255,${0.9 + laserPower/200})`);
+            coreGrad.addColorStop(0.3, `rgba(167,243,252,${0.6})`);
+            coreGrad.addColorStop(1, 'rgba(34,211,238,0)');
+            ctx.fillStyle = coreGrad;
+            ctx.beginPath();
+            ctx.arc(cx, cy, 28 + laserPower*0.15, 0, Math.PI*2);
+            ctx.fill();
+
+            // Harmonize interference pattern
+            if (harmonizing) {
+                ctx.save();
+                ctx.translate(cx, cy);
+                ctx.globalAlpha = 0.9;
+                
+                // 6-wave sum
+                for(let layer=0; layer<3; layer++){
+                    ctx.beginPath();
+                    for(let x=-140; x<=140; x+=2){
+                        let y = 0;
+                        const freqs=[396,417,528,639,741,852];
+                        freqs.forEach((f,idx)=>{
+                            const amp = (7-idx) * (1.2 - layer*0.3);
+                            y += Math.sin((x*0.018 + time*3) * (f/400) + idx) * amp;
+                        });
+                        y *= 0.8;
+                        if(x===-140) ctx.moveTo(x, y);
+                        else ctx.lineTo(x, y);
+                    }
+                    ctx.strokeStyle = layer===0 ? 'rgba(255,255,255,0.95)' : layer===1 ? 'rgba(192,132,252,0.7)' : 'rgba(103,232,249,0.5)';
+                    ctx.lineWidth = 3 - layer;
+                    ctx.shadowBlur = 20 - layer*5;
+                    ctx.shadowColor = '#fff';
+                    ctx.stroke();
+                }
+                ctx.restore();
+                ctx.shadowBlur = 0;
+                ctx.globalAlpha = 1;
+            }
+
+            // Update telemetry bars
+            if (Math.floor(time*10) % 3 === 0) {
+                [...f1bars.children].forEach(b => {
+                    b.style.height = (20 + Math.random()*80 * field1Strength/100) + '%';
+                });
+                [...f2bars.children].forEach(b => {
+                    b.style.height = (15 + Math.random()*85 * field2Strength/100) + '%';
+                });
+                [...stackGrid.children].forEach((c,i) => {
+                    const active = Math.random() < laserPower/120;
+                    c.style.background = active ? 'rgba(167,139,250,0.5)' : 'rgba(139,92,246,0.15)';
+                    c.style.boxShadow = active ? '0 0 10px rgba(167,139,250,0.6), inset 0 0 8px rgba(139,92,246,0.4)' : 'inset 0 0 8px rgba(139,92,246,0.2)';
+                });
+            }
+
+            requestAnimationFrame(animate);
+        }
+        requestAnimationFrame(animate);
+        updateSliders();
+
+        // Auto-select 396Hz on load for demo
+        setTimeout(() => {
+            document.querySelector('[data-freq="396"]').click();
+        }, 300);
+    </script>
+
+</body></html>

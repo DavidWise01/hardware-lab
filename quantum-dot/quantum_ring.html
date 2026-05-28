@@ -1,0 +1,361 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Quantum Ring — Aharonov–Bohm Oscillations</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=IBM+Plex+Mono:wght@400;500;600&family=Spline+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#060810;--ink:#eaf0f8;--body:#a9b6cc;--dim:#647693;--dimmer:#27344a;
+  --gold:#ffd166;--cyan:#46e6ff;--mag:#ff5d9e;--violet:#9b7bff;--green:#48f0a6;
+  --line:rgba(70,230,255,.13);--panel:rgba(10,16,28,.82);
+  --mono:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
+  --sans:"Spline Sans",ui-sans-serif,system-ui,sans-serif;
+  --serif:"Fraunces",Georgia,serif;
+}
+*{box-sizing:border-box}html{scroll-behavior:smooth}
+body{margin:0;color:var(--ink);font-family:var(--sans);line-height:1.62;
+  background:
+   radial-gradient(120% 60% at 50% -10%,rgba(155,123,255,.10),transparent 50%),
+   radial-gradient(50% 50% at 85% 8%,rgba(70,230,255,.07),transparent 55%),
+   radial-gradient(60% 50% at 12% 95%,rgba(255,93,158,.06),transparent 55%),
+   linear-gradient(180deg,#070a14,#060810 60%,#04060c);
+  background-attachment:fixed;-webkit-font-smoothing:antialiased}
+.grain{position:fixed;inset:0;pointer-events:none;z-index:88;opacity:.05;mix-blend-mode:screen;background-image:url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="160" height="160"><filter id="n"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2"/></filter><rect width="100%25" height="100%25" filter="url(%23n)"/></svg>')}
+
+nav{position:sticky;top:0;z-index:30;border-bottom:1px solid var(--line);background:rgba(6,8,16,.86);backdrop-filter:blur(12px)}
+.nbar{max-width:1180px;margin:auto;display:flex;align-items:center;justify-content:space-between;gap:14px;padding:12px 22px}
+.brand{font-family:var(--mono);font-weight:600;letter-spacing:.1em;font-size:12px;color:var(--cyan);text-transform:uppercase}
+.nlinks{display:flex;gap:18px;flex-wrap:wrap}
+.nlinks a{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--dim);text-decoration:none}
+.nlinks a:hover{color:var(--cyan)}
+
+.wrap{max-width:1180px;margin:0 auto;padding:0 22px}
+header.hero{padding:74px 0 46px;border-bottom:1px solid var(--line)}
+.eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.26em;text-transform:uppercase;color:var(--violet);margin-bottom:16px}
+h1{font-family:var(--serif);font-size:clamp(38px,7vw,80px);line-height:.98;margin:0 0 18px;letter-spacing:-.02em;font-weight:600;font-optical-sizing:auto}
+h1 em{font-style:italic;color:var(--cyan)}
+.sub{font-size:18px;color:var(--body);max-width:760px}
+.disc{margin-top:22px;font-family:var(--mono);font-size:11px;color:var(--dim);border-left:2px solid var(--dimmer);padding-left:12px;max-width:760px;line-height:1.7}
+
+section{padding:60px 0;border-top:1px solid rgba(70,230,255,.08)}
+.kick{font-family:var(--mono);font-size:11px;letter-spacing:.24em;text-transform:uppercase;color:var(--gold);margin-bottom:12px}
+h2{font-family:var(--serif);font-size:clamp(26px,4vw,42px);line-height:1.04;margin:0 0 14px;letter-spacing:-.01em;font-weight:600}
+h2 em{font-style:italic;color:var(--cyan)}
+p{color:var(--body);max-width:760px}
+p code,td code,li code{font-family:var(--mono);font-size:.88em;color:var(--gold);background:rgba(255,209,102,.08);padding:1px 5px;border-radius:4px}
+.note{font-size:13px;color:var(--dim)}
+
+.bench{margin-top:24px;border:1px solid var(--line);border-radius:16px;background:var(--panel);overflow:hidden;box-shadow:0 30px 70px rgba(0,0,0,.45)}
+.bhead{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:13px 18px;border-bottom:1px solid var(--line);background:rgba(70,230,255,.03)}
+.btitle{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--cyan)}
+.btag{font-family:var(--mono);font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--dim);border:1px solid var(--dimmer);border-radius:3px;padding:3px 8px}
+.bgrid{display:grid;grid-template-columns:1.15fr .85fr;gap:0}
+@media(max-width:900px){.bgrid{grid-template-columns:1fr}}
+.viz{padding:10px;border-right:1px solid var(--line);position:relative}
+@media(max-width:900px){.viz{border-right:none;border-bottom:1px solid var(--line)}}
+#ring{display:block;width:100%;border-radius:12px;background:radial-gradient(60% 60% at 50% 46%,rgba(20,32,52,.6),rgba(4,7,14,.95))}
+.panel{padding:20px;display:flex;flex-direction:column;gap:16px}
+.ctl label{display:flex;justify-content:space-between;font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--dim);margin-bottom:8px}
+.ctl label b{color:var(--cyan);font-size:13px}
+input[type=range]{width:100%;accent-color:var(--cyan);height:4px}
+.flux-wrap{position:relative}
+.readout{border:1px solid var(--line);border-radius:10px;background:rgba(6,10,18,.6);overflow:hidden}
+.rrow{display:flex;justify-content:space-between;align-items:center;padding:9px 14px;border-bottom:1px solid rgba(70,230,255,.07);font-family:var(--mono);font-size:13px}
+.rrow:last-child{border-bottom:none}
+.rrow span{color:var(--dim);font-size:10.5px;letter-spacing:.06em;text-transform:uppercase}
+.rrow b{font-weight:600;font-size:14px}
+.rrow b.c{color:var(--cyan)}.rrow b.g{color:var(--gold)}.rrow b.m{color:var(--mag)}.rrow b.v{color:var(--violet)}
+#trace{display:block;width:100%;border-radius:10px;background:rgba(6,10,18,.5);border:1px solid var(--line);margin-top:2px}
+.chips{display:flex;gap:7px;flex-wrap:wrap}
+.chip{font-family:var(--mono);font-size:10px;letter-spacing:.05em;text-transform:uppercase;color:var(--cyan);border:1px solid var(--line);background:rgba(70,230,255,.05);border-radius:18px;padding:6px 11px;cursor:pointer;transition:.12s}
+.chip:hover{background:rgba(70,230,255,.16)}
+.chip.play{color:var(--gold);border-color:rgba(255,209,102,.4);background:rgba(255,209,102,.06)}
+
+.eq{font-family:var(--mono);background:rgba(6,10,18,.6);border:1px solid var(--line);border-left:3px solid var(--cyan);border-radius:8px;padding:18px;margin-top:18px;font-size:13px;line-height:2;color:var(--body);overflow-x:auto}
+.eq b{color:var(--gold)}.eq .t{color:var(--cyan)}.eq .m{color:var(--mag)}
+.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:24px}
+@media(max-width:760px){.cards{grid-template-columns:1fr}}
+.card{border:1px solid var(--line);border-radius:12px;background:var(--panel);padding:20px}
+.card h4{margin:0 0 9px;font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--cyan)}
+.card p{font-size:13.5px;margin:0;color:var(--body)}
+ul.clean{list-style:none;padding:0;margin:18px 0;max-width:760px}
+ul.clean li{padding:9px 0 9px 22px;position:relative;color:var(--body);border-bottom:1px solid rgba(70,230,255,.06)}
+ul.clean li::before{content:"▸";position:absolute;left:0;color:var(--cyan)}
+ul.clean li b{color:var(--ink)}
+footer{padding:46px 0 80px;border-top:1px solid var(--line);font-family:var(--mono);font-size:11px;color:var(--dimmer);letter-spacing:.06em;line-height:1.8}
+</style>
+</head>
+<body>
+<div class="grain"></div>
+
+<nav><div class="nbar">
+  <div class="brand">◯ Quantum Ring</div>
+  <div class="nlinks"><a href="#bench">Instrument</a><a href="#why">Mechanism</a><a href="#spectrum">Spectrum</a><a href="#uses">Why it matters</a><a href="#honest">Caveats</a></div>
+</div></nav>
+
+<header class="hero"><div class="wrap">
+  <div class="eyebrow">mesoscopic physics · Aharonov–Bohm effect</div>
+  <h1>An electron that <em>feels</em><br>a field it never touches.</h1>
+  <p class="sub">Grow a quantum dot into a <em>ring</em> — a nanoscale toroid — and thread a magnetic field through the hole. The electron orbits in a region with <strong>zero field</strong>, yet its energy still oscillates with the flux through the centre. That is the Aharonov–Bohm effect: in quantum mechanics the potential is real even where the field is not. Sweep the field below and watch the spectrum breathe.</p>
+  <p class="disc">This instrument computes the real one-dimensional ring spectrum E(l,Φ) live, with energy periodic in the flux quantum Φ₀ = h/e — the measured signature. Physics as represented in my training data; a teaching model, with its simplifying assumptions stated at the end.</p>
+</div></header>
+
+<section id="bench"><div class="wrap">
+  <div class="kick">// instrument</div>
+  <h2>The flux <em>tuner</em></h2>
+
+  <div class="bench">
+    <div class="bhead"><div class="btitle">quantum ring · energy vs. threaded flux</div><div class="btag" id="mat-tag">GaAs · R=20 nm</div></div>
+    <div class="bgrid">
+      <div class="viz"><canvas id="ring" height="430"></canvas></div>
+      <div class="panel">
+        <div class="ctl flux-wrap">
+          <label>threaded flux  Φ / Φ₀ <b id="v-flux">0.00</b></label>
+          <input type="range" id="s-flux" min="0" max="300" value="0">
+          <div class="chips" style="margin-top:9px">
+            <span class="chip play" id="chip-play">▶ sweep field</span>
+            <span class="chip" data-f="0">Φ=0</span>
+            <span class="chip" data-f="50">½Φ₀</span>
+            <span class="chip" data-f="100">1Φ₀</span>
+          </div>
+        </div>
+        <div class="ctl">
+          <label>ring radius R <b id="v-R">20 nm</b></label>
+          <input type="range" id="s-R" min="8" max="60" value="20">
+        </div>
+        <div class="readout">
+          <div class="rrow"><span>ground-state momentum  l</span><b class="c" id="o-l">0</b></div>
+          <div class="rrow"><span>ground-state energy</span><b class="g" id="o-E">0.000 meV</b></div>
+          <div class="rrow"><span>persistent current  I</span><b class="m" id="o-I">0.00 nA</b></div>
+          <div class="rrow"><span>flux quantum  Φ₀ = h/e</span><b class="v">4.14×10⁻¹⁵ Wb</b></div>
+        </div>
+        <canvas id="trace" height="150"></canvas>
+        <p class="note" style="margin:0">Lower trace: ground-state energy as flux sweeps 0→3 Φ₀. The cusps where it touches zero are where the electron's angular momentum <code>l</code> jumps to the next integer — one jump per flux quantum. That period is the Aharonov–Bohm oscillation.</p>
+      </div>
+    </div>
+  </div>
+</div></section>
+
+<section id="why"><div class="wrap">
+  <div class="kick">// the mechanism</div>
+  <h2>Phase from the <em>potential,</em> not the field</h2>
+  <p>Confine an electron to a thin ring of radius <code>R</code> and only its angular motion survives. Its allowed states carry integer angular momentum <code>l = …,−1,0,+1,…</code>. Thread magnetic flux <code>Φ</code> through the hole and the electron — even in a field-free region — accumulates a quantum phase set by the enclosed flux. The energies become:</p>
+  <div class="eq">
+E<span class="t">l</span>(Φ) = <b>(ℏ² / 2m*R²)</b> · ( <span class="m">l</span> − Φ/Φ<span class="t">0</span> )²        Φ<span class="t">0</span> = h/e
+
+  • integer <span class="m">l</span> labels angular momentum
+  • the spectrum is <b>periodic in Φ₀</b> — add one flux quantum, the pattern repeats
+  • ground state hops <span class="m">l</span> → <span class="m">l</span>+1 every half flux quantum (the cusps)
+  • persistent current  I = −∂E/∂Φ  flows with <b>no battery, no resistance</b>
+  </div>
+  <p class="note">This is the textbook 1-D Aharonov–Bohm ring. The instrument evaluates it exactly: at each flux it picks the integer <code>l</code> that minimises the energy (the ground state), and the trace is that minimum vs. flux — reproducing the measured Φ₀-periodic oscillation and the persistent current that changes sign at each cusp.</p>
+</div></section>
+
+<section id="spectrum"><div class="wrap">
+  <div class="kick">// reading the fan</div>
+  <h2>A fan of <em>parabolas</em></h2>
+  <p>Each angular-momentum state <code>l</code> traces a parabola in flux, centred at <code>Φ = l·Φ₀</code>. The visible spectrum on the ring view is that whole family at once; the bright lower envelope — the lowest parabola at every flux — is the ground state, and its scalloped shape <em>is</em> the Aharonov–Bohm oscillation. Shrink the radius and every parabola steepens (energy scales as <code>1/R²</code>, the same confinement law as the dot), but the Φ₀ period never changes — it is set by fundamental constants alone, not by the ring.</p>
+  <div class="cards">
+    <div class="card"><h4>period = Φ₀</h4><p>Independent of radius, material, or temperature. h/e is a constant of nature, which is why AB oscillations are such a clean experimental fingerprint.</p></div>
+    <div class="card"><h4>cusps = level crossings</h4><p>At each half-integer flux two angular-momentum states are degenerate; the ground state switches <code>l</code>, and the persistent current reverses direction.</p></div>
+    <div class="card"><h4>1/R² envelope</h4><p>Smaller ring → larger energy scale, exactly as quantum confinement dictates. The dot's size-tuning law lives here too.</p></div>
+  </div>
+</div></section>
+
+<section id="uses"><div class="wrap">
+  <div class="kick">// why anyone cares</div>
+  <h2>The toroid earns its <em>hole</em></h2>
+  <ul class="clean">
+    <li><b>Proof that potentials are physical.</b> AB rings are the cleanest demonstration that the electromagnetic potential, not just the field, has measurable consequences in quantum mechanics — a foundational result.</li>
+    <li><b>Persistent currents.</b> A ring in a steady flux carries a dissipationless equilibrium current — measured in metal and semiconductor rings, a genuine mesoscopic phenomenon.</li>
+    <li><b>Self-assembled quantum rings.</b> InAs/GaAs rings form during epitaxial growth (Lorke, García and co-workers); their far-infrared and magneto-optical response shows the ring spectrum directly.</li>
+    <li><b>Interferometry &amp; qubits.</b> Ring geometries underlie electron interferometers and are studied as flux-tunable elements — the topology (the hole) is the working part, not incidental.</li>
+  </ul>
+</div></section>
+
+<section id="honest"><div class="wrap">
+  <div class="kick">// honesty about the model</div>
+  <h2>Where this model <em>simplifies</em></h2>
+  <ul class="clean">
+    <li><b>Strictly 1-D, single electron.</b> Real rings have finite width, radial modes, and many interacting electrons; the clean parabola fan is the idealised limit.</li>
+    <li><b>No disorder or temperature.</b> Real AB oscillations are damped by scattering and smeared by temperature; the model shows the zero-temperature, ballistic ideal.</li>
+    <li><b>No Zeeman / spin.</b> A real magnetic field also splits spin and adds a confinement (diamagnetic) shift; only the orbital AB phase is modelled here.</li>
+    <li><b>Persistent current is illustrative.</b> Computed as <code>−∂E/∂Φ</code> of the ground state; absolute magnitudes in real rings depend on the full level occupation.</li>
+  </ul>
+  <p class="note">Background: Y. Aharonov &amp; D. Bohm, "Significance of Electromagnetic Potentials in the Quantum Theory" (Phys. Rev., 1959); M. Büttiker, Y. Imry &amp; R. Landauer on persistent currents (1983); A. Lorke et al. on self-assembled InAs quantum rings (Phys. Rev. Lett., 2000).</p>
+</div></section>
+
+<footer><div class="wrap">
+  Quantum Ring · Aharonov–Bohm tuner · 1-D ring spectrum E(l,Φ) computed live, periodic in Φ₀ = h/e · teaching instrument, not lab metrology
+</div></footer>
+
+<script>
+"use strict";
+/* ---------- constants ---------- */
+const h=6.626e-34, hbar=h/(2*Math.PI), e=1.602e-19, m0=9.109e-31;
+const mstar=0.067*m0;            // GaAs effective mass
+const Phi0=h/e;                  // flux quantum (Wb)
+
+let R_nm=20, fluxRatio=0;        // Φ/Φ0
+let playing=false;
+
+const $=id=>document.getElementById(id);
+function Eprefactor(R_m){ return hbar*hbar/(2*mstar*R_m*R_m)/e*1000; } // meV
+function groundState(fr,R_m){
+  const pref=Eprefactor(R_m);
+  let bestL=Math.round(fr), bestE=pref*(bestL-fr)**2;
+  // check neighbours to be safe
+  for(const l of [Math.floor(fr),Math.ceil(fr),Math.round(fr)]){
+    const E=pref*(l-fr)**2; if(E<bestE){bestE=E;bestL=l;}
+  }
+  return {l:bestL,E:bestE,pref};
+}
+// persistent current I = -dE/dPhi ; E = pref*(l - Phi/Phi0)^2
+// dE/dPhi = pref * 2(l - Phi/Phi0) * (-1/Phi0)   [pref in meV -> J: *e/1000]
+function persistentCurrent(l,fr,R_m){
+  const pref_J=Eprefactor(R_m)*e/1000;
+  const dEdPhi = pref_J*2*(l-fr)*(-1/Phi0);   // J/Wb = A
+  return -dEdPhi/1e-9;                        // nA
+}
+
+/* ---------- ring visual ---------- */
+const ring=$("ring"), rx=ring.getContext("2d");
+let RW=0,RH=0,DPR=Math.min(devicePixelRatio||1,2);
+let particles=[];
+function fitRing(){RW=ring.clientWidth;RH=430;ring.width=RW*DPR;ring.height=RH*DPR;rx.setTransform(DPR,0,0,DPR,0,0);
+  particles=[];for(let i=0;i<48;i++)particles.push({a:Math.random()*Math.PI*2,sp:0});}
+function drawRing(t){
+  const cx=RW/2, cy=RH/2-6;
+  const Rpix=70+(R_nm-8)/(60-8)*70;     // visual ring radius
+  rx.clearRect(0,0,RW,RH);
+  // ambient field lines through the hole (only inside)
+  const gs=groundState(fluxRatio,R_nm*1e-9);
+  const fluxAmt=fluxRatio;
+  // field shading in the hole — strength ~ flux
+  const hg=rx.createRadialGradient(cx,cy,2,cx,cy,Rpix*0.78);
+  const fa=Math.min(0.7,0.12+fluxAmt*0.18);
+  hg.addColorStop(0,`rgba(255,209,102,${fa})`);
+  hg.addColorStop(1,"rgba(255,209,102,0)");
+  rx.fillStyle=hg;rx.beginPath();rx.arc(cx,cy,Rpix*0.78,0,7);rx.fill();
+  // flux "into page" markers (x) scaling with flux
+  const nMark=Math.min(24,Math.round(fluxAmt*8)+1);
+  rx.strokeStyle=`rgba(255,209,102,${0.25+fluxAmt*0.1})`;rx.lineWidth=1.2;
+  for(let i=0;i<nMark;i++){const ang=i/nMark*Math.PI*2+t*0.0002;const rr=Rpix*0.5*Math.sqrt((i%6)/6+0.1);
+    const mx=cx+Math.cos(ang)*rr,my=cy+Math.sin(ang)*rr,s=3;
+    rx.beginPath();rx.moveTo(mx-s,my-s);rx.lineTo(mx+s,my+s);rx.moveTo(mx+s,my-s);rx.lineTo(mx-s,my+s);rx.stroke();}
+  // the toroid ring — layered for 3D sheen
+  for(let i=0;i<3;i++){
+    rx.beginPath();rx.arc(cx,cy,Rpix,0,7);
+    rx.lineWidth=30-i*8;
+    const a=0.10+i*0.05;
+    rx.strokeStyle=`rgba(70,230,255,${a})`;rx.stroke();
+  }
+  // bright inner/outer edges
+  rx.beginPath();rx.arc(cx,cy,Rpix+15,0,7);rx.lineWidth=2;rx.strokeStyle="rgba(70,230,255,.5)";
+  rx.shadowColor="rgba(70,230,255,.7)";rx.shadowBlur=16;rx.stroke();rx.shadowBlur=0;
+  rx.beginPath();rx.arc(cx,cy,Rpix-15,0,7);rx.lineWidth=2;rx.strokeStyle="rgba(155,123,255,.45)";rx.stroke();
+  // probability lobes around ring: |psi|^2 ~ cos^2(l*theta) pattern for ground l
+  const l=gs.l;
+  rx.save();
+  for(let i=0;i<260;i++){
+    const th=i/260*Math.PI*2;
+    const amp=0.5+0.5*Math.cos((l||0.0001)*th*2 + t*0.001);
+    const rr=Rpix + (amp-0.5)*10;
+    const x=cx+Math.cos(th)*rr,y=cy+Math.sin(th)*rr;
+    rx.fillStyle=`rgba(255,255,255,${0.05+amp*0.18})`;
+    rx.fillRect(x-1,y-1,2,2);
+  }
+  rx.restore();
+  // orbiting electron(s): direction & speed from persistent current sign
+  const I=persistentCurrent(l,fluxRatio,R_nm*1e-9);
+  const dir=Math.sign(I)||1, speed=0.004+Math.min(0.02,Math.abs(I)*0.0006);
+  particles.forEach((p,idx)=>{
+    p.a+=dir*speed*(playing?1:0.4);
+    const x=cx+Math.cos(p.a)*Rpix, y=cy+Math.sin(p.a)*Rpix;
+    if(idx%4===0){ // a few bright leaders + tails
+      rx.fillStyle="rgba(255,255,255,.95)";rx.shadowColor="#46e6ff";rx.shadowBlur=10;
+      rx.beginPath();rx.arc(x,y,2.6,0,7);rx.fill();rx.shadowBlur=0;
+    } else {
+      rx.fillStyle="rgba(70,230,255,.5)";rx.beginPath();rx.arc(x,y,1.4,0,7);rx.fill();
+    }
+  });
+  // labels
+  rx.fillStyle="#647693";rx.font="11px 'IBM Plex Mono',monospace";rx.textAlign="center";
+  rx.fillText("Φ through the hole · electron in the (field-free) ring", cx, RH-14);
+  rx.fillStyle="#ffd166";rx.fillText("Φ = "+fluxRatio.toFixed(2)+" Φ₀", cx, 22);
+  rx.fillStyle=I>=0?"#46e6ff":"#ff5d9e";rx.textAlign="left";
+  rx.fillText((I>=0?"↻":"↺")+" I = "+I.toFixed(2)+" nA", 14, RH-14);
+}
+
+/* ---------- energy-vs-flux trace ---------- */
+const tr=$("trace"), tx=tr.getContext("2d");
+function drawTrace(){
+  const w=tr.clientWidth||420,hh=150;tr.width=w*DPR;tr.height=hh*DPR;tx.setTransform(DPR,0,0,DPR,0,0);
+  tx.clearRect(0,0,w,hh);
+  const padL=38,padR=12,padT=14,padB=24;
+  const R_m=R_nm*1e-9, pref=Eprefactor(R_m);
+  const fMax=3, eMax=pref*0.25*1.15;   // max ground energy is pref*(0.5)^2=0.25pref
+  const X=f=>padL+f/fMax*(w-padL-padR);
+  const Y=E=>hh-padB-E/eMax*(hh-padT-padB);
+  // axes
+  tx.strokeStyle="rgba(70,230,255,.18)";tx.lineWidth=1;
+  tx.beginPath();tx.moveTo(padL,padT);tx.lineTo(padL,hh-padB);tx.lineTo(w-padR,hh-padB);tx.stroke();
+  tx.fillStyle="#647693";tx.font="9px 'IBM Plex Mono',monospace";
+  tx.fillText("E (meV)",4,padT+6);
+  for(const f of [0,1,2,3]){tx.fillText(f+"Φ₀",X(f)-7,hh-padB+13);
+    tx.strokeStyle="rgba(70,230,255,.06)";tx.beginPath();tx.moveTo(X(f),padT);tx.lineTo(X(f),hh-padB);tx.stroke();}
+  // faint full parabola fan
+  for(let l=-1;l<=4;l++){tx.strokeStyle="rgba(155,123,255,.18)";tx.lineWidth=1;tx.beginPath();
+    let started=false;
+    for(let f=0;f<=fMax;f+=0.02){const E=pref*(l-f)**2;if(E>eMax){started=false;continue;}
+      const px=X(f),py=Y(E);started?tx.lineTo(px,py):tx.moveTo(px,py);started=true;}
+    tx.stroke();}
+  // ground-state envelope (bright)
+  tx.strokeStyle="#46e6ff";tx.lineWidth=2.4;tx.beginPath();
+  for(let f=0;f<=fMax;f+=0.01){const g=groundState(f,R_m);const px=X(f),py=Y(g.E);
+    f===0?tx.moveTo(px,py):tx.lineTo(px,py);}
+  tx.shadowColor="rgba(70,230,255,.6)";tx.shadowBlur=8;tx.stroke();tx.shadowBlur=0;
+  // current marker
+  const g=groundState(fluxRatio,R_m);
+  tx.fillStyle="#ffd166";tx.beginPath();tx.arc(X(fluxRatio),Y(g.E),4.5,0,7);
+  tx.shadowColor="#ffd166";tx.shadowBlur=10;tx.fill();tx.shadowBlur=0;
+}
+
+/* ---------- readouts ---------- */
+function sync(){
+  const R_m=R_nm*1e-9;
+  const g=groundState(fluxRatio,R_m);
+  const I=persistentCurrent(g.l,fluxRatio,R_m);
+  $("v-flux").textContent=fluxRatio.toFixed(2);
+  $("v-R").textContent=R_nm+" nm";
+  $("mat-tag").textContent="GaAs · R="+R_nm+" nm";
+  $("o-l").textContent=(g.l>=0?"+":"")+g.l;
+  $("o-E").textContent=g.E.toFixed(3)+" meV";
+  $("o-I").textContent=I.toFixed(2)+" nA";
+}
+
+/* ---------- loop ---------- */
+function frame(t){
+  if(playing){ fluxRatio+=0.006; if(fluxRatio>3)fluxRatio=0;
+    $("s-flux").value=Math.round(fluxRatio*100); }
+  drawRing(t); sync(); drawTrace();
+  requestAnimationFrame(frame);
+}
+
+/* ---------- controls ---------- */
+$("s-flux").addEventListener("input",e=>{fluxRatio=(+e.target.value)/100;playing=false;setPlay();});
+$("s-R").addEventListener("input",e=>{R_nm=+e.target.value;});
+document.querySelectorAll(".chip[data-f]").forEach(c=>c.addEventListener("click",()=>{
+  fluxRatio=(+c.dataset.f)/100;$("s-flux").value=c.dataset.f;playing=false;setPlay();}));
+function setPlay(){$("chip-play").textContent=playing?"⏸ pause":"▶ sweep field";
+  $("chip-play").style.color=playing?"#ff5d9e":"";}
+$("chip-play").addEventListener("click",()=>{playing=!playing;setPlay();});
+addEventListener("resize",()=>{fitRing();drawTrace();});
+fitRing();requestAnimationFrame(frame);
+</script>
+</body>
+</html>

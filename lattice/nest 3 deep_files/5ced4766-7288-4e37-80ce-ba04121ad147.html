@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<!-- saved from url=(0165)https://1339660338017575.a.metaaiusercontent.com/html?artifact_uuid=5ced4766-7288-4e37-80ce-ba04121ad147&ext=1779550620&hash=Q5fpDAEq3JHN_FNhx-0As8sVcVXA&theme=light -->
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Whisper Lattice — 32-Bit Nested 2^5</title>
+<style>
+:root{
+  --bg:#030305; --panel:#0b0e14cc; --border:#1f242e;
+  --text:#e5e7eb; --muted:#9ca3af; --cyan:#22d3ee; --cyan2:#67e8f9; --pink:#f472b6;
+}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{
+  margin:0; color:var(--text);
+  background:
+    radial-gradient(1200px 800px at 80% -20%, #0a1230 0%, transparent 60%),
+    radial-gradient(900px 600px at 10% 120%, #0f172a 0%, transparent 50%),
+    var(--bg);
+  font-family:Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;
+  -webkit-font-smoothing:antialiased;
+}
+header{
+  position:sticky; top:0; z-index:40; backdrop-filter:blur(10px);
+  background:linear-gradient(to bottom, rgba(3,3,5,.88), rgba(3,3,5,.55));
+  border-bottom:1px solid #12151f;
+}
+.container{max-width:1280px; margin:0 auto; padding:0 16px}
+.header-inner{display:flex; align-items:center; justify-content:space-between; gap:16px; padding:14px 0}
+h1{margin:0; font-size:clamp(18px,2.6vw,26px); letter-spacing:.08em; font-weight:700}
+.title p{margin:3px 0 0; font-size:11px; letter-spacing:.14em; color:var(--muted); text-transform:uppercase}
+.badge{font-size:10px; padding:3px 8px; border-radius:999px; border:1px solid #0e3a47; color:#7dd3fc; background:#08252e; letter-spacing:.08em}
+.status-pills{display:flex; gap:8px}
+.status-pills span{
+  font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  font-size:12px; padding:6px 10px; border-radius:10px;
+  background:#090b12; border:1px solid #1c2331; color:#a5f3fc;
+}
+main{padding:20px 0 60px}
+.grid{display:grid; gap:16px; grid-template-columns:1fr}
+@media(min-width:1080px){.grid{grid-template-columns:1.42fr .98fr; align-items:start}}
+.card{
+  background:linear-gradient(180deg, rgba(14,17,24,.88), rgba(9,11,16,.88));
+  border:1px solid var(--border); border-radius:18px; padding:14px;
+  box-shadow:0 10px 30px rgba(0,0,0,.35), inset 0 1px 0 rgba(255,255,255,.02);
+}
+.viz-head{display:flex; align-items:center; justify-content:space-between; font-size:11px; color:#717a8a; text-transform:uppercase; letter-spacing:.12em; margin:2px 2px 10px}
+.viz-head span:last-child{font-family:ui-monospace; color:#7dd3fc}
+.svg-wrap{
+  position:relative; width:100%; aspect-ratio:1/1; max-width:720px; margin:0 auto;
+  background:radial-gradient(closest-side, #0a0f1c 0%, #05070c 70%, #020308 100%);
+  border-radius:22px; border:1px solid #111827; overflow:hidden;
+}
+#latticeSvg{width:100%; height:100%; display:block}
+.viz-labels{position:absolute; left:10px; right:10px; bottom:10px; display:flex; flex-wrap:wrap; gap:6px; pointer-events:none}
+.viz-labels>div{font-size:10px; letter-spacing:.08em; color:#64748b; background:rgba(2,6,12,.6); border:1px solid #0f172a; padding:3px 7px; border-radius:8px; backdrop-filter:blur(4px)}
+.control-group{margin:2px 0 18px}
+.control-group h3{margin:0 0 10px; font-size:11px; font-weight:600; letter-spacing:.14em; text-transform:uppercase; color:#9aa3b2}
+.row{display:flex; align-items:center; gap:10px; margin:9px 0}
+.row label{width:58px; flex:0 0 58px; font-size:12px; color:#cbd5e1}
+.row input[type=range]{-webkit-appearance:none; appearance:none; width:100%; height:22px; background:transparent; flex:1}
+.row input[type=range]::-webkit-slider-runnable-track{height:4px; background:#111827; border:1px solid #1f2937; border-radius:999px}
+.row input[type=range]::-webkit-slider-thumb{-webkit-appearance:none; width:16px; height:16px; margin-top:-7px; border-radius:50%; background:#0e1b26; border:1px solid #22d3ee; box-shadow:0 0 10px rgba(34,211,238,.35)}
+.row input[type=range]::-moz-range-track{height:4px; background:#111827; border:1px solid #1f2937; border-radius:999px}
+.row input[type=range]::-moz-range-thumb{width:14px; height:14px; border-radius:50%; background:#0e1b26; border:1px solid #22d3ee}
+.value{width:56px; text-align:right; font-family:ui-monospace; font-size:11px; color:#7dd3fc}
+.btns{display:flex; gap:8px; flex-wrap:wrap}
+button{
+  appearance:none; border:1px solid #1f2937; background:#0a0f18; color:#d1d5db;
+  padding:7px 11px; border-radius:10px; font-size:12px; letter-spacing:.02em; cursor:pointer; transition:.15s;
+}
+button:hover{border-color:#295260; color:#fff; transform:translateY(-1px)}
+button.active{border-color:#22d3ee; background:#08222b; color:#a5f3fc; box-shadow:0 0 18px rgba(34,211,238,.18) inset}
+.toggle{display:inline-flex; align-items:center; gap:8px; cursor:pointer; user-select:none}
+.toggle input{display:none}
+.toggle .sw{width:38px; height:22px; border-radius:999px; background:#0b111a; border:1px solid #1f2937; position:relative; transition:.2s}
+.toggle .sw::after{content:''; position:absolute; top:2px; left:2px; width:16px; height:16px; border-radius:50%; background:#334155; transition:.2s}
+.toggle input:checked + .sw{background:#08232c; border-color:#155e75}
+.toggle input:checked + .sw::after{left:18px; background:#22d3ee; box-shadow:0 0 10px rgba(34,211,238,.6)}
+.teach-display{font-family:ui-monospace; font-size:22px; letter-spacing:.22em; color:#a5f3fc; background:#050a10; border:1px solid #0f1f2a; border-radius:12px; padding:8px 12px; text-align:center; min-width:110px}
+.ternary{display:grid; grid-template-columns:repeat(8,1fr); gap:5px}
+.ternary span{display:flex; align-items:center; justify-content:center; aspect-ratio:1; font-family:ui-monospace; font-size:11px; border-radius:7px; background:#070b13; border:1px solid #121a27; color:#475569; transition:.15s}
+.ternary span.s1{color:#f59e0b; border-color:#7c2d12; background:#1c1404; box-shadow:0 0 10px rgba(245,158,11,.18) inset}
+.ternary span.s-1{color:#a78bfa; border-color:#4c1d95; background:#11051e; box-shadow:0 0 10px rgba(167,139,250,.16) inset}
+.log{height:118px; overflow:auto; background:#04060a; border:1px solid #0f172a; border-radius:12px; padding:8px 10px; font-family:ui-monospace; font-size:11px; line-height:1.5; color:#8a94a6}
+.log div{white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
+.log div:first-child{color:#a5f3fc}
+.vest{display:grid; grid-template-columns:repeat(9,1fr); gap:4px}
+.vest div{aspect-ratio:1; border-radius:5px; background:#070a11; border:1px solid #121a27; transition:.25s}
+.vest div.v1{background:#3d2605; border-color:#92400e; box-shadow:0 0 8px rgba(245,158,11,.28)}
+.vest div.-1{background:#1e0b2e; border-color:#5b21b6; box-shadow:0 0 8px rgba(167,139,250,.24)}
+.note{font-size:11px; color:#64748b; margin-top:6px}
+hr.sep{border:none; height:1px; background:linear-gradient(to right, transparent, #1f2937, transparent); margin:14px 0}
+.l1-dot,.l2-dot,.l3-dot{transition:opacity .15s linear, r .18s ease}
+@media(max-width:640px){.status-pills span{padding:5px 8px; font-size:11px} .teach-display{font-size:18px}}
+</style>
+</head>
+<body>
+<header>
+  <div class="container header-inner">
+    <div class="title">
+      <div style="display:flex;align-items:center;gap:10px">
+        <h1>WHISPER LATTICE</h1>
+        <span class="badge">OFFLINE</span>
+      </div>
+      <p>32-BIT NESTED LATTICE // 2^5 • BALANCED TERNARY</p>
+    </div>
+    <div class="status-pills">
+      <span id="statusN">N 1.24</span>
+      <span id="statusPhi">Φ 0.00</span>
+    </div>
+  </div>
+</header>
+
+<main class="container">
+  <div class="grid">
+    <div>
+      <section class="card">
+        <div class="viz-head">
+          <span>1 → 4 → 16 → 11 TERNARY</span>
+          <span id="harmonizerRead">H 1.00×</span>
+        </div>
+        <div class="svg-wrap">
+          <svg id="latticeSvg" viewBox="-220 -220 440 440" aria-label="32-bit nested lattice"><defs>
+      <radialgradient id="rg"><stop offset="0%" stop-color="#0b1e2a" stop-opacity=".95"></stop><stop offset="55%" stop-color="#070d16" stop-opacity=".7"></stop><stop offset="100%" stop-color="#02040a" stop-opacity="0"></stop></radialgradient>
+      <filter id="glowR" x="-50%" y="-50%" width="200%" height="200%"><fegaussianblur stdDeviation="14" result="b"></fegaussianblur><femerge><femergenode in="b"></femergenode><femergenode in="SourceGraphic"></femergenode></femerge></filter>
+      <filter id="glow1" x="-50%" y="-50%" width="200%" height="200%"><fegaussianblur stdDeviation="5"></fegaussianblur></filter>
+    </defs><g><circle r="200" fill="url(#rg)" stroke="#0d1724" stroke-width="1"></circle><circle id="rootPulse" r="188" fill="none" stroke="#22d3ee" stroke-width="5.08" opacity="0.661" filter="url(#glowR)"></circle><circle id="rootDot" r="176" fill="#03070e" stroke="#22d3ee" stroke-width="1.50" opacity="0.900"></circle></g><g transform="translate(-83,-83)"><circle r="66" fill="#070c15" stroke="#13202e" stroke-width="1" opacity=".35"></circle><circle r="58.00" fill="#0a1320" stroke="#22d3ee" stroke-width="1.4" opacity="0.421" class="l1-dot"></circle></g><g transform="translate(83,-83)"><circle r="66" fill="#070c15" stroke="#13202e" stroke-width="1" opacity=".35"></circle><circle r="19.50" fill="#0a1320" stroke="#22d3ee" stroke-width="1.4" opacity="0.222" class="l1-dot"></circle></g><g transform="translate(83,83)"><circle r="66" fill="#070c15" stroke="#13202e" stroke-width="1" opacity=".35"></circle><circle r="21.35" fill="#0a1320" stroke="#22d3ee" stroke-width="1.4" opacity="0.211" class="l1-dot"></circle></g><g transform="translate(-83,83)"><circle r="66" fill="#070c15" stroke="#13202e" stroke-width="1" opacity=".35"></circle><circle r="21.33" fill="#0a1320" stroke="#22d3ee" stroke-width="1.4" opacity="0.265" class="l1-dot"></circle></g><g><circle cx="1.255262969126037e-14" cy="-205" r="4.90" fill="#0a101c" stroke="#22d3ee" stroke-width=".9" opacity="0.380" class="l3-dot"></circle><circle cx="110.83136757839752" cy="-172.45697423039212" r="4.90" fill="#0a101c" stroke="#22d3ee" stroke-width=".9" opacity="0.380" class="l3-dot"></circle><circle cx="186.47455904767628" cy="-85.16007766538671" r="4.90" fill="#0a101c" stroke="#22d3ee" stroke-width=".9" opacity="0.380" class="l3-dot"></circle><circle cx="202.91339558559122" cy="29.174541846023438" r="4.90" fill="#0a101c" stroke="#22d3ee" stroke-width=".9" opacity="0.380" class="l3-dot"></circle><circle cx="154.92866274262295" cy="134.24645045878344" r="4.90" fill="#0a101c" stroke="#22d3ee" stroke-width=".9" opacity="0.380" class="l3-dot"></circle><circle cx="57.75517415249307" cy="196.69605959097197" r="4.90" fill="#0a101c" stroke="#22d3ee" stroke-width=".9" opacity="0.380" class="l3-dot"></circle><circle cx="-57.75517415249303" cy="196.69605959097197" r="4.90" fill="#0a101c" stroke="#22d3ee" stroke-width=".9" opacity="0.380" class="l3-dot"></circle><circle cx="-154.92866274262292" cy="134.24645045878347" r="5.59" fill="#0a101c" stroke="#f59e0b" stroke-width=".9" opacity="0.880" class="l3-dot" filter="url(#glow1)"></circle><circle cx="-202.9133955855912" cy="29.17454184602346" r="4.90" fill="#0a101c" stroke="#22d3ee" stroke-width=".9" opacity="0.380" class="l3-dot"></circle><circle cx="-186.4745590476763" cy="-85.16007766538665" r="5.59" fill="#0a101c" stroke="#f59e0b" stroke-width=".9" opacity="0.880" class="l3-dot" filter="url(#glow1)"></circle><circle cx="-110.83136757839748" cy="-172.45697423039215" r="4.02" fill="#0a101c" stroke="#a78bfa" stroke-width=".9" opacity="0.880" class="l3-dot" filter="url(#glow1)"></circle></g></svg>
+          <div class="viz-labels">
+            <div>ROOT • MSB TRIT</div>
+            <div>L1×4 • TRITS 1-4</div>
+            <div>L2×16 • TRITS 5-20</div>
+            <div>OUTER×11 • TRITS 21-31</div>
+          </div>
+        </div>
+      </section>
+
+      <section class="card" style="margin-top:16px">
+        <div class="control-group">
+          <h3>Convergence Log</h3>
+          <div id="convLog" class="log"><div>[10:42:18 AM] trit +1 → 29</div><div>[10:42:17 AM] trit +1 → 28</div><div>[10:42:17 AM] trit +1 → 27</div><div>[10:42:16 AM] trit +1 → 26</div><div>[10:42:15 AM] trit +1 → 25</div><div>[10:42:15 AM] trit +1 → 24</div><div>[10:42:14 AM] trit +1 → 23</div><div>[10:42:13 AM] trit +1 → 22</div><div>[10:42:12 AM] trit +1 → 21</div><div>[10:42:11 AM] trit +1 → 20</div><div>[10:42:11 AM] trit +1 → 19</div><div>[10:42:10 AM] trit +1 → 18</div><div>[10:42:09 AM] trit +1 → 17</div><div>[10:42:09 AM] trit +1 → 16</div><div>[10:42:08 AM] trit +1 → 15</div><div>[10:42:07 AM] ✓ converged N=1.240 Φ=0.003</div><div>[10:42:07 AM] trit +1 → 14</div><div>[10:41:37 AM] trit +1 → 13</div><div>[10:41:37 AM] trit +1 → 12</div><div>[10:41:36 AM] trit +1 → 11</div><div>[10:41:35 AM] trit +1 → 10</div><div>[10:41:34 AM] trit +1 → 9</div><div>[10:41:34 AM] trit +1 → 8</div><div>[10:41:33 AM] trit +1 → 7</div><div>[10:41:32 AM] trit +1 → 6</div><div>[10:41:32 AM] trit +1 → 5</div><div>[10:41:31 AM] trit +1 → 4</div><div>[10:41:30 AM] trit +1 → 3</div><div>[10:41:30 AM] trit +1 → 2</div><div>[10:41:29 AM] trit +1 → 1</div><div>[10:37:02 AM] root=MSB • L1×4 • L2×16 • OUTER×11 • counting on 5-4-3-2-1-0-0</div><div>[10:37:02 AM] lattice initialized • 32-trit balanced ternary</div></div>
+          <div class="note">Logs trit increments and dN/dt &amp; dΦ/dt &lt; 0.002 sustained</div>
+        </div>
+      </section>
+    </div>
+
+    <div>
+      <section class="card">
+        <div class="control-group">
+          <h3>Laser Core • rate equations</h3>
+          <div class="row"><label>Pump</label><input id="pump" type="range" min="0" max="2" step="0.01"><span class="value" id="pumpVal">0.78</span></div>
+          <div class="row"><label>B</label><input id="bcoeff" type="range" min="0" max="3" step="0.01"><span class="value" id="bcoeffVal">1.28</span></div>
+          <div class="row"><label>τN</label><input id="tauN" type="range" min="0.2" max="3" step="0.01"><span class="value" id="tauNVal">1.60</span></div>
+          <div class="row"><label>τΦ</label><input id="tauPhi" type="range" min="0.02" max="0.5" step="0.001"><span class="value" id="tauPhiVal">0.140</span></div>
+          <hr class="sep">
+          <div class="row"><label>Harm</label><input id="harm" type="range" min="0.01" max="5" step="0.01"><span class="value" id="harmVal">1.00</span></div>
+          <div class="btns"><button id="harmInf">∞ INF</button><button id="harmReset">1× Reset</button></div>
+          <div class="note">dN/dt = Pump − N/τN − B·N·Φ &nbsp; | &nbsp; dΦ/dt = B·N·Φ − Φ/τΦ + β·N/τN</div>
+        </div>
+      </section>
+
+      <section class="card">
+        <div class="control-group">
+          <h3>Teaching Mode • 5-4-3-2-1-0-0</h3>
+          <div class="row" style="justify-content:space-between">
+            <label class="toggle"><input id="teachToggle" type="checkbox" checked=""><span class="sw"></span><span>Enable</span></label>
+            <div class="teach-display" id="teachDisplay">0</div>
+          </div>
+          <div class="row"><label>Speed</label><input id="teachSpeed" type="range" min="0.2" max="3" step="0.1"><span class="value" id="teachSpeedVal">1.0×</span></div>
+          <div class="note">Each pulse increments 32-trit counter by +1 in balanced ternary</div>
+        </div>
+      </section>
+
+      <section class="card">
+        <div class="control-group">
+          <h3>Ternary Planck • 1 · 0 · ‾1 (32-bit)</h3>
+          <div style="display:flex;gap:8px;align-items:center;margin:0 0 8px">
+            <div id="tritString" class="teach-display" style="flex:1;font-size:11px;letter-spacing:.06em;padding:6px 8px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">00000000 00000000 00000000 0000+0+-</div>
+            <div style="font-family:ui-monospace;font-size:11px;color:#7dd3fc;background:#050a10;border:1px solid #0f1f2a;border-radius:10px;padding:6px 10px;white-space:nowrap">Count: <span id="tritCount">29</span></div>
+          </div>
+          <div id="ternaryGrid" class="ternary"><span class="">0</span><span class="">0</span><span class="">0</span><span class="">0</span><span class="">0</span><span class="">0</span><span class="">0</span><span class="">0</span><span class="">0</span><span class="">0</span><span class="">0</span><span class="">0</span><span class="">0</span><span class="">0</span><span class="">0</span><span class="">0</span><span class="">0</span><span class="">0</span><span class="">0</span><span class="">0</span><span class="">0</span><span class="">0</span><span class="">0</span><span class="">0</span><span class="">0</span><span class="">0</span><span class="">0</span><span class="">0</span><span class="s1">+</span><span class="">0</span><span class="s1">+</span><span class="s-1">−</span></div>
+          <div class="btns" style="margin-top:10px">
+            <button id="btnRand">Randomize</button>
+            <button id="btnCycle">Cycle</button>
+            <button id="btnZero">Zero</button>
+          </div>
+          <div class="note">32 trits drive lattice • first 27 drive vestibules • +1 amber • 0 cyan • -1 violet</div>
+        </div>
+      </section>
+
+      <section class="card">
+        <div class="control-group">
+          <h3>d0 Foundation • 27 Vestibules (3³)</h3>
+          <div id="vest" class="vest"><div class=""></div><div class=""></div><div class=""></div><div class=""></div><div class=""></div><div class=""></div><div class=""></div><div class=""></div><div class=""></div><div class=""></div><div class=""></div><div class=""></div><div class=""></div><div class=""></div><div class=""></div><div class=""></div><div class=""></div><div class=""></div><div class=""></div><div class=""></div><div class=""></div><div class=""></div><div class=""></div><div class=""></div><div class=""></div><div class=""></div><div class=""></div></div>
+          <div class="note">Vestibules driven by trits 0-26: +1=above Planck, 0=at, -1=below</div>
+        </div>
+      </section>
+    </div>
+  </div>
+</main>
+
+<script>
+(()=>{ 
+  const svgNS = "http://www.w3.org/2000/svg";
+  const l1Dots=[], l2Dots=[], l3Dots=[], vestEls=[], dotMap=[];
+  const state = {
+    N:0.35, phi:0.22,
+    pump:0.78, B:1.28, tauN:1.6, tauPhi:0.14, beta:0.018,
+    harmonizer:1.0,
+    teachOn:true, teachSpeed:1.0, teachStep:5, teachTimer:0,
+    ternary: Array(32).fill(0),
+    count: 0n,
+    lastStable:0, cycleMode:0,
+    rippleAnim:0
+  };
+
+  function tritsToCount(trits){ let n=0n; for(const t of trits){ n = n*3n + BigInt(t); } return n; }
+
+  function initLattice(){
+    const svg = document.getElementById('latticeSvg');
+    const defs = document.createElementNS(svgNS,'defs');
+    defs.innerHTML = `
+      <radialGradient id="rg"><stop offset="0%" stop-color="#0b1e2a" stop-opacity=".95"/><stop offset="55%" stop-color="#070d16" stop-opacity=".7"/><stop offset="100%" stop-color="#02040a" stop-opacity="0"/></radialGradient>
+      <filter id="glowR" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="14" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+      <filter id="glow1" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="5"/></filter>
+    `;
+    svg.appendChild(defs);
+    const g0 = document.createElementNS(svgNS,'g');
+    const bg = document.createElementNS(svgNS,'circle'); bg.setAttribute('r','200'); bg.setAttribute('fill','url(#rg)'); bg.setAttribute('stroke','#0d1724'); bg.setAttribute('stroke-width','1'); g0.appendChild(bg);
+    const pulse = document.createElementNS(svgNS,'circle'); pulse.setAttribute('id','rootPulse'); pulse.setAttribute('r','188'); pulse.setAttribute('fill','none'); pulse.setAttribute('stroke','#22d3ee'); pulse.setAttribute('stroke-width','2'); pulse.setAttribute('opacity','0.18'); pulse.setAttribute('filter','url(#glowR)'); g0.appendChild(pulse);
+    const root = document.createElementNS(svgNS,'circle'); root.setAttribute('id','rootDot'); root.setAttribute('r','176'); root.setAttribute('fill','#03070e'); root.setAttribute('stroke','#22d3ee'); root.setAttribute('stroke-width','1.4'); root.setAttribute('opacity','0.9'); g0.appendChild(root);
+    svg.appendChild(g0);
+    dotMap[0]=root;
+
+    const l1Pos = [[-83,-83],[83,-83],[83,83],[-83,83]];
+    let idx=1;
+    l1Pos.forEach(p=>{
+      const g1 = document.createElementNS(svgNS,'g'); g1.setAttribute('transform',`translate(${p[0]},${p[1]})`);
+      const c1b = document.createElementNS(svgNS,'circle'); c1b.setAttribute('r','66'); c1b.setAttribute('fill','#070c15'); c1b.setAttribute('stroke','#13202e'); c1b.setAttribute('stroke-width','1'); c1b.setAttribute('opacity','.35'); g1.appendChild(c1b);
+      const c1 = document.createElementNS(svgNS,'circle'); c1.setAttribute('r','58'); c1.setAttribute('fill','#0a1320'); c1.setAttribute('stroke','#67e8f9'); c1.setAttribute('stroke-width','1.4'); c1.setAttribute('filter','url(#glow1)'); c1.setAttribute('opacity','.85'); c1.classList.add('l1-dot'); g1.appendChild(c1); l1Dots.push(c1); dotMap[idx++]=c1;
+      const l2Pos=[[-27,-27],[27,-27],[27,27],[-27,27]];
+      l2Pos.forEach(p2=>{
+        const g2 = document.createElementNS(svgNS,'g'); g2.setAttribute('transform',`translate(${p2[0]},${p2[1]})`);
+        const c2b = document.createElementNS(svgNS,'circle'); c2b.setAttribute('r','23.5'); c2b.setAttribute('fill','#080e18'); c2b.setAttribute('stroke','#1a2535'); c2b.setAttribute('stroke-width','.8'); c2b.setAttribute('opacity','.3'); g2.appendChild(c2b);
+        const c2 = document.createElementNS(svgNS,'circle'); c2.setAttribute('r','19.5'); c2.setAttribute('fill','#0c1624'); c2.setAttribute('stroke','#a5f3fc'); c2.setAttribute('stroke-width','1'); c2.setAttribute('opacity','.8'); c2.classList.add('l2-dot'); g2.appendChild(c2); l2Dots.push(c2); dotMap[idx++]=c2;
+      });
+      svg.appendChild(g1);
+    });
+    // outer ring for remaining 11 trits (indices 21-31)
+    const outerG = document.createElementNS(svgNS,'g');
+    for(let i=0;i<11;i++){
+      const angle = -Math.PI/2 + i * 2*Math.PI/11;
+      const r = 205;
+      const x = r*Math.cos(angle);
+      const y = r*Math.sin(angle);
+      const c3=document.createElementNS(svgNS,'circle'); c3.setAttribute('cx',x); c3.setAttribute('cy',y); c3.setAttribute('r','4.9'); c3.setAttribute('fill','#0a101c'); c3.setAttribute('stroke','#475569'); c3.setAttribute('stroke-width','.9'); c3.setAttribute('opacity','0.75'); c3.classList.add('l3-dot'); outerG.appendChild(c3); l3Dots.push(c3); dotMap[idx++]=c3;
+    }
+    svg.appendChild(outerG);
+  }
+
+  function initVest(){
+    const v=document.getElementById('vest');
+    for(let i=0;i<27;i++){ const d=document.createElement('div'); v.appendChild(d); vestEls.push(d); }
+  }
+
+  function updateTernaryUI(){
+    const wrap=document.getElementById('ternaryGrid'); wrap.innerHTML='';
+    state.ternary.forEach(val=>{
+      const s=document.createElement('span');
+      s.textContent = val===1?'+':val===-1?'−':'0';
+      s.className = val===1?'s1':val===-1?'s-1':'';
+      wrap.appendChild(s);
+    });
+    const tritStr = state.ternary.map(t=> t===1?'+':t===-1?'-':'0').join('');
+    const pretty = tritStr.replace(/(.{8})/g,'$1 ').trim();
+    document.getElementById('tritString').textContent = pretty;
+    document.getElementById('tritCount').textContent = state.count.toString();
+  }
+
+  function logConverge(msg){
+    const el=document.getElementById('convLog');
+    const time=new Date().toLocaleTimeString();
+    const div=document.createElement('div'); div.textContent=`[${time}] ${msg}`;
+    el.prepend(div);
+    while(el.children.length>90) el.removeChild(el.lastChild);
+  }
+
+  function incrementTrits(){
+    let carry=1;
+    for(let i=31;i>=0 && carry!==0;i--){
+      const sum = state.ternary[i] + carry;
+      if(sum>1){ state.ternary[i] = -1; carry=1; }
+      else if(sum<-1){ state.ternary[i]=1; carry=-1; }
+      else { state.ternary[i]=sum; carry=0; }
+    }
+    state.count = tritsToCount(state.ternary);
+    state.rippleAnim = 1.0;
+    updateTernaryUI();
+    logConverge(`trit +1 → ${state.count}`);
+    const payload = {type:"trit_increment", count: state.count.toString(), trits:[...state.ternary], scale: state.ternary.slice(0,27)};
+    console.log('BRIDGE POST', payload);
+    try{ fetch('/bridge', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(payload)}).catch(()=>{}); }catch(e){}
+  }
+
+  function bindControls(){
+    const $=id=>document.getElementById(id);
+    const set=(id,key,fmt=v=>v)=>{
+      const el=$(id); el.value=state[key]; $(id+'Val').textContent=fmt(state[key]);
+      el.addEventListener('input',e=>{ state[key]=parseFloat(e.target.value); $(id+'Val').textContent=fmt(state[key]); });
+    };
+    set('pump','pump',v=>v.toFixed(2));
+    set('bcoeff','B',v=>v.toFixed(2));
+    set('tauN','tauN',v=>v.toFixed(2));
+    set('tauPhi','tauPhi',v=>v.toFixed(3));
+    set('harm','harmonizer',v=>v.toFixed(2));
+    set('teachSpeed','teachSpeed',v=>v.toFixed(1)+'×');
+
+    $('harm').addEventListener('input',()=>{ $('harmonizerRead').textContent='H '+state.harmonizer.toFixed(2)+'×'; $('harmInf').classList.remove('active'); });
+    $('harmInf').onclick=()=>{ state.harmonizer=100; $('harmVal').textContent='INF'; $('harmonizerRead').textContent='H INF'; $('harmInf').classList.add('active'); };
+    $('harmReset').onclick=()=>{ state.harmonizer=1; $('harm').value=1; $('harmVal').textContent='1.00'; $('harmonizerRead').textContent='H 1.00×'; $('harmInf').classList.remove('active'); };
+
+    $('teachToggle').checked=state.teachOn;
+    $('teachToggle').addEventListener('change',e=>state.teachOn=e.target.checked);
+
+    $('btnRand').onclick=()=>{ state.ternary=Array(32).fill(0).map(()=>[-1,0,1][Math.floor(Math.random()*3)]); state.count=tritsToCount(state.ternary); state.rippleAnim=1; updateTernaryUI(); logConverge('ternary randomized'); };
+    $('btnZero').onclick=()=>{ state.ternary=Array(32).fill(0); state.count=0n; state.rippleAnim=1; updateTernaryUI(); logConverge('ternary zeroed'); };
+    $('btnCycle').onclick=()=>{
+      state.cycleMode=(state.cycleMode+1)%4;
+      const pats=[[1,1,1],[0,0,0],[-1,-1,-1],[1,0,-1]];
+      const pat=pats[state.cycleMode];
+      state.ternary=Array(32).fill(0).map((_,i)=>pat[i%pat.length]);
+      state.count=tritsToCount(state.ternary); state.rippleAnim=1; updateTernaryUI(); logConverge('ternary cycle '+['all+1','all0','all-1','wave'][state.cycleMode]);
+    };
+  }
+
+  let last=performance.now();
+  function tick(now){
+    const dt=Math.min(0.033,(now-last)/1000); last=now;
+    const h=state.harmonizer; const step=dt*h;
+    const dN = state.pump - state.N/state.tauN - state.B*state.N*state.phi;
+    const dPhi = state.B*state.N*state.phi - state.phi/state.tauPhi + state.beta*state.N/state.tauN;
+    state.N = Math.max(0,Math.min(2.5, state.N + dN*step));
+    state.phi = Math.max(0,Math.min(2.5, state.phi + dPhi*step));
+
+    const rp=document.getElementById('rootPulse'); const n=Math.min(1.5,state.N);
+    rp.setAttribute('opacity',(0.14+n*0.42).toFixed(3)); rp.setAttribute('stroke-width',(1.6+n*2.8).toFixed(2));
+
+    if(state.teachOn){
+      state.teachTimer+=dt*state.teachSpeed;
+      if(state.teachTimer>0.68){ state.teachTimer=0; const seq=[5,4,3,2,1,0,0]; const idx=seq.indexOf(state.teachStep); state.teachStep=seq[(idx+1)%seq.length]; document.getElementById('teachDisplay').textContent=state.teachStep; incrementTrits(); }
+    }
+    const tv=state.teachStep/5;
+
+    if(state.rippleAnim>0) state.rippleAnim = Math.max(0, state.rippleAnim - dt*1.8);
+    const colors = {1:'#f59e0b',0:'#22d3ee','-1':'#a78bfa'};
+    dotMap.forEach((dot,i)=>{
+      if(!dot) return;
+      const trit = state.ternary[i];
+      const col = colors[trit];
+      dot.setAttribute('stroke', col);
+      if(i===0){
+        const sw = trit===1?2.6:trit===-1?0.9:1.5;
+        dot.setAttribute('stroke-width', sw.toFixed(2));
+        dot.setAttribute('opacity', (0.5 + 0.4*Math.min(1,state.N)).toFixed(3));
+        if(trit!==0) dot.setAttribute('filter','url(#glow1)'); else dot.removeAttribute('filter');
+        return;
+      }
+      let baseR = i<=4?58: i<=20?19.5:4.9;
+      const scale = trit===1?1.14:trit===-1?0.82:1.0;
+      let boost=0;
+      if(state.rippleAnim>0){
+        const wavePos = (31-i)/31;
+        const dist = Math.abs(state.rippleAnim - wavePos);
+        boost = Math.max(0, 0.28 - dist*1.4) * state.rippleAnim;
+      }
+      dot.setAttribute('r', (baseR*(scale+boost)).toFixed(2));
+      let op = 0.72;
+      if(i<=4) op = 0.42 + 0.54*Math.min(1,state.phi)*(0.85 + 0.15*Math.abs(trit));
+      else if(i<=20) op = (0.32 + 0.62*tv)*(0.8 + 0.2*Math.abs(trit)) + 0.05*Math.sin(now*0.0018+i);
+      else op = 0.38 + 0.5*Math.abs(trit);
+      dot.setAttribute('opacity', Math.max(0.18, Math.min(0.97, op)).toFixed(3));
+      if(trit!==0) dot.setAttribute('filter','url(#glow1)'); else dot.removeAttribute('filter');
+    });
+
+    // vestibules driven by first 27 trits
+    vestEls.forEach((el,i)=>{ const s = state.ternary[i] ?? 0; el.className = s===1?'v1': s===-1?'-1':''; });
+
+    const stable=Math.abs(dN)<0.0018 && Math.abs(dPhi)<0.0018;
+    state.lastStable = stable?state.lastStable+1:0;
+    if(state.lastStable===90) logConverge(`✓ converged N=${state.N.toFixed(3)} Φ=${state.phi.toFixed(3)}`);
+
+    document.getElementById('statusN').textContent=`N ${state.N.toFixed(2)}`;
+    document.getElementById('statusPhi').textContent=`Φ ${state.phi.toFixed(2)}`;
+    requestAnimationFrame(tick);
+  }
+
+  window.addEventListener('DOMContentLoaded',()=>{
+    initLattice(); initVest(); bindControls(); state.count = tritsToCount(state.ternary); updateTernaryUI();
+    document.getElementById('harmonizerRead').textContent='H 1.00×';
+    logConverge('lattice initialized • 32-trit balanced ternary');
+    logConverge('root=MSB • L1×4 • L2×16 • OUTER×11 • counting on 5-4-3-2-1-0-0');
+    requestAnimationFrame(tick);
+  });
+})();
+</script>
+
+</body></html>

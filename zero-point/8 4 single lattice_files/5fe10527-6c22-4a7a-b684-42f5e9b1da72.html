@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<!-- saved from url=(0165)https://2365080937230727.a.metaaiusercontent.com/html?artifact_uuid=5fe10527-6c22-4a7a-b684-42f5e9b1da72&ext=1779463045&hash=Q5fpDAE6kY2Xs5_Z2xWz4v59rYI7&theme=light -->
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Photonic Fractal Dashboard — 128-bit Core</title>
+<style>
+:root {
+  --bg:#020617;
+  --panel:#0b1220cc;
+  --ink:#cbd5e1;
+  --muted:#64748b;
+  --cyan:#00e5ff;
+  --mag:#ff3bff;
+  --green:#00ff88;
+  --orange:#ff8800;
+  --grid:#1e293b;
+}
+* { box-sizing:border-box; }
+html,body { height:100%; margin:0; }
+body {
+  background:
+    radial-gradient(1200px 800px at 50% -10%, #0a1a33 0%, #020617 55%, #000 100%),
+    var(--bg);
+  color:var(--ink);
+  font-family: ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  overflow-x:hidden;
+}
+.dashboard { min-height:100vh; display:flex; flex-direction:column; }
+header {
+  display:flex; align-items:center; justify-content:space-between;
+  padding:14px 22px; border-bottom:1px solid #0f1a2e;
+  background:linear-gradient(180deg,rgba(11,18,32,.9),rgba(2,6,14,.6));
+  backdrop-filter: blur(8px); position:sticky; top:0; z-index:10;
+}
+.brand { display:flex; align-items:center; gap:12px; }
+.logo {
+  font-weight:900; letter-spacing:.18em; color:#7dd3fc;
+  text-shadow:0 0 16px #0ea5e9,0 0 32px #0284c7;
+}
+.badge { font-size:11px; color:#7dd3fc; padding:4px 10px; border:1px solid #0ea5e933; border-radius:999px; background:#082032aa; }
+
+main {
+  display:grid; grid-template-columns:300px 1fr 300px; gap:18px;
+  padding:18px; flex:1;
+}
+@media (max-width:1120px) { main{ grid-template-columns:1fr; } }
+
+.panel {
+  background:var(--panel); border:1px solid #162335; border-radius:16px; padding:16px;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.03), 0 20px 60px rgba(0,0,0,.45);
+  backdrop-filter: blur(10px);
+}
+.panel h4 { margin:0 0 10px; font-size:12px; text-transform:uppercase; letter-spacing:.14em; color:#7dd3fc; }
+.stat { display:flex; justify-content:space-between; align-items:center; padding:9px 0; border-bottom:1px dashed #1f2b41; font-size:13px; }
+.stat:last-child{ border-bottom:none; }
+.stat label{ color:var(--muted); text-transform:uppercase; font-size:11px; letter-spacing:.08em; }
+.stat .v{ font-weight:700; color:#e2e8f0; text-shadow:0 0 10px currentColor; }
+.qdot { display:inline-block; width:8px; height:8px; border-radius:50%; margin-right:8px; box-shadow:0 0 10px currentColor; }
+
+.center { display:flex; align-items:center; justify-content:center; }
+.core-wrap { position:relative; width:100%; max-width:740px; aspect-ratio:1/1; }
+#fractal { width:100%; height:100%; display:block; border-radius:24px;
+  background: radial-gradient(ellipse at center, #0a162a 0%, #030a18 60%, #020617 100%);
+  box-shadow:0 0 120px rgba(0,229,255,.06), inset 0 0 80px rgba(0,0,0,.85);
+  border:1px solid #0f1f36;
+}
+.overlay {
+  position:absolute; top:12px; left:50%; transform:translateX(-50%);
+  padding:6px 14px; font-size:11px; letter-spacing:.14em; color:#7dd3fc;
+  background:rgba(2,8,18,.7); border:1px solid #0ea5e933; border-radius:999px;
+  text-shadow:0 0 10px #0ea5e9; pointer-events:none; white-space:nowrap;
+}
+.legend { position:absolute; bottom:10px; left:50%; transform:translateX(-50%); display:flex; gap:14px; font-size:10px; color:#8aa0b8; background:#030a16aa; padding:6px 10px; border-radius:10px; border:1px solid #0f1f36; }
+
+.control-group { margin-bottom:16px; }
+.control-group label{ display:block; font-size:11px; color:#9ab1c9; text-transform:uppercase; letter-spacing:.08em; margin-bottom:8px; }
+input[type=range]{ width:100%; appearance:none; height:6px; background:#0b1628; border:1px solid #1b2a44; border-radius:999px; outline:none; }
+input[type=range]::-webkit-slider-thumb{ appearance:none; width:16px; height:16px; border-radius:50%; background:#0ea5e9; border:2px solid #021020; box-shadow:0 0 14px #0ea5e9; cursor:pointer; }
+input[type=range]::-moz-range-thumb{ width:16px; height:16px; border-radius:50%; background:#0ea5e9; border:2px solid #021020; box-shadow:0 0 14px #0ea5e9; cursor:pointer; }
+
+.harmonics { border-top:1px solid #0f1a2e; background:linear-gradient(180deg,rgba(2,8,18,.3),rgba(2,6,12,.7)); padding:16px 18px 22px; }
+.harmonics h3{ margin:0 0 12px; font-size:12px; letter-spacing:.16em; text-transform:uppercase; color:#7dd3fc; }
+#harmonic-grid{ display:grid; grid-template-columns:repeat(10,1fr); gap:8px; }
+@media(max-width:900px){ #harmonic-grid{ grid-template-columns:repeat(5,1fr);} }
+.hcell{ background:#081222aa; border:1px solid #14233b; border-radius:10px; padding:6px; }
+.hcell label{ display:block; text-align:center; font-size:9px; color:#5b708a; margin-bottom:4px; }
+.hcell input{ width:100%; height:4px; }
+
+.foot { color:#5a6b82; font-size:11px; text-align:center; padding:10px; }
+</style>
+</head>
+<body>
+<div class="dashboard">
+  <header>
+    <div class="brand">
+      <div class="logo">PHOTONIC • FRACTAL</div>
+      <span class="badge">v3 • 128-BIT CORE</span>
+    </div>
+    <div style="font-size:12px;color:#8aa3be;letter-spacing:.12em">1×4×4×2×1 PER QUADRANT</div>
+  </header>
+
+  <main>
+    <aside class="left panel">
+      <h4>Core Metrics</h4>
+      <div class="stat"><label>Laser Power</label><span class="v" id="s-power">75%</span></div>
+      <div class="stat"><label>Coherence</label><span class="v" id="s-coh">85%</span></div>
+      <div class="stat"><label>Pulse Rate</label><span class="v" id="s-pulse">1.20×</span></div>
+      <div class="stat"><label>Harmonic Drive</label><span class="v" id="s-harm">50%</span></div>
+      <div class="stat"><label>FRACTAL LEVEL</label><span class="v" style="color:#7dd3fc">1 / 0.01 / 0.001</span></div>
+      <div class="stat"><label>TOTAL BITS</label><span class="v" style="color:#a5f3fc">128</span></div>
+      <div class="stat"><label>Bits / Quad</label><span class="v">32</span></div>
+      <div class="stat"><label>Structure</label><span class="v">1×4×4×2×1</span></div>
+
+      <h4 style="margin-top:16px">Quadrant Status</h4>
+      <div class="stat"><label><span class="qdot" style="color:var(--cyan)"></span>NE</label><span class="v" style="color:var(--cyan)">ONLINE</span></div>
+      <div class="stat"><label><span class="qdot" style="color:var(--mag)"></span>NW</label><span class="v" style="color:var(--mag)">ONLINE</span></div>
+      <div class="stat"><label><span class="qdot" style="color:var(--green)"></span>SW</label><span class="v" style="color:var(--green)">ONLINE</span></div>
+      <div class="stat"><label><span class="qdot" style="color:var(--orange)"></span>SE</label><span class="v" style="color:var(--orange)">ONLINE</span></div>
+    </aside>
+
+    <section class="center">
+      <div class="core-wrap">
+        <canvas id="fractal" width="786" height="786"></canvas>
+        <div class="overlay">128-bit FRACTAL CORE — 1×4×4×2×1 per quad</div>
+        <div class="legend">
+          <span style="color:var(--cyan)">NE CYAN</span>
+          <span style="color:var(--mag)">NW MAGENTA</span>
+          <span style="color:var(--green)">SW GREEN</span>
+          <span style="color:var(--orange)">SE ORANGE</span>
+        </div>
+      </div>
+    </section>
+
+    <aside class="right panel">
+      <h4>Laser Controls</h4>
+      <div class="control-group">
+        <label>Laser Power</label>
+        <input id="laser" type="range" min="20" max="100" value="75">
+      </div>
+      <div class="control-group">
+        <label>Pulse Rate</label>
+        <input id="pulse" type="range" min="30" max="200" value="60">
+      </div>
+      <div class="control-group">
+        <label>Coherence</label>
+        <input id="coh" type="range" min="50" max="100" value="85">
+      </div>
+      <div class="control-group">
+        <label>Fractal Gain</label>
+        <input id="gain" type="range" min="0" max="100" value="65">
+      </div>
+      <h4 style="margin-top:18px">Electron Fields</h4>
+      <div class="stat"><label>Inner Ring</label><span class="v">8 e⁻ @ 180</span></div>
+      <div class="stat"><label>Outer Ring</label><span class="v">14 e⁻ @ 245</span></div>
+      <div class="stat"><label>Field Coupling</label><span class="v">PHASE-LOCKED</span></div>
+    </aside>
+  </main>
+
+  <section class="harmonics">
+    <h3>Harmonic Matrix — 6×10</h3>
+    <div id="harmonic-grid"><div class="hcell"><label>H1-1</label><input type="range" min="0" max="100" value="50"></div><div class="hcell"><label>H1-2</label><input type="range" min="0" max="100" value="50"></div><div class="hcell"><label>H1-3</label><input type="range" min="0" max="100" value="50"></div><div class="hcell"><label>H1-4</label><input type="range" min="0" max="100" value="50"></div><div class="hcell"><label>H1-5</label><input type="range" min="0" max="100" value="50"></div><div class="hcell"><label>H1-6</label><input type="range" min="0" max="100" value="50"></div><div class="hcell"><label>H1-7</label><input type="range" min="0" max="100" value="50"></div><div class="hcell"><label>H1-8</label><input type="range" min="0" max="100" value="50"></div><div class="hcell"><label>H1-9</label><input type="range" min="0" max="100" value="50"></div><div class="hcell"><label>H1-10</label><input type="range" min="0" max="100" value="50"></div><div class="hcell"><label>H2-1</label><input type="range" min="0" max="100" value="50"></div><div class="hcell"><label>H2-2</label><input type="range" min="0" max="100" value="50"></div><div class="hcell"><label>H2-3</label><input type="range" min="0" max="100" value="50"></div><div class="hcell"><label>H2-4</label><input type="range" min="0" max="100" value="50"></div><div class="hcell"><label>H2-5</label><input type="range" min="0" max="100" value="50"></div><div class="hcell"><label>H2-6</label><input type="range" min="0" max="100" value="50"></div><div class="hcell"><label>H2-7</label><input type="range" min="0" max="100" value="50"></div><div class="hcell"><label>H2-8</label><input type="range" min="0" max="100" value="50"></div><div class="hcell"><label>H2-9</label><input type="range" min="0" max="100" value="50"></div><div class="hcell"><label>H2-10</label><input type="range" min="0" max="100" value="50"></div><div class="hcell"><label>H3-1</label><input type="range" min="0" max="100" value="50"></div><div class="hcell"><label>H3-2</label><input type="range" min="0" max="100" value="50"></div><div class="hcell"><label>H3-3</label><input type="range" min="0" max="100" value="50"></div><div class="hcell"><label>H3-4</label><input type="range" min="0" max="100" value="50"></div><div class="hcell"><label>H3-5</label><input type="range" min="0" max="100" value="50"></div><div class="hcell"><label>H3-6</label><input type="range" min="0" max="100" value="50"></div><div class="hcell"><label>H3-7</label><input type="range" min="0" max="100" value="50"></div><div class="hcell"><label>H3-8</label><input type="range" min="0" max="100" value="50"></div><div class="hcell"><label>H3-9</label><input type="range" min="0" max="100" value="50"></div><div class="hcell"><label>H3-10</label><input type="range" min="0" max="100" value="50"></div><div class="hcell"><label>H4-1</label><input type="range" min="0" max="100" value="50"></div><div class="hcell"><label>H4-2</label><input type="range" min="0" max="100" value="50"></div><div class="hcell"><label>H4-3</label><input type="range" min="0" max="100" value="50"></div><div class="hcell"><label>H4-4</label><input type="range" min="0" max="100" value="50"></div><div class="hcell"><label>H4-5</label><input type="range" min="0" max="100" value="50"></div><div class="hcell"><label>H4-6</label><input type="range" min="0" max="100" value="50"></div><div class="hcell"><label>H4-7</label><input type="range" min="0" max="100" value="50"></div><div class="hcell"><label>H4-8</label><input type="range" min="0" max="100" value="50"></div><div class="hcell"><label>H4-9</label><input type="range" min="0" max="100" value="50"></div><div class="hcell"><label>H4-10</label><input type="range" min="0" max="100" value="50"></div><div class="hcell"><label>H5-1</label><input type="range" min="0" max="100" value="50"></div><div class="hcell"><label>H5-2</label><input type="range" min="0" max="100" value="50"></div><div class="hcell"><label>H5-3</label><input type="range" min="0" max="100" value="50"></div><div class="hcell"><label>H5-4</label><input type="range" min="0" max="100" value="50"></div><div class="hcell"><label>H5-5</label><input type="range" min="0" max="100" value="50"></div><div class="hcell"><label>H5-6</label><input type="range" min="0" max="100" value="50"></div><div class="hcell"><label>H5-7</label><input type="range" min="0" max="100" value="50"></div><div class="hcell"><label>H5-8</label><input type="range" min="0" max="100" value="50"></div><div class="hcell"><label>H5-9</label><input type="range" min="0" max="100" value="50"></div><div class="hcell"><label>H5-10</label><input type="range" min="0" max="100" value="50"></div><div class="hcell"><label>H6-1</label><input type="range" min="0" max="100" value="50"></div><div class="hcell"><label>H6-2</label><input type="range" min="0" max="100" value="50"></div><div class="hcell"><label>H6-3</label><input type="range" min="0" max="100" value="50"></div><div class="hcell"><label>H6-4</label><input type="range" min="0" max="100" value="50"></div><div class="hcell"><label>H6-5</label><input type="range" min="0" max="100" value="50"></div><div class="hcell"><label>H6-6</label><input type="range" min="0" max="100" value="50"></div><div class="hcell"><label>H6-7</label><input type="range" min="0" max="100" value="50"></div><div class="hcell"><label>H6-8</label><input type="range" min="0" max="100" value="50"></div><div class="hcell"><label>H6-9</label><input type="range" min="0" max="100" value="50"></div><div class="hcell"><label>H6-10</label><input type="range" min="0" max="100" value="50"></div></div>
+  </section>
+  <div class="foot">Photonic Dashboard v3 — Fractal Laser Core Active</div>
+</div>
+
+<script>
+const canvas = document.getElementById('fractal');
+const ctx = canvas.getContext('2d');
+let laserPower = 75, pulseRate = 1.2, coherence = 85, gain = 0.65;
+
+const quadrants = [
+  {name:'NE', angle:Math.PI/4,      color:'#00e5ff'}, // cyan
+  {name:'NW', angle:3*Math.PI/4,    color:'#ff3bff'}, // magenta
+  {name:'SW', angle:5*Math.PI/4,    color:'#00ff88'}, // green
+  {name:'SE', angle:7*Math.PI/4,    color:'#ff8800'}, // orange
+];
+
+// Build 1×4×4×2×1 per quadrant
+quadrants.forEach(q=>{
+  const toXY = p => ({x:Math.cos(p.a)*p.r, y:Math.sin(p.a)*p.r});
+  q.l1 = {r:20, a:q.angle}; q.l1.p = toXY(q.l1);
+  q.l2 = []; const s2=0.52;
+  for(let i=0;i<4;i++){ const a = q.angle - s2/2 + (s2/3)*i; q.l2.push({r:45,a}); }
+  q.l2.forEach(p=>p.p=toXY(p));
+  q.l3 = []; q.l2.forEach(l2=>{ const s3=0.26; for(let j=0;j<4;j++){ const a=l2.a - s3/2 + (s3/3)*j; q.l3.push({r:75,a,parent:l2}); }});
+  q.l3.forEach(p=>p.p=toXY(p));
+  q.l4 = []; q.l3.forEach(l3=>{ for(let k=0;k<2;k++){ const a=l3.a + (k-0.5)*0.09; q.l4.push({r:105,a,parent:l3}); }});
+  q.l4.forEach(p=>p.p=toXY(p));
+  q.l5 = []; q.l2.forEach(l2=>{ q.l5.push({r:135,a:l2.a}); });
+  q.l5.forEach(p=>p.p=toXY(p));
+
+  // segments for drawing and flow
+  q.segs = [];
+  q.segs.push({a:{x:0,y:0}, b:q.l1.p}); // center -> L1
+  q.l2.forEach(l2=> q.segs.push({a:q.l1.p, b:l2.p}));
+  q.l3.forEach(l3=> q.segs.push({a:l3.parent.p, b:l3.p}));
+  q.l4.forEach(l4=> q.segs.push({a:l4.parent.p, b:l4.p}));
+  q.l2.forEach((l2,idx)=>{ const out = q.l5[idx].p;
+    for(let n=0;n<8;n++){ const l4 = q.l4[idx*8 + n]; q.segs.push({a:l4.p, b:out}); }
+  });
+});
+
+function resize(){
+  const r = canvas.getBoundingClientRect();
+  const dpr = Math.min(window.devicePixelRatio||1, 2);
+  const w = Math.max(320, r.width), h = Math.max(320, r.height);
+  if (canvas.width !== Math.floor(w*dpr) || canvas.height !== Math.floor(h*dpr)) {
+    canvas.width = Math.floor(w*dpr); canvas.height = Math.floor(h*dpr);
+  }
+}
+window.addEventListener('resize', resize); resize();
+
+// Controls
+document.getElementById('laser').addEventListener('input', e=> laserPower = +e.target.value);
+document.getElementById('pulse').addEventListener('input', e=> pulseRate = (+e.target.value)/50 );
+document.getElementById('coh').addEventListener('input', e=> coherence = +e.target.value);
+document.getElementById('gain').addEventListener('input', e=> gain = (+e.target.value)/100 );
+
+// Harmonic 6x10
+const harmonics = Array.from({length:6},()=>Array(10).fill(50));
+const grid = document.getElementById('harmonic-grid');
+for(let r=0;r<6;r++){
+  for(let c=0;c<10;c++){
+    const cell = document.createElement('div'); cell.className='hcell';
+    cell.innerHTML = `<label>H${r+1}-${c+1}</label><input type="range" min="0" max="100" value="50">`;
+    const inp = cell.querySelector('input');
+    inp.addEventListener('input', ev=>{ harmonics[r][c] = +ev.target.value; });
+    grid.appendChild(cell);
+  }
+}
+
+function harmonicEnergy(){
+  let s=0; for(let r=0;r<6;r++) for(let c=0;c<10;c++) s+=harmonics[r][c];
+  return s/6000; // 0..1
+}
+
+function drawElectronRings(t, scale){
+  const rings = [
+    {r:180, n:8,  sp:0.75, col:'#38bdf8'},
+    {r:245, n:14, sp:-0.48, col:'#a78bfa'}
+  ];
+  rings.forEach(rk=>{
+    ctx.save();
+    ctx.strokeStyle = rk.col+'22';
+    ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.arc(0,0,rk.r,0,Math.PI*2); ctx.stroke();
+    for(let i=0;i<rk.n;i++){
+      const ang = t*rk.sp + i*(Math.PI*2/rk.n);
+      const x = Math.cos(ang)*rk.r, y = Math.sin(ang)*rk.r;
+      ctx.shadowColor = rk.col; ctx.shadowBlur = 14;
+      ctx.fillStyle = rk.col;
+      ctx.beginPath(); ctx.arc(x,y,2.3,0,7); ctx.fill();
+      ctx.shadowBlur = 0;
+      ctx.fillStyle = rk.col+'33';
+      ctx.beginPath(); ctx.arc(x,y,10,0,7); ctx.fill();
+    }
+    ctx.restore();
+  });
+}
+
+function animate(now){
+  requestAnimationFrame(animate);
+  const t = now*0.001 * pulseRate;
+  resize();
+  const w=canvas.width, h=canvas.height;
+  ctx.clearRect(0,0,w,h);
+  ctx.save();
+  ctx.translate(w/2, h/2);
+  const scale = Math.min(w,h)/560;
+  ctx.scale(scale,scale);
+
+  // faint grid
+  ctx.globalAlpha = 0.07; ctx.strokeStyle='#0ea5e9'; ctx.lineWidth=1;
+  for(let r=35;r<=260;r+=35){ ctx.beginPath(); ctx.arc(0,0,r,0,Math.PI*2); ctx.stroke(); }
+  ctx.globalAlpha=1;
+
+  const he = harmonicEnergy();
+  drawElectronRings(t, scale);
+
+  // central core pulse
+  const corePulse = 0.6 + 0.4*Math.sin(t*2.2);
+  ctx.shadowColor='#7dd3fc'; ctx.shadowBlur=28* (laserPower/100) * (0.7+he);
+  ctx.fillStyle='#a5f3fc';
+  ctx.beginPath(); ctx.arc(0,0,5 + corePulse*2.2,0,Math.PI*2); ctx.fill();
+  ctx.shadowBlur=0;
+
+  // draw quadrants
+  quadrants.forEach((q,qi)=>{
+    ctx.save();
+    const intensity = (laserPower/100) * (0.6 + gain*0.7 + he*0.5);
+    ctx.shadowColor = q.color;
+    ctx.shadowBlur = 14 * intensity;
+    ctx.strokeStyle = q.color + 'dd';
+    ctx.lineWidth = 1.3;
+    ctx.globalAlpha = 0.9;
+
+    // segments
+    q.segs.forEach((s,si)=>{
+      ctx.beginPath(); ctx.moveTo(s.a.x, s.a.y); ctx.lineTo(s.b.x, s.b.y); ctx.stroke();
+      // data flow particle
+      const speed = 0.85 + (coherence-50)/200;
+      const prog = (t*speed + si*0.018 + qi*0.22) % 1;
+      const px = s.a.x + (s.b.x - s.a.x)*prog;
+      const py = s.a.y + (s.b.y - s.a.y)*prog;
+      ctx.shadowBlur = 18;
+      ctx.fillStyle = q.color;
+      ctx.globalAlpha = 0.95;
+      ctx.beginPath(); ctx.arc(px,py,1.9,0,Math.PI*2); ctx.fill();
+      ctx.shadowBlur = 14*intensity;
+      ctx.globalAlpha = 0.9;
+    });
+
+    // nodes
+    const nodes = [q.l1, ...q.l2, ...q.l3, ...q.l4, ...q.l5];
+    nodes.forEach(n=>{
+      const pulse = 0.5 + 0.5*Math.sin(t*3.1 - n.r*0.085 + qi);
+      ctx.globalAlpha = 0.85 * pulse * intensity;
+      ctx.fillStyle = q.color;
+      const sz = n.r===20?3.0 : n.r===45?2.4 : n.r===75?2.0 : n.r===105?1.8 : 2.6;
+      ctx.beginPath(); ctx.arc(n.p.x, n.p.y, sz, 0, Math.PI*2); ctx.fill();
+    });
+
+    ctx.restore();
+  });
+
+  ctx.restore();
+
+  // update stats
+  document.getElementById('s-power').textContent = laserPower + '%';
+  document.getElementById('s-coh').textContent = coherence + '%';
+  document.getElementById('s-pulse').textContent = pulseRate.toFixed(2) + '×';
+  document.getElementById('s-harm').textContent = Math.round(he*100) + '%';
+}
+requestAnimationFrame(animate);
+</script>
+
+</body></html>

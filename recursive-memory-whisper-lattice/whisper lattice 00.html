@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WHISPER LATTICE // RECURSIVE MEMORY ENGINE</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root { color-scheme: dark; }
+  body { font-family: 'Inter', system-ui, -apple-system, sans-serif; background: #050508; overscroll-behavior: none; }
+  .mono { font-family: 'JetBrains Mono', monospace; }
+  .grid-bg { background-image: radial-gradient(circle at 1px 1px, rgba(113,113,122,0.12) 1px, transparent 0); background-size: 28px 28px; }
+  .lattice-pulse { animation: lattice-pulse 1.8s ease-in-out infinite; }
+  @keyframes lattice-pulse { 0%,100% { filter: drop-shadow(0 0 0px rgba(139,92,246,0)) } 50% { filter: drop-shadow(0 0 28px rgba(139,92,246,0.65)) } }
+  .glow-violet { filter: drop-shadow(0 0 10px rgba(139,92,246,0.7)) drop-shadow(0 0 20px rgba(139,92,246,0.3)); }
+  .glow-emerald { filter: drop-shadow(0 0 10px rgba(16,185,129,0.8)) drop-shadow(0 0 18px rgba(16,185,129,0.4)); }
+  .glow-amber { filter: drop-shadow(0 0 10px rgba(245,158,11,0.8)) drop-shadow(0 0 18px rgba(245,158,11,0.4)); }
+  .scope-grid { background-image: linear-gradient(rgba(39,39,42,0.7) 1px, transparent 1px), linear-gradient(90deg, rgba(39,39,42,0.7) 1px, transparent 1px); background-size: 20px 20px; }
+  .scrollbar-thin::-webkit-scrollbar { width: 4px; height: 4px; } .scrollbar-thin::-webkit-scrollbar-thumb { background: #3f3f46; border-radius: 2px; }
+  input[type=range] { -webkit-appearance: none; appearance: none; height: 4px; background: #27272a; border-radius: 2px; outline: none; }
+  input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; width: 16px; height: 16px; border-radius: 50%; background: #e4e4e7; border: 2px solid #09090b; box-shadow: 0 0 8px rgba(139,92,246,0.6), inset 0 0 4px rgba(0,0,0,0.5); cursor: pointer; margin-top: -6px; }
+  input[type=range]::-moz-range-thumb { width: 16px; height: 16px; border-radius: 50%; background: #e4e4e7; border: 2px solid #09090b; box-shadow: 0 0 8px rgba(139,92,246,0.6); cursor: pointer; }
+  input[type=range]::-webkit-slider-runnable-track { height: 4px; background: linear-gradient(90deg, #18181b, #3f3f46); border-radius: 2px; }
+  .btn-active { background: rgb(109 40 217 / 0.3) !important; color: #ddd6fe !important; border-color: rgb(124 58 237 / 0.5) !important; box-shadow: inset 0 0 12px rgba(139,92,246,0.15); }
+</style>
+</head>
+<body class="text-zinc-200 min-h-screen selection:bg-violet-500/30 selection:text-violet-100">
+<div class="fixed inset-0 -z-10">
+  <div class="absolute inset-0 bg-[#050508]"></div>
+  <div class="absolute inset-0" style="background: radial-gradient(1000px 600px at 15% 0%, rgba(109,40,217,0.12), transparent 60%), radial-gradient(800px 500px at 85% 20%, rgba(16,185,129,0.08), transparent 50%), radial-gradient(600px 400px at 50% 100%, rgba(245,158,11,0.06), transparent 50%);"></div>
+</div>
+
+<header class="sticky top-0 z-40 backdrop-blur-2xl bg-zinc-950/70 border-b border-zinc-800/80">
+  <div class="max-w-[1920px] mx-auto px-4 sm:px-6 py-3 flex items-center gap-4">
+    <div class="flex items-center gap-3">
+      <div class="relative w-2.5 h-2.5">
+        <div class="absolute inset-0 rounded-full bg-violet-500 animate-ping opacity-40"></div>
+        <div class="relative w-2.5 h-2.5 rounded-full bg-violet-500"></div>
+      </div>
+      <h1 class="mono text-[13px] sm:text-[15px] font-semibold tracking-[0.18em] text-zinc-100">WHISPER LATTICE // RECURSIVE MEMORY</h1>
+    </div>
+    <div class="hidden lg:flex items-center gap-6 ml-6 pl-6 border-l border-zinc-800">
+      <div class="flex items-center gap-2">
+        <span id="light-bridge" class="w-2 h-2 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.6)]"></span>
+        <span class="text-[11px] tracking-widest text-zinc-400">BRIDGE</span>
+      </div>
+      <div class="flex items-center gap-2">
+        <span id="light-perpetuate" class="w-2 h-2 rounded-full bg-zinc-600 transition-all"></span>
+        <span class="text-[11px] tracking-widest text-zinc-400">PERPETUATE</span>
+      </div>
+      <div class="flex items-center gap-2">
+        <span id="light-lasing" class="w-2 h-2 rounded-full bg-zinc-700 transition-all"></span>
+        <span class="text-[11px] tracking-widest text-zinc-400">LASING</span>
+      </div>
+    <div class="ml-auto flex items-center gap-3 sm:gap-5 mono text-[11px] sm:text-xs">
+      <div class="hidden sm:block text-zinc-500">IDEAS: <span id="cnt-ideas" class="text-zinc-200">247</span></div>
+      <div class="hidden sm:block text-zinc-500">CYCLES: <span id="cnt-cycles" class="text-zinc-200">1,432</span></div>
+      <div class="text-zinc-500">UPTIME: <span id="cnt-uptime" class="text-emerald-400">04:12:33</span></div>
+    </div>
+  </div>
+</header>
+
+<main class="max-w-[1920px] mx-auto p-3 sm:p-4 lg:p-5 grid grid-cols-1 xl:grid-cols-12 gap-3 lg:gap-4">
+  <!-- LEFT: LATTICE -->
+  <section class="xl:col-span-5 2xl:col-span-5">
+    <div class="relative rounded-[20px] border border-zinc-800 bg-zinc-950/70 backdrop-blur-xl shadow-[inset_0_1px_0_0_rgba(255,255,255,0.03)] overflow-hidden h-full">
+      <div class="absolute inset-0 grid-bg opacity-[0.3] pointer-events-none"></div>
+      <div class="relative px-4 py-3 border-b border-zinc-800/80 flex items-center justify-between">
+        <h2 class="text-[11px] tracking-[0.2em] text-zinc-400 font-medium">LATTICE / OBSERVERS</h2>
+        <div class="flex items-center gap-2 text-[10px] mono">
+          <span class="text-zinc-500">THRESHOLD</span>
+          <span id="thresh-ind" class="px-1.5 py-0.5 rounded bg-zinc-900 border-zinc-800 text-zinc-400">STANDBY</span>
+        </div>
+      </div>
+      <div class="relative p-3 sm:p-5">
+        <div class="aspect-square w-full max-w-[600px] mx-auto relative">
+          <svg id="lattice-svg" viewBox="0 0 600 600" class="w-full h-full overflow-visible">
+            <defs>
+              <radialGradient id="coreGlow" cx="50%" cy="50%">
+                <stop offset="0%" stop-color="#8b5cf6" stop-opacity="0.8"/>
+                <stop offset="60%" stop-color="#8b5cf6" stop-opacity="0.2"/>
+                <stop offset="100%" stop-color="#8b5cf6" stop-opacity="0"/>
+              </radialGradient>
+              <filter id="softGlow" x="-50%" y="-50%" width="200%" height="200%">
+                <feGaussianBlur stdDeviation="12" result="blur"/>
+                <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+              </filter>
+            </defs>
+            <g id="tethers" opacity="0.55">
+              <!-- pentagon -->
+              <line x1="300" y1="110" x2="480.7" y2="241.3" stroke="#6d28d9" stroke-width="1.5" stroke-opacity="0.5"/>
+              <line x1="480.7" y1="241.3" x2="411.7" y2="453.7" stroke="#6d28d9" stroke-width="1.5" stroke-opacity="0.5"/>
+              <line x1="411.7" y1="453.7" x2="188.3" y2="453.7" stroke="#6d28d9" stroke-width="1.5" stroke-opacity="0.5"/>
+              <line x1="188.3" y1="453.7" x2="119.3" y2="241.3" stroke="#6d28d9" stroke-width="1.5" stroke-opacity="0.5"/>
+              <line x1="119.3" y1="241.3" x2="300" y2="110" stroke="#6d28d9" stroke-width="1.5" stroke-opacity="0.5"/>
+              <!-- spokes -->
+              <line x1="300" y1="110" x2="300" y2="300" stroke="#27272a" stroke-width="1" stroke-dasharray="3 4"/>
+              <line x1="480.7" y1="241.3" x2="300" y2="300" stroke="#27272a" stroke-width="1" stroke-dasharray="3 4"/>
+              <line x1="411.7" y1="453.7" x2="300" y2="300" stroke="#27272a" stroke-width="1" stroke-dasharray="3 4"/>
+              <line x1="188.3" y1="453.7" x2="300" y2="300" stroke="#27272a" stroke-width="1" stroke-dasharray="3 4"/>
+              <line x1="119.3" y1="241.3" x2="300" y2="300" stroke="#27272a" stroke-width="1" stroke-dasharray="3 4"/>
+            </g>
+            <g id="particles"></g>
+            <circle cx="300" cy="300" r="65" fill="url(#coreGlow)" opacity="0.15"/>
+            <circle cx="300" cy="300" r="22" fill="#09090b" stroke="#3f3f46" stroke-width="1.5"/>
+            <circle cx="300" cy="300" r="14" fill="#18181b" stroke="#52525b" stroke-width="1"/>
+            <text x="300" y="304" text-anchor="middle" class="mono text-[9px] fill-zinc-500">CORE</text>
+            <!-- Observers -->
+            <g transform="translate(300,110)">
+              <circle r="44" fill="#0a0a0f" stroke="#27272a" stroke-width="2"/>
+              <circle r="36" fill="#111113" stroke="#7c3aed" stroke-width="1.5" class="glow-violet"/>
+              <text y="4" text-anchor="middle" class="mono text-[11px] fill-violet-300">O1</text>
+            </g>
+            <g transform="translate(480.7,241.3)">
+              <circle r="44" fill="#0a0a0f" stroke="#27272a" stroke-width="2"/>
+              <circle r="36" fill="#111113" stroke="#7c3aed" stroke-width="1.5" class="glow-violet"/>
+              <text y="4" text-anchor="middle" class="mono text-[11px] fill-violet-300">O2</text>
+            </g>
+            <g transform="translate(119.3,241.3)">
+              <circle r="44" fill="#0a0a0f" stroke="#27272a" stroke-width="2"/>
+              <circle r="36" fill="#111113" stroke="#7c3aed" stroke-width="1.5" class="glow-violet"/>
+              <text y="4" text-anchor="middle" class="mono text-[11px] fill-violet-300">O3</text>
+            </g>
+            <!-- O4 bottom-left GREEN (N) -->
+            <g transform="translate(188.3,453.7)">
+              <circle r="48" fill="#0a0a0f" stroke="#14532d" stroke-width="2" opacity="0.9"/>
+              <circle r="40" fill="#0b1210" stroke="#10b981" stroke-width="2" class="glow-emerald" id="obs4-ring"/>
+              <text y="-6" text-anchor="middle" class="mono text-[10px] fill-emerald-400 tracking-wider">N</text>
+              <text id="obs4-n" y="12" text-anchor="middle" class="mono text-[16px] font-semibold fill-emerald-300">0.00</text>
+            </g>
+            <!-- O5 bottom-right AMBER (phi) -->
+            <g transform="translate(411.7,453.7)">
+              <circle r="48" fill="#0a0a0f" stroke="#78350f" stroke-width="2" opacity="0.9"/>
+              <circle r="40" fill="#12100b" stroke="#f59e0b" stroke-width="2" class="glow-amber" id="obs5-ring"/>
+              <text y="-6" text-anchor="middle" class="mono text-[10px] fill-amber-400 tracking-wider">φ</text>
+              <text id="obs5-phi" y="12" text-anchor="middle" class="mono text-[16px] font-semibold fill-amber-300">0.00</text>
+            </g>
+          </svg>
+          <div class="absolute bottom-0 left-0 right-0 flex justify-center pb-2 pointer-events-none">
+            <div class="flex items-center gap-4 px-3 py-1.5 rounded-full bg-zinc-950/80 border border-zinc-800 backdrop-blur-md">
+              <div class="flex items-center gap-1.5"><span class="w-1.5 h-1.5 rounded-full bg-violet-500"></span><span class="text-[10px] mono text-zinc-500">LATTICE</span></div>
+              <div class="flex items-center gap-1.5"><span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span><span class="text-[10px] mono text-zinc-500">N INV</span></div>
+              <div class="flex items-center gap-1.5"><span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span><span class="text-[10px] mono text-zinc-500">PHOTON</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CENTER: LASER CORE -->
+  <section class="xl:col-span-4 2xl:col-span-4">
+    <div class="relative rounded-[20px] border border-zinc-800 bg-zinc-950/70 backdrop-blur-xl shadow-[inset_0_1px_0_0_rgba(255,255,255,0.03)] overflow-hidden h-full">
+      <div class="px-4 py-3 border-b border-zinc-800/80 flex items-center justify-between">
+        <h2 class="text-[11px] tracking-[0.2em] text-zinc-400 font-medium">LASER CORE // Yb:FIBER</h2>
+        <div class="flex items-center gap-2">
+          <span class="text-[10px] mono px-2 py-0.5 rounded bg-emerald-950/50 text-emerald-400 border border-emerald-900/50">CW</span>
+          <span class="text-[10px] mono px-2 py-0.5 rounded bg-zinc-900 text-zinc-400 border border-zinc-800">1064nm</span>
+        </div>
+      </div>
+
+      <div class="p-4 space-y-4">
+        <!-- Oscilloscope -->
+        <div class="relative rounded-xl overflow-hidden border border-zinc-800 bg-black/70">
+          <div class="absolute top-2 left-3 flex items-center gap-3 text-[10px] mono z-10">
+            <div class="flex items-center gap-1"><span class="w-3 h-[2px] bg-emerald-500"></span><span class="text-zinc-500">N</span></div>
+            <div class="flex items-center gap-1"><span class="w-3 h-[2px] bg-amber-500"></span><span class="text-zinc-500">φ</span></div>
+            <div class="text-zinc-600">5.0s WINDOW</div>
+          </div>
+          <canvas id="scope" width="800" height="240" class="w-full h-[120px] scope-grid"></canvas>
+          <div class="absolute bottom-1 right-2 text-[9px] mono text-zinc-600">60 FPS</div>
+        </div>
+
+        <!-- 4 Metrics -->
+        <div class="grid grid-cols-2 gap-3">
+          <div class="group relative rounded-xl border border-zinc-800 bg-zinc-900/40 p-3 hover:bg-zinc-900/60 transition">
+            <div class="flex items-start justify-between">
+              <div class="text-[10px] tracking-widest text-zinc-500">POPULATION INVERSION</div>
+              <div class="w-1.5 h-1.5 rounded-full bg-emerald-500/80 animate-pulse"></div>
+            </div>
+            <div class="mt-2 flex items-baseline gap-2">
+              <div class="text-[10px] text-zinc-500">N =</div>
+              <div id="n-val" class="mono text-2xl font-medium text-emerald-300 tracking-tight">0.847</div>
+            </div>
+            <div class="mt-3 h-[6px] rounded-full bg-zinc-950 border border-zinc-800 overflow-hidden p-[1px]">
+              <div id="bar-n" class="h-full rounded-full bg-gradient-to-r from-emerald-600 to-emerald-400 transition-[width] duration-100" style="width:60%"></div>
+            </div>
+            <div class="mt-1.5 flex justify-between text-[9px] mono text-zinc-600"><span>0.0</span><span>1.0</span></div>
+          </div>
+
+          <div class="group relative rounded-xl border border-zinc-800 bg-zinc-900/40 p-3 hover:bg-zinc-900/60 transition">
+            <div class="flex items-start justify-between">
+              <div class="text-[10px] tracking-widest text-zinc-500">PHOTON FLUX</div>
+              <div class="w-1.5 h-1.5 rounded-full bg-amber-500/80 animate-pulse"></div>
+            </div>
+            <div class="mt-2 flex items-baseline gap-2">
+              <div class="text-[10px] text-zinc-500">φ =</div>
+              <div id="phi-val" class="mono text-2xl font-medium text-amber-300 tracking-tight">0.623</div>
+            </div>
+            <div class="mt-3 h-[6px] rounded-full bg-zinc-950 border border-zinc-800 overflow-hidden p-[1px]">
+              <div id="bar-phi" class="h-full rounded-full bg-gradient-to-r from-amber-600 to-amber-400 transition-[width] duration-100" style="width:45%"></div>
+            </div>
+            <div class="mt-1.5 flex justify-between text-[9px] mono text-zinc-600"><span>0.0</span><span>1.2</span></div>
+          </div>
+
+          <div class="relative rounded-xl border border-zinc-800 bg-zinc-900/40 p-3">
+            <div class="text-[10px] tracking-widest text-zinc-500">NET GAIN</div>
+            <div class="mt-2 flex items-baseline gap-2">
+              <div class="text-[10px] text-zinc-500">g₀N - loss =</div>
+              <div id="gain-val" class="mono text-2xl font-medium text-violet-300 tracking-tight">+2.34</div>
+            </div>
+            <div class="mt-3 h-[6px] rounded-full bg-zinc-950 border border-zinc-800 overflow-hidden p-[1px]">
+              <div id="bar-gain" class="h-full rounded-full bg-gradient-to-r from-violet-600 to-fuchsia-400 transition-[width] duration-100" style="width:70%"></div>
+            </div>
+            <div class="mt-1.5 flex justify-between text-[9px] mono text-zinc-600"><span>-1</span><span>THR</span><span>+5</span></div>
+          </div>
+
+          <div class="relative rounded-xl border border-zinc-800 bg-zinc-900/40 p-3">
+            <div class="text-[10px] tracking-widest text-zinc-500">STIM RATE</div>
+            <div class="mt-2 flex items-baseline gap-2">
+              <div class="text-[10px] text-zinc-500">Rs·N·φ =</div>
+              <div id="stim-val" class="mono text-2xl font-medium text-zinc-200 tracking-tight">4,217</div>
+            </div>
+            <div class="mt-3 h-[6px] rounded-full bg-zinc-950 border border-zinc-800 overflow-hidden p-[1px]">
+              <div id="bar-stim" class="h-full rounded-full bg-gradient-to-r from-zinc-600 to-zinc-300 transition-[width] duration-100" style="width:55%"></div>
+            </div>
+            <div class="mt-1.5 flex justify-between text-[9px] mono text-zinc-600"><span>0</span><span>8k</span></div>
+          </div>
+        </div>
+
+        <!-- Controls -->
+        <div class="rounded-xl border border-zinc-800 bg-zinc-900/30 p-3.5 space-y-4">
+          <div class="flex items-center justify-between">
+            <h3 class="text-[11px] tracking-widest text-zinc-400">CAVITY CONTROLS</h3>
+            <div class="text-[10px] mono text-zinc-500">Yb³⁺ : silica | τ = 0.85ms</div>
+          </div>
+          
+          <div class="space-y-3.5">
+            <div>
+              <div class="flex items-center justify-between mb-1.5">
+                <label class="text-[11px] text-zinc-400">PUMP RATE Rp</label>
+                <div class="flex items-center gap-2"><span id="rp-val" class="mono text-xs text-violet-300">4,800</span><span class="text-[10px] text-zinc-600">s⁻¹</span></div>
+              </div>
+              <input id="rp-slider" type="range" min="1000" max="10000" step="50" value="4800" class="w-full">
+              <div class="flex justify-between text-[9px] mono text-zinc-600 mt-1"><span>1k</span><span>THR ~3.2k</span><span>10k</span></div>
+            </div>
+            <div>
+              <div class="flex items-center justify-between mb-1.5">
+                <label class="text-[11px] text-zinc-400">CAVITY LOSS</label>
+                <div class="flex items-center gap-2"><span id="loss-val" class="mono text-xs text-zinc-300">0.45</span></div>
+              </div>
+              <input id="loss-slider" type="range" min="0.1" max="1.0" step="0.01" value="0.45" class="w-full">
+            </div>
+            <div>
+              <div class="flex items-center justify-between mb-1.5">
+                <label class="text-[11px] text-zinc-400">SEED EPS</label>
+                <div class="flex items-center gap-2"><span id="eps-val" class="mono text-xs text-zinc-300">2.0e-6</span></div>
+              </div>
+              <input id="eps-slider" type="range" min="0" max="100" step="1" value="50" class="w-full">
+            </div>
+          </div>
+
+          <div class="grid grid-cols-3 gap-2 pt-1">
+            <button id="btn-reset" class="h-9 rounded-lg bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 text-[11px] tracking-widest text-zinc-300 transition">RESET</button>
+            <button id="btn-threshold" class="h-9 rounded-lg bg-violet-950/50 hover:bg-violet-900/50 border border-violet-900/50 text-[11px] tracking-widest text-violet-200 transition">THRESHOLD TEST</button>
+            <button id="btn-kill" class="h-9 rounded-lg bg-red-950/40 hover:bg-red-900/40 border border-red-900/50 text-[11px] tracking-widest text-red-300 transition">KILL BEAM</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- RIGHT: CONTROL -->
+  <section class="xl:col-span-3 2xl:col-span-3">
+    <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-1 gap-3 lg:gap-4 h-full">
+      <!-- Perpetuate -->
+      <div class="relative rounded-[20px] border border-zinc-800 bg-zinc-950/70 backdrop-blur-xl p-4">
+        <div class="flex items-center justify-between mb-3">
+          <h3 class="text-[11px] tracking-[0.2em] text-zinc-400">PERPETUATE</h3>
+          <label class="relative inline-flex cursor-pointer">
+            <input id="toggle-perpetuate" type="checkbox" class="sr-only peer">
+            <div class="w-11 h-6 bg-zinc-800 rounded-full peer-checked:bg-violet-600 transition-all duration-300 shadow-inner"></div>
+            <div class="absolute left-[2px] top-[2px] w-5 h-5 bg-zinc-200 rounded-full transition-all duration-300 peer-checked:translate-x-5 peer-checked:bg-white shadow-md"></div>
+          </label>
+        </div>
+        <div class="space-y-3">
+          <div>
+            <div class="text-[10px] text-zinc-500 mb-1.5">INTERVAL</div>
+            <div class="grid grid-cols-4 gap-1.5">
+              <button data-int="20000" class="p-int btn-active px-2 py-1.5 rounded-md bg-zinc-900 border border-zinc-800 text-[11px] mono hover:bg-zinc-800">20s</button>
+              <button data-int="40000" class="p-int px-2 py-1.5 rounded-md bg-zinc-900 border border-zinc-800 text-[11px] mono hover:bg-zinc-800">40s</button>
+              <button data-int="60000" class="p-int px-2 py-1.5 rounded-md bg-zinc-900 border border-zinc-800 text-[11px] mono hover:bg-zinc-800">60s</button>
+              <button data-int="120000" class="p-int px-2 py-1.5 rounded-md bg-zinc-900 border border-zinc-800 text-[11px] mono hover:bg-zinc-800">120s</button>
+            </div>
+          </div>
+          <div>
+            <div class="text-[10px] text-zinc-500 mb-1.5">MODE</div>
+            <div class="grid grid-cols-3 gap-1.5">
+              <button data-mode="Commons" class="p-mode px-2 py-1.5 rounded-md bg-zinc-900 border border-zinc-800 text-[11px] hover:bg-zinc-800">Commons</button>
+              <button data-mode="Memory" class="p-mode px-2 py-1.5 rounded-md bg-zinc-900 border border-zinc-800 text-[11px] hover:bg-zinc-800">Memory</button>
+              <button data-mode="Hybrid" class="p-mode btn-active px-2 py-1.5 rounded-md bg-zinc-900 border border-zinc-800 text-[11px] hover:bg-zinc-800">Hybrid</button>
+            </div>
+          <div class="pt-2 border-t border-zinc-800/60">
+            <div class="text-[10px] text-zinc-500">LAST CYCLE</div>
+            <div id="last-cycle" class="mono text-[11px] text-violet-300 mt-1 leading-relaxed">LOOK → QUESTION → ANSWER → EXPLAIN</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Injector -->
+      <div class="relative rounded-[20px] border border-zinc-800 bg-zinc-950/70 backdrop-blur-xl p-4">
+        <h3 class="text-[11px] tracking-[0.2em] text-zinc-400 mb-3">IDEA INJECTOR</h3>
+        <div class="flex gap-2">
+          <input id="idea-input" type="text" placeholder="Enter seed hypothesis..." class="flex-1 h-9 px-3 rounded-lg bg-zinc-950 border border-zinc-800 text-[13px] placeholder-zinc-600 focus:outline-none focus:border-violet-800 focus:ring-1 focus:ring-violet-900/50 transition">
+          <button id="btn-inject" class="h-9 px-3 rounded-lg bg-violet-600 hover:bg-violet-500 text-white text-[11px] font-medium tracking-widest transition">INJECT</button>
+        </div>
+        <button id="btn-commons" class="mt-2 w-full h-8 rounded-lg bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 text-[11px] tracking-widest text-zinc-300 transition flex items-center justify-center gap-1.5">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/></svg>
+          COMMONS PULL
+        </button>
+        <div id="idea-chips" class="flex flex-wrap gap-1.5 mt-3"></div>
+      </div>
+
+      <!-- Memory Tree -->
+      <div class="relative rounded-[20px] border border-zinc-800 bg-zinc-950/70 backdrop-blur-xl p-4 md:col-span-2 xl:col-span-1">
+        <div class="flex items-center justify-between mb-3">
+          <h3 class="text-[11px] tracking-[0.2em] text-zinc-400">MEMORY TREE</h3>
+          <span class="text-[10px] mono px-1.5 py-0.5 rounded bg-zinc-900 border border-zinc-800 text-zinc-500">DEPTH 0-4</span>
+        </div>
+        <div id="memory-list" class="space-y-1.5 max-h-[200px] overflow-y-auto scrollbar-thin pr-1 -mr-1"></div>
+      </div>
+
+      <!-- System -->
+      <div class="relative rounded-[20px] border border-zinc-800 bg-zinc-950/70 backdrop-blur-xl p-4 md:col-span-2 xl:col-span-1">
+        <h3 class="text-[11px] tracking-[0.2em] text-zinc-400 mb-3">SYSTEM</h3>
+        <div class="space-y-2.5 text-[11px] mono">
+          <div class="flex justify-between"><span class="text-zinc-500">Bridge</span><span class="text-emerald-400 flex items-center gap-1.5">http://localhost:8787 <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span></span></div>
+          <div class="flex justify-between"><span class="text-zinc-500">Log path</span><span class="text-zinc-400 truncate ml-2">C:\Users\Dave\whisper-lattice\</span></div>
+          <div class="flex items-center gap-2 pt-1">
+            <button id="btn-export-jsonl" class="h-7 px-2.5 rounded-md bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 text-[10px] tracking-widest">EXPORT JSONL</button>
+            <button id="btn-export-csv" class="h-7 px-2.5 rounded-md bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 text-[10px] tracking-widest">EXPORT CSV</button>
+            <div class="ml-auto text-[10px] text-zinc-600">LOCALSTORAGE</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- BOTTOM TIMELINE -->
+<footer class="max-w-[1920px] mx-auto px-3 sm:px-4 lg:px-5 pb-4">
+  <div class="relative rounded-[16px] border border-zinc-800 bg-zinc-950/60 backdrop-blur-xl p-3">
+    <div class="flex items-center justify-between mb-2">
+      <h3 class="text-[10px] tracking-[0.2em] text-zinc-500">CYCLE TIMELINE // LAST 50</h3>
+      <div class="flex items-center gap-3 text-[10px] mono">
+        <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-zinc-700"></span><span class="text-zinc-600">BELOW</span></span>
+        <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-amber-600"></span><span class="text-zinc-600">THRESHOLD</span></span>
+        <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-emerald-500"></span><span class="text-zinc-600">LASING</span></span>
+      </div>
+    </div>
+    <div id="timeline" class="flex items-end gap-[3px] h-9 overflow-hidden"></div>
+  </div>
+</footer>
+
+<script>
+(() => {
+  const $ = id => document.getElementById(id);
+  // State
+  const defaultState = {
+    N: 0.124, phi: 0.008,
+    params: { Rp: 4800, loss: 0.45, eps: 2e-6, g0: 5.2, Rs: 8.5, tau: 0.85 },
+    cycles: 1432, ideas: 247,
+    uptimeStart: Date.now() - (4*3600+12*60+33)*1000,
+    perpetuate: false, pInterval: 20000, pMode: 'Hybrid',
+    lastCycle: 'LOOK → QUESTION → ANSWER → EXPLAIN',
+    memory: [], timeline: [],
+    ideasList: ['Yb-doped silica phase', 'Cavity Q-switch timing', 'Whisper mode coupling'],
+    lastPerp: 0
+  };
+  let state = JSON.parse(localStorage.getItem('wl_state_v2') || 'null') || defaultState;
+  if (!state.memory.length) {
+    // seed memory
+    state.memory = [
+      {depth:3,title:'Recursive photon echo alignment',N:0.847,phi:0.623,t:Date.now()-120000},
+      {depth:2,title:'Lattice tether phase matching',N:0.721,phi:0.512,t:Date.now()-240000},
+      {depth:4,title:'Yb³⁺ upper-state lifetime',N:0.912,phi:0.881,t:Date.now()-360000},
+      {depth:1,title:'Seed injection jitter',N:0.543,phi:0.210,t:Date.now()-480000},
+      {depth:2,title:'Commons pull: coherence',N:0.765,phi:0.445,t:Date.now()-600000},
+    ];
+    state.timeline = Array.from({length:38},(_,i)=>({gain: Math.sin(i*0.4)*2.5+0.5, idea:'init', t:Date.now()-i*60000}));
+  }
+  
+  // History for scope
+  const nHist = new Array(300).fill(0);
+  const pHist = new Array(300).fill(0);
+  let lastFrame = performance.now();
+  
+  // Canvas
+  const scope = $('scope');
+  const sctx = scope.getContext('2d');
+  
+  // Particles
+  const particlesG = $('particles');
+  const tetherLines = [
+    {x1:300,y1:110,x2:480.7,y2:241.3},{x1:480.7,y1:241.3,x2:411.7,y2:453.7},
+    {x1:411.7,y1:453.7,x2:188.3,y2:453.7},{x1:188.3,y1:453.7,x2:119.3,y2:241.3},
+    {x1:119.3,y1:241.3,x2:300,y2:110},{x1:300,y1:110,x2:300,y2:300},
+    {x1:480.7,y1:241.3,x2:300,y2:300},{x1:411.7,y1:453.7,x2:300,y2:300},
+    {x1:188.3,y1:453.7,x2:300,y2:300},{x1:119.3,y1:241.3,x2:300,y2:300},
+  ];
+  const particles = [];
+  for(let i=0;i<18;i++){
+    const c = document.createElementNS('http://www.w3.org/2000/svg','circle');
+    c.setAttribute('r','1.8'); c.setAttribute('fill','#a78bfa'); c.setAttribute('opacity','0');
+    particlesG.appendChild(c);
+    particles.push({el:c, line: Math.floor(Math.random()*tetherLines.length), t: Math.random(), dir: Math.random()<0.5?1:-1, speed: 0.003+Math.random()*0.004});
+  }
+
+  // UI Init
+  $('rp-slider').value = state.params.Rp;
+  $('loss-slider').value = state.params.loss;
+  $('eps-slider').value = 50;
+  $('rp-val').textContent = state.params.Rp.toLocaleString();
+  $('loss-val').textContent = state.params.loss.toFixed(2);
+  $('eps-val').textContent = state.params.eps.toExponential(1);
+  $('toggle-perpetuate').checked = state.perpetuate;
+  $('last-cycle').textContent = state.lastCycle;
+  document.querySelectorAll('.p-int').forEach(b=>b.classList.toggle('btn-active', +b.dataset.int===state.pInterval));
+  document.querySelectorAll('.p-mode').forEach(b=>b.classList.toggle('btn-active', b.dataset.mode===state.pMode));
+
+  function save(){ localStorage.setItem('wl_state_v2', JSON.stringify(state)); }
+  function fmtTime(ms){ const s=Math.floor(ms/1000); const h=String(Math.floor(s/3600)).padStart(2,'0'); const m=String(Math.floor(s%3600/60)).padStart(2,'0'); const sec=String(s%60).padStart(2,'0'); return `${h}:${m}:${sec}`; }
+
+  function stepPhysics(dt){
+    const p = state.params;
+    const pump = p.Rp/5000;
+    const dN = pump*(1-state.N) - state.N/p.tau - p.Rs*state.N*state.phi;
+    const dPhi = (p.g0*state.N - p.loss)*state.phi + p.eps*state.N;
+    state.N = Math.max(0, Math.min(1, state.N + dN*dt));
+    state.phi = Math.max(0, Math.min(2, state.phi + dPhi*dt));
+    // clamp small values to avoid denorm
+    if(state.phi < 1e-6) state.phi = 1e-6;
+  }
+
+  function drawScope(){
+    const w=800,h=240;
+    sctx.clearRect(0,0,w,h);
+    // grid already via css, draw traces
+    sctx.lineWidth=2;
+    // N
+    sctx.beginPath(); sctx.strokeStyle='#10b981';
+    for(let i=0;i<nHist.length;i++){
+      const x = (i/(nHist.length-1))*w;
+      const y = h-20 - nHist[i]*180;
+      if(i===0) sctx.moveTo(x,y); else sctx.lineTo(x,y);
+    }
+    sctx.stroke();
+    // phi
+    sctx.beginPath(); sctx.strokeStyle='#f59e0b';
+    for(let i=0;i<pHist.length;i++){
+      const x = (i/(pHist.length-1))*w;
+      const y = h-20 - Math.min(pHist[i]/1.2,1)*180;
+      if(i===0) sctx.moveTo(x,y); else sctx.lineTo(x,y);
+    }
+    sctx.stroke();
+    // threshold line
+    const nth = state.params.loss/state.params.g0;
+    const yth = h-20 - nth*180;
+    sctx.setLineDash([4,4]); sctx.strokeStyle='rgba(139,92,246,0.5)'; sctx.lineWidth=1;
+    sctx.beginPath(); sctx.moveTo(0,yth); sctx.lineTo(w,yth); sctx.stroke(); sctx.setLineDash([]);
+  }
+
+  function updateUI(){
+    const netGain = state.params.g0*state.N - state.params.loss;
+    const stim = state.params.Rs*state.N*state.phi;
+    // numbers
+    $('n-val').textContent = state.N.toFixed(3);
+    $('phi-val').textContent = state.phi.toFixed(3);
+    $('gain-val').textContent = (netGain>=0?'+':'')+netGain.toFixed(2);
+    $('stim-val').textContent = Math.round(stim*1000).toLocaleString();
+    // bars
+    $('bar-n').style.width = (state.N*100)+'%';
+    $('bar-phi').style.width = Math.min(100, state.phi/1.2*100)+'%';
+    $('bar-gain').style.width = Math.max(0, Math.min(100, (netGain+1)/6*100))+'%';
+    $('bar-stim').style.width = Math.min(100, stim/8*100)+'%';
+    // observers
+    $('obs4-n').textContent = state.N.toFixed(2);
+    $('obs5-phi').textContent = state.phi.toFixed(2);
+    // tether glow
+    const intensity = Math.min(1, stim*0.8 + Math.max(0,netGain)*0.2);
+    $('tethers').setAttribute('opacity', 0.25 + intensity*0.7);
+    document.querySelectorAll('#tethers line').forEach((ln,i)=>{
+      const isViolet = i<5;
+      ln.setAttribute('stroke', isViolet ? '#8b5cf6' : '#3f3f46');
+      ln.setAttribute('stroke-opacity', isViolet ? 0.3+intensity*0.7 : 0.2+intensity*0.3);
+      ln.setAttribute('stroke-width', isViolet ? 1+intensity*1.5 : 1);
+    });
+    // lasing
+    const lasing = netGain > 0;
+    $('light-lasing').className = 'w-2 h-2 rounded-full transition-all ' + (lasing ? 'bg-amber-500 shadow-[0_0_8px_rgba(245,158,11,0.7)] animate-pulse' : 'bg-zinc-700');
+    $('thresh-ind').textContent = lasing ? 'LASING' : 'STANDBY';
+    $('thresh-ind').className = 'px-1.5 py-0.5 rounded border text-[10px] mono ' + (lasing ? 'bg-amber-950/50 border-amber-900/50 text-amber-300' : 'bg-zinc-900 border-zinc-800 text-zinc-400');
+    $('lattice-svg').classList.toggle('lattice-pulse', lasing && intensity>0.5);
+    // perpetuate light
+    $('light-perpetuate').className = 'w-2 h-2 rounded-full transition-all ' + (state.perpetuate ? 'bg-violet-500 shadow-[0_0_8px_rgba(139,92,246,0.6)] animate-pulse' : 'bg-zinc-600');
+    // particles
+    particles.forEach(p=>{
+      p.t += p.dir * p.speed * (0.5 + intensity*1.5);
+      if(p.t>1 || p.t<0){ p.dir*=-1; p.t = Math.max(0,Math.min(1,p.t)); p.line = Math.floor(Math.random()*tetherLines.length); }
+      const L = tetherLines[p.line];
+      const x = L.x1 + (L.x2-L.x1)*p.t;
+      const y = L.y1 + (L.y2-L.y1)*p.t;
+      p.el.setAttribute('cx', x); p.el.setAttribute('cy', y);
+      p.el.setAttribute('opacity', 0.1 + intensity*0.8);
+      p.el.setAttribute('fill', lasing ? '#fbbf24' : '#a78bfa');
+      p.el.setAttribute('r', lasing ? '2.2' : '1.6');
+    });
+  }
+
+  function renderMemory(){
+    const list = $('memory-list'); list.innerHTML='';
+    state.memory.slice(0,10).forEach(m=>{
+      const d = document.createElement('div');
+      d.className = 'group flex items-start gap-2.5 p-2 rounded-lg hover:bg-zinc-900/70 border border-zinc-900 hover:border-zinc-800 transition cursor-pointer';
+      d.innerHTML = `<div class="shrink-0 w-6 text-center"><span class="inline-flex w-5 h-5 items-center justify-center rounded bg-zinc-900 border border-zinc-800 text-[10px] mono text-zinc-500 group-hover:text-violet-300 group-hover:border-violet-900/50">${m.depth}</span></div>
+      <div class="min-w-0 flex-1"><div class="text-[12px] leading-snug truncate text-zinc-200 group-hover:text-white">${m.title}</div>
+      <div class="mt-1 flex items-center gap-2 text-[10px] mono"><span class="text-emerald-400/80">N ${m.N.toFixed(3)}</span><span class="text-zinc-600">·</span><span class="text-amber-400/80">φ ${m.phi.toFixed(3)}</span></div></div>`;
+      list.appendChild(d);
+    });
+  }
+  function renderChips(){
+    const wrap = $('idea-chips'); wrap.innerHTML='';
+    state.ideasList.slice(0,3).forEach(t=>{
+      const s = document.createElement('span');
+      s.className='inline-flex items-center px-2 py-1 rounded-md bg-zinc-900 border border-zinc-800 text-[11px] text-zinc-300';
+      s.textContent = t;
+      wrap.appendChild(s);
+    });
+  }
+  function renderTimeline(){
+    const tl = $('timeline'); tl.innerHTML='';
+    const data = state.timeline.slice(-50);
+    data.forEach(pt=>{
+      const g = pt.gain;
+      let cls='bg-zinc-700';
+      if(g>0.2) cls='bg-emerald-500 shadow-[0_0_6px_rgba(16,185,129,0.5)]';
+      else if(g>-0.1) cls='bg-amber-600 shadow-[0_0_6px_rgba(217,119,6,0.4)]';
+      const dot = document.createElement('div');
+      dot.className = `w-[8px] h-[${6+Math.max(0,Math.min(1,(g+1)/3))*22}px] rounded-full ${cls} transition-all duration-300`;
+      dot.title = `${new Date(pt.t).toLocaleTimeString()} · gain ${g.toFixed(2)} · ${pt.idea}`;
+      tl.appendChild(dot);
+    });
+    // fill to 50
+    for(let i=data.length;i<50;i++){
+      const d=document.createElement('div'); d.className='w-[8px] h-[6px] rounded-full bg-zinc-900'; tl.appendChild(d);
+    }
+  }
+  function tickCounters(){
+    $('cnt-ideas').textContent = state.ideas.toLocaleString();
+    $('cnt-cycles').textContent = state.cycles.toLocaleString();
+    $('cnt-uptime').textContent = fmtTime(Date.now()-state.uptimeStart);
+  }
+
+  function doCycle(title, source='manual'){
+    state.cycles++; state.ideas++;
+    const node = {depth: Math.floor(Math.random()*4)+1, title, N: state.N, phi: state.phi, t: Date.now(), src: source};
+    state.memory.unshift(node); if(state.memory.length>200) state.memory.pop();
+    state.timeline.push({gain: state.params.g0*state.N - state.params.loss, idea:title, t:Date.now()}); if(state.timeline.length>50) state.timeline.shift();
+    const phases = ['LOOK → QUESTION → ANSWER → EXPLAIN','SEED → PUMP → AMPLIFY → EMIT','RECALL → WEIGHT → REINFORCE → STORE','INJECT → COUPLE → LASE → MEMORIZE'];
+    state.lastCycle = phases[Math.floor(Math.random()*phases.length)];
+    $('last-cycle').textContent = state.lastCycle;
+    if(!state.ideasList.includes(title)) { state.ideasList.unshift(title); state.ideasList = state.ideasList.slice(0,12); }
+    renderMemory(); renderChips(); renderTimeline(); tickCounters(); save();
+    // slight pump kick
+    state.params.Rp = Math.min(10000, state.params.Rp + 80);
+    $('rp-slider').value = state.params.Rp; $('rp-val').textContent = Math.round(state.params.Rp).toLocaleString();
+  }
+
+  // Main loop
+  function loop(now){
+    const dt = Math.min(0.033, (now-lastFrame)/1000); lastFrame=now;
+    stepPhysics(0.016);
+    nHist.push(state.N); if(nHist.length>300) nHist.shift();
+    pHist.push(state.phi); if(pHist.length>300) pHist.shift();
+    if(Math.floor(now/50) % 2 ===0) drawScope();
+    updateUI();
+    // perpetuate
+    if(state.perpetuate && now - state.lastPerp > state.pInterval){
+      state.lastPerp = now;
+      const src = state.pMode;
+      let title = 'Hybrid recall';
+      if(src==='Commons' || (src==='Hybrid' && Math.random()<0.5)){
+        const commons = ['Whispering gallery mode','Yb³⁺ Stark manifold','Four-wave mixing','Photon echo','Cavity ring-down','Coherent population trapping','Raman scattering','Mode locking'];
+        title = commons[Math.floor(Math.random()*commons.length)];
+      } else {
+        title = state.memory[Math.floor(Math.random()*Math.min(5,state.memory.length))]?.title || 'Memory reactivation';
+      }
+      doCycle(title, 'perpetuate');
+      // auto-adjust pump toward threshold
+      const targetN = state.params.loss/state.params.g0*1.15;
+      const err = targetN - state.N;
+      state.params.Rp = Math.max(1000, Math.min(10000, state.params.Rp + err*800));
+      $('rp-slider').value = state.params.Rp; $('rp-val').textContent = Math.round(state.params.Rp).toLocaleString();
+    }
+    requestAnimationFrame(loop);
+  }
+
+  // Events
+  $('rp-slider').addEventListener('input', e=>{ state.params.Rp=+e.target.value; $('rp-val').textContent=(+e.target.value).toLocaleString(); save(); });
+  $('loss-slider').addEventListener('input', e=>{ state.params.loss=+e.target.value; $('loss-val').textContent=(+e.target.value).toFixed(2); save(); });
+  $('eps-slider').addEventListener('input', e=>{ const v=+e.target.value; const eps = Math.pow(10, -7 + (v/100)*2); state.params.eps=eps; $('eps-val').textContent=eps.toExponential(1); save(); });
+  $('btn-reset').onclick = ()=>{ state.N=0.05; state.phi=0.001; };
+  $('btn-threshold').onclick = ()=>{ const old=state.params.Rp; state.params.Rp=9200; $('rp-slider').value=9200; $('rp-val').textContent='9,200'; setTimeout(()=>{state.params.Rp=old; $('rp-slider').value=old; $('rp-val').textContent=old.toLocaleString();},2000); };
+  $('btn-kill').onclick = ()=>{ state.params.loss=0.98; state.params.Rp=1100; state.phi*=0.15; $('loss-slider').value=0.98; $('loss-val').textContent='0.98'; $('rp-slider').value=1100; $('rp-val').textContent='1,100'; };
+  $('toggle-perpetuate').onchange = e=>{ state.perpetuate=e.target.checked; save(); };
+  document.querySelectorAll('.p-int').forEach(b=>b.onclick=()=>{ document.querySelectorAll('.p-int').forEach(x=>x.classList.remove('btn-active')); b.classList.add('btn-active'); state.pInterval=+b.dataset.int; save(); });
+  document.querySelectorAll('.p-mode').forEach(b=>b.onclick=()=>{ document.querySelectorAll('.p-mode').forEach(x=>x.classList.remove('btn-active')); b.classList.add('btn-active'); state.pMode=b.dataset.mode; save(); });
+  $('btn-inject').onclick = ()=>{ const v=$('idea-input').value.trim(); if(!v) return; doCycle(v,'inject'); $('idea-input').value=''; };
+  $('idea-input').addEventListener('keydown', e=>{ if(e.key==='Enter') $('btn-inject').click(); });
+  $('btn-commons').onclick = ()=>{ const commons=['Whisper mode coupling','Yb fiber ASE suppression','Distributed feedback','Photon lifetime','Coherence collapse']; doCycle(commons[Math.floor(Math.random()*commons.length)], 'commons'); };
+  $('btn-export-jsonl').onclick = ()=>{ const blob=new Blob([state.memory.map(m=>JSON.stringify(m)).join('\n')],{type:'application/jsonl'}); const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='whisper-lattice-memory.jsonl'; a.click(); };
+  $('btn-export-csv').onclick = ()=>{ const rows=['depth,title,N,phi,t']; state.memory.forEach(m=>rows.push(`${m.depth},"${m.title.replace(/"/g,'""')}",${m.N.toFixed(4)},${m.phi.toFixed(4)},${m.t}`)); const blob=new Blob([rows.join('\n')],{type:'text/csv'}); const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='whisper-lattice-memory.csv'; a.click(); };
+
+  // Init renders
+  renderMemory(); renderChips(); renderTimeline(); tickCounters(); updateUI();
+  setInterval(tickCounters, 1000);
+  setInterval(save, 5000);
+  requestAnimationFrame(loop);
+
+  // subtle intro pump
+  setTimeout(()=>{ state.params.Rp=5200; $('rp-slider').value=5200; $('rp-val').textContent='5,200'; }, 800);
+})();
+</script>
+</body>
+</html>

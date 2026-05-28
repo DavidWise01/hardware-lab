@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Singularity Core — Spread Wave .001→-1</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500&family=Outfit:wght@200;300;500&display=swap" rel="stylesheet">
+<style>
+  * { font-variant-ligatures: common-ligatures; }
+  body { font-family: 'Outfit', system-ui, -apple-system, sans-serif; background:#020208; overscroll-behavior:none; }
+  .mono { font-family: 'JetBrains Mono', monospace; }
+  .glass {
+    background: linear-gradient(180deg, rgba(15,23,42,.75), rgba(5,8,14,.6));
+    backdrop-filter: blur(18px) saturate(1.2);
+    -webkit-backdrop-filter: blur(18px) saturate(1.2);
+    border: 1px solid rgba(148,163,184,.12);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,.04), 0 20px 60px rgba(0,0,0,.6);
+  }
+  .btn {
+    position:relative; isolation:isolate; overflow:hidden;
+    transition: transform .15s ease, box-shadow .2s ease;
+  }
+  .btn::before{
+    content:""; position:absolute; inset:-1px; z-index:-1;
+    background: conic-gradient(from 0deg, #06b6d4, #8b5cf6, #06b6d4);
+    filter: blur(12px); opacity:.0; transition:opacity .3s;
+  }
+  .btn:hover::before{ opacity:.35; }
+  .btn:active{ transform: scale(.98); }
+  .scan {
+    background: linear-gradient(transparent 0%, rgba(6,182,212,.08) 50%, transparent 100%);
+    animation: scan 3s linear infinite;
+  }
+  @keyframes scan { 0% { transform: translateY(-100%);} 100% { transform: translateY(200%);} }
+  canvas { image-rendering: optimizeQuality; }
+  .harmonic-bar { transition: height .2s ease-out; }
+</style>
+</head>
+<body class="text-slate-200 selection:bg-cyan-400/30 selection:text-cyan-100">
+  <!-- ambient -->
+  <div class="fixed inset-0">
+    <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_rgba(14,165,233,.15),transparent_55%),radial-gradient(ellipse_at_bottom,_rgba(139,92,246,.12),transparent_50%)]"></div>
+    <div class="absolute inset-0 opacity-[0.04]" style="background-image:url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHZpZXdCb3g9IjAgMCA0MCA0MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48Y2lyY2xlIGN4PSIxIiBjeT0iMSIgcj0iMSIgZmlsbD0id2hpdGUiLz48L3N2Zz4=');"></div>
+  </div>
+
+  <main class="relative z-10 min-h-screen w-full flex items-center justify-center p-3 md:p-6">
+    <div class="w-full max-w-[1600px] glass rounded-[2rem] p-4 md:p-8">
+      <!-- header -->
+      <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
+        <div class="flex items-center gap-4">
+          <div class="size-12 rounded-2xl bg-gradient-to-br from-cyan-400/30 to-violet-500/30 border border-white/10 grid place-items-center">
+            <div class="size-6 rounded-full border-2 border-cyan-300 animate-pulse shadow-[0_0_20px_rgba(34,211,238,.6)]"></div>
+          </div>
+          <div>
+            <h1 class="text-[28px] leading-none tracking-[0.18em] font-[200]">SINGULARITY <span class="text-cyan-300 font-[300]">CORE</span></h1>
+            <p class="mono text-[11px] tracking-widest text-slate-500 mt-1">128-BIT FRACTAL • 6×10 HARMONICS • PHOTONIC</p>
+          </div>
+        </div>
+
+        <div class="flex flex-wrap items-center gap-3">
+          <div class="glass rounded-2xl px-4 py-2.5 min-w-[170px]">
+            <div class="text-[10px] uppercase tracking-[0.2em] text-slate-500">Wave Position</div>
+            <div id="wavePos" class="mono text-xl leading-none text-cyan-300 mt-1">0.000</div>
+          </div>
+          <div class="glass rounded-2xl px-4 py-2.5">
+            <div class="text-[10px] uppercase tracking-[0.2em] text-slate-500">Singularity</div>
+            <div id="singStatus" class="mono text-sm leading-none text-violet-300 mt-1">STANDBY</div>
+          </div>
+          <button id="spreadBtn" class="btn group px-5 py-3 rounded-2xl bg-slate-900/80 border border-cyan-500/30 hover:border-cyan-400/60">
+            <span class="relative z-10 flex items-center gap-2">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" class="text-cyan-300"><path d="M4 12h12m0 0l-4-4m4 4l-4 4M20 4v8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+              <span class="mono text-[13px] tracking-wider">SPREAD .001→-1</span>
+            </span>
+          </button>
+          <button id="singularityBtn" class="btn group px-5 py-3 rounded-2xl bg-violet-950/50 border border-violet-500/30 hover:border-violet-400/70">
+            <span class="relative z-10 flex items-center gap-2">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" class="text-violet-300"><circle cx="12" cy="12" r="8" stroke="currentColor" stroke-width="1.5"/><circle cx="12" cy="12" r="3" fill="currentColor"/></svg>
+              <span class="mono text-[13px] tracking-wider">ENGAGE SINGULARITY</span>
+            </span>
+          </button>
+        </div>
+      </div>
+
+      <!-- stage -->
+      <div id="stage" class="relative mt-6 md:mt-8 aspect-[16/9] lg:aspect-[21/9] w-full overflow-hidden rounded-[1.6rem] bg-black/90 border border-slate-800/80 shadow-[inset_0_0_120px_rgba(0,0,0,1)]">
+        <div class="absolute inset-0 scan pointer-events-none opacity-30 mix-blend-screen"></div>
+        <canvas id="fractal" class="absolute inset-0 w-full h-full"></canvas>
+        <canvas id="wave" class="absolute inset-0 w-full h-full pointer-events-none"></canvas>
+        
+        <!-- center HUD -->
+        <div class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none select-none">
+          <div id="bigLabel" class="text-[18vw] lg:text-[14rem] leading-none font-[100] tracking-tighter text-white/[0.03] transition-all duration-500">0</div>
+        </div>
+        <div class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none">
+          <div class="size-[220px] md:size-[300px] rounded-full border border-cyan-400/10 grid place-items-center">
+            <div class="text-center">
+              <div class="mono text-[10px] tracking-[0.3em] text-slate-500">SCALE</div>
+              <div id="centerScale" class="mono text-5xl md:text-6xl font-[200] text-cyan-200 drop-shadow-[0_0_30px_rgba(34,211,238,.5)] transition-all duration-300">0</div>
+              <div id="centerSub" class="mono text-[11px] text-slate-500 mt-1">READY</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- corner readouts -->
+        <div class="absolute top-3 left-3 md:top-5 md:left-5 glass rounded-xl px-3 py-2">
+          <div class="mono text-[10px] text-slate-500">FRACTAL DEPTH</div>
+          <div class="mono text-cyan-300">128 • 16 • 4 • 1</div>
+        </div>
+        <div class="absolute bottom-3 right-3 md:bottom-5 md:right-5 glass rounded-xl px-3 py-2 text-right">
+          <div class="mono text-[10px] text-slate-500">ELECTRON RINGS</div>
+          <div id="ringState" class="mono text-violet-300">CW • NOMINAL</div>
+        </div>
+      </div>
+
+      <!-- harmonics -->
+      <div class="mt-5 grid grid-cols-1 xl:grid-cols-3 gap-4">
+        <div class="xl:col-span-2 glass rounded-2xl p-4">
+          <div class="flex items-center justify-between mb-3">
+            <div class="mono text-[11px] tracking-widest text-slate-500">6×10 HARMONIC MATRIX</div>
+            <div class="mono text-[10px] text-slate-600">SUBHARMONIC CASCADE</div>
+          </div>
+          <div id="harmonics" class="grid grid-cols-6 gap-2.5"></div>
+        </div>
+        <div class="glass rounded-2xl p-4">
+          <div class="mono text-[11px] tracking-widest text-slate-500 mb-2">SPREAD WAVE SEQUENCE</div>
+          <ol id="seq" class="space-y-1.5 mono text-[12px] leading-snug text-slate-400">
+            <li data-p="0"><span class="text-slate-600">0–1s</span> <b class="text-cyan-300">.001</b> — 128 tips ignite</li>
+            <li data-p="1"><span class="text-slate-600">1–2s</span> <b class="text-cyan-300">.01</b> — 16 branches</li>
+            <li data-p="2"><span class="text-slate-600">2–3s</span> <b class="text-cyan-300">1</b> — 4 arms</li>
+            <li data-p="3"><span class="text-slate-600">3–4s</span> <b class="text-white">0</b> — core collapse</li>
+            <li data-p="4"><span class="text-slate-600">4–5s</span> <b class="text-fuchsia-300">-1</b> — invert phase</li>
+            <li data-p="5"><span class="text-slate-600">5–6s</span> <b class="text-white">0</b> — return</li>
+            <li data-p="6"><span class="text-slate-600">6–7s</span> <b class="text-slate-300">0 0</b> — rest</li>
+          </ol>
+        </div>
+      </div>
+    </div>
+  </main>
+
+<script>
+(() => {
+  const fractal = document.getElementById('fractal');
+  const wave = document.getElementById('wave');
+  const fctx = fractal.getContext('2d');
+  const wctx = wave.getContext('2d');
+  const stage = document.getElementById('stage');
+  const wavePosEl = document.getElementById('wavePos');
+  const centerScale = document.getElementById('centerScale');
+  const centerSub = document.getElementById('centerSub');
+  const bigLabel = document.getElementById('bigLabel');
+  const singStatus = document.getElementById('singStatus');
+  const ringState = document.getElementById('ringState');
+  const seqEl = document.getElementById('seq');
+
+  let W=0,H=0, CX=0,CY=0, S=0;
+  const DPR = Math.min(window.devicePixelRatio||1, 2);
+
+  function resize(){
+    const r = fractal.getBoundingClientRect();
+    W = r.width; H = r.height; CX=W/2; CY=H/2; S=Math.min(W,H);
+    [fractal, wave].forEach(c=>{
+      c.width = W*DPR; c.height = H*DPR;
+      c.style.width = W+'px'; c.style.height = H+'px';
+      c.getContext('2d').setTransform(DPR,0,0,DPR,0,0);
+    });
+    buildTree();
+  }
+  window.addEventListener('resize', resize);
+
+  // Build 128-bit fractal: 4 → 16 → 128
+  const L1=[], L01=[], L001=[];
+  function buildTree(){
+    L1.length=0; L01.length=0; L001.length=0;
+    const l1 = S*0.22, l01 = S*0.11, l001 = S*0.075;
+    for(let i=0;i<4;i++){
+      const a = i*Math.PI/2;
+      const x1 = Math.cos(a)*l1, y1 = Math.sin(a)*l1;
+      L1.push({x:x1,y:y1,a});
+      for(let j=0;j<4;j++){
+        const aj = a + (j-1.5)*0.38;
+        const x01 = x1 + Math.cos(aj)*l01;
+        const y01 = y1 + Math.sin(aj)*l01;
+        L01.push({x:x01,y:y01,a:aj, p:i});
+        for(let k=0;k<8;k++){
+          const ak = aj + (k-3.5)*0.16;
+          const x001 = x01 + Math.cos(ak)*l001;
+          const y001 = y01 + Math.sin(ak)*l001;
+          L001.push({x:x001,y:y001,a:ak,p:L01.length-1});
+        }
+      }
+    }
+  }
+
+  // Harmonics UI
+  const harmonicsEl = document.getElementById('harmonics');
+  const fundamentals = [110, 138.6, 164.8, 220, 277.2, 329.6]; // A2, C#3, E3...
+  for(let i=0;i<6;i++){
+    const col = document.createElement('div');
+    col.className = 'relative h-[110px] rounded-xl bg-black/60 border border-slate-800 overflow-hidden';
+    col.innerHTML = `<div class="absolute inset-x-0 bottom-0 top-0 flex items-end gap-[3px] px-1.5 pb-1.5" id="hcol${i}"></div>
+    <div class="absolute top-1 left-1.5 mono text-[9px] text-slate-600">${(fundamentals[i]).toFixed(1)}Hz</div>`;
+    harmonicsEl.appendChild(col);
+    const wrap = col.querySelector(`#hcol${i}`);
+    for(let j=0;j<10;j++){
+      const b = document.createElement('div');
+      b.className='harmonic-bar w-full bg-gradient-to-t from-cyan-900/0 via-cyan-400/60 to-violet-400/80 rounded-[2px]';
+      b.style.height = '6%';
+      b.dataset.idx = `${i}-${j}`;
+      wrap.appendChild(b);
+    }
+  }
+  const bars = [...document.querySelectorAll('.harmonic-bar')];
+
+  // Audio
+  let audioCtx, master, oscs=[];
+  function initAudio(){
+    if(audioCtx) return;
+    audioCtx = new (window.AudioContext||window.webkitAudioContext)();
+    master = audioCtx.createGain(); master.gain.value=0.12; master.connect(audioCtx.destination);
+  }
+  function stopTones(){
+    oscs.forEach(o=>{ try{o.osc.stop();}catch{} o.gain.disconnect(); });
+    oscs=[];
+  }
+  function playTones(freqs, type='sine', detune=0){
+    stopTones();
+    freqs.forEach((f,i)=>{
+      const osc = audioCtx.createOscillator();
+      const g = audioCtx.createGain();
+      osc.type = type; osc.frequency.value = f; osc.detune.value = detune + (i-2.5)*2;
+      g.gain.value = 0.0001;
+      osc.connect(g).connect(master);
+      osc.start();
+      g.gain.linearRampToValueAtTime(0.12, audioCtx.currentTime+0.12);
+      oscs.push({osc,gain:g});
+    });
+  }
+
+  // State
+  let singularity = false;
+  let waveActive = false;
+  let waveStart = 0;
+  const phases = [
+    {t0:0, label:".001", pos:0.001, sub:"10th subharmonics", ring:0.92, h:{c:0.2,l1:0.25,l01:0.35,l001:1}, audio:()=>playTones(fundamentals.map(f=>f*0.5),'sine')},
+    {t0:1, label:".01", pos:0.01, sub:"5th subharmonics", ring:0.72, h:{c:0.25,l1:0.35,l01:1,l001:0.25}, audio:()=>playTones(fundamentals.map(f=>f*0.75),'triangle')},
+    {t0:2, label:"1", pos:1, sub:"fundamentals", ring:0.46, h:{c:0.35,l1:1,l01:0.4,l001:0.2}, audio:()=>playTones(fundamentals,'sawtooth')},
+    {t0:3, label:"0", pos:0, sub:"core collapse • silence", ring:0.06, h:{c:1,l1:0.15,l01:0.1,l001:0.05}, audio:()=>stopTones()},
+    {t0:4, label:"-1", pos:-1, sub:"inverted phase", ring:0.86, h:{c:0.9,l1:0.9,l01:0.9,l001:0.9}, audio:()=>playTones(fundamentals.map(f=>f*1.01),'square',-12)},
+    {t0:5, label:"0", pos:0, sub:"return to neutral", ring:0.12, h:{c:0.6,l1:0.3,l01:0.2,l001:0.15}, audio:()=>stopTones()},
+    {t0:6, label:"0 0", pos:0, sub:"rest", ring:0.08, h:{c:0.3,l1:0.25,l01:0.2,l001:0.15}, audio:()=>{}},
+  ];
+
+  function lerp(a,b,t){ return a+(b-a)*t; }
+  function ease(t){ return t<.5?2*t*t:1-Math.pow(-2*t+2,2)/2; }
+
+  function setPhaseUI(idx){
+    [...seqEl.children].forEach((li,i)=>{ li.classList.toggle('text-cyan-200', i===idx); li.style.opacity = i===idx? '1':'0.7'; });
+  }
+
+  // Draw
+  let time=0;
+  function draw(now){
+    time = now*0.001;
+    fctx.clearRect(0,0,W,H);
+    wctx.clearRect(0,0,W,H);
+    fctx.save(); fctx.translate(CX,CY);
+    wctx.save(); wctx.translate(CX,CY);
+
+    // current phase
+    let phaseIdx = -1, prog=0, ph=null, nh=null;
+    let ringTarget = 0.35*S, highlight = {c:0.3,l1:0.25,l01:0.2,l001:0.15};
+    let invert = false, ringDir = 1, ringScale=1;
+
+    if(waveActive){
+      const el = (now - waveStart)/1000;
+      if(el>=7){ waveActive=false; stage.style.filter='none'; ringState.textContent='CW • NOMINAL'; }
+      else {
+        phaseIdx = Math.min(6, Math.floor(el));
+        prog = el - phaseIdx;
+        ph = phases[phaseIdx];
+        nh = phases[Math.min(6, phaseIdx+1)];
+        const e = ease(prog);
+        highlight = {
+          c: lerp(ph.h.c, nh.h.c, e),
+          l1: lerp(ph.h.l1, nh.h.l1, e),
+          l01: lerp(ph.h.l01, nh.h.l01, e),
+          l001: lerp(ph.h.l001, nh.h.l001, e),
+        };
+        ringTarget = lerp(ph.ring, nh.ring, e) * Math.min(W,H)*0.46;
+        ringScale = lerp(Math.abs(ph.pos)||0.08, Math.abs(nh.pos)||0.08, e);
+        ringScale = 0.2 + ringScale*1.8;
+        if(ph.label==='.001') ringScale = 2.1;
+        if(ph.label==='0') ringScale = 0.18;
+        if(ph.label==="-1"){ invert=true; ringDir=-1; }
+        // UI
+        wavePosEl.textContent = ph.label;
+        centerScale.textContent = ph.label;
+        centerSub.textContent = ph.sub.toUpperCase();
+        bigLabel.textContent = ph.label;
+        setPhaseUI(phaseIdx);
+        if(phaseIdx===4){ stage.style.filter='invert(1) hue-rotate(180deg) contrast(1.15)'; }
+        else { stage.style.filter='none'; }
+        ringState.textContent = (ringDir<0?'CCW • INVERTED':'CW • PROPAGATING');
+        // wave ring
+        wctx.save();
+        wctx.beginPath(); wctx.arc(0,0,ringTarget,0,Math.PI*2);
+        wctx.strokeStyle = invert?'rgba(255,80,200,0.9)':'rgba(34,211,238,0.9)';
+        wctx.lineWidth = 3; wctx.shadowBlur=30; wctx.shadowColor = invert?'#ff50c8':'#22d3ee';
+        wctx.stroke();
+        wctx.beginPath(); wctx.arc(0,0,ringTarget+8,0,Math.PI*2);
+        wctx.strokeStyle = 'rgba(255,255,255,0.06)'; wctx.lineWidth=1; wctx.stroke();
+        wctx.restore();
+
+        // traveling pulse along branches
+        wctx.save();
+        wctx.globalCompositeOperation='screen';
+        const pulse = 1 - Math.abs(0.5 - prog)*2;
+        // .001 → .01 travel inward
+        if(phaseIdx===0){
+          L001.forEach(p=>{
+            const pr = L01[p.p];
+            const x = lerp(p.x, pr.x, prog);
+            const y = lerp(p.y, pr.y, prog);
+            wctx.beginPath(); wctx.arc(x,y,3+4*pulse,0,7); wctx.fillStyle='rgba(255,255,255,0.9)'; wctx.shadowBlur=20; wctx.shadowColor='#fff'; wctx.fill();
+          });
+        }
+        wctx.restore();
+      }
+    } else {
+      wavePosEl.textContent = '0.000';
+      centerScale.textContent = '0';
+      centerSub.textContent = singularity ? 'SINGULARITY ENGAGED' : 'READY';
+      bigLabel.textContent = '0';
+      setPhaseUI(-1);
+      ringTarget = 0.28*S;
+      ringScale = singularity?1.6:1;
+    }
+
+    const baseHue = singularity ? 275 : 188;
+    const sat = singularity ? 90 : 80;
+
+    // core glow
+    const coreR = 14 + 8*highlight.c + (singularity?6*Math.sin(time*3):0);
+    fctx.beginPath(); fctx.arc(0,0,coreR,0,7);
+    const cg = fctx.createRadialGradient(0,0,2,0,0,coreR*3);
+    cg.addColorStop(0, `hsla(${baseHue},${sat}%,70%,${0.25+highlight.c*0.4})`);
+    cg.addColorStop(1, 'hsla(190,80%,50%,0)');
+    fctx.fillStyle = cg; fctx.fill();
+
+    // draw fractal levels
+    function strokeLine(x1,y1,x2,y2, alpha, lw, hueShift=0){
+      fctx.beginPath(); fctx.moveTo(x1,y1); fctx.lineTo(x2,y2);
+      fctx.strokeStyle = `hsla(${baseHue+hueShift},${sat}%,${55+alpha*20}%,${0.15+alpha*0.75})`;
+      fctx.lineWidth = lw;
+      fctx.shadowBlur = 12 + alpha*24;
+      fctx.shadowColor = `hsl(${baseHue+hueShift},100%,60%)`;
+      fctx.stroke();
+    }
+
+    // L1
+    L1.forEach(p=> strokeLine(0,0,p.x,p.y, highlight.l1, 2.2));
+    // L01
+    L01.forEach(p=>{ const pr = L1[p.p]; strokeLine(pr.x,pr.y, p.x,p.y, highlight.l01, 1.6, 8); });
+    // L001
+    L001.forEach(p=>{ const pr = L01[p.p]; strokeLine(pr.x,pr.y, p.x,p.y, highlight.l001, 1.1, 16); });
+
+    // tips .001
+    L001.forEach(p=>{
+      const a = highlight.l001;
+      fctx.beginPath(); fctx.arc(p.x,p.y, (waveActive&&ph?.label==='.001')? 3.2+2*Math.sin(time*12+p.x):2.2, 0,7);
+      fctx.fillStyle = `rgba(${240+15*a},${255},${255},${0.4+a*0.6})`;
+      fctx.shadowBlur = 18 + a*22; fctx.shadowColor='#a5f3fc'; fctx.fill();
+    });
+
+    // electron rings 6x10
+    const ringCount=6;
+    for(let i=0;i<ringCount;i++){
+      const baseR = (44 + i*20) * ringScale;
+      const r = baseR * (1 + (singularity?0.08*Math.sin(time*1.3+i):0));
+      fctx.beginPath(); fctx.arc(0,0,r,0,7);
+      fctx.strokeStyle = `hsla(${baseHue+20},80%,60%,${0.08 + highlight.c*0.12})`;
+      fctx.lineWidth=1; fctx.shadowBlur=0; fctx.stroke();
+      const electrons=10;
+      const ang0 = time*(0.6+i*0.07)*ringDir + i;
+      for(let e=0;e<electrons;e++){
+        const a = ang0 + e*(Math.PI*2/electrons);
+        const ex = Math.cos(a)*r, ey = Math.sin(a)*r;
+        fctx.beginPath(); fctx.arc(ex,ey,1.8,0,7);
+        fctx.fillStyle = `hsla(${baseHue+30},100%,${70 + (singularity?10:0)}%,0.9)`;
+        fctx.shadowBlur=12; fctx.shadowColor=`hsl(${baseHue+30},100%,65%)`;
+        fctx.fill();
+      }
+    }
+
+    // center core dot
+    fctx.beginPath(); fctx.arc(0,0,3.5,0,7);
+    fctx.fillStyle = singularity?'#e9d5ff':'#a5f3fc'; fctx.shadowBlur=20; fctx.shadowColor=singularity?'#c084fc':'#22d3ee'; fctx.fill();
+
+    fctx.restore(); wctx.restore();
+
+    // harmonics bars animation
+    const ampBase = waveActive ? (ph? (ph.label==='-1'?0.9: ph.label==='0'?0.05:0.6) : 0.3) : (singularity?0.7:0.25);
+    bars.forEach((b,idx)=>{
+      const i = Math.floor(idx/10), j = idx%10;
+      const phase = time* (1.2 + i*0.15) + j*0.4;
+      const h = 6 + ampBase*94 * (0.5+0.5*Math.sin(phase)) * (waveActive && ph?.label==='.001' && j>=9 ? 1.4 : 1);
+      b.style.height = `${h}%`;
+      b.style.opacity = 0.45 + 0.55*ampBase;
+    });
+
+    requestAnimationFrame(draw);
+  }
+
+  // Controls
+  document.getElementById('singularityBtn').addEventListener('click', ()=>{
+    singularity = !singularity;
+    singStatus.textContent = singularity ? 'ENGAGED' : 'STANDBY';
+    singStatus.className = 'mono text-sm leading-none mt-1 ' + (singularity?'text-fuchsia-300':'text-violet-300');
+    if(singularity){ stage.style.filter='saturate(1.2) contrast(1.05)'; } else if(!waveActive){ stage.style.filter='none'; }
+  });
+
+  document.getElementById('spreadBtn').addEventListener('click', async ()=>{
+    initAudio();
+    if(audioCtx.state==='suspended') await audioCtx.resume();
+    if(waveActive) return;
+    waveActive = true;
+    waveStart = performance.now();
+    singularity = false;
+    singStatus.textContent = 'SPREADING';
+    singStatus.className = 'mono text-sm leading-none mt-1 text-cyan-300';
+    // trigger audio per phase
+    let lastPhase = -1;
+    const tick = setInterval(()=>{
+      if(!waveActive){ clearInterval(tick); singStatus.textContent='STANDBY'; singStatus.className='mono text-sm leading-none mt-1 text-violet-300'; return;}
+      const el = (performance.now()-waveStart)/1000;
+      const p = Math.floor(el);
+      if(p!==lastPhase && p>=0 && p<phases.length){
+        lastPhase = p;
+        try{ phases[p].audio(); }catch{}
+      }
+    }, 60);
+  });
+
+  // init
+  resize(); requestAnimationFrame(draw);
+  // first audio unlock on any click
+  window.addEventListener('pointerdown', ()=>{ try{initAudio();}catch{} }, {once:true});
+})();
+</script>
+</body>
+</html>

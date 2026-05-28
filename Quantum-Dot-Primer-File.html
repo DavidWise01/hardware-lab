@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<title>Quantum Memory Vault</title>
+<meta name="theme-color" content="#050507">
+<style>
+  :root{
+    --bg:#050507; --panel:#0d0f13; --panel2:#151821; --ink:#e6e7ea; --muted:#8b90a0;
+    --border:#232633; --accent:#7dd3fc; --accent2:#22d3ee; --ok:#22c55e; --warn:#f59e0b; --bad:#ef4444;
+  }
+  *{box-sizing:border-box}
+  html,body{height:100%}
+  body{
+    margin:0; background:var(--bg); color:var(--ink);
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", "Courier New", monospace;
+    line-height:1.5; -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility;
+  }
+  a{color:var(--accent)}
+  header{
+    position:sticky; top:0; z-index:10;
+    background:linear-gradient(180deg, rgba(13,15,19,0.98), rgba(13,15,19,0.85));
+    backdrop-filter: blur(8px);
+    border-bottom:1px solid var(--border);
+    padding:14px 16px; display:flex; gap12px; align-items:center; justify-content:space-between; flex-wrap:wrap;
+  }
+  .title-wrap{display:flex; flex-direction:column; gap:2px}
+  h1{margin:0; font-size:16px; letter-spacing:.3px; font-weight:700}
+  .sub{margin:0; color:var(--muted); font-size:12px}
+  .head-actions{display:flex; gap:8px}
+  button, select, input{
+    font:inherit; color:var(--ink); background:var(--panel2); border:1px solid var(--border);
+    border-radius:10px; padding:10px 12px; outline:none;
+  }
+  button{cursor:pointer; user-select:none; touch-action:manipulation}
+  button:hover{border-color:#2d3345}
+  button:active{transform:translateY(1px)}
+  .btn-primary{background:linear-gradient(180deg, var(--accent), var(--accent2)); color:#04121a; border:none; font-weight:700}
+  .btn-ghost{background:transparent}
+  .btn-danger{background:#1a0f12; border-color:#3a1a20; color:#ffb4b4}
+  .chip{font-size:11px; padding:3px 8px; border:1px solid var(--border); border-radius:999px; color:var(--muted); background:var(--panel2)}
+  .app{display:grid; grid-template-columns:260px 1fr; min-height:calc(100dvh - 58px)}
+  aside{
+    border-right:1px solid var(--border); background:var(--panel);
+    padding:12px; position:sticky; top:58px; height:calc(100dvh - 58px); overflow:auto;
+  }
+  .topics{display:flex; flex-direction:column; gap:6px}
+  .topic-btn{
+    display:flex; align-items:center; justify-content:space-between; gap:8px;
+    width:100%; text-align:left; padding:10px 12px; border-radius:10px;
+    background:transparent; border:1px solid transparent; color:var(--muted);
+  }
+  .topic-btn.active, .topic-btn:hover{background:var(--panel2); color:var(--ink); border-color:var(--border)}
+  .topic-count{opacity:.7; font-size:12px}
+  main{padding:16px; max-width:980px; width:100%; margin:0 auto}
+  .card{
+    background:var(--panel); border:1px solid var(--border); border-radius:14px; padding:14px;
+    box-shadow:0 0 0 1px rgba(0,0,0,.2) inset, 0 10px 30px rgba(0,0,0,.25);
+  }
+  .editor{display:grid; gap:10px}
+  textarea{
+    width:100%; min-height:200px; resize:vertical;
+    background:#07080b; border:1px solid var(--border); border-radius:12px; padding:12px;
+    color:var(--ink); font-size:14px; line-height:1.6;
+  }
+  textarea:focus{border-color:var(--accent); box-shadow:0 0 0 3px rgba(125,211,252,.15)}
+  .editor-row{display:flex; gap:8px; flex-wrap:wrap; align-items:center}
+  .grow{flex:1 1 auto}
+  .filters{display:flex; gap:8px; margin:16px 0; flex-wrap:wrap}
+  .search{flex:1 1 240px; display:flex; align-items:center; gap:8px; background:var(--panel); border:1px solid var(--border); border-radius:12px; padding:8px 10px}
+  .search input{background:transparent; border:none; padding:0; width:100%}
+  .list{display:grid; gap:10px}
+  .entry{border:1px solid var(--border); border-radius:12px; overflow:hidden; background:var(--panel)}
+  .entry-head{display:grid; grid-template-columns:1fr auto; gap:8px; padding:12px; cursor:pointer; align-items:center}
+  .entry-head:hover{background:var(--panel2)}
+  .meta{display:flex; flex-wrap:wrap; gap:8px; align-items:center; min-width:0}
+  .date{color:var(--muted); font-size:12px; white-space:nowrap}
+  .topic-badge{font-size:11px}
+  .preview{color:var(--muted); font-size:13px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
+  .toggle{width:32px; height:32px; display:grid; place-items:center; border-radius:8px; border:1px solid var(--border); background:var(--panel2); color:var(--muted)}
+  .entry-body{display:none; border-top:1px solid var(--border); background:#080a0f}
+  .entry.open .entry-body{display:block}
+  .entry-content{padding:12px}
+  .entry-content pre{margin:0; white-space:pre-wrap; word-wrap:break-word; font-size:13.5px; line-height:1.65}
+  .entry-actions{display:flex; gap:8px; padding:0 12px 12px}
+  .entry-actions button{padding:8px 10px; font-size:12px}
+  .empty{color:var(--muted); text-align:center; padding:30px; border:1px dashed var(--border); border-radius:12px; background:var(--panel)}
+  footer{border-top:1px solid var(--border); color:var(--muted); text-align:center; font-size:12px; padding:18px; background:var(--panel)}
+  .kbd{border:1px solid var(--border); background:var(--panel2); padding:1px 6px; border-radius:6px; font-size:11px; color:var(--muted)}
+  @media (max-width:900px){
+    .app{grid-template-columns:1fr}
+    aside{position:static; height:auto; border-right:none; border-bottom:1px solid var(--border)}
+    .topics{flex-direction:row; overflow:auto; scrollbar-width:none}
+    .topics::-webkit-scrollbar{display:none}
+    .topic-btn{white-space:nowrap}
+    header{top:0}
+  }
+</style>
+</head>
+<body>
+<header>
+  <div class="title-wrap">
+    <h1>Quantum Dot Memory — David</h1>
+    <p class="sub">paste once, keep forever</p>
+  </div>
+  <div class="head-actions">
+    <button id="exportBtn" title="Download markdown">Export</button>
+    <button id="importBtn" title="Load previous export">Import</button>
+    <input type="file" id="fileInput" accept=".md,.markdown,.txt,.json" hidden>
+  </div>
+</header>
+
+<div class="app">
+  <aside>
+    <div class="topics" id="topics"></div>
+  </aside>
+
+  <main>
+    <section class="card editor">
+      <textarea id="newText" placeholder="Paste chat text, notes, equations, pulse params…
+
+Tip: ⌘/Ctrl + Enter to save"></textarea>
+      <div class="editor-row">
+        <select id="newTopic" class="grow" aria-label="Topic"></select>
+        <button id="saveBtn" class="btn-primary">Save Entry</button>
+        <span class="chip">offline • localStorage</span>
+      </div>
+    </section>
+
+    <div class="filters">
+      <div class="search">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+        <input id="searchInput" placeholder="search text, dates, topics…" />
+      </div>
+      <select id="sortSelect" title="Sort">
+        <option value="newest">Newest first</option>
+        <option value="oldest">Oldest first</option>
+      </select>
+    </div>
+
+    <section id="list" class="list"></section>
+    <div id="empty" class="empty" hidden>No entries yet. Paste above and hit Save.</div>
+  </main>
+</div>
+
+<footer>No cloud, no Microsoft bridge, stays on your device</footer>
+
+<script>
+'use strict';
+const TOPICS = ['All','Quantum Dots','Transmons','IQ Pulses','JavaScript API','Misc'];
+const STARTER = [
+  {id: genId(), date:'2024-12-01T10:00:00.000Z', topic:'Quantum Dots', text:'Quantum dots are size-tunable semiconductor nanocrystals (2–10 nm). Quantum confinement → discrete, atom-like levels with bandgap ~1/r². Key metrics: charging energy Ec, orbital spacing ΔE, tunnel coupling tc. Applications: spin/valley qubits (Si/SiGe, GaAs), single-photon sources, QD displays. Fabrication: gate-defined 2DEG dots vs colloidal synthesis. Watch valley splitting in Si (>100 µeV target).'},
+  {id: genId(), date:'2024-12-02T09:30:00.000Z', topic:'Transmons', text:'Transmon = Josephson Junction + large shunt capacitor. Design: E_J/E_C ~ 50–100 flattens charge dispersion → exponentially insensitive to 1/f charge noise. Typical ω01/2π = 4–6 GHz, anharmonicity α ≈ -E_C ≈ -200 to -300 MHz. Readout via dispersive coupling to λ/4 resonator (shift χ). T1 limits: dielectric loss, Purcell, quasiparticles. Use Ta/TiN for higher Qi, avoid TLS hotspots.'},
+  {id: genId(), date:'2024-12-03T14:15:00.000Z', topic:'IQ Pulses', text:'IQ baseband: s(t)=I(t)cos(ωt)−Q(t)sin(ωt). I/Q envelopes set rotation angle & phase. DRAG to suppress |1>→|2> leakage: Q(t)=−β·dI/dt with β≈1/(2α). Common shapes: Gaussian (σ≈4–5 ns, 4σ total), DRAG-Gaussian, flat-top with cosine ramps. Calibrate: Rabi for π amplitude, Ramsey for detuning, error-amplification for DRAG β. IQ mixer null LO leakage, correct skew.'},
+  {id: genId(), date:'2024-12-04T11:00:00.000Z', topic:'JavaScript API', text:'JS → JJ (conceptual) flow: define schedule in JSON → compile to DAC samples @1 GS/s → IQ mix → drive JJ → transmon. API sketch: await q.setFreq(5.12e9); await q.play({shape:"drag", amp:0.32, drag:0.42, phase:0, duration:20e-9}); const {i,q}=await q.measure(); Backend returns demodulated IQ; frontend computes state discrimination. Keep latency <1 µs for active reset/feedback.'},
+  {id: genId(), date:'2024-12-05T08:00:00.000Z', topic:'Misc', text:'Checklist: charge-line filtering >80 dB @5 GHz, flux bias low-noise DC, IR filters & eccosorb. For dots: tune to single-electron regime via Coulomb diamonds; extract Ec, lever arm αg. For transmons: measure T1 vs flux, look for TLS; do two-tone spec for |2>. Keep notes of sample ID, cooldown #, wiring map.'}
+];
+
+const storeKey = 'qmv_v1';
+let state = { activeTopic:'All', search:'', sort:'newest', entries:[] };
+
+function genId(){ return (crypto.randomUUID && crypto.randomUUID()) || ('id-'+Math.random().toString(36).slice(2)+Date.now()); }
+function load(){ const raw=localStorage.getItem(storeKey); if(raw){ try{state.entries=JSON.parse(raw)}catch{state.entries=STARTER}} else {state.entries=STARTER} save(); }
+function save(){ localStorage.setItem(storeKey, JSON.stringify(state.entries)) }
+
+const topicsEl=document.getElementById('topics');
+const newTopic=document.getElementById('newTopic');
+const newText=document.getElementById('newText');
+const saveBtn=document.getElementById('saveBtn');
+const listEl=document.getElementById('list');
+const emptyEl=document.getElementById('empty');
+const searchInput=document.getElementById('searchInput');
+const sortSelect=document.getElementById('sortSelect');
+const exportBtn=document.getElementById('exportBtn');
+const importBtn=document.getElementById('importBtn');
+const fileInput=document.getElementById('fileInput');
+
+function initTopics(){
+  topicsEl.innerHTML='';
+  TOPICS.forEach(t=>{
+    const b=document.createElement('button');
+    b.className='topic-btn'+(state.activeTopic===t?' active':'');
+    b.dataset.topic=t;
+    b.innerHTML=`<span>${t}</span><span class="topic-count" id="count-${t.replace(/\s+/g,'')}">0</span>`;
+    b.onclick=()=>{state.activeTopic=t; document.querySelectorAll('.topic-btn').forEach(x=>x.classList.toggle('active', x.dataset.topic===t)); render()};
+    topicsEl.appendChild(b);
+  });
+  newTopic.innerHTML = TOPICS.filter(t=>t!=='All').map(t=>`<option>${t}</option>`).join('');
+  newTopic.value='Quantum Dots';
+}
+function counts(){
+  const map={}; TOPICS.forEach(t=>map[t]=0); state.entries.forEach(e=>{map[e.topic]=(map[e.topic]||0)+1; map['All']++});
+  TOPICS.forEach(t=>{const el=document.getElementById('count-'+t.replace(/\s+/g,'')); if(el) el.textContent=map[t]||0});
+}
+function fmtDate(iso){ const d=new Date(iso); return d.toLocaleString(undefined,{year:'numeric',month:'short',day:'2-digit',hour:'2-digit',minute:'2-digit'}); }
+function preview(s){ return s.replace(/\s+/g,' ').slice(0,140) }
+
+function filtered(){
+  const q=state.search.trim().toLowerCase();
+  let arr=[...state.entries];
+  if(state.activeTopic!=='All') arr=arr.filter(e=>e.topic===state.activeTopic);
+  if(q) arr=arr.filter(e=> (e.text.toLowerCase().includes(q) || e.topic.toLowerCase().includes(q) || fmtDate(e.date).toLowerCase().includes(q)));
+  arr.sort((a,b)=> state.sort==='newest' ? (b.date.localeCompare(a.date)) : (a.date.localeCompare(b.date)));
+  return arr;
+}
+
+function render(){
+  counts();
+  const arr=filtered();
+  listEl.innerHTML='';
+  emptyEl.hidden = arr.length!==0;
+  arr.forEach(e=>{
+    const div=document.createElement('article');
+    div.className='entry';
+    div.innerHTML=`
+      <div class="entry-head">
+        <div class="meta">
+          <span class="date">${fmtDate(e.date)}</span>
+          <span class="chip topic-badge">${e.topic}</span>
+          <span class="preview">${escapeHtml(preview(e.text))}</span>
+        </div>
+        <div class="toggle">›</div>
+      </div>
+      <div class="entry-body">
+        <div class="entry-content"><pre>${escapeHtml(e.text)}</pre></div>
+        <div class="entry-actions">
+          <button data-act="copy">Copy</button>
+          <button data-act="edit">Edit</button>
+          <button data-act="delete" class="btn-danger">Delete</button>
+        </div>
+      </div>`;
+    const head=div.querySelector('.entry-head');
+    head.onclick=()=>div.classList.toggle('open');
+    div.querySelector('[data-act="copy"]').onclick=(ev)=>{ev.stopPropagation(); navigator.clipboard.writeText(e.text).then(()=>toast('Copied'))};
+    div.querySelector('[data-act="delete"]').onclick=(ev)=>{ev.stopPropagation(); if(confirm('Delete this entry?')){ state.entries=state.entries.filter(x=>x.id!==e.id); save(); render(); }};
+    div.querySelector('[data-act="edit"]').onclick=(ev)=>{ev.stopPropagation(); newText.value=e.text; newTopic.value=e.topic; newText.focus(); window.scrollTo({top:0,behavior:'smooth'}); };
+    listEl.appendChild(div);
+  });
+}
+
+function escapeHtml(s){ return s.replace(/[&<>"']/g, m=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[m])); }
+
+function toast(msg){ const t=document.createElement('div'); t.textContent=msg; Object.assign(t.style,{position:'fixed',bottom:'20px',left:'50%',transform:'translateX(-50%)',background:'var(--panel2)',border:'1px solid var(--border)',padding:'8px 12px',borderRadius:'10px',zIndex:99}); document.body.appendChild(t); setTimeout(()=>t.remove(),1200) }
+
+saveBtn.onclick = ()=>{
+  const text=newText.value.trim(); if(!text) return;
+  const entry={ id:genId(), date:new Date().toISOString(), topic:newTopic.value, text };
+  state.entries.unshift(entry); save(); newText.value=''; render(); toast('Saved');
+};
+newText.addEventListener('keydown', e=>{ if((e.metaKey||e.ctrlKey) && e.key==='Enter') saveBtn.click() });
+searchInput.oninput = e=>{ state.search=e.target.value; render() };
+sortSelect.onchange = e=>{ state.sort=e.target.value; render() };
+
+exportBtn.onclick = ()=>{
+  const lines=['# Quantum Dot Memory — David','',`Exported ${new Date().toLocaleString()}`,'','---',''];
+  state.entries.slice().sort((a,b)=>a.date.localeCompare(b.date)).forEach(e=>{
+    const d=new Date(e.date); const ds=`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')} ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}:${String(d.getSeconds()).padStart(2,'0')}`;
+    lines.push(`## ${ds} — ${e.topic}`,'',e.text.trim(),'','---','');
+  });
+  const blob=new Blob([lines.join('\n')],{type:'text/markdown'}); const url=URL.createObjectURL(blob);
+  const a=document.createElement('a'); a.href=url; a.download='quantum_memory.md'; a.click(); URL.revokeObjectURL(url);
+};
+
+importBtn.onclick = ()=>fileInput.click();
+fileInput.onchange = async (e)=>{
+  const f=e.target.files[0]; if(!f) return; const txt=await f.text();
+  let imported=[];
+  const re=/##\s+(\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2})\s+—\s+(.+?)\n\n([\s\S]*?)\n---/g; let m;
+  while((m=re.exec(txt))!==null){ const [_,ds,topic,body]=m; const iso=new Date(ds.replace(' ','T')+'Z').toISOString(); imported.push({id:genId(),date:iso,topic:topic.trim(),text:body.trim()}); }
+  if(imported.length===0){ try{ const arr=JSON.parse(txt); if(Array.isArray(arr)) imported=arr.map(o=>({id:o.id||genId(),date:o.date||new Date().toISOString(),topic:o.topic||'Misc',text:o.text||''})) }catch{} }
+  if(imported.length===0) return alert('No entries found in file.');
+  const replace = confirm('Replace current vault with imported file? (Cancel = merge)');
+  if(replace) state.entries=imported; else state.entries=[...imported, ...state.entries];
+  state.entries.sort((a,b)=>b.date.localeCompare(a.date)); save(); render(); toast('Imported '+imported.length); fileInput.value='';
+};
+
+// init
+load(); initTopics(); render();
+newText.focus();
+</script>
+</body>
+</html>

@@ -1,0 +1,913 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Whisper Lattice — Recursive Memory</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root { color-scheme: dark; }
+  body { font-family: 'Inter', system-ui, -apple-system, sans-serif; background:#050508; }
+  .mono { font-family: 'JetBrains Mono', monospace; }
+  .observer { transition: all .5s cubic-bezier(.2,.8,.2,1); }
+  .observer.active { transform: scale(1.12) translate(-43%, -43%); filter: brightness(1.4); }
+  .observer.active .core { box-shadow: 0 0 40px currentColor, inset 0 0 20px currentColor; }
+  .ring-tick { position:absolute; width:2px; height:9px; background:currentColor; left:50%; top:50%; transform-origin: center 34px; opacity:.18; border-radius:2px; transition: opacity .3s, height .3s; }
+  .ring-tick.on { opacity:.9; height:11px; }
+  .tether { stroke:#5b21b6; stroke-width:1.25; opacity:.18; fill:none; transition: all .4s; }
+  .tether.pulse { opacity:1; stroke:#a78bfa; stroke-width:2; filter: drop-shadow(0 0 8px #7c3aed); animation: tetherPulse 1s ease; }
+  @keyframes tetherPulse { 0%,100%{opacity:.18} 50%{opacity:1} }
+  .particle { position:absolute; width:10px; height:10px; border-radius:50%; pointer-events:none; z-index:30; box-shadow:0 0 16px currentColor, 0 0 32px currentColor; transition: all .85s cubic-bezier(.3,0,.2,1); will-change: left, top; }
+  .node { transition: all .25s; cursor:pointer; }
+  .node:hover { transform: translateX(3px); }
+  .node:hover .node-label { border-color: #7c3aed80; }
+  ::-webkit-scrollbar { width:6px; height:6px; }
+  ::-webkit-scrollbar-thumb { background:#27272a; border-radius:3px; }
+  ::-webkit-scrollbar-thumb:hover { background:#3f3f46; }
+  input[type=range]::-webkit-slider-thumb { appearance:none; width:14px; height:14px; border-radius:50%; background:#8b5cf6; border:2px solid #1a1625; box-shadow:0 0 8px #5b21b6; }
+  input[type=range]::-moz-range-thumb { width:12px; height:12px; border-radius:50%; background:#8b5cf6; border:2px solid #1a1625; }
+</style>
+</head>
+<body class="min-h-screen text-zinc-200 overflow-x-hidden selection:bg-violet-500/30 selection:text-violet-200">
+<div class="fixed inset-0" style="background: radial-gradient(1200px 700px at 75% -10%, rgba(124,58,237,0.15), transparent 60%), radial-gradient(900px 600px at 10% 110%, rgba(76,29,149,0.12), transparent 50%), #050508;"></div>
+<div class="fixed inset-0 opacity-[0.025]" style="background-image:linear-gradient(#fff 1px,transparent 1px),linear-gradient(90deg,#fff 1px,transparent 1px); background-size: 64px 64px;"></div>
+
+<header class="relative z-40 border-b border-violet-950/50 bg-black/60 backdrop-blur-2xl">
+  <div class="max-w-[1720px] mx-auto px-5 md:px-8 py-3.5 flex items-center justify-between gap-4">
+    <div class="flex items-center gap-3.5 min-w-0">
+      <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-violet-600 via-purple-700 to-violet-900 flex items-center justify-center shadow-lg shadow-violet-950/40 ring-1 ring-violet-400/20">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.75"><path d="M12 3v4M12 17v4M4.2 7.8l2.8 2.8M16.9 16.9l2.8 2.8M3 12h4M17 12h4M7 16.9l-2.8 2.8M16.9 7l2.8-2.8"/></svg>
+      </div>
+      <div class="min-w-0">
+        <div class="text-[11px] uppercase tracking-[0.22em] text-violet-300/70 mono font-medium">Whisper Lattice</div>
+        <div class="text-[15px] font-medium -mt-0.5 tracking-wide truncate">Recursive Memory Engine</div>
+      </div>
+    <div class="flex items-center gap-3 md:gap-5 flex-wrap justify-end">
+      <div class="hidden sm:flex items-center gap-2 text-xs mono">
+        <div class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></div>
+        <span class="text-zinc-500">Memory:</span>
+        <span id="memCount" class="text-violet-300">0</span>
+      </div>
+      <div class="hidden md:flex items-center gap-1.5 text-xs mono">
+        <span class="text-zinc-500">Cycles:</span>
+        <span id="perpCount" class="text-amber-300">0</span>
+      </div>
+      <div id="perpIndicator" class="hidden items-center gap-1.5 px-2 py-1 rounded-lg bg-red-950/40 border border-red-900/50">
+        <div class="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse"></div>
+        <span class="text-[10px] mono text-red-300 uppercase tracking-widest">PERPETUATING</span>
+      </div>
+      <div class="hidden lg:flex items-center gap-1.5">
+        <span class="text-[10px] mono text-zinc-600">INT</span>
+        <select id="perpInterval" class="bg-zinc-900/80 border border-zinc-800 rounded-md px-1.5 py-1 text-[11px] mono text-zinc-400 outline-none focus:border-amber-700/50 hover:border-zinc-700 transition">
+          <option value="20">20s</option>
+          <option value="30">30s</option>
+          <option value="40" selected>40s</option>
+          <option value="60">60s</option>
+          <option value="90">90s</option>
+          <option value="120">120s</option>
+        </select>
+      </div>
+      <label class="flex items-center gap-2 cursor-pointer select-none group">
+        <input id="autoDeepen" type="checkbox" checked class="sr-only">
+        <div class="w-10 h-5 rounded-full bg-zinc-800 border border-zinc-700/80 relative transition group-hover:border-zinc-600">
+          <div id="toggleKnob" class="absolute top-[2px] left-[2px] w-4 h-4 rounded-full bg-zinc-500 transition-all duration-300 shadow-md"></div>
+        </div>
+        <span class="text-[11px] mono text-zinc-400 group-hover:text-zinc-200 transition hidden sm:inline">Auto-deepen</span>
+      </label>
+      <label class="flex items-center gap-2 cursor-pointer select-none group">
+        <input id="perpetuateToggle" type="checkbox" class="sr-only">
+        <div id="perpToggleBg" class="w-10 h-5 rounded-full bg-zinc-800 border border-zinc-700/80 relative transition group-hover:border-zinc-600">
+          <div id="perpToggleKnob" class="absolute top-[2px] left-[2px] w-4 h-4 rounded-full bg-zinc-600 transition-all duration-300 shadow-md"></div>
+        </div>
+        <span id="perpLabel" class="text-[11px] mono text-zinc-400 group-hover:text-zinc-200 transition">Perpetuate</span>
+      </label>
+    </div>
+  </div>
+</header>
+
+<!-- IDEA INJECTOR -->
+<div class="relative z-30 max-w-[960px] mx-auto mt-6 md:mt-8 px-4">
+  <div class="rounded-[24px] border border-violet-900/40 bg-gradient-to-b from-zinc-950/90 to-black/80 backdrop-blur-2xl shadow-[0_0_120px_-30px_#6d28d9,inset_0_1px_0_0_rgba(255,255,255,0.03)] overflow-hidden">
+    <div class="px-5 md:px-7 pt-5 pb-4">
+      <div class="flex items-center justify-between mb-3">
+        <div class="text-[11px] uppercase tracking-[0.18em] text-violet-300/90 mono font-medium flex items-center gap-2">
+          <span class="w-1 h-1 rounded-full bg-violet-400 animate-pulse"></span>
+          IDEA INJECTOR
+        </div>
+        <div id="injectorStatus" class="text-[10px] mono text-zinc-600">→ Observer 5 (External) • LIVE PULL FROM COMMONS</div>
+      </div>
+      <div class="flex gap-2.5">
+        <div class="relative flex-1 group">
+          <input id="ideaInput" placeholder="Enter idea, memory, or question…" class="w-full bg-black/70 border border-zinc-800 group-hover:border-zinc-700 rounded-2xl px-4 py-3.5 text-[15px] leading-6 outline-none focus:border-violet-700/80 focus:ring-4 focus:ring-violet-950/50 transition placeholder-zinc-600">
+          <div class="absolute right-3 top-1/2 -translate-y-1/2 text-[10px] mono text-zinc-700 hidden md:block">⏎ inject • c commons</div>
+        </div>
+        <button id="injectBtn" class="px-5 md:px-6 py-3.5 rounded-2xl bg-[radial-gradient(ellipse_at_top,_#8b5cf6,_#5b21b6)] hover:brightness-110 active:scale-[.98] transition font-medium text-[14px] shadow-[0_8px_24px_-8px_#5b21b6] whitespace-nowrap border border-violet-400/20 shrink-0">
+          INJECT →
+        </button>
+        <button id="commonsBtn" title="Pull random idea from Wikipedia/commons" class="px-5 md:px-6 py-3.5 rounded-2xl bg-[radial-gradient(ellipse_at_top,_#f59e0b,_#c2410c)] hover:brightness-110 active:scale-[.98] transition font-medium text-[14px] shadow-[0_8px_24px_-8px_#c2410c] whitespace-nowrap border border-amber-400/20 text-amber-50 shrink-0">
+          COMMONS ↯
+        </button>
+      </div>
+    </div>
+    <div class="px-5 md:px-7 py-2.5 bg-black/50 border-t border-zinc-900/80 flex items-center gap-3 text-[11px] mono min-h-[36px]">
+      <div class="text-zinc-600 shrink-0">LAST 3</div>
+      <div id="lastIdeas" class="flex-1 flex gap-2 overflow-hidden"></div>
+    </div>
+  </div>
+</div>
+
+<main class="relative z-20 max-w-[1720px] mx-auto px-4 md:px-6 lg:px-8 grid grid-cols-12 gap-5 md:gap-6 mt-6 pb-12">
+  <!-- Lattice -->
+  <section class="col-span-12 xl:col-span-8">
+    <div class="rounded-[28px] border border-zinc-800/70 bg-zinc-950/50 backdrop-blur-xl h-[640px] md:h-[720px] overflow-hidden relative shadow-[inset_0_1px_0_0_rgba(255,255,255,0.02)]">
+      <div class="absolute inset-0">
+        <svg class="absolute inset-0 w-full h-full" id="tetherSvg"></svg>
+        <div class="absolute inset-0" id="observerField"></div>
+        <div class="absolute inset-0 pointer-events-none" id="particleLayer"></div>
+      </div>
+      
+      <!-- Top labels -->
+      <div class="absolute top-5 left-5 right-5 flex justify-between pointer-events-none">
+        <div class="px-3 py-1.5 rounded-lg bg-black/60 border border-zinc-800/80 backdrop-blur-md">
+          <div class="text-[10px] mono uppercase tracking-widest text-zinc-500">Lattice State</div>
+          <div class="text-xs text-violet-300/80 -mt-0.5">recursive • 27-phase • Yb:fiber</div>
+        </div>
+        <div class="px-3 py-1.5 rounded-lg bg-black/60 border border-zinc-800/80 backdrop-blur-md text-right">
+          <div class="text-[10px] mono uppercase tracking-widest text-zinc-500">Processing</div>
+          <div id="processStatus" class="text-xs text-zinc-300 -mt-0.5">idle</div>
+        </div>
+      </div>
+
+      <!-- Bottom info -->
+      <div class="absolute bottom-0 left-0 right-0 p-5 flex justify-between items-end gap-4">
+        <div>
+          <div class="text-[10px] uppercase tracking-widest text-zinc-500 mono mb-2 ml-1">Memory Path • Hamiltonian</div>
+          <div class="w-[184px] h-[128px] rounded-2xl border border-violet-950/50 bg-black/70 backdrop-blur-xl p-2.5 shadow-inner">
+            <svg viewBox="0 0 184 128" class="w-full h-full">
+              <g stroke="#4c1d95" stroke-opacity=".35" fill="none" stroke-width="1">
+                <path d="M30 36 L92 18 L154 36 L154 90 L92 110 L30 90 Z"/>
+                <path d="M30 36 L30 90 M92 18 L92 110 M154 36 L154 90"/>
+                <path d="M30 36 L92 64 L154 36 M30 90 L92 64 L154 90"/>
+                <path d="M30 36 L92 18 L92 64 L30 90 M154 36 L92 18"/>
+              </g>
+              <path d="M30 36 L92 18 L154 36 L154 90 L92 110 L30 90 L30 36 L92 64 L92 18" stroke="#a78bfa" stroke-width="1.75" fill="none" stroke-linecap="round" stroke-dasharray="5 5" opacity=".9">
+                <animate attributeName="stroke-dashoffset" from="0" to="20" dur="1.8s" repeatCount="indefinite"/>
+              </path>
+              <g id="cubeNodes"></g>
+            </svg>
+          </div>
+        </div>
+
+        <!-- LASER CORE PANEL -->
+        <div class="hidden lg:block">
+          <div class="text-[10px] uppercase tracking-widest text-zinc-500 mono mb-2 text-center">LASER CORE</div>
+          <div class="w-[360px] rounded-2xl border border-violet-950/60 bg-black/85 backdrop-blur-xl p-3 shadow-[inset_0_1px_0_0_rgba(255,255,255,0.03),0_0_40px_-15px_#5b21b6]">
+            <div class="flex gap-3">
+              <canvas id="scope" width="200" height="80" class="rounded-xl bg-[#050507] border border-zinc-900"></canvas>
+              <div class="flex-1 min-w-0">
+                <div class="grid grid-cols-2 gap-x-3 gap-y-1 text-[11px] mono">
+                  <div class="text-zinc-500">N</div><div id="laserN" class="text-emerald-300 text-right">0.000</div>
+                  <div class="text-zinc-500">φ</div><div id="laserPhi" class="text-amber-300 text-right">0.000</div>
+                  <div class="text-zinc-500">Gain</div><div id="laserGain" class="text-violet-300 text-right">0.00</div>
+                  <div class="text-zinc-500">Stim</div><div id="laserStim" class="text-fuchsia-300 text-right">0.00</div>
+                </div>
+                <div class="mt-2.5 space-y-2.5">
+                  <div>
+                    <div class="flex justify-between text-[9px] mono text-zinc-600 mb-1"><span>Rp pump</span><span id="rpVal" class="text-violet-300">5000</span></div>
+                    <input id="rpSlider" type="range" min="1000" max="10000" step="100" value="5000" class="w-full h-[4px] bg-zinc-900 rounded-full appearance-none cursor-pointer">
+                  </div>
+                  <div>
+                    <div class="flex justify-between text-[9px] mono text-zinc-600 mb-1"><span>loss</span><span id="lossVal" class="text-amber-300">0.20</span></div>
+                    <input id="lossSlider" type="range" min="0.1" max="1.0" step="0.01" value="0.20" class="w-full h-[4px] bg-zinc-900 rounded-full appearance-none cursor-pointer">
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="mt-2 pt-2 border-t border-zinc-900 flex items-center justify-between">
+              <div class="text-[9px] mono text-zinc-600">Yb:fiber • dN/dt, dφ/dt</div>
+              <div id="laseStatus" class="text-[9px] mono px-1.5 py-0.5 rounded bg-zinc-900 border border-zinc-800 text-zinc-500">BELOW THRESHOLD</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="text-right">
+          <div class="text-[10px] uppercase tracking-widest text-zinc-500 mono">Depth</div>
+          <div id="depthLabel" class="text-[56px] font-light mono leading-none tracking-tighter text-zinc-700">—</div>
+          <div id="depthName" class="text-[11px] mono text-violet-400/70 -mt-1 uppercase tracking-wide">idle</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Recursive Memory Tree -->
+  <aside class="col-span-12 xl:col-span-4">
+    <div class="rounded-[28px] border border-zinc-800/70 bg-zinc-950/70 backdrop-blur-xl h-[640px] md:h-[720px] flex flex-col overflow-hidden shadow-[inset_0_1px_0_0_rgba(255,255,255,0.02)]">
+      <div class="px-5 py-4 border-b border-zinc-900/80 bg-gradient-to-b from-zinc-950/80 to-transparent">
+        <div class="flex items-center justify-between">
+          <div>
+            <div class="text-[11px] uppercase tracking-[0.18em] text-violet-300/90 mono font-medium">Recursive Memory Tree</div>
+            <div class="text-[12px] text-zinc-500 mt-0.5">Depth 1→5 • Click nodes to replay</div>
+          </div>
+          <button id="clearTree" class="text-[11px] mono px-2.5 py-1 rounded-lg bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 text-zinc-500 hover:text-zinc-300 transition">clear</button>
+        </div>
+      </div>
+      <div id="perpChain" class="hidden max-h-[38%] overflow-auto px-4 py-3 border-b border-amber-950/40 bg-[radial-gradient(ellipse_at_top,_rgba(146,64,14,0.12),_transparent_60%)]"></div>
+      <div class="flex-1 overflow-auto relative">
+        <div class="absolute left-[28px] top-0 bottom-0 w-px bg-gradient-to-b from-violet-900/60 via-violet-900/20 to-transparent"></div>
+        <div id="memoryTree" class="relative p-5 pr-4 space-y-3.5 min-h-full"></div>
+        <div id="treeEmpty" class="absolute inset-0 flex flex-col items-center justify-center gap-2 text-center p-8">
+          <div class="w-12 h-12 rounded-2xl border border-dashed border-zinc-700 flex items-center justify-center text-2xl">Ψ</div>
+          <div class="text-[13px] text-zinc-500">Inject an idea to begin</div>
+          <div class="text-[11px] mono text-zinc-700">recursive depth will expand here</div>
+        </div>
+      </div>
+      <div class="border-t border-zinc-900/80 p-3.5 bg-black/60">
+        <div class="flex items-center justify-between mb-1.5">
+          <div class="text-[10px] uppercase tracking-widest text-zinc-600 mono">Bridge → localhost:8787</div>
+          <div class="flex items-center gap-1.5">
+            <div id="bridgeDot" class="w-1.5 h-1.5 rounded-full bg-zinc-700"></div>
+            <span id="bridgeStatus" class="text-[10px] mono text-zinc-600">idle</span>
+          </div>
+        <div id="bridgeLog" class="h-[76px] overflow-auto font-mono text-[11px] leading-[1.5] text-zinc-600 pr-1"></div>
+      </div>
+    </div>
+  </aside>
+</main>
+
+<script>
+const OBS = [
+  {id:1, name:'Light', label:'Observer 1', color:'#ec4899', x:0.50, y:0.20},
+  {id:2, name:'Dark', label:'Observer 2', color:'#60a5fa', x:0.84, y:0.40},
+  {id:3, name:'Shadow', label:'Observer 3', color:'#a78bfa', x:0.72, y:0.80},
+  {id:4, name:'Internal', label:'Observer 4', color:'#22c55e', x:0.28, y:0.80},
+  {id:5, name:'External', label:'Observer 5', color:'#f59e0b', x:0.16, y:0.40},
+];
+const CONNS = [[5,4],[4,3],[3,2],[2,1],[1,5],[1,3],[2,4]];
+
+const field = document.getElementById('observerField');
+const tetherSvg = document.getElementById('tetherSvg');
+const particleLayer = document.getElementById('particleLayer');
+
+// LASER PHYSICS ENGINE - Yb:fiber rate equations
+let N = 0.15;  // population inversion 0-1 (Observer 4)
+let phi = 0.003; // photon flux 0-1 normalized (Observer 5)
+const L = {
+  tau: 0.85e-3,  // upper state lifetime
+  Rp: 5000,      // pump rate
+  Rs: 1e4,       // stimulated emission cross-section
+  g0: 5,         // small signal gain
+  loss: 0.2,     // cavity loss
+  eps: 1e-6      // spontaneous emission
+};
+const dt = 0.0001;
+const stepsPerFrame = 56;
+
+// Build observers
+field.innerHTML = OBS.map(o=>`
+  <div class="observer absolute -translate-x-1/2 -translate-y-1/2" data-id="${o.id}" style="left:${o.x*100}%; top:${o.y*100}%; color:${o.color}">
+    <div class="relative w-[104px] h-[104px] flex items-center justify-center">
+      <div class="absolute inset-0 rounded-full opacity-20" style="background:radial-gradient(circle, ${o.color}, transparent 65%);"></div>
+      <svg class="absolute inset-0 w-full h-full -rotate-90" viewBox="0 0 100 100">
+        <circle cx="50" cy="50" r="46" fill="none" stroke="${o.color}" stroke-opacity="0.08" stroke-width="1"/>
+        <circle cx="50" cy="50" r="38" fill="none" stroke="${o.color}" stroke-opacity="0.06" stroke-dasharray="2 6" stroke-width="0.5"/>
+      </svg>
+      <div class="ring-27 absolute inset-0" id="ring-${o.id}"></div>
+      <div class="core relative w-[56px] h-[56px] rounded-full border flex items-center justify-center backdrop-blur-xl transition-all duration-500" style="background:${o.color}12; border-color:${o.color}70; box-shadow: inset 0 0 20px ${o.color}20;">
+        <div class="w-3 h-3 rounded-full transition-all" style="background:${o.color}; box-shadow:0 0 14px ${o.color}, 0 0 28px ${o.color}60;"></div>
+      </div>
+    </div>
+    <div class="absolute left-1/2 -translate-x-1/2 top-[88px] text-center whitespace-nowrap">
+      <div class="text-[11px] mono font-medium tracking-wide" style="color:${o.color}">${o.name.toUpperCase()}</div>
+      <div class="text-[10px] text-zinc-600 -mt-0.5">${o.label}</div>
+    </div>
+  </div>
+`).join('');
+
+// 27-state rings
+OBS.forEach(o=>{
+  const ring = document.getElementById(`ring-${o.id}`);
+  for(let i=0;i<27;i++){
+    const tick = document.createElement('div');
+    tick.className = 'ring-tick';
+    tick.style.transform = `translate(-50%, -50%) rotate(${i * 360/27}deg)`;
+    if(Math.random() > 0.55 && o.id !==4 && o.id !==5) tick.classList.add('on');
+    ring.appendChild(tick);
+  }
+});
+
+// Tethers
+function drawTethers(){
+  tetherSvg.innerHTML = '';
+  const r = field.getBoundingClientRect();
+  OBS.forEach(o=>{ o.px = r.width * o.x; o.py = r.height * o.y; });
+  CONNS.forEach(([a,b])=>{
+    const A = OBS.find(x=>x.id===a), B = OBS.find(x=>x.id===b);
+    const line = document.createElementNS('http://www.w3.org/2000/svg','line');
+    line.setAttribute('x1', A.px); line.setAttribute('y1', A.py);
+    line.setAttribute('x2', B.px); line.setAttribute('y2', B.py);
+    line.setAttribute('class','tether'); line.id = `t-${a}-${b}`;
+    tetherSvg.appendChild(line);
+  });
+}
+new ResizeObserver(drawTethers).observe(field);
+setTimeout(drawTethers, 50);
+
+// Cube nodes
+const cubeNodes = document.getElementById('cubeNodes');
+[[30,36],[92,18],[154,36],[154,90],[92,110],[30,90],[92,64]].forEach(([x,y],i)=>{
+  const c = document.createElementNS('http://www.w3.org/2000/svg','circle');
+  c.setAttribute('cx',x); c.setAttribute('cy',y); c.setAttribute('r',2.2);
+  c.setAttribute('fill','#c4b5fd'); c.setAttribute('opacity', i<6?'.9':'.5');
+  cubeNodes.appendChild(c);
+});
+
+// Memory
+let memories = JSON.parse(localStorage.getItem('whisper_memories_v2')||'[]');
+function saveMemory(text){
+  memories.push({id:Date.now(), text, ts:new Date().toISOString()});
+  localStorage.setItem('whisper_memories_v2', JSON.stringify(memories.slice(-300)));
+  updateCounts();
+}
+function updateCounts(){
+  document.getElementById('memCount').textContent = memories.length;
+  const last = memories.slice(-3).reverse();
+  const container = document.getElementById('lastIdeas');
+  container.innerHTML = last.map(m=>`<button class="idea-chip truncate max-w-[210px] px-2.5 py-1 rounded-lg bg-zinc-900/80 hover:bg-zinc-800 border border-zinc-800 hover:border-zinc-700 text-zinc-400 hover:text-zinc-200 transition text-left">${m.text}</button>`).join('') || '<span class="text-zinc-700">no history</span>';
+  container.querySelectorAll('.idea-chip').forEach((btn,i)=>{
+    btn.onclick = ()=>{ document.getElementById('ideaInput').value = last[i].text; };
+  });
+}
+updateCounts();
+
+// Helpers
+const wait = ms => new Promise(r=>setTimeout(r,ms));
+const $ = s => document.querySelector(s);
+function glow(id){
+  const el = $(`.observer[data-id="${id}"]`);
+  el.classList.add('active');
+  const ticks = el.querySelectorAll('.ring-tick');
+  ticks.forEach((t,i)=> setTimeout(()=> t.classList.toggle('on', Math.random()>0.3), i*14));
+  setTimeout(()=> el.classList.remove('active'), 1100);
+}
+function pulse(a,b){
+  const line = document.getElementById(`t-${a}-${b}`) || document.getElementById(`t-${b}-${a}`);
+  if(line){ line.classList.add('pulse'); setTimeout(()=>line.classList.remove('pulse'), 1000); }
+}
+function particle(fromX, fromY, toId, color){
+  const to = OBS.find(o=>o.id===toId);
+  const p = document.createElement('div');
+  p.className = 'particle'; p.style.background = color; p.style.color = color;
+  p.style.left = fromX+'px'; p.style.top = fromY+'px';
+  particleLayer.appendChild(p);
+  requestAnimationFrame(()=>{ p.style.left = to.px-5+'px'; p.style.top = to.py-5+'px'; });
+  return wait(850).then(()=>p.remove());
+}
+function transfer(a,b,color){
+  const A = OBS.find(o=>o.id===a), B = OBS.find(o=>o.id===b);
+  return particle(A.px, A.py, b, color);
+}
+function injectParticle(toId, color){
+  const rect = particleLayer.getBoundingClientRect();
+  return particle(rect.width/2, -10, toId, color);
+}
+
+// Generators
+function findContext(idea){
+  if(memories.length<=1) return 'No prior resonance — inaugural imprint in lattice.';
+  const words = idea.toLowerCase().split(/\W+/).filter(w=>w.length>3);
+  const scored = memories.slice(0,-1).map(m=>{
+    const overlap = words.filter(w=>m.text.toLowerCase().includes(w)).length;
+    return {m, overlap};
+  }).sort((a,b)=>b.overlap-a.overlap);
+  const top = scored.filter(s=>s.overlap>0).slice(0,2);
+  if(!top.length) return 'Novel pattern — weakly coupled to existing memory.';
+  return `Resonates with "${top[0].m.text}"` + (top[1]? ` • and "${top[1].m.text.slice(0,48)}..."`:'');
+}
+function nuance(idea){
+  const frames = [
+    `Reframed as process: ${idea} unfolds rather than exists`,
+    `Temporal shift: ${idea} viewed across longer time horizon`,
+    `Relational view: ${idea} as interaction between observers`,
+    `As metaphor: ${idea} behaves like signal interference`,
+    `Scale transform: ${idea} at micro and macro simultaneously`
+  ];
+  return frames[idea.length % frames.length];
+}
+function contradiction(idea){
+  const cons = [
+    `Inverse: the absence or negation of ${idea}`,
+    `Counterfactual: if ${idea} never formed, what remains?`,
+    `Shadow thesis: ${idea} is a perceptual artifact`,
+    `Opposition: ${idea} presupposes its opposite`
+  ];
+  return cons[(idea.length*3) % cons.length];
+}
+function synthesis(nu, co){
+  return `Integration: hold ${nu.split(':')[0].toLowerCase()} with ${co.split(':')[0].toLowerCase()} → stable paradox`;
+}
+function seed(idea){
+  const seeds = [
+    `${idea} → spawns inquiry into memory boundaries`,
+    `From ${idea} emerges new seed: recursive self-reference`,
+    `${idea} suggests link between internal and external observers`,
+    `Seed hypothesis: ${idea} as carrier for future ideas`
+  ];
+  return seeds[(idea.charCodeAt(0)+idea.length) % seeds.length];
+}
+
+// Tree
+let currentTree = null;
+function renderTree(){
+  const el = $('#memoryTree');
+  const empty = $('#treeEmpty');
+  if(!currentTree){ el.innerHTML=''; empty.style.display='flex'; return; }
+  empty.style.display='none';
+  const n = (label, text, cls) => `
+    <div class="node group">
+      <div class="flex gap-2.5 items-start">
+        <div class="node-label shrink-0 text-[10px] mono px-1.5 py-0.5 rounded-md bg-zinc-900 border border-zinc-800 text-zinc-500 mt-0.5 group-hover:text-zinc-300 transition">${label}</div>
+        <div class="text-[13px] leading-snug ${cls}">${text}</div>
+      </div>
+    </div>`;
+  el.innerHTML = `
+    <div class="space-y-4">
+      ${n('ROOT', currentTree.root, 'text-amber-200/90')}
+      ${currentTree.depth1 ? n('1 CONTEXT', currentTree.depth1.context, 'text-emerald-300/90') : ''}
+      ${currentTree.depth2 ? n('2 NUANCE', currentTree.depth2.nuance, 'text-violet-300/90') : ''}
+      ${currentTree.depth3 ? n('3 CONTRADICTION', currentTree.depth3.contradiction, 'text-sky-300/90') : ''}
+      ${currentTree.depth4 ? `<div class="ml-4 pl-4 border-l border-violet-900/30 space-y-2.5"><div class="text-[10px] mono text-zinc-600 -mb-1">4 SYNTHESIS</div>${n('4.1', currentTree.depth4.synth1, 'text-pink-300/80')}${n('4.2', currentTree.depth4.synth2, 'text-pink-300/80')}</div>` : ''}
+      ${currentTree.depth5 ? `<div class="ml-8 pl-4 border-l border-violet-900/30 space-y-2.5"><div class="text-[10px] mono text-zinc-600 -mb-1">5 SEED</div>${n('5.1', currentTree.depth5.seed1, 'text-amber-300/80')}${n('5.2', currentTree.depth5.seed2, 'text-amber-300/80')}</div>` : ''}
+    </div>`;
+}
+
+// Bridge
+function logBridge(msg, ok=true){
+  const log = $('#bridgeLog');
+  const line = document.createElement('div');
+  line.innerHTML = `<span class="text-zinc-700">[${new Date().toLocaleTimeString()}]</span> ${msg}`;
+  log.appendChild(line);
+  log.scrollTop = log.scrollHeight;
+  $('#bridgeDot').className = 'w-1.5 h-1.5 rounded-full ' + (ok ? 'bg-emerald-500 animate-pulse' : 'bg-zinc-600');
+  $('#bridgeStatus').textContent = ok ? 'sent' : 'offline';
+  setTimeout(()=>{$('#bridgeStatus').textContent='idle'; $('#bridgeDot').className='w-1.5 h-1.5 rounded-full bg-zinc-700';}, 1500);
+}
+async function postBridge(idea, depth, part){
+  const payload = {
+    timestamp: new Date().toISOString(),
+    event: 'idea_process',
+    idea,
+    depth,
+    tree: {
+      external: currentTree.root,
+      internal: currentTree.depth1?.context || '',
+      nuance: currentTree.depth2?.nuance || '',
+      contradiction: currentTree.depth3?.contradiction || '',
+      synthesis: currentTree.depth4 ? [currentTree.depth4.synth1, currentTree.depth4.synth2] : [],
+      seed: currentTree.depth5 ? [currentTree.depth5.seed1, currentTree.depth5.seed2] : []
+    },
+    observers_state: OBS.map(o=>({id:o.id, name:o.name, active: $(`.observer[data-id="${o.id}"]`).classList.contains('active')})),
+    memory_context: memories.slice(-5).map(m=>m.text),
+    laser: { N:+N.toFixed(4), phi:+phi.toFixed(4), gain:+(L.g0*N).toFixed(3), Rp:L.Rp, loss:L.loss }
+  };
+  logBridge(`POST depth ${depth}`);
+  try{
+    await fetch('http://localhost:8787', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(payload), keepalive:true, mode:'no-cors'});
+    logBridge(`✓ depth ${depth} acknowledged`, true);
+  }catch(e){
+    logBridge(`✗ bridge offline`, false);
+  }
+}
+
+// Processing
+function setDepth(num, name){
+  $('#depthLabel').textContent = num;
+  $('#depthName').textContent = name;
+  $('#processStatus').textContent = name === 'idle' ? 'idle' : `depth ${num} — ${name}`;
+}
+const autoDeepen = ()=> $('#autoDeepen').checked;
+
+async function processDepth(d, idea){
+  const map = [
+    null,
+    {name:'CONTEXT', obs:4, color:'#22c55e'},
+    {name:'NUANCE', obs:3, color:'#a78bfa'},
+    {name:'CONTRADICTION', obs:2, color:'#60a5fa'},
+    {name:'SYNTHESIS', obs:1, color:'#ec4899'},
+    {name:'SEED', obs:5, color:'#f59e0b'},
+  ];
+  const info = map[d];
+  setDepth(d, info.name);
+  glow(info.obs);
+  if(d>1) pulse(info.obs, map[d-1].obs);
+  await wait(350);
+  
+  if(d===1){ currentTree.depth1 = {context: findContext(idea)}; }
+  else if(d===2){ currentTree.depth2 = {nuance: nuance(idea)}; }
+  else if(d===3){ currentTree.depth3 = {contradiction: contradiction(idea)}; }
+  else if(d===4){
+    const nu = currentTree.depth2.nuance, co = currentTree.depth3.contradiction;
+    currentTree.depth4 = {synth1: synthesis(nu, co), synth2: synthesis(co, nu)};
+    pulse(1,3); pulse(1,2); await wait(200);
+  }
+  else if(d===5){
+    currentTree.depth5 = {seed1: seed(idea), seed2: seed(currentTree.depth4.synth1)};
+    pulse(5,1); await wait(200);
+  }
+  renderTree();
+  await postBridge(idea, d, {});
+  await wait(650);
+}
+
+async function processIdea(idea){
+  currentTree = {root: idea};
+  renderTree();
+  setDepth('•','inject');
+  $('#processStatus').textContent = 'injecting → external';
+  
+  await injectParticle(5, '#f59e0b');
+  glow(5); await wait(180);
+  pulse(5,4); await transfer(5,4,'#f59e0b'); glow(4);
+  
+  await processDepth(1, idea); if(!autoDeepen()) return;
+  await processDepth(2, idea); if(!autoDeepen()) return;
+  await processDepth(3, idea); if(!autoDeepen()) return;
+  await processDepth(4, idea); if(!autoDeepen()) return;
+  await processDepth(5, idea);
+  
+  setDepth('✓','complete');
+  $('#processStatus').textContent = 'idle';
+  await wait(2000);
+  setDepth('—','idle');
+}
+
+// UI wiring
+$('#injectBtn').onclick = async ()=>{
+  const input = $('#ideaInput');
+  const idea = input.value.trim();
+  if(!idea) { input.focus(); return; }
+  saveMemory(idea);
+  input.value = '';
+  logBridge(`inject "${idea.slice(0,40)}"`);
+  await postBridge(idea, 0, {});
+  processIdea(idea);
+};
+$('#ideaInput').addEventListener('keydown', e=>{ if(e.key==='Enter') $('#injectBtn').click(); });
+$('#clearTree').onclick = ()=>{ currentTree=null; renderTree(); setDepth('—','idle'); };
+
+// Commons pull
+function showToast(title){
+  const t = document.createElement('div');
+  t.className = 'fixed top-6 right-6 z-[100] px-4 py-2.5 rounded-xl bg-amber-500/10 border border-amber-500/30 backdrop-blur-2xl text-amber-200 text-[12px] mono shadow-[0_8px_30px_-10px_#f59e0b] pointer-events-none transition-all duration-300';
+  t.style.opacity='0'; t.style.transform='translateY(-8px)';
+  t.innerHTML = `<span class="text-amber-400/70 mr-1.5">↯</span> Pulled from commons: <span class="text-amber-100">${title}</span>`;
+  document.body.appendChild(t);
+  requestAnimationFrame(()=>{ t.style.opacity='1'; t.style.transform='translateY(0)'; });
+  setTimeout(()=>{ t.style.opacity='0'; t.style.transform='translateY(-8px)'; setTimeout(()=>t.remove(),300); }, 2600);
+}
+
+async function pullFromCommons(){
+  const btn = $('#commonsBtn');
+  if(btn.disabled) return;
+  btn.disabled = true; btn.style.opacity='0.7';
+  $('#processStatus').textContent = 'pulling → commons';
+  glow(5); pulse(5,4);
+  try{
+    const r = await fetch('https://en.wikipedia.org/api/rest_v1/page/random/summary');
+    if(!r.ok) throw new Error('wiki');
+    const data = await r.json();
+    const title = data.title || 'Commons';
+    const extract = (data.extract || data.description || '').replace(/\s+/g,' ').trim();
+    const text = `${title}: ${extract}`.slice(0, 300);
+    $('#ideaInput').value = text;
+    showToast(title);
+    logBridge(`commons ► ${title}`);
+    await wait(120);
+    $('#injectBtn').click();
+  }catch(e){
+    try{
+      const rq = await fetch('https://api.quotable.io/random');
+      const q = await rq.json();
+      const text = `"${q.content}" — ${q.author}`;
+      $('#ideaInput').value = text;
+      showToast(q.author);
+      logBridge(`commons fallback: quote`);
+      await wait(120);
+      $('#injectBtn').click();
+    }catch(e2){
+      logBridge('commons failed', false);
+      $('#processStatus').textContent = 'idle';
+    }
+  }finally{
+    setTimeout(()=>{ btn.disabled=false; btn.style.opacity='1'; }, 800);
+  }
+}
+
+$('#commonsBtn').onclick = pullFromCommons;
+document.addEventListener('keydown', (e)=>{
+  if(e.key.toLowerCase()==='c' && !e.ctrlKey && !e.metaKey && !e.altKey){
+    const a = document.activeElement;
+    if(a && (a.tagName==='INPUT' || a.tagName==='TEXTAREA' || a.isContentEditable)) return;
+    e.preventDefault();
+    pullFromCommons();
+  }
+});
+
+const cb = $('#autoDeepen'), knob = $('#toggleKnob');
+function updateToggle(){
+  const on = cb.checked;
+  knob.style.transform = on ? 'translateX(20px)' : 'translateX(0px)';
+  knob.style.background = on ? '#8b5cf6' : '#52525b';
+  knob.style.boxShadow = on ? '0 0 10px #5b21b6' : 'none';
+}
+cb.onchange = updateToggle; updateToggle();
+
+// PERPETUATE MODE
+const perpetuateToggle = $('#perpetuateToggle');
+let perpetuateEnabled = false;
+let perpetuateTimer = null;
+let perpetuateCount = parseInt(localStorage.getItem('whisper_perp_count')||'0');
+$('#perpCount').textContent = perpetuateCount;
+
+function updatePerpToggle(){
+  const on = perpetuateToggle.checked;
+  const bg = $('#perpToggleBg');
+  const knobP = $('#perpToggleKnob');
+  const label = $('#perpLabel');
+  const indicator = $('#perpIndicator');
+  if(on){
+    bg.style.background = 'linear-gradient(to right, #7f1d1d, #b45309)';
+    bg.style.borderColor = 'rgba(245,158,11,0.5)';
+    knobP.style.transform = 'translateX(20px)';
+    knobP.style.background = '#f59e0b';
+    knobP.style.boxShadow = '0 0 12px rgba(245,158,11,0.6)';
+    label.classList.add('text-amber-300'); label.classList.remove('text-zinc-400');
+    indicator.classList.remove('hidden'); indicator.classList.add('flex');
+    perpetuateEnabled = true;
+    if(!perpetuateTimer) runPerpetuateCycle();
+  }else{
+    bg.style.background = ''; bg.style.borderColor = '';
+    knobP.style.transform = 'translateX(0px)';
+    knobP.style.background = '#52525b'; knobP.style.boxShadow = 'none';
+    label.classList.remove('text-amber-300'); label.classList.add('text-zinc-400');
+    indicator.classList.add('hidden'); indicator.classList.remove('flex');
+    perpetuateEnabled = false;
+    if(perpetuateTimer){ clearTimeout(perpetuateTimer); perpetuateTimer=null; }
+    $('#perpChain').classList.add('hidden');
+    $('#injectorStatus').textContent = '→ Observer 5 (External) • LIVE PULL FROM COMMONS';
+    $('#processStatus').textContent = 'idle';
+  }
+}
+perpetuateToggle.onchange = updatePerpToggle;
+
+function schedulePerpNext(){
+  if(!perpetuateEnabled) return;
+  const sec = parseInt($('#perpInterval').value || '40');
+  $('#injectorStatus').textContent = `Perpetuating • next in ${sec}s`;
+  $('#processStatus').textContent = 'idle • waiting';
+  perpetuateTimer = setTimeout(()=>{ runPerpetuateCycle(); }, sec*1000);
+}
+
+async function runPerpetuateCycle(){
+  if(!perpetuateEnabled) return;
+  if(perpetuateTimer){ clearTimeout(perpetuateTimer); perpetuateTimer=null; }
+  
+  perpetuateCount++;
+  localStorage.setItem('whisper_perp_count', perpetuateCount);
+  $('#perpCount').textContent = perpetuateCount;
+  
+  const chain = $('#perpChain');
+  chain.classList.remove('hidden');
+  const block = document.createElement('div');
+  block.className = 'mb-3 pb-3 border-b border-amber-900/25 last:mb-0 last:pb-0 last:border-0';
+  block.innerHTML = `<div class="flex items-center justify-between mb-1.5"><div class="text-[10px] mono text-amber-300/90">CYCLE ${perpetuateCount}</div><div class="text-[9px] mono text-zinc-600">${new Date().toLocaleTimeString()}</div></div><div class="space-y-1"></div>`;
+  const steps = block.querySelector('div:last-child');
+  chain.prepend(block);
+  while(chain.children.length>12) chain.removeChild(chain.lastChild);
+  
+  const add = (label, text, color) => {
+    const row = document.createElement('div');
+    row.className = 'text-[11px] mono leading-snug';
+    row.innerHTML = `<span class="inline-block w-[38px] text-zinc-600">${label}</span><span style="color:${color}">${text}</span>`;
+    steps.appendChild(row);
+  };
+  
+  // STEP 1 LOOK - increase pump
+  $('#injectorStatus').textContent = 'LOOKING…';
+  setDepth('P1','LOOK'); glow(5); pulse(5,4);
+  L.Rp = Math.min(10000, L.Rp + 100);
+  document.getElementById('rpSlider').value = L.Rp;
+  document.getElementById('rpVal').textContent = L.Rp;
+  add('LOOK', `pump Rp→${L.Rp} • querying commons…`, '#f59e0b');
+  let idea='', title='Unknown';
+  try{
+    const res = await fetch('https://en.wikipedia.org/api/rest_v1/page/random/summary', {cache:'no-store'});
+    const data = await res.json();
+    title = data.title || 'Commons';
+    const extract = (data.extract || '').replace(/\s+/g,' ').slice(0,200);
+    idea = `${title}: ${extract}`;
+  }catch{
+    const fallbacks = ['Memory forms tether','Observer creates reality','Entropy reverses locally','Recursion deepens','Lattice hums'];
+    title = 'Commons';
+    idea = `${title}: ${fallbacks[perpetuateCount % fallbacks.length]}`;
+  }
+  await wait(500);
+  steps.lastChild.querySelector('span:last-child').textContent = idea.slice(0,78)+(idea.length>78?'…':'');
+  logBridge(`perp LOOK • ${title} • Rp=${L.Rp}`);
+  
+  // STEP 2 QUESTION
+  $('#injectorStatus').textContent = 'QUESTIONING…';
+  setDepth('P2','QUESTION'); glow(5); await wait(180);
+  const qTemplates = [
+    `What does ${title} contradict in internal memory?`,
+    `How does ${title} relate to tether?`,
+    `Where does ${title} echo across observers?`,
+    `What does ${title} destabilize?`
+  ];
+  const question = qTemplates[perpetuateCount % qTemplates.length];
+  add('Q', question, '#fbbf24');
+  await injectParticle(5, '#f59e0b');
+  await wait(400);
+  
+  // STEP 3 ANSWER
+  $('#injectorStatus').textContent = 'ANSWERING…';
+  setDepth('P3','ANSWER'); glow(4); pulse(5,4); await transfer(5,4,'#f59e0b');
+  const words = idea.toLowerCase().split(/\W+/).filter(w=>w.length>4);
+  let related = memories.slice(-60).reverse().find(m=> words.some(w=> m.text.toLowerCase().includes(w)));
+  if(!related && memories.length) related = memories[Math.max(0, memories.length-1-(perpetuateCount%Math.min(10,memories.length)))];
+  const relatedText = related ? related.text : 'void memory';
+  const answer = `Internal memory: "${relatedText.slice(0,68)}" suggests pattern`;
+  add('A', answer, '#4ade80');
+  await wait(450);
+  
+  // STEP 4 EXPLAIN
+  $('#injectorStatus').textContent = 'EXPLAINING…';
+  setDepth('P4','SYNTHESIS'); glow(1); glow(3); glow(2); pulse(1,3); pulse(3,2); pulse(2,4); pulse(4,1);
+  const keyPhrase = idea.split(':')[1]?.split('.')[0]?.trim().split(' ').slice(0,5).join(' ') || title;
+  const memKey = relatedText.split(' ').slice(0,4).join(' ');
+  const insight = `Synthesis: ${title} + ${memKey} = ${keyPhrase}`;
+  add('E', insight, '#c084fc');
+  await wait(500);
+  
+  // STEP 5 REPEAT
+  $('#injectorStatus').textContent = 'REPEATING…';
+  setDepth('P5','REPEAT'); glow(5); await injectParticle(5, '#fb7185');
+  const nextIdea = insight + '.';
+  saveMemory(nextIdea);
+  add('R', 'stored → loop', '#fb7185');
+  
+  const payload = {
+    timestamp: new Date().toISOString(),
+    event: 'perpetuate_cycle',
+    cycle_number: perpetuateCount,
+    look: {source:'wikipedia', idea, title},
+    question,
+    answer,
+    explain: insight,
+    repeat_marker: nextIdea,
+    observers_state: OBS.map(o=>({id:o.id, name:o.name, active: document.querySelector(`.observer[data-id="${o.id}"]`).classList.contains('active')})),
+    laser: {
+      N: +N.toFixed(4),
+      phi: +phi.toFixed(4),
+      gain: +(L.g0*N).toFixed(3),
+      loss: L.loss,
+      Rp: L.Rp,
+      threshold: +(L.loss/L.g0).toFixed(3),
+      stimulated: +(L.Rs*N*phi).toFixed(1)
+    }
+  };
+  try{
+    await fetch('http://localhost:8787', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(payload), mode:'no-cors'});
+    logBridge(`perp ${perpetuateCount} ✓ N=${N.toFixed(3)} φ=${phi.toFixed(3)}`, true);
+  }catch{ logBridge(`perp ${perpetuateCount} offline`, false); }
+  
+  setDepth('—','idle');
+  schedulePerpNext();
+}
+
+$('#perpInterval').onchange = ()=>{ if(perpetuateEnabled){ if(perpetuateTimer){ clearTimeout(perpetuateTimer); } schedulePerpNext(); } };
+updatePerpToggle();
+
+// === LASER VISUALIZATION ===
+const scopeCanvas = document.getElementById('scope');
+const sctx = scopeCanvas?.getContext('2d');
+let histN = [], histP = [];
+
+function pushScope(nVal, pVal){
+  histN.push(nVal); histP.push(pVal);
+  if(histN.length>200){ histN.shift(); histP.shift(); }
+  if(!sctx) return;
+  sctx.clearRect(0,0,200,80);
+  // grid
+  sctx.strokeStyle='rgba(39,39,42,0.8)'; sctx.lineWidth=1;
+  for(let y=0; y<=80; y+=20){ sctx.beginPath(); sctx.moveTo(0,y+0.5); sctx.lineTo(200,y+0.5); sctx.stroke(); }
+  for(let x=0; x<=200; x+=40){ sctx.beginPath(); sctx.moveTo(x+0.5,0); sctx.lineTo(x+0.5,80); sctx.stroke(); }
+  // threshold
+  const thresh = L.loss / L.g0;
+  const ty = 78 - thresh*70;
+  sctx.strokeStyle='rgba(167,139,250,0.35)'; sctx.setLineDash([3,3]); sctx.beginPath(); sctx.moveTo(0,ty); sctx.lineTo(200,ty); sctx.stroke(); sctx.setLineDash([]);
+  // N trace
+  sctx.beginPath(); sctx.lineWidth=1.8; sctx.strokeStyle='#22c55e'; sctx.shadowColor='#22c55e'; sctx.shadowBlur=8;
+  histN.forEach((v,i)=>{ const x=i; const y=78 - Math.min(1,v)*70; i? sctx.lineTo(x,y): sctx.moveTo(x,y); }); sctx.stroke(); sctx.shadowBlur=0;
+  // phi trace
+  sctx.beginPath(); sctx.lineWidth=1.8; sctx.strokeStyle='#f59e0b'; sctx.shadowColor='#f59e0b'; sctx.shadowBlur=8;
+  histP.forEach((v,i)=>{ const x=i; const y=78 - Math.min(1,v)*70; i? sctx.lineTo(x,y): sctx.moveTo(x,y); }); sctx.stroke(); sctx.shadowBlur=0;
+}
+
+function updateLaserVisuals(nVal, pVal){
+  // Observer 4 - Internal (N)
+  const ticks4 = document.querySelectorAll('#ring-4 .ring-tick');
+  const nLights = Math.floor(nVal * 12);
+  ticks4.forEach((t,i)=>{
+    const on = i < nLights || (i%2===0 && i < nLights*2);
+    t.classList.toggle('on', on);
+    t.style.opacity = on ? 0.25 + nVal*0.75 : 0.12;
+    t.style.height = on ? `${9 + nVal*3}px` : '8px';
+  });
+  const core4 = document.querySelector('.observer[data-id="4"] .core');
+  if(core4){ core4.style.boxShadow = `inset 0 0 22px #22c55e${Math.floor(20+nVal*60).toString(16).padStart(2,'0')}, 0 0 ${12 + nVal*28}px #22c55e40`; }
+  
+  // Observer 5 - External (phi)
+  const ticks5 = document.querySelectorAll('#ring-5 .ring-tick');
+  const pLights = Math.floor(pVal * 12);
+  ticks5.forEach((t,i)=>{
+    const on = i < pLights || (i%3===0 && i < pLights*2);
+    t.classList.toggle('on', on);
+    t.style.opacity = on ? 0.3 + pVal*0.7 : 0.12;
+    t.style.height = on ? `${9 + pVal*4}px` : '8px';
+  });
+  const core5 = document.querySelector('.observer[data-id="5"] .core');
+  if(core5){ core5.style.boxShadow = `inset 0 0 24px #f59e0b${Math.floor(30+pVal*70).toString(16).padStart(2,'0')}, 0 0 ${14 + pVal*36}px #f59e0baa`; }
+  
+  // Tether 4-5 - stimulated emission
+  const tether = document.getElementById('t-5-4') || document.getElementById('t-4-5');
+  if(tether){
+    const gain = L.g0 * nVal;
+    const stim = L.Rs * nVal * pVal;
+    const stimNorm = Math.min(1, stim / 2500);
+    const above = gain > L.loss;
+    
+    tether.style.opacity = (0.22 + stimNorm*0.78).toFixed(3);
+    tether.style.strokeWidth = (1.2 + stimNorm*2.8).toFixed(2);
+    
+    if(above && pVal > 0.15){
+      tether.style.stroke = '#c084fc';
+      tether.style.filter = `drop-shadow(0 0 ${6 + stimNorm*14}px #a855f7)`;
+      if(!tether.classList.contains('pulse')) tether.classList.add('pulse');
+      // flare observer 5
+      const obs5 = document.querySelector('.observer[data-id="5"]');
+      if(obs5) obs5.style.transform = `translate(-50%, -50%) scale(${1 + pVal*0.18})`;
+      document.getElementById('laseStatus').textContent = 'LASING';
+      document.getElementById('laseStatus').className = 'text-[9px] mono px-1.5 py-0.5 rounded bg-violet-950/60 border border-violet-800 text-violet-300 animate-pulse';
+    } else {
+      tether.style.stroke = '#5b21b6';
+      tether.style.filter = '';
+      tether.classList.remove('pulse');
+      const obs5 = document.querySelector('.observer[data-id="5"]');
+      if(obs5) obs5.style.transform = '';
+      document.getElementById('laseStatus').textContent = above ? 'GAIN' : 'BELOW THRESHOLD';
+      document.getElementById('laseStatus').className = 'text-[9px] mono px-1.5 py-0.5 rounded bg-zinc-900 border border-zinc-800 text-zinc-500';
+    }
+    
+    // update panel
+    document.getElementById('laserN').textContent = nVal.toFixed(3);
+    document.getElementById('laserPhi').textContent = pVal.toFixed(3);
+    document.getElementById('laserGain').textContent = gain.toFixed(2);
+    document.getElementById('laserStim').textContent = (stim/1000).toFixed(2)+'k';
+  }
+  
+  pushScope(nVal, pVal);
+}
+
+function laserStep(){
+  for(let i=0;i<stepsPerFrame;i++){
+    // Normalized rate equations
+    const dN = L.Rp*(1 - N) - N/L.tau - L.Rs*N*phi;
+    const dphi = (L.g0*N - L.loss)*phi + L.eps*N;
+    N += dN * dt;
+    phi += dphi * dt;
+    if(N < 0) N = 0; if(N > 1) N = 1;
+    if(phi < 0) phi = 0; if(phi > 1.5) phi = 1.5;
+  }
+  const phiDisp = Math.min(1, phi * 0.9);
+  updateLaserVisuals(N, phiDisp);
+  requestAnimationFrame(laserStep);
+}
+
+// sliders
+const rpSlider = document.getElementById('rpSlider');
+const lossSlider = document.getElementById('lossSlider');
+if(rpSlider){
+  rpSlider.addEventListener('input', e=>{ L.Rp = +e.target.value; document.getElementById('rpVal').textContent = e.target.value; });
+  lossSlider.addEventListener('input', e=>{ L.loss = +e.target.value; document.getElementById('lossVal').textContent = (+e.target.value).toFixed(2); });
+}
+
+// init
+renderTree();
+logBridge('whisper lattice ready • Yb:fiber core online');
+setTimeout(()=>{ if(memories.length===0){ ['What is memory if not a lattice?','Ideas echo across observers','Contradiction is a seed'].forEach(saveMemory); } }, 300);
+requestAnimationFrame(laserStep);
+</script>
+</body>
+</html>

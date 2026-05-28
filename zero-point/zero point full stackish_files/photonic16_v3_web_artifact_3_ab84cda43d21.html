@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<!-- saved from url=(0286)https://cdn.fbsbx.com/v/t65.102178-21/703025458_27084127501218287_2230447780568343933_n.jpg/photonic16_v3_web_artifact_3_ab84cda43d21.html?_nc_ht=cdn.fbsbx.com&_nc_ohc=2D1gjeLcDlgQ7kNvwE_GmF2&sdl=0&ccb=14-4&oh=00_Af4hEfU-n7biTzac1Z0Is8coMnkdZtIvnaDpu8_-Zy7w4A&oe=6A106F82&_nc_sid=4ee932 -->
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Photonic Processor — 64-Node Core</title>
+<style>
+:root{color-scheme:dark}
+*{box-sizing:border-box}
+html,body{height:100%;margin:0}
+body{
+  background:#030712;
+  background-image: radial-gradient(1200px 800px at 50% -10%, #0b1224 0%, #050816 40%, #030712 100%),
+                    radial-gradient(800px 600px at 80% 120%, #0a1a2f 0%, transparent 60%);
+  color:#cbd5e1;
+  font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Inter, "Helvetica Neue", Arial;
+  overflow:hidden;
+}
+.wrap{position:relative;width:100vw;height:100vh}
+canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
+.panel{
+  position:absolute;left:16px;top:16px;z-index:10;
+  backdrop-filter: blur(10px);
+  background: linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.03));
+  border:1px solid rgba(255,255,255,.12);
+  border-radius:16px;
+  padding:14px 14px 12px;
+  width:min(360px, calc(100vw - 32px));
+  box-shadow: 0 10px 30px rgba(0,0,0,.45), inset 0 1px 0 rgba(255,255,255,.06);
+}
+.title{
+  font-weight:700;letter-spacing:.02em;font-size:14px;color:#e2e8f0;
+  display:flex;align-items:center;gap:8px;margin-bottom:8px;
+}
+.title .dot{width:8px;height:8px;border-radius:999px;background:#7dd3fc;box-shadow:0 0 16px #7dd3fc}
+.row{display:grid;grid-template-columns:1fr auto;gap:8px;align-items:center;margin:10px 0}
+label{font-size:12px;color:#94a3b8}
+input[type=range]{width:100%;accent-color:#7dd3fc}
+.val{font-variant-numeric:tabular-nums;font-size:12px;color:#e2e8f0;background:rgba(255,255,255,.06);padding:4px 8px;border-radius:8px;border:1px solid rgba(255,255,255,.08);min-width:110px;text-align:right}
+.check{grid-column:1 / -1;display:flex;align-items:center;gap:10px;margin-top:4px;padding-top:8px;border-top:1px dashed rgba(255,255,255,.08)}
+.check input{width:16px;height:16px;accent-color:#7dd3fc}
+.check span{font-size:12px;color:#cbd5e1}
+.badge{display:inline-flex;align-items:center;gap:6px;font-size:11px;color:#67e8f9;background:rgba(103,232,249,.08);border:1px solid rgba(103,232,249,.25);padding:4px 8px;border-radius:999px;margin-left:auto}
+.footer{
+  position:absolute;left:50%;transform:translateX(-50%);
+  bottom:14px;z-index:10;text-align:center;
+  font-size:12px;color:#93a4c2;background:rgba(2,6,23,.55);
+  border:1px solid rgba(255,255,255,.08);padding:8px 12px;border-radius:999px;
+  backdrop-filter: blur(6px);
+  width:max-content;max-width:calc(100vw - 24px);
+}
+.legend{position:absolute;right:16px;top:16px;z-index:9;display:flex;gap:8px;flex-wrap:wrap;max-width:48vw;justify-content:flex-end}
+.chip{font-size:11px;color:#a5b4cf;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);padding:6px 8px;border-radius:10px}
+@media (max-width:640px){
+  .legend{display:none}
+  .panel{left:12px;right:12px;top:12px;width:auto}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <canvas id="core" width="1862" height="1163"></canvas>
+
+  <div class="panel">
+    <div class="title"><span class="dot"></span> PHOTONIC CORE — 64-NODE <span class="badge">8-0-8</span></div>
+    
+    <div class="row">
+      <label for="contain">Containment</label>
+      <div class="val" id="containVal">98.00%</div>
+      <input id="contain" type="range" min="85" max="99.5" step="0.01" value="98" style="grid-column:1/-1">
+    </div>
+
+    <div class="row">
+      <label for="couple">Inter-layer Coupling</label>
+      <div class="val" id="coupleVal">42.00</div>
+      <input id="couple" type="range" min="0" max="100" step="0.01" value="42" style="grid-column:1/-1">
+    </div>
+
+    <div class="check">
+      <input id="density" type="checkbox">
+      <span>×2 density boost</span>
+    </div>
+  </div>
+
+  <div class="legend">
+    <div class="chip">17 layers</div>
+    <div class="chip">64 emitters/layer</div>
+    <div class="chip">4 quadrants × 16</div>
+  </div>
+
+  <div class="footer">Core Law: Sixty-four colors enter (16×4). One white report exits. Contain 98%. Release 2%.</div>
+</div>
+
+<script>
+(() => {
+  const canvas = document.getElementById('core');
+  const ctx = canvas.getContext('2d', { alpha: true });
+  let w=0,h=0,cx=0,cy=0,dpr=1;
+
+  const containEl = document.getElementById('contain');
+  const coupleEl = document.getElementById('couple');
+  const densityEl = document.getElementById('density');
+  const containVal = document.getElementById('containVal');
+  const coupleVal = document.getElementById('coupleVal');
+
+  let containment = 98.0;
+  let coupling = 42.0;
+  let densityBoost = false;
+
+  function resize(){
+    dpr = Math.min(window.devicePixelRatio||1, 2);
+    w = canvas.clientWidth = window.innerWidth;
+    h = canvas.clientHeight = window.innerHeight;
+    canvas.width = Math.floor(w*dpr);
+    canvas.height = Math.floor(h*dpr);
+    ctx.setTransform(dpr,0,0,dpr,0,0);
+    cx = w*0.5; cy = h*0.56;
+  }
+  addEventListener('resize', resize, {passive:true});
+  resize();
+
+  function fmt(v){ return v.toFixed(2); }
+  function updateDisplays(){
+    containVal.textContent = fmt(containment) + '%';
+    coupleVal.textContent = fmt(coupling) + (densityBoost ? ' (×2 active)' : '');
+  }
+  updateDisplays();
+
+  containEl.addEventListener('input', e=>{
+    containment = parseFloat(e.target.value);
+    updateDisplays();
+  });
+  coupleEl.addEventListener('input', e=>{
+    coupling = parseFloat(e.target.value);
+    updateDisplays();
+  });
+  densityEl.addEventListener('change', e=>{
+    densityBoost = e.target.checked;
+    updateDisplays();
+  });
+
+  const hues = new Float32Array(64);
+  for(let i=0;i<64;i++) hues[i] = (i*360/64);
+
+  function draw(t){
+    ctx.fillStyle = 'rgba(3,7,18,0.18)';
+    ctx.fillRect(0,0,w,h);
+
+    const effectiveCoupling = Math.min(100, densityBoost ? coupling*2 : coupling);
+    const release = 100 - containment;
+    let beamAlpha = 0.08 + (effectiveCoupling/100)*0.22 + (release/100)*0.35;
+    if(densityBoost) beamAlpha *= 2;
+    beamAlpha = Math.min(beamAlpha, 0.95);
+
+    const coreGrad = ctx.createRadialGradient(cx, cy, 0, cx, cy, Math.min(w,h)*0.45);
+    coreGrad.addColorStop(0, `rgba(255,255,255,${0.05 + beamAlpha*0.08})`);
+    coreGrad.addColorStop(0.35, `rgba(125,211,252,${0.04 + beamAlpha*0.06})`);
+    coreGrad.addColorStop(1, 'rgba(0,0,0,0)');
+    ctx.fillStyle = coreGrad;
+    ctx.beginPath(); ctx.arc(cx, cy, Math.min(w,h)*0.45, 0, Math.PI*2); ctx.fill();
+
+    const layers = 17;
+    const mid = 8;
+    const layerGap = Math.min(27, h*0.033);
+    const baseRadius = Math.min(w,h)*0.115;
+
+    ctx.save();
+    ctx.globalCompositeOperation = 'screen';
+    ctx.lineWidth = 1.2;
+    for(let q=0;q<4;q++){
+      const qAng = q * Math.PI/2 + Math.PI/4;
+      const bx = cx + Math.cos(qAng) * baseRadius*0.45;
+      const topY = cy + (0-mid)*layerGap - 44;
+      const botY = cy + (16-mid)*layerGap + 44;
+      const grad = ctx.createLinearGradient(0, topY, 0, botY);
+      grad.addColorStop(0, `rgba(255,255,255,0)`);
+      grad.addColorStop(0.45, `rgba(186,230,255,${beamAlpha*0.55})`);
+      grad.addColorStop(0.5, `rgba(255,255,255,${beamAlpha})`);
+      grad.addColorStop(0.55, `rgba(186,230,255,${beamAlpha*0.55})`);
+      grad.addColorStop(1, `rgba(255,255,255,0)`);
+      ctx.strokeStyle = grad;
+      ctx.beginPath();
+      ctx.moveTo(bx, topY);
+      ctx.lineTo(bx, botY);
+      ctx.stroke();
+    }
+    ctx.restore();
+
+    for(let layer=0; layer<layers; layer++){
+      if(layer === mid){
+        const r = 6 + release*0.18;
+        ctx.save();
+        ctx.globalCompositeOperation='screen';
+        ctx.shadowColor = 'rgba(255,255,255,0.9)';
+        ctx.shadowBlur = 24;
+        const g = ctx.createRadialGradient(cx,cy,0,cx,cy, r*3);
+        g.addColorStop(0, `rgba(255,255,255,0.9)`);
+        g.addColorStop(0.3, `rgba(220,240,255,0.5)`);
+        g.addColorStop(1, 'rgba(255,255,255,0)');
+        ctx.fillStyle = g;
+        ctx.beginPath(); ctx.arc(cx,cy,r*3,0,Math.PI*2); ctx.fill();
+        ctx.shadowBlur = 0;
+        ctx.fillStyle = '#ffffff';
+        ctx.beginPath(); ctx.arc(cx,cy,r,0,Math.PI*2); ctx.fill();
+        ctx.restore();
+        continue;
+      }
+
+      const depth = Math.abs(layer - mid);
+      const y = cy + (layer - mid) * layerGap + (layer<mid ? -38 : 38);
+      const ringRadius = baseRadius + depth*10;
+      const spinBase = t*0.00022;
+      const spinDir = layer < mid ? 1 : -1;
+      const spin = spinBase * spinDir * (1 + effectiveCoupling*0.009);
+
+      ctx.save();
+      ctx.globalAlpha = 0.08 + (1-depth/8)*0.12;
+      ctx.strokeStyle = '#7dd3fc';
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.ellipse(cx, y, ringRadius, ringRadius*0.26, 0, 0, Math.PI*2);
+      ctx.stroke();
+      ctx.restore();
+
+      ctx.save();
+      ctx.globalCompositeOperation = 'screen';
+      const layerAlpha = 0.55 + (containment/100)*0.35;
+      for(let n=0;n<64;n++){
+        const quad = (n / 16) | 0;
+        const iq = n % 16;
+        const quadCenter = quad * Math.PI/2;
+        const spread = 1.18;
+        const baseAng = quadCenter - spread/2 + (iq+0.5)*(spread/16);
+        const ang = baseAng + spin + depth*0.07;
+
+        const x = cx + Math.cos(ang) * ringRadius;
+        const yy = y + Math.sin(ang) * ringRadius*0.26;
+
+        const hue = (hues[n] + layer*5 + spin*18) % 360;
+        const sat = 92;
+        const light = 63 + Math.sin(t*0.001 + n*0.19 + layer)*3;
+
+        ctx.beginPath();
+        ctx.arc(x, yy, 1.6, 0, Math.PI*2);
+        ctx.fillStyle = `hsla(${hue},${sat}%,${light}%,${layerAlpha})`;
+        ctx.shadowColor = `hsla(${hue},${sat}%,60%,${0.85*layerAlpha})`;
+        ctx.shadowBlur = 8 + effectiveCoupling*0.06;
+        ctx.fill();
+        ctx.shadowBlur = 0;
+
+        if(effectiveCoupling > 2 && layer !== 7 && layer !== 9){
+          const nextLayer = layer < mid ? layer+1 : layer-1;
+          if(nextLayer !== mid && (n & 1) === 0){
+            const nextDepth = Math.abs(nextLayer - mid);
+            const ny = cy + (nextLayer - mid) * layerGap + (nextLayer<mid ? -38 : 38);
+            const nr = baseRadius + nextDepth*10;
+            const nang = baseAng + spinBase* (nextLayer<mid?1:-1)*(1+effectiveCoupling*0.009) + nextDepth*0.07;
+            const nx = cx + Math.cos(nang) * nr;
+            const nyy = ny + Math.sin(nang) * nr*0.26;
+            ctx.globalAlpha = 0.03 + (effectiveCoupling/100)*0.16;
+            ctx.strokeStyle = `hsla(${hue},${sat}%,70%,1)`;
+            ctx.lineWidth = 0.65;
+            ctx.beginPath();
+            ctx.moveTo(x, yy);
+            ctx.lineTo(nx, nyy);
+            ctx.stroke();
+            ctx.globalAlpha = 1;
+          }
+        }
+      }
+      ctx.restore();
+    }
+
+    ctx.save();
+    ctx.globalCompositeOperation='screen';
+    const beamH = h*0.42;
+    const beamW = 2 + release*0.9 + (densityBoost?2.2:0);
+    const beamGrad = ctx.createLinearGradient(cx, cy-beamH, cx, cy);
+    beamGrad.addColorStop(0, `rgba(255,255,255,0)`);
+    beamGrad.addColorStop(0.2, `rgba(255,255,255,${beamAlpha*0.35})`);
+    beamGrad.addColorStop(0.5, `rgba(224,242,254,${beamAlpha*0.7})`);
+    beamGrad.addColorStop(1, `rgba(255,255,255,${beamAlpha})`);
+    ctx.strokeStyle = beamGrad;
+    ctx.lineWidth = beamW;
+    ctx.shadowColor = `rgba(255,255,255,${Math.min(1,beamAlpha)})`;
+    ctx.shadowBlur = 18;
+    ctx.beginPath();
+    ctx.moveTo(cx, cy);
+    ctx.lineTo(cx, cy - beamH);
+    ctx.stroke();
+    ctx.restore();
+
+    requestAnimationFrame(draw);
+  }
+  requestAnimationFrame(draw);
+})();
+</script>
+
+</body></html>

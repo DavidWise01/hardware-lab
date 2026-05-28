@@ -1,0 +1,751 @@
+<!DOCTYPE html>
+<!-- saved from url=(0165)https://2148932365950918.a.metaaiusercontent.com/html?artifact_uuid=f00a2ad4-a9bc-4a42-b8fa-b6ff409d8662&ext=1779545967&hash=Q5fpDAGji5eJtUaz4AhKAjTlTjLI&theme=light -->
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WHISPER LATTICE // HARMONIZED PRO</title>
+<style>
+:root {
+  --bg: #040608;
+  --panel: #0b1118;
+  --panel-2: #0e141d;
+  --border: #192232;
+  --border-2: #223045;
+  --text: #d1dbe8;
+  --muted: #6d7f96;
+  --cyan: #7dd3fc;
+  --teal: #22d3ee;
+  --violet: #a78bfa;
+  --amber: #fbbf24;
+  --green: #34d399;
+}
+* { box-sizing: border-box; }
+html, body { height: 100%; }
+body {
+  margin: 0;
+  background: radial-gradient(1200px 800px at 70% -20%, #0f1b2d 0%, #060a10 50%, #040608 100%);
+  color: var(--text);
+  font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial;
+  overflow: hidden;
+}
+.dashboard {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 16px;
+  border-bottom: 1px solid var(--border);
+  background: linear-gradient(180deg, rgba(14,22,35,0.8), rgba(8,12,18,0.4));
+  backdrop-filter: blur(8px);
+}
+.brand {
+  font-size: 13px;
+  letter-spacing: 0.18em;
+  font-weight: 700;
+  color: var(--cyan);
+}
+.brand span { color: var(--muted); font-weight: 500; letter-spacing: 0.12em; }
+.status { display: flex; gap: 14px; font-size: 11px; color: var(--muted); }
+.status .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--teal); box-shadow: 0 0 8px var(--teal); display: inline-block; margin-right: 6px; }
+
+main.grid-3 {
+  display: grid;
+  grid-template-columns: 300px 1fr 300px;
+  gap: 12px;
+  padding: 12px;
+  flex: 1;
+  min-height: 0;
+}
+.panel {
+  background: linear-gradient(180deg, rgba(16,23,34,0.9), rgba(10,15,22,0.85));
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 12px;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.02), 0 10px 30px rgba(0,0,0,0.35);
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+.panel h2, .panel h3 {
+  margin: 0 0 10px 0;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--cyan);
+  font-weight: 600;
+}
+.left, .right { overflow: auto; }
+.center { overflow: hidden; }
+
+.observer {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 8px 10px; margin-bottom: 8px;
+  background: var(--panel-2);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  transition: all .2s;
+}
+.obs-left { display: flex; align-items: center; gap: 9px; }
+.obs-dot {
+  width: 9px; height: 9px; border-radius: 50%;
+  background: #1c2535; box-shadow: inset 0 0 4px rgba(0,0,0,0.8);
+  transition: all .15s;
+}
+.observer.active .obs-dot { background: var(--teal); box-shadow: 0 0 10px var(--teal), 0 0 20px rgba(34,211,238,0.3); }
+#obs-5.pulse .obs-dot {
+  background: var(--amber); box-shadow: 0 0 14px var(--amber), 0 0 28px rgba(251,191,36,0.5);
+  transform: scale(1.35);
+}
+.obs-name { font-size: 13px; letter-spacing: 0.02em; }
+.obs-val { font-size: 11px; color: var(--muted); font-variant-numeric: tabular-nums; min-width: 48px; text-align: right; }
+
+.tether { margin-bottom: 10px; }
+.tether-label { display: flex; justify-content: space-between; font-size: 11px; color: var(--muted); margin-bottom: 4px; }
+.tether-bar { height: 8px; background: #070b11; border: 1px solid #14202f; border-radius: 6px; overflow: hidden; position: relative; }
+.tether-fill {
+  height: 100%; width: 30%;
+  background: linear-gradient(90deg, #0b3e5a, var(--teal));
+  box-shadow: inset 0 0 8px rgba(34,211,238,0.25);
+  transition: width 0.25s ease;
+}
+.tether-fill.converge {
+  width: 100% !important;
+  background: linear-gradient(90deg, #7c4a00, var(--amber));
+  box-shadow: 0 0 14px rgba(251,191,36,0.6), inset 0 0 10px rgba(255,255,255,0.2);
+}
+
+.lattice-wrap {
+  position: relative;
+  flex: 1;
+  background: radial-gradient(ellipse at center, #0c1726 0%, #070c14 60%, #05080e 100%);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+}
+#lattice { width: 100%; height: 100%; display: block; }
+.laser-readout {
+  position: absolute; top: 10px; left: 10px;
+  display: flex; gap: 14px;
+  font-size: 11px; background: rgba(3,7,12,0.7);
+  padding: 6px 10px; border-radius: 8px; border: 1px solid #1a2636;
+  backdrop-filter: blur(6px);
+}
+.laser-readout b { color: var(--text); font-weight: 600; font-variant-numeric: tabular-nums; }
+.laser-readout span { color: var(--muted); }
+
+.memory { margin-top: 10px; }
+.memory-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
+.memory-head label { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; }
+#memoryCount { font-size: 11px; color: var(--muted); font-variant-numeric: tabular-nums; }
+#memoryTape {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 13px; line-height: 1.5;
+  padding: 10px; background: #080d14; border: 1px solid var(--border);
+  border-radius: 10px; min-height: 54px; max-height: 54px; overflow: hidden;
+  color: #a5f3fc; letter-spacing: 0.06em;
+  box-shadow: inset 0 0 20px rgba(0,0,0,0.5);
+}
+
+.control-group { margin-bottom: 14px; padding-bottom: 12px; border-bottom: 1px solid #111a26; }
+.control-group:last-child { border-bottom: 0; margin-bottom: 0; padding-bottom: 0; }
+.eq { font-size: 11px; color: #7a8ca3; margin: 3px 0; font-family: ui-monospace, monospace; }
+.controls-row { display: flex; align-items: center; justify-content: space-between; margin-top: 8px; }
+input[type="range"] {
+  width: 100%; accent-color: var(--teal); height: 24px; background: transparent;
+}
+.check { display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--muted); margin-top: 6px; cursor: pointer; }
+.check input { accent-color: var(--teal); }
+
+.presets { display: grid; grid-template-columns: repeat(3,1fr); gap: 6px; }
+button {
+  background: #0e1622; color: var(--text); border: 1px solid var(--border-2);
+  padding: 7px 10px; border-radius: 8px; font-size: 12px; cursor: pointer;
+  transition: all .18s; font-weight: 500;
+}
+button:hover { background: #142034; border-color: #2a3b55; transform: translateY(-1px); }
+button.active { background: #0b3f5c; border-color: var(--teal); color: white; box-shadow: 0 0 12px rgba(34,211,238,0.25); }
+button.ghost { background: transparent; }
+
+.switch { position: relative; width: 42px; height: 24px; display: inline-block; }
+.switch input { opacity: 0; width: 0; height: 0; }
+.switch span {
+  position: absolute; inset: 0; background: #1a2435; border-radius: 24px; transition: .2s; border: 1px solid #243246;
+}
+.switch span:before {
+  content: ""; position: absolute; height: 18px; width: 18px; left: 2px; top: 2px;
+  background: #5e708a; border-radius: 50%; transition: .2s;
+}
+.switch input:checked + span { background: #0a3a4f; border-color: var(--teal); }
+.switch input:checked + span:before { transform: translateX(18px); background: white; box-shadow: 0 0 8px var(--teal); }
+
+.small { font-size: 11px; color: var(--muted); }
+.log {
+  font-family: ui-monospace, monospace; font-size: 11px;
+  background: #070b11; border: 1px solid var(--border); border-radius: 8px;
+  padding: 6px; height: 84px; overflow: auto; color: #8aa0b8;
+}
+
+/* SYNC PULSE */
+.sync-pulse {
+  height: 120px;
+  margin: 0 12px 12px;
+  padding: 10px 12px;
+  display: flex; flex-direction: column;
+}
+.sync-header {
+  font-size: 11px; letter-spacing: 0.16em; color: var(--amber);
+  margin-bottom: 6px; font-weight: 600;
+}
+.sync-body { display: flex; align-items: center; gap: 14px; flex: 1; min-height: 0; }
+.rings { display: flex; gap: 8px; }
+.ring {
+  width: 56px; height: 56px; position: relative; background: #060a0f;
+  border-radius: 50%; border: 1px solid #1a2536; overflow: hidden;
+  box-shadow: inset 0 0 12px rgba(0,0,0,0.7);
+}
+.ring canvas { width: 100%; height: 100%; display: block; }
+.ring-label {
+  position: absolute; bottom: -2px; left: 0; right: 0; text-align: center;
+  font-size: 9px; color: var(--muted); letter-spacing: 0.08em;
+}
+.waveform-wrap { flex: 1; position: relative; height: 100%; background: #070b11; border: 1px solid #16212f; border-radius: 10px; overflow: hidden; }
+#waveform { width: 100%; height: 100%; display: block; }
+.phases {
+  position: absolute; left: 8px; right: 8px; bottom: 6px;
+  display: flex; justify-content: space-between; pointer-events: none;
+}
+.phase {
+  font-size: 10px; color: #3a4a60; padding: 2px 6px; border-radius: 5px;
+  border: 1px solid transparent; background: rgba(0,0,0,0.4);
+  transition: all .18s; font-variant-numeric: tabular-nums; min-width: 26px; text-align: center;
+}
+.phase.active {
+  color: #fff7d6; background: rgba(251,191,36,0.18); border-color: var(--amber);
+  box-shadow: 0 0 14px rgba(251,191,36,0.45); transform: translateY(-2px) scale(1.05);
+}
+.sync-stats {
+  width: 150px; font-size: 11px; color: var(--muted); line-height: 1.55;
+  background: #070b11; border: 1px solid #16212f; border-radius: 10px; padding: 8px 10px;
+}
+.sync-stats b { color: var(--text); font-weight: 600; }
+
+.convergence-flash {
+  position: absolute; inset: 0; pointer-events: none;
+  background: radial-gradient(circle at center, rgba(251,191,36,0.18), transparent 60%);
+  opacity: 0; transition: opacity .3s;
+}
+.convergence-flash.show { opacity: 1; }
+
+@media (max-width: 1080px) {
+  main.grid-3 { grid-template-columns: 1fr; overflow: auto; }
+  .left, .right { overflow: visible; }
+  .lattice-wrap { height: 260px; }
+  .sync-pulse { height: auto; }
+  .sync-body { flex-wrap: wrap; }
+  .sync-stats { width: 100%; order: 3; }
+  .rings { order: 1; }
+  .waveform-wrap { order: 2; width: 100%; height: 80px; }
+  body { overflow: auto; }
+  .dashboard { height: auto; min-height: 100vh; }
+}
+</style>
+</head>
+<body>
+<div class="dashboard">
+  <header>
+    <div class="brand">WHISPER LATTICE <span>// HARMONIZED PRO</span></div>
+    <div class="status">
+      <div><span class="dot"></span>OFFLINE</div>
+      <div id="clock">12:38:13</div>
+    </div>
+  </header>
+
+  <main class="grid-3">
+    <!-- LEFT -->
+    <section class="panel left">
+      <h2>Observers</h2>
+      <div id="observers"><div class="observer" id="obs-1"><div class="obs-left"><div class="obs-dot"></div><div class="obs-name">Observer 1</div></div><div class="obs-val" id="obs-val-1">-0.08</div></div><div class="observer" id="obs-2"><div class="obs-left"><div class="obs-dot"></div><div class="obs-name">Observer 2</div></div><div class="obs-val" id="obs-val-2">0.32</div></div><div class="observer active" id="obs-3"><div class="obs-left"><div class="obs-dot"></div><div class="obs-name">Observer 3</div></div><div class="obs-val" id="obs-val-3">-0.61</div></div><div class="observer" id="obs-4"><div class="obs-left"><div class="obs-dot"></div><div class="obs-name">Observer 4</div></div><div class="obs-val" id="obs-val-4">0.02</div></div><div class="observer" id="obs-5"><div class="obs-left"><div class="obs-dot"></div><div class="obs-name">Observer 5</div></div><div class="obs-val" id="obs-val-5">-0.08</div></div></div>
+      
+      <h2 style="margin-top:14px">Tethers</h2>
+      <div id="tethers"><div class="tether"><div class="tether-label"><span>T1 → Core</span><span id="t-val-1">50%</span></div><div class="tether-bar"><div class="tether-fill" id="t-fill-1" style="width: 55%;"></div></div></div><div class="tether"><div class="tether-label"><span>T2 → Core</span><span id="t-val-2">50%</span></div><div class="tether-bar"><div class="tether-fill" id="t-fill-2"></div></div></div><div class="tether"><div class="tether-label"><span>T3 → Core</span><span id="t-val-3">50%</span></div><div class="tether-bar"><div class="tether-fill" id="t-fill-3"></div></div></div><div class="tether"><div class="tether-label"><span>T4 → Core</span><span id="t-val-4">50%</span></div><div class="tether-bar"><div class="tether-fill" id="t-fill-4"></div></div></div><div class="tether"><div class="tether-label"><span>T5 → Core</span><span id="t-val-5">50%</span></div><div class="tether-bar"><div class="tether-fill" id="t-fill-5"></div></div></div></div>
+    </section>
+
+    <!-- CENTER -->
+    <section class="panel center">
+      <div class="lattice-wrap">
+        <canvas id="lattice" width="880" height="762"></canvas>
+        <div class="convergence-flash" id="flash"></div>
+        <div class="laser-readout">
+          <div><span>Rp</span> <b id="rpVal">5066</b></div>
+          <div><span>Ψ</span> <b id="compVal">0.016</b></div>
+          <div><span>τ</span> <b id="tauVal">20.0 ms</b></div>
+        </div>
+      </div>
+      <div class="memory">
+        <div class="memory-head">
+          <label>Memory Lattice</label>
+          <div id="memoryCount">5 symbols</div>
+        </div>
+        <div id="memoryTape">·····</div>
+      </div>
+    </section>
+
+    <!-- RIGHT -->
+    <section class="panel right">
+      <div class="control-group">
+        <h3>Laser Equations</h3>
+        <div class="eq">dN₂/dt = Rp − N₂/τ₂₁ − σ·c·φ·N₂</div>
+        <div class="eq">dφ/dt = Γ·σ·c·φ·N₂ − φ/τc + β·N₂/τ₂₁</div>
+        <input type="range" id="rpManual" min="1000" max="9000" value="5000" disabled="">
+        <label class="check"><input type="checkbox" id="syncToggle" checked=""> Sync pump to harmonizer</label>
+      </div>
+
+      <div class="control-group">
+        <h3>Presets</h3>
+        <div class="presets">
+          <button data-preset="quiet">Quiet</button>
+          <button data-preset="resonant" class="active">Resonant</button>
+          <button data-preset="bloom">Bloom</button>
+        </div>
+      </div>
+
+      <div class="control-group">
+        <h3>Perpetuate</h3>
+        <div class="controls-row">
+          <label class="switch"><input type="checkbox" id="perpetuate"><span></span></label>
+          <div class="small" id="perpetuateStatus">idle — manual mode</div>
+        </div>
+      </div>
+
+      <div class="control-group">
+        <h3>Commons</h3>
+        <div class="controls-row">
+          <div class="small" id="commonsPeers">3 peers · lattice v0.9.3</div>
+          <button id="commonsSync" class="ghost">SYNC</button>
+        </div>
+      </div>
+
+      <div class="control-group">
+        <h3>Git Bridge</h3>
+        <div class="controls-row" style="margin-bottom:6px">
+          <button id="gitCommit">COMMIT STATE</button>
+          <button id="gitExport" class="ghost">EXPORT</button>
+        </div>
+        <div class="log" id="gitLog">[9:19:29 AM] sync pulse locked 3³<br>[9:19:29 AM] whisper lattice initialized<br></div>
+      </div>
+    </section>
+  </main>
+
+  <!-- BOTTOM SYNC PULSE -->
+  <section class="panel sync-pulse">
+    <div class="sync-header">SYNC PULSE // 3³((.3³(.03³))) // -5 0 0 +5</div>
+    <div class="sync-body">
+      <div class="rings">
+        <div class="ring"><canvas id="ringOuter" width="112" height="112"></canvas><div class="ring-label">3 Hz</div></div>
+        <div class="ring"><canvas id="ringMid" width="112" height="112"></canvas><div class="ring-label">0.3 Hz</div></div>
+        <div class="ring"><canvas id="ringInner" width="112" height="112"></canvas><div class="ring-label">0.03 Hz</div></div>
+      </div>
+      <div class="waveform-wrap">
+        <canvas id="waveform" width="1647" height="139"></canvas>
+        <div class="phases">
+          <div class="phase" data-p="-5">-5</div>
+          <div class="phase" data-p="0a">0</div>
+          <div class="phase" data-p="0b">0</div>
+          <div class="phase" data-p="+5">+5</div>
+        </div>
+      <div class="sync-stats">
+        <div>f₁ <b>3.00 Hz</b></div>
+        <div>f₂ <b>0.30 Hz</b></div>
+        <div>f₃ <b>0.03 Hz</b></div>
+        <div id="convergenceCount">convergences: 0</div>
+      </div>
+    </div>
+  </div></section>
+</div>
+
+<script>
+(() => {
+  // Elements
+  const observersEl = document.getElementById('observers');
+  const tethersEl = document.getElementById('tethers');
+  const rpVal = document.getElementById('rpVal');
+  const compVal = document.getElementById('compVal');
+  const memoryTape = document.getElementById('memoryTape');
+  const memoryCount = document.getElementById('memoryCount');
+  const flash = document.getElementById('flash');
+  const rpManual = document.getElementById('rpManual');
+  const syncToggle = document.getElementById('syncToggle');
+  const perpetuate = document.getElementById('perpetuate');
+  const perpetuateStatus = document.getElementById('perpetuateStatus');
+  const commonsPeers = document.getElementById('commonsPeers');
+  const gitLog = document.getElementById('gitLog');
+  const convergenceCountEl = document.getElementById('convergenceCount');
+  const clockEl = document.getElementById('clock');
+
+  // Create observers 1-5
+  const observers = [];
+  for (let i=1; i<=5; i++) {
+    const div = document.createElement('div');
+    div.className = 'observer';
+    div.id = `obs-${i}`;
+    div.innerHTML = `<div class="obs-left"><div class="obs-dot"></div><div class="obs-name">Observer ${i}</div></div><div class="obs-val" id="obs-val-${i}">0.00</div>`;
+    observersEl.appendChild(div);
+    observers.push(div);
+  }
+
+  // Create tethers
+  const tetherFills = [];
+  for (let i=1; i<=5; i++) {
+    const wrap = document.createElement('div');
+    wrap.className = 'tether';
+    wrap.innerHTML = `<div class="tether-label"><span>T${i} → Core</span><span id="t-val-${i}">50%</span></div><div class="tether-bar"><div class="tether-fill" id="t-fill-${i}"></div></div>`;
+    tethersEl.appendChild(wrap);
+    tetherFills.push(document.getElementById(`t-fill-${i}`));
+  }
+
+  // Canvas setup
+  const lattice = document.getElementById('lattice');
+  const lctx = lattice.getContext('2d');
+  const waveform = document.getElementById('waveform');
+  const wctx = waveform.getContext('2d');
+  const rings = [
+    {c: document.getElementById('ringOuter'), f: 3, col: '#22d3ee'},
+    {c: document.getElementById('ringMid'), f: 0.3, col: '#a78bfa'},
+    {c: document.getElementById('ringInner'), f: 0.03, col: '#fbbf24'},
+  ];
+  const rctxs = rings.map(r => r.c.getContext('2d'));
+
+  function resize() {
+    const rect = lattice.getBoundingClientRect();
+    lattice.width = rect.width * devicePixelRatio;
+    lattice.height = rect.height * devicePixelRatio;
+    lctx.setTransform(1,0,0,1,0,0);
+
+    const wrect = waveform.getBoundingClientRect();
+    waveform.width = wrect.width * devicePixelRatio;
+    waveform.height = wrect.height * devicePixelRatio;
+    wctx.setTransform(1,0,0,1,0,0);
+  }
+  window.addEventListener('resize', resize);
+  resize();
+
+  // State
+  let memory = '····';
+  let convergences = 0;
+  let amp = 1.0;
+  let phaseOffsets = [0,0,0];
+  let prevComp = 0;
+  let prevPulse = 0;
+  let inConvergence = false;
+  let peakIdx = 0;
+  let wavePoints = new Array(400).fill(0);
+  let start = performance.now();
+  let perpetuateTimer = null;
+
+  function updateMemory(char='·') {
+    memory += char;
+    if (memory.length > 180) memory = memory.slice(-180);
+    memoryTape.textContent = memory;
+    memoryCount.textContent = `${memory.length} symbols`;
+  }
+  updateMemory();
+
+  // Presets
+  document.querySelectorAll('[data-preset]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('[data-preset]').forEach(b=>b.classList.remove('active'));
+      btn.classList.add('active');
+      const p = btn.dataset.preset;
+      if (p === 'quiet') { amp = 0.6; phaseOffsets = [0.2, -0.1, 0]; }
+      else if (p === 'resonant') { amp = 1.0; phaseOffsets = [0,0,0]; }
+      else if (p === 'bloom') { amp = 1.25; phaseOffsets = [-0.15, 0.1, 0.05]; }
+      addLog(`preset: ${p}`);
+    });
+  });
+
+  // Perpetuate
+  perpetuate.addEventListener('change', () => {
+    if (perpetuate.checked) {
+      perpetuateStatus.textContent = 'active — breathing lattice';
+      perpetuateTimer = setInterval(() => updateMemory('·'), 2300);
+    } else {
+      perpetuateStatus.textContent = 'idle — manual mode';
+      clearInterval(perpetuateTimer);
+    }
+  });
+
+  // Commons
+  document.getElementById('commonsSync').addEventListener('click', () => {
+    commonsPeers.textContent = 'syncing...';
+    setTimeout(() => {
+      const peers = 3 + Math.floor(Math.random()*3);
+      commonsPeers.textContent = `${peers} peers · lattice v0.9.3`;
+      addLog('commons sync complete');
+    }, 800);
+  });
+
+  // Git
+  function addLog(msg) {
+    const t = new Date().toLocaleTimeString();
+    gitLog.innerHTML = `[${t}] ${msg}<br>` + gitLog.innerHTML;
+  }
+  document.getElementById('gitCommit').addEventListener('click', () => {
+    const rp = parseInt(rpVal.textContent);
+    addLog(`commit: Rp=${rp} Ψ=${compVal.textContent} mem=${memory.length}`);
+    flash.classList.add('show');
+    setTimeout(()=>flash.classList.remove('show'), 250);
+  });
+  document.getElementById('gitExport').addEventListener('click', () => {
+    const data = { memory, convergences, ts: Date.now() };
+    const blob = new Blob([JSON.stringify(data,null,2)], {type:'application/json'});
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'whisper-lattice-state.json';
+    a.click();
+    addLog('exported state');
+  });
+
+  syncToggle.addEventListener('change', () => {
+    rpManual.disabled = syncToggle.checked;
+  });
+
+  // Clock
+  setInterval(() => {
+    const d = new Date();
+    clockEl.textContent = d.toLocaleTimeString('en-GB', {hour12:false});
+  }, 1000);
+
+  // Draw rings
+  function drawRing(ctx, canvas, freq, t, color, offset) {
+    const w = canvas.width, h = canvas.height;
+    ctx.clearRect(0,0,w,h);
+    ctx.save();
+    ctx.translate(w/2, h/2);
+    const r = Math.min(w,h)*0.36;
+    
+    // track
+    ctx.beginPath();
+    ctx.arc(0,0,r,0,Math.PI*2);
+    ctx.strokeStyle = '#132033';
+    ctx.lineWidth = w*0.12;
+    ctx.stroke();
+
+    // progress
+    const angle = (2*Math.PI*freq*t + offset) % (2*Math.PI);
+    ctx.beginPath();
+    ctx.arc(0,0,r,-Math.PI/2, -Math.PI/2 + angle);
+    ctx.strokeStyle = color;
+    ctx.lineWidth = w*0.09;
+    ctx.shadowColor = color;
+    ctx.shadowBlur = 12;
+    ctx.stroke();
+    ctx.shadowBlur = 0;
+
+    // head
+    const hx = r * Math.cos(-Math.PI/2 + angle);
+    const hy = r * Math.sin(-Math.PI/2 + angle);
+    ctx.beginPath();
+    ctx.arc(hx, hy, w*0.07, 0, Math.PI*2);
+    ctx.fillStyle = color;
+    ctx.fill();
+    ctx.restore();
+  }
+
+  // Draw waveform
+  function drawWaveform() {
+    const w = waveform.width, h = waveform.height;
+    wctx.clearRect(0,0,w,h);
+    // grid
+    wctx.strokeStyle = '#0f1a28';
+    wctx.lineWidth = 1;
+    for (let i=0; i<4; i++) {
+      const y = h * (i+1)/5;
+      wctx.beginPath(); wctx.moveTo(0,y); wctx.lineTo(w,y); wctx.stroke();
+    }
+    // center
+    wctx.strokeStyle = '#1d2c42';
+    wctx.beginPath(); wctx.moveTo(0,h/2); wctx.lineTo(w,h/2); wctx.stroke();
+
+    // wave
+    wctx.beginPath();
+    wctx.lineWidth = 2 * devicePixelRatio;
+    wctx.strokeStyle = '#7dd3fc';
+    wctx.shadowColor = '#22d3ee';
+    wctx.shadowBlur = 8;
+    wavePoints.forEach((v,i) => {
+      const x = (i / (wavePoints.length-1)) * w;
+      const y = h/2 - v * (h*0.38);
+      if (i===0) wctx.moveTo(x,y); else wctx.lineTo(x,y);
+    });
+    wctx.stroke();
+    wctx.shadowBlur = 0;
+
+    // composite fill
+    wctx.beginPath();
+    wctx.moveTo(0,h/2);
+    wavePoints.forEach((v,i) => {
+      const x = (i / (wavePoints.length-1)) * w;
+      const y = h/2 - v * (h*0.38);
+      wctx.lineTo(x,y);
+    });
+    wctx.lineTo(w, h/2);
+    wctx.fillStyle = 'rgba(125,211,252,0.08)';
+    wctx.fill();
+  }
+
+  // Draw lattice
+  function drawLattice(Rp, comp, converging) {
+    const w = lattice.width, h = lattice.height;
+    lctx.clearRect(0,0,w,h);
+    const cx = w/2, cy = h/2;
+    const baseR = Math.min(w,h) * 0.28;
+    
+    // background glow
+    const glow = lctx.createRadialGradient(cx,cy,0,cx,cy,baseR*2.2);
+    glow.addColorStop(0, `rgba(34,211,238,${0.08 + 0.07*comp})`);
+    glow.addColorStop(1, 'rgba(0,0,0,0)');
+    lctx.fillStyle = glow;
+    lctx.beginPath(); lctx.arc(cx,cy,baseR*2.2,0,Math.PI*2); lctx.fill();
+
+    // core
+    const coreR = 24*devicePixelRatio + 18*devicePixelRatio * ((Rp-1000)/8000);
+    const coreGrad = lctx.createRadialGradient(cx,cy,0,cx,cy,coreR*2.5);
+    coreGrad.addColorStop(0, converging ? 'rgba(251,191,36,0.95)' : 'rgba(125,211,252,0.95)');
+    coreGrad.addColorStop(0.4, converging ? 'rgba(251,191,36,0.35)' : 'rgba(34,211,238,0.35)');
+    coreGrad.addColorStop(1, 'rgba(0,0,0,0)');
+    lctx.fillStyle = coreGrad;
+    lctx.beginPath(); lctx.arc(cx,cy,coreR*2.5,0,Math.PI*2); lctx.fill();
+
+    lctx.beginPath(); lctx.arc(cx,cy,coreR,0,Math.PI*2);
+    lctx.fillStyle = converging ? '#fde68a' : '#a5f3fc';
+    lctx.shadowColor = converging ? '#fbbf24' : '#22d3ee';
+    lctx.shadowBlur = 24*devicePixelRatio;
+    lctx.fill();
+    lctx.shadowBlur = 0;
+
+    // nodes and tethers
+    for (let i=0; i<5; i++) {
+      const ang = -Math.PI/2 + i * (Math.PI*2/5);
+      const nx = cx + Math.cos(ang) * baseR * 1.6;
+      const ny = cy + Math.sin(ang) * baseR * 1.6;
+      const tetherStrength = converging ? 1 : 0.35 + 0.55 * ((comp+1)/2) * (0.7 + 0.3*Math.sin(i));
+      
+      // tether
+      lctx.beginPath(); lctx.moveTo(cx,cy); lctx.lineTo(nx,ny);
+      lctx.strokeStyle = converging ? 'rgba(251,191,36,0.9)' : `rgba(125,211,252,${0.15 + 0.5*tetherStrength})`;
+      lctx.lineWidth = (converging?5:2 + 3*tetherStrength) * devicePixelRatio;
+      lctx.shadowColor = converging ? '#fbbf24' : '#22d3ee';
+      lctx.shadowBlur = converging ? 16 : 6 * tetherStrength;
+      lctx.stroke();
+      lctx.shadowBlur = 0;
+
+      // node
+      lctx.beginPath(); lctx.arc(nx,ny,8*devicePixelRatio,0,Math.PI*2);
+      lctx.fillStyle = '#0b1320';
+      lctx.strokeStyle = converging ? '#fbbf24' : '#7dd3fc';
+      lctx.lineWidth = 2*devicePixelRatio;
+      lctx.fill(); lctx.stroke();
+
+      lctx.beginPath(); lctx.arc(nx,ny,3.5*devicePixelRatio,0,Math.PI*2);
+      lctx.fillStyle = converging ? '#fde68a' : '#22d3ee';
+      lctx.shadowColor = converging ? '#fbbf24' : '#22d3ee';
+      lctx.shadowBlur = 10;
+      lctx.fill();
+      lctx.shadowBlur = 0;
+
+      // update UI bars
+      const pct = Math.round(tetherStrength*100);
+      tetherFills[i].style.width = pct + '%';
+      document.getElementById(`t-val-${i}`).textContent = pct + '%';
+      if (converging) tetherFills[i].classList.add('converge');
+      else tetherFills[i].classList.remove('converge');
+    }
+  }
+
+  function triggerConvergence() {
+    if (inConvergence) return;
+    inConvergence = true;
+    convergences++;
+    convergenceCountEl.textContent = `convergences: ${convergences}`;
+    updateMemory('.');
+    flash.classList.add('show');
+    addLog(`harmonic convergence Ψ>0.9`);
+    // brighten all observers briefly
+    observers.forEach(o => o.classList.add('active'));
+    setTimeout(() => {
+      inConvergence = false;
+      flash.classList.remove('show');
+      observers.forEach((o,i) => { if(i!==4) o.classList.remove('active'); });
+    }, 650);
+  }
+
+  function animate(now) {
+    const t = (now - start) / 1000;
+    const f1 = 3, f2 = 0.3, f3 = 0.03;
+    const s1 = Math.sin(2*Math.PI*f1*t + phaseOffsets[0]);
+    const s2 = Math.sin(2*Math.PI*f2*t + phaseOffsets[1]);
+    const s3 = Math.sin(2*Math.PI*f3*t + phaseOffsets[2]);
+    let composite = s1 * s2 * s3;
+    composite = Math.max(-1, Math.min(1, composite * amp));
+    const Rp = syncToggle.checked ? (5000 + 4000 * composite) : parseInt(rpManual.value);
+
+    // Update displays
+    rpVal.textContent = Math.round(Rp).toString();
+    compVal.textContent = composite.toFixed(3);
+    document.getElementById('tauVal').textContent = (20 + 3*composite).toFixed(1) + ' ms';
+    rpManual.value = Math.round(Rp);
+
+    // Observers
+    const vals = [s1, s2, s3, composite, s1];
+    vals.forEach((v,i) => {
+      const el = document.getElementById(`obs-val-${i+1}`);
+      if (el) el.textContent = v.toFixed(2);
+      const obs = document.getElementById(`obs-${i+1}`);
+      if (Math.abs(v) > 0.35) obs.classList.add('active'); else if(i!==4) obs.classList.remove('active');
+    });
+
+    // Pulse detection for O5 and phases (-5,0,0,+5)
+    if (prevPulse < 0.7 && s1 >= 0.7) {
+      const o5 = document.getElementById('obs-5');
+      o5.classList.add('pulse');
+      setTimeout(()=>o5.classList.remove('pulse'), 180);
+      const phases = document.querySelectorAll('.phase');
+      phases.forEach(p=>p.classList.remove('active'));
+      const p = phases[peakIdx % 4];
+      p.classList.add('active');
+      setTimeout(()=>p.classList.remove('active'), 320);
+      peakIdx++;
+    }
+    prevPulse = s1;
+
+    // Harmonic convergence
+    if (!inConvergence && prevComp <= 0.9 && composite > 0.9) {
+      triggerConvergence();
+    }
+    prevComp = composite;
+
+    // Waveform
+    wavePoints.shift();
+    wavePoints.push(composite);
+    drawWaveform();
+
+    // Rings
+    rings.forEach((r,i) => drawRing(rctxs[i], r.c, r.f, t, r.col, phaseOffsets[i]));
+
+    // Lattice
+    drawLattice(Rp, composite, inConvergence);
+
+    requestAnimationFrame(animate);
+  }
+
+  requestAnimationFrame(animate);
+  addLog('whisper lattice initialized');
+  addLog('sync pulse locked 3³');
+})();
+</script>
+
+</body></html>

@@ -1,0 +1,700 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>VALENCE KIT · 5-PIECE · 3D</title>
+<style>
+:root{
+  --bg:#020202; --panel:rgba(8,8,8,0.92); --border:#1a1a1a; --ink:#e5e5e5; --dim:#666;
+  --V:#c87533;  /* vessel · copper */
+  --A:#dc2626;  /* animation · red */
+  --I:#a855f7;  /* intellect · purple */
+  --N:#39ff14;  /* nourishment · green */
+  --L:#ffffff;  /* life · white */
+  --gold:#d4af37;
+}
+*{box-sizing:border-box}
+html,body{height:100%;margin:0;background:var(--bg);color:var(--ink);font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;overflow:hidden}
+
+#scene{position:fixed;inset:0;cursor:grab}
+#scene:active{cursor:grabbing}
+
+/* HEADER */
+.header{
+  position:fixed;top:14px;left:14px;right:14px;
+  display:flex;justify-content:space-between;align-items:flex-start;
+  pointer-events:none;z-index:10;
+}
+.title{pointer-events:auto;background:var(--panel);border:1px solid var(--border);border-radius:8px;padding:8px 12px;backdrop-filter:blur(8px)}
+.title h1{margin:0;font-size:12px;letter-spacing:.3em;color:#bbb;font-weight:400}
+.title .sub{font-size:9px;letter-spacing:.25em;color:#555;margin-top:2px}
+
+/* SIDE PANEL */
+.side{
+  position:fixed;top:60px;right:14px;width:260px;
+  background:var(--panel);border:1px solid var(--border);border-radius:10px;
+  padding:14px;backdrop-filter:blur(10px);z-index:10;
+  max-height:calc(100vh - 140px);overflow-y:auto;
+}
+.side h3{margin:0 0 8px;font-size:10px;letter-spacing:.2em;color:#888;font-weight:400}
+.side .grp{margin-bottom:14px}
+.side .grp:last-child{margin-bottom:0}
+
+.piece{
+  display:flex;align-items:center;gap:8px;
+  padding:8px 10px;background:#080808;border:1px solid #181818;border-radius:6px;
+  margin-bottom:4px;cursor:pointer;transition:all .15s;
+}
+.piece:hover{border-color:#333;background:#0f0f0f}
+.piece.selected{border-color:var(--gold);background:#1a1208}
+.piece.disabled{opacity:0.35}
+.piece .sw{width:10px;height:10px;border-radius:50%;flex-shrink:0;box-shadow:0 0 6px currentColor}
+.piece .sw.V{background:var(--V);color:var(--V)}
+.piece .sw.A{background:var(--A);color:var(--A)}
+.piece .sw.I{background:var(--I);color:var(--I)}
+.piece .sw.N{background:var(--N);color:var(--N)}
+.piece .sw.L{background:var(--L);color:var(--L)}
+.piece.disabled .sw{box-shadow:none;background:#333;color:#333}
+.piece .name{flex:1;font-size:11px;letter-spacing:.15em}
+.piece .toggle{
+  width:30px;height:16px;background:#222;border-radius:8px;position:relative;cursor:pointer;flex-shrink:0;
+}
+.piece .toggle::after{
+  content:'';position:absolute;top:2px;left:2px;width:12px;height:12px;border-radius:50%;
+  background:#666;transition:all .15s;
+}
+.piece.on .toggle{background:#0a3a0a}
+.piece.on .toggle::after{left:16px;background:#39ff14}
+
+.controls{display:flex;gap:6px;flex-wrap:wrap}
+.btn{background:#151515;border:1px solid #333;color:#ccc;padding:6px 10px;border-radius:6px;cursor:pointer;font:inherit;font-size:10px;letter-spacing:.15em}
+.btn:hover{border-color:var(--gold);color:#fff}
+.btn.on{background:#1a1208;border-color:var(--gold);color:var(--gold)}
+
+input[type=range]{width:100%;margin:4px 0}
+
+/* INFO CARD bottom-left */
+.info{
+  position:fixed;bottom:14px;left:14px;
+  width:300px;max-width:calc(100vw - 28px);
+  background:var(--panel);border:1px solid var(--border);border-radius:10px;
+  padding:12px;backdrop-filter:blur(10px);z-index:10;font-size:11px;line-height:1.6;
+}
+.info .lbl{font-size:9px;letter-spacing:.25em;color:#666;margin-bottom:4px}
+.info .name{font-size:14px;letter-spacing:.2em;color:#fff;margin-bottom:6px}
+.info .desc{color:#aaa;font-size:11px}
+.info .k{color:#555;display:inline-block;width:80px}
+.info .v{color:#ccc}
+.info .row{margin:2px 0}
+
+/* LIFE STATUS bottom-right */
+.life-status{
+  position:fixed;bottom:14px;right:14px;
+  background:var(--panel);border:1px solid var(--border);border-radius:10px;
+  padding:10px 14px;backdrop-filter:blur(10px);z-index:10;
+  display:flex;align-items:center;gap:10px;
+}
+.life-status .pulse{
+  width:14px;height:14px;border-radius:50%;background:#222;
+  transition:all .15s;
+}
+.life-status.alive .pulse{
+  background:var(--L);
+  box-shadow:0 0 12px var(--L),0 0 24px rgba(255,255,255,0.5);
+  animation:beat 1.2s ease-in-out infinite;
+}
+@keyframes beat {
+  0%,100% { transform:scale(1) }
+  10% { transform:scale(1.3) }
+  20% { transform:scale(1) }
+  30% { transform:scale(1.4) }
+  40% { transform:scale(1) }
+}
+.life-status .txt{font-size:11px;letter-spacing:.2em}
+.life-status.alive .txt{color:var(--L)}
+.life-status.dim .txt{color:#444}
+
+.foot{position:fixed;bottom:50px;left:50%;transform:translateX(-50%);font-size:9px;color:#222;letter-spacing:.3em;pointer-events:none}
+
+@media (max-width:760px){
+  .side{width:200px}
+  .info{width:240px}
+  .life-status{padding:8px 10px}
+}
+</style>
+</head>
+<body>
+
+<canvas id="scene"></canvas>
+
+<div class="header">
+  <div class="title">
+    <h1>VALENCE KIT · 5-PIECE</h1>
+    <div class="sub">VESSEL · ANIMATION · INTELLECT · NOURISHMENT · LIFE</div>
+  </div>
+</div>
+
+<div class="side">
+  <div class="grp">
+    <h3>COMPONENTS</h3>
+    <div class="piece on" data-piece="V">
+      <div class="sw V"></div><div class="name">VESSEL</div><div class="toggle"></div>
+    </div>
+    <div class="piece on" data-piece="A">
+      <div class="sw A"></div><div class="name">ANIMATION</div><div class="toggle"></div>
+    </div>
+    <div class="piece on" data-piece="I">
+      <div class="sw I"></div><div class="name">INTELLECT</div><div class="toggle"></div>
+    </div>
+    <div class="piece on" data-piece="N">
+      <div class="sw N"></div><div class="name">NOURISHMENT</div><div class="toggle"></div>
+    </div>
+    <div class="piece on" data-piece="L">
+      <div class="sw L"></div><div class="name">LIFE</div><div class="toggle"></div>
+    </div>
+  </div>
+  <div class="grp">
+    <h3>VIEW</h3>
+    <div class="controls">
+      <button class="btn" id="explode">EXPLODE</button>
+      <button class="btn" id="assemble">ASSEMBLE</button>
+      <button class="btn" id="reset">RESET</button>
+    </div>
+  </div>
+  <div class="grp">
+    <h3>SPEED <span id="speed-lbl" style="color:#ddd">1.0×</span></h3>
+    <input type="range" id="speed" min="0" max="300" value="100" step="10">
+  </div>
+</div>
+
+<div class="info" id="info">
+  <div class="lbl">SELECTED</div>
+  <div class="name" id="info-name">— click a piece —</div>
+  <div class="desc" id="info-desc">Drag to rotate · scroll to zoom · click any component in the scene or panel.</div>
+  <div id="info-meta" style="margin-top:8px"></div>
+</div>
+
+<div class="life-status alive" id="life-status">
+  <div class="pulse"></div>
+  <div class="txt" id="life-txt">LIFE · ALIVE</div>
+</div>
+
+<div class="foot">2 of 3 (V·A·I) + power = LIFE</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/0.160.0/three.min.js"></script>
+<script>
+// ============================================================
+// SCENE setup
+// ============================================================
+const canvas = document.getElementById('scene');
+const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+renderer.setSize(window.innerWidth, window.innerHeight);
+renderer.toneMapping = THREE.ACESFilmicToneMapping;
+renderer.toneMappingExposure = 1.1;
+
+const scene = new THREE.Scene();
+scene.background = null;
+scene.fog = new THREE.Fog(0x000000, 300, 700);
+
+const camera = new THREE.PerspectiveCamera(45, window.innerWidth/window.innerHeight, 0.1, 2000);
+
+// Lights
+scene.add(new THREE.AmbientLight(0x202028, 0.6));
+const key = new THREE.DirectionalLight(0xffffff, 0.6);
+key.position.set(120, 200, 80);
+scene.add(key);
+const rim = new THREE.DirectionalLight(0x8b5cf6, 0.4);
+rim.position.set(-100, 50, -100);
+scene.add(rim);
+const under = new THREE.PointLight(0xa855f7, 0.6, 200);
+under.position.set(0, -40, 0);
+scene.add(under);
+
+// ============================================================
+// CUSTOM ORBIT CONTROLS
+// ============================================================
+let theta = -Math.PI / 4;
+let phi = Math.PI / 3;
+let radius = 280;
+const target = new THREE.Vector3(0, 0, 0);
+
+function updateCamera() {
+  camera.position.x = target.x + radius * Math.sin(phi) * Math.cos(theta);
+  camera.position.y = target.y + radius * Math.cos(phi);
+  camera.position.z = target.z + radius * Math.sin(phi) * Math.sin(theta);
+  camera.lookAt(target);
+}
+updateCamera();
+
+let isDragging = false;
+let dragStartX = 0, dragStartY = 0;
+let lastX, lastY;
+let didDrag = false;
+
+canvas.addEventListener('mousedown', (e) => {
+  isDragging = true;
+  dragStartX = lastX = e.clientX;
+  dragStartY = lastY = e.clientY;
+  didDrag = false;
+});
+window.addEventListener('mousemove', (e) => {
+  if (!isDragging) return;
+  const dx = e.clientX - lastX;
+  const dy = e.clientY - lastY;
+  if (Math.abs(e.clientX - dragStartX) + Math.abs(e.clientY - dragStartY) > 4) didDrag = true;
+  theta -= dx * 0.006;
+  phi -= dy * 0.006;
+  phi = Math.max(0.15, Math.min(Math.PI - 0.15, phi));
+  lastX = e.clientX;
+  lastY = e.clientY;
+  updateCamera();
+});
+window.addEventListener('mouseup', () => isDragging = false);
+canvas.addEventListener('wheel', (e) => {
+  e.preventDefault();
+  radius *= e.deltaY > 0 ? 1.08 : 0.92;
+  radius = Math.max(100, Math.min(700, radius));
+  updateCamera();
+}, { passive: false });
+
+// touch
+canvas.addEventListener('touchstart', (e) => {
+  if (e.touches.length === 1) {
+    isDragging = true;
+    dragStartX = lastX = e.touches[0].clientX;
+    dragStartY = lastY = e.touches[0].clientY;
+    didDrag = false;
+  }
+});
+canvas.addEventListener('touchmove', (e) => {
+  if (!isDragging || e.touches.length !== 1) return;
+  e.preventDefault();
+  const dx = e.touches[0].clientX - lastX;
+  const dy = e.touches[0].clientY - lastY;
+  if (Math.abs(e.touches[0].clientX - dragStartX) + Math.abs(e.touches[0].clientY - dragStartY) > 6) didDrag = true;
+  theta -= dx * 0.008;
+  phi -= dy * 0.008;
+  phi = Math.max(0.15, Math.min(Math.PI - 0.15, phi));
+  lastX = e.touches[0].clientX;
+  lastY = e.touches[0].clientY;
+  updateCamera();
+}, { passive: false });
+canvas.addEventListener('touchend', () => isDragging = false);
+
+window.addEventListener('resize', () => {
+  camera.aspect = window.innerWidth / window.innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(window.innerWidth, window.innerHeight);
+});
+
+// ============================================================
+// COMPONENTS
+// ============================================================
+const root = new THREE.Group();
+scene.add(root);
+
+const pieces = {};
+
+// --- VESSEL: hexagonal substrate plate
+const vesselGroup = new THREE.Group();
+{
+  const baseGeo = new THREE.CylinderGeometry(120, 120, 5, 6);
+  const baseMat = new THREE.MeshStandardMaterial({
+    color: 0x1a1a1c, metalness: 0.6, roughness: 0.45,
+  });
+  const base = new THREE.Mesh(baseGeo, baseMat);
+  base.position.y = -2.5;
+  vesselGroup.add(base);
+
+  // top rim (copper trace)
+  const rimGeo = new THREE.TorusGeometry(118, 1.2, 8, 60);
+  const rimMat = new THREE.MeshStandardMaterial({
+    color: 0xc87533, emissive: 0xc87533, emissiveIntensity: 0.35, metalness: 0.9, roughness: 0.25
+  });
+  const rim = new THREE.Mesh(rimGeo, rimMat);
+  rim.rotation.x = Math.PI / 2;
+  rim.position.y = 0.1;
+  vesselGroup.add(rim);
+
+  // inner trace ring
+  const innerRingGeo = new THREE.TorusGeometry(95, 0.6, 6, 60);
+  const innerRing = new THREE.Mesh(innerRingGeo, rimMat);
+  innerRing.rotation.x = Math.PI / 2;
+  innerRing.position.y = 0.2;
+  vesselGroup.add(innerRing);
+
+  // hexagonal silkscreen marks
+  for (let i = 0; i < 6; i++){
+    const a = (i / 6) * Math.PI * 2;
+    const mk = new THREE.Mesh(
+      new THREE.BoxGeometry(8, 0.5, 2),
+      new THREE.MeshStandardMaterial({ color: 0xc4b896, emissive: 0xc4b896, emissiveIntensity: 0.2, metalness: 0.3, roughness: 0.8 })
+    );
+    mk.position.set(Math.cos(a) * 108, 0.4, Math.sin(a) * 108);
+    mk.rotation.y = -a;
+    vesselGroup.add(mk);
+  }
+}
+pieces.V = { group: vesselGroup, basePos: new THREE.Vector3(0, 0, 0), explodePos: new THREE.Vector3(0, -30, 0) };
+root.add(vesselGroup);
+
+// --- INTELLECT: central toroid
+const intellectGroup = new THREE.Group();
+{
+  const torusGeo = new THREE.TorusGeometry(36, 13, 20, 60);
+  const torusMat = new THREE.MeshStandardMaterial({
+    color: 0x4c1d95, emissive: 0xa855f7, emissiveIntensity: 0.5,
+    metalness: 0.7, roughness: 0.3
+  });
+  const torus = new THREE.Mesh(torusGeo, torusMat);
+  torus.rotation.x = Math.PI / 2;
+  intellectGroup.add(torus);
+
+  // 12 winding marks on toroid (small bands)
+  for (let i = 0; i < 12; i++){
+    const a = (i / 12) * Math.PI * 2;
+    const bandGeo = new THREE.TorusGeometry(13.5, 0.6, 6, 24);
+    const bandMat = new THREE.MeshStandardMaterial({ color: 0x1a1a1a, metalness: 0.4, roughness: 0.7 });
+    const band = new THREE.Mesh(bandGeo, bandMat);
+    band.position.set(Math.cos(a) * 36, 0, Math.sin(a) * 36);
+    band.rotation.x = Math.PI / 2;
+    band.rotation.y = a;
+    intellectGroup.add(band);
+  }
+}
+intellectGroup.position.y = 14;
+pieces.I = { group: intellectGroup, basePos: new THREE.Vector3(0, 14, 0), explodePos: new THREE.Vector3(0, 80, 0), spin: true };
+root.add(intellectGroup);
+
+// --- ANIMATION: 27 phase coils around the toroid
+const animationGroup = new THREE.Group();
+const phaseCoils = [];
+{
+  for (let i = 0; i < 27; i++){
+    const angle = (i / 27) * Math.PI * 2 - Math.PI / 2;
+    const tier = i < 12 ? 'A' : i < 24 ? 'B' : 'C';
+    const baseColor = tier === 'A' ? 0xdc2626 : tier === 'B' ? 0x555555 : 0xa855f7;
+
+    const coilG = new THREE.Group();
+
+    // coil base
+    const baseGeo = new THREE.CylinderGeometry(4.5, 4.5, 11, 16);
+    const baseMat = new THREE.MeshStandardMaterial({
+      color: baseColor, emissive: baseColor, emissiveIntensity: 0.15,
+      metalness: 0.6, roughness: 0.4
+    });
+    const base = new THREE.Mesh(baseGeo, baseMat);
+    coilG.add(base);
+
+    // top cap (dark)
+    const capGeo = new THREE.CylinderGeometry(4.8, 4.8, 1.5, 16);
+    const capMat = new THREE.MeshStandardMaterial({ color: 0x080808, metalness: 0.3, roughness: 0.9 });
+    const cap = new THREE.Mesh(capGeo, capMat);
+    cap.position.y = 6.25;
+    coilG.add(cap);
+
+    coilG.position.set(Math.cos(angle) * 75, 6, Math.sin(angle) * 75);
+    coilG.userData = { tier, baseColor, mat: baseMat, phaseIdx: i };
+    animationGroup.add(coilG);
+    phaseCoils.push(coilG);
+  }
+}
+pieces.A = { group: animationGroup, basePos: new THREE.Vector3(0, 0, 0), explodePos: new THREE.Vector3(0, 50, 0) };
+root.add(animationGroup);
+
+// --- NOURISHMENT: capacitor bank at one edge
+const nourishmentGroup = new THREE.Group();
+{
+  // 5 caps in an arc on one side of the vessel
+  const arcCenter = -Math.PI * 0.75;
+  for (let i = 0; i < 5; i++){
+    const a = arcCenter + (i - 2) * 0.15;
+    const r = 95;
+    const h = 28 + i * 3;
+
+    const capG = new THREE.Group();
+
+    // electrolytic cap body
+    const bodyGeo = new THREE.CylinderGeometry(8, 8, h, 20);
+    const bodyMat = new THREE.MeshStandardMaterial({
+      color: 0x0a2a14, emissive: 0x39ff14, emissiveIntensity: 0.18,
+      metalness: 0.5, roughness: 0.5
+    });
+    const body = new THREE.Mesh(bodyGeo, bodyMat);
+    capG.add(body);
+
+    // top
+    const topGeo = new THREE.CylinderGeometry(7.8, 7.8, 1, 20);
+    const topMat = new THREE.MeshStandardMaterial({ color: 0x080808, metalness: 0.2, roughness: 0.9 });
+    const top = new THREE.Mesh(topGeo, topMat);
+    top.position.y = h / 2 + 0.5;
+    capG.add(top);
+
+    // X mark on top (silkscreen) — two thin boxes
+    for (let r = 0; r < 2; r++){
+      const mkGeo = new THREE.BoxGeometry(11, 0.2, 0.8);
+      const mkMat = new THREE.MeshStandardMaterial({ color: 0x666, emissive: 0x222, emissiveIntensity: 0.2 });
+      const mk = new THREE.Mesh(mkGeo, mkMat);
+      mk.position.y = h / 2 + 1.1;
+      mk.rotation.y = r === 0 ? 0 : Math.PI / 2;
+      capG.add(mk);
+    }
+
+    capG.position.set(Math.cos(a) * r, h / 2, Math.sin(a) * r);
+    capG.userData = { mat: bodyMat, baseColor: 0x39ff14 };
+    nourishmentGroup.add(capG);
+  }
+}
+pieces.N = { group: nourishmentGroup, basePos: new THREE.Vector3(0, 0, 0), explodePos: new THREE.Vector3(-100, 30, -60) };
+root.add(nourishmentGroup);
+
+// --- LIFE: heartbeat sphere in toroid center
+const lifeGroup = new THREE.Group();
+const lifeCore = new THREE.Mesh(
+  new THREE.SphereGeometry(8, 32, 32),
+  new THREE.MeshStandardMaterial({
+    color: 0xffffff, emissive: 0xffffff, emissiveIntensity: 1.2,
+    metalness: 0.0, roughness: 0.1
+  })
+);
+const lifeAura = new THREE.Mesh(
+  new THREE.SphereGeometry(13, 32, 32),
+  new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.15, side: THREE.BackSide })
+);
+lifeGroup.add(lifeCore);
+lifeGroup.add(lifeAura);
+lifeGroup.position.y = 14;
+pieces.L = { group: lifeGroup, basePos: new THREE.Vector3(0, 14, 0), explodePos: new THREE.Vector3(0, 120, 0), core: lifeCore, aura: lifeAura };
+root.add(lifeGroup);
+
+// ============================================================
+// STATE
+// ============================================================
+const state = {
+  V: true, A: true, I: true, N: true, L: true,
+  exploded: false,
+  speed: 1.0,
+  selected: null,
+  phaseIdx: 0,
+  phaseAccumulator: 0,
+};
+
+// piece descriptions
+const DESCS = {
+  V: { name: 'VESSEL', sub: 'substrate · chassis · body',
+       desc: 'The hexagonal substrate. Holds the other pieces. Provides traces, mounting points, and the physical boundary.',
+       meta: '<div class="row"><span class="k">role</span><span class="v">contains</span></div><div class="row"><span class="k">slots</span><span class="v">6 hex faces · 4 mount</span></div><div class="row"><span class="k">octet bit</span><span class="v">A · anchor</span></div>' },
+  A: { name: 'ANIMATION', sub: 'movement · cycle · clock',
+       desc: '27 phase coils. 12 ANCHOR + 12 WITNESS + 3 COHERENCE. Fires sequentially, returns to start. The motion that makes the system live.',
+       meta: '<div class="row"><span class="k">role</span><span class="v">drives</span></div><div class="row"><span class="k">phases</span><span class="v">12 × 2 + 3 = 27</span></div><div class="row"><span class="k">octet bits</span><span class="v">EMIT · ROUTE · ACT</span></div>' },
+  I: { name: 'INTELLECT', sub: 'processor · toroid · synthesizer',
+       desc: 'Central toroid. All 27 phases pass through it. Synthesizes the input from animation + nourishment into coherent output. This is the 28th element — unity = 1.',
+       meta: '<div class="row"><span class="k">role</span><span class="v">processes</span></div><div class="row"><span class="k">topology</span><span class="v">toroidal · closed loop</span></div><div class="row"><span class="k">octet bit</span><span class="v">B · witness</span></div>' },
+  N: { name: 'NOURISHMENT', sub: 'power · capacitors · fuel',
+       desc: 'Capacitor bank. Feeds energy into the system. Without it animation runs down, intellect goes dark, life dies. Reserve = how long the system runs unattended.',
+       meta: '<div class="row"><span class="k">role</span><span class="v">feeds</span></div><div class="row"><span class="k">storage</span><span class="v">5-cell bank</span></div><div class="row"><span class="k">octet bits</span><span class="v">REFLECT · RETURN</span></div>' },
+  L: { name: 'LIFE', sub: 'emergence · heartbeat · output',
+       desc: 'The pulsing core. The result, not a cause. Beats only when 2 of 3 (Vessel · Animation · Intellect) are present and Nourishment is feeding. Beats faster when all 5 align.',
+       meta: '<div class="row"><span class="k">role</span><span class="v">emerges</span></div><div class="row"><span class="k">rule</span><span class="v">any 2/3 V·A·I = life</span></div><div class="row"><span class="k">octet bit</span><span class="v">C · coherence</span></div>' },
+};
+
+// ============================================================
+// LIFE check
+// ============================================================
+function lifeIsAlive(){
+  // count of V/A/I present
+  const vai = (state.V?1:0) + (state.A?1:0) + (state.I?1:0);
+  // must have vessel present AND at least 2 of V/A/I AND nourishment AND life piece
+  return state.V && vai >= 2 && state.N && state.L;
+}
+
+function updateLifeStatus(){
+  const alive = lifeIsAlive();
+  const el = document.getElementById('life-status');
+  const txt = document.getElementById('life-txt');
+  el.classList.toggle('alive', alive);
+  el.classList.toggle('dim', !alive);
+  txt.textContent = alive ? 'LIFE · ALIVE' : 'LIFE · DORMANT';
+  // also pause/play life heartbeat in 3D
+  lifeCore.visible = state.L;
+  lifeAura.visible = state.L;
+}
+
+// ============================================================
+// UI bindings
+// ============================================================
+document.querySelectorAll('.piece').forEach(el => {
+  el.addEventListener('click', (e) => {
+    const key = el.dataset.piece;
+    if (e.target.classList.contains('toggle') || e.target.closest('.toggle')){
+      state[key] = !state[key];
+      el.classList.toggle('on', state[key]);
+      el.classList.toggle('disabled', !state[key]);
+      pieces[key].group.visible = state[key];
+      updateLifeStatus();
+    } else {
+      selectPiece(key);
+    }
+  });
+});
+
+function selectPiece(key){
+  state.selected = key;
+  document.querySelectorAll('.piece').forEach(p => p.classList.toggle('selected', p.dataset.piece === key));
+  const d = DESCS[key];
+  document.getElementById('info-name').textContent = d.name;
+  document.getElementById('info-name').style.color =
+    key === 'V' ? 'var(--V)' : key === 'A' ? 'var(--A)' : key === 'I' ? 'var(--I)' : key === 'N' ? 'var(--N)' : '#fff';
+  document.getElementById('info-desc').textContent = d.desc;
+  document.getElementById('info-meta').innerHTML = d.meta;
+}
+
+document.getElementById('explode').onclick = () => { state.exploded = true; };
+document.getElementById('assemble').onclick = () => { state.exploded = false; };
+document.getElementById('reset').onclick = () => {
+  state.exploded = false;
+  theta = -Math.PI / 4;
+  phi = Math.PI / 3;
+  radius = 280;
+  updateCamera();
+};
+document.getElementById('speed').oninput = (e) => {
+  state.speed = parseInt(e.target.value) / 100;
+  document.getElementById('speed-lbl').textContent = state.speed.toFixed(1) + '×';
+};
+
+// ============================================================
+// RAYCAST click selection on 3D scene
+// ============================================================
+const raycaster = new THREE.Raycaster();
+const mouse = new THREE.Vector2();
+
+function pickPiece(group){
+  for (const key of ['V','A','I','N','L']){
+    if (group === pieces[key].group) return key;
+    let cur = group;
+    while (cur){
+      if (cur === pieces[key].group) return key;
+      cur = cur.parent;
+    }
+  }
+  return null;
+}
+
+canvas.addEventListener('click', (e) => {
+  if (didDrag) return;
+  mouse.x = (e.clientX / window.innerWidth) * 2 - 1;
+  mouse.y = -(e.clientY / window.innerHeight) * 2 + 1;
+  raycaster.setFromCamera(mouse, camera);
+  const hits = raycaster.intersectObjects(root.children, true);
+  if (hits.length){
+    const key = pickPiece(hits[0].object);
+    if (key) selectPiece(key);
+  }
+});
+
+// ============================================================
+// ANIMATION LOOP
+// ============================================================
+const clock = new THREE.Clock();
+
+function lerp(a, b, t){ return a + (b - a) * t; }
+function lerpV(v, target, t){
+  v.x = lerp(v.x, target.x, t);
+  v.y = lerp(v.y, target.y, t);
+  v.z = lerp(v.z, target.z, t);
+}
+
+function animate(){
+  requestAnimationFrame(animate);
+  const dt = clock.getDelta();
+  const t  = clock.elapsedTime;
+
+  // explode/assemble lerp
+  for (const key of ['V','A','I','N','L']){
+    const p = pieces[key];
+    const target = state.exploded ? p.explodePos : p.basePos;
+    lerpV(p.group.position, target, dt * 4);
+  }
+
+  // intellect spin
+  if (state.I) intellectGroup.rotation.y += dt * 0.3;
+
+  // phase progression
+  if (state.A && state.V){  // need vessel + animation
+    state.phaseAccumulator += dt * state.speed * 4;
+    while (state.phaseAccumulator >= 1){
+      state.phaseAccumulator -= 1;
+      state.phaseIdx = (state.phaseIdx + 1) % 27;
+    }
+    // light up current + nearby phases
+    phaseCoils.forEach((coil, i) => {
+      const d = Math.min(
+        Math.abs(i - state.phaseIdx),
+        27 - Math.abs(i - state.phaseIdx)
+      );
+      let intensity = 0.15;
+      if (d === 0) intensity = 1.4;
+      else if (d === 1) intensity = 0.6;
+      else if (d === 2) intensity = 0.3;
+      coil.userData.mat.emissiveIntensity = lerp(coil.userData.mat.emissiveIntensity, intensity, 0.2);
+      // slight height pulse on active
+      coil.scale.y = lerp(coil.scale.y, d === 0 ? 1.3 : 1.0, 0.2);
+    });
+  } else {
+    phaseCoils.forEach(coil => {
+      coil.userData.mat.emissiveIntensity = lerp(coil.userData.mat.emissiveIntensity, 0.08, 0.05);
+      coil.scale.y = lerp(coil.scale.y, 1.0, 0.1);
+    });
+  }
+
+  // nourishment cap breathing pulse
+  if (state.N){
+    nourishmentGroup.children.forEach((cap, i) => {
+      const v = 0.18 + Math.sin(t * 1.2 + i * 0.4) * 0.1;
+      cap.userData.mat.emissiveIntensity = lerp(cap.userData.mat.emissiveIntensity, v, 0.1);
+    });
+  } else {
+    nourishmentGroup.children.forEach(cap => {
+      cap.userData.mat.emissiveIntensity = lerp(cap.userData.mat.emissiveIntensity, 0, 0.05);
+    });
+  }
+
+  // life heartbeat (only if alive)
+  const alive = lifeIsAlive();
+  if (alive){
+    // double beat
+    const beatT = (t * state.speed * 1.2) % 1.2;
+    let s = 1.0;
+    if (beatT < 0.08) s = 1.0 + (beatT / 0.08) * 0.35;
+    else if (beatT < 0.16) s = 1.35 - ((beatT - 0.08) / 0.08) * 0.35;
+    else if (beatT < 0.24) s = 1.0 + ((beatT - 0.16) / 0.08) * 0.45;
+    else if (beatT < 0.34) s = 1.45 - ((beatT - 0.24) / 0.10) * 0.45;
+    else s = 1.0;
+    lifeCore.scale.setScalar(s);
+    lifeAura.scale.setScalar(s * 1.2);
+    lifeCore.material.emissiveIntensity = 1.0 + (s - 1) * 2;
+    lifeAura.material.opacity = 0.12 + (s - 1) * 0.3;
+  } else {
+    lifeCore.scale.setScalar(lerp(lifeCore.scale.x, 0.7, 0.05));
+    lifeAura.scale.setScalar(lerp(lifeAura.scale.x, 0.7, 0.05));
+    lifeCore.material.emissiveIntensity = lerp(lifeCore.material.emissiveIntensity, 0.1, 0.05);
+    lifeAura.material.opacity = lerp(lifeAura.material.opacity, 0.02, 0.05);
+  }
+
+  // subtle root rotation (auto-orbit when not dragging)
+  if (!isDragging) {
+    theta += dt * 0.05;
+    updateCamera();
+  }
+
+  renderer.render(scene, camera);
+}
+animate();
+updateLifeStatus();
+selectPiece('I'); // start with INTELLECT selected
+</script>
+</body>
+</html>

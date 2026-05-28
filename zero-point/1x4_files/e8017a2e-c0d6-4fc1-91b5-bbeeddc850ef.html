@@ -1,0 +1,733 @@
+<!DOCTYPE html>
+<!-- saved from url=(0165)https://1883393532330016.a.metaaiusercontent.com/html?artifact_uuid=e8017a2e-c0d6-4fc1-91b5-bbeeddc850ef&ext=1779463813&hash=Q5fpDAGBBkNjNwd_E0y-Nfy-u-_p&theme=light -->
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SINGULARITY DASHBOARD — PLASMA WIRED v3.0</title>
+<script src="./saved_resource"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com/">
+<link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin="">
+<link href="./css2(2)" rel="stylesheet">
+<style>
+  :root { color-scheme: dark; }
+  body { font-family: 'Inter', system-ui; background: #02030a; overflow-x: hidden; }
+  .mono { font-family: 'JetBrains Mono', monospace; }
+  .glass { background: linear-gradient(180deg, rgba(15,20,32,0.85), rgba(8,12,20,0.7)); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.08); box-shadow: inset 0 1px 0 rgba(255,255,255,0.05), 0 10px 40px rgba(0,0,0,0.5); }
+  .plasma-grid { background-image: radial-gradient(rgba(0,220,255,0.08) 1px, transparent 1px); background-size: 24px 24px; }
+  input[type=range] { -webkit-appearance: none; appearance: none; height: 6px; background: rgba(255,255,255,0.1); border-radius: 3px; outline: none; }
+  input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; width: 18px; height: 18px; border-radius: 50%; background: currentColor; box-shadow: 0 0 15px currentColor, 0 0 30px currentColor; cursor: pointer; border: 2px solid #02030a; }
+  .toggle { width: 52px; height: 28px; background: rgba(255,255,255,0.1); border-radius: 14px; position: relative; transition: all 0.3s; cursor: pointer; border: 1px solid rgba(255,255,255,0.15); }
+  .toggle::after { content: ''; position: absolute; width: 22px; height: 22px; background: white; border-radius: 50%; top: 2px; left: 2px; transition: all 0.3s cubic-bezier(0.4,0,0.2,1); box-shadow: 0 2px 8px rgba(0,0,0,0.4); }
+  input:checked + .toggle { background: rgba(0,220,255,0.3); border-color: rgba(0,220,255,0.8); box-shadow: 0 0 20px rgba(0,220,255,0.4); }
+  input:checked + .toggle::after { transform: translateX(24px); background: #00dcff; box-shadow: 0 0 15px #00dcff; }
+  .plasma-wired .glass { border-color: rgba(0,220,255,0.3); box-shadow: inset 0 1px 0 rgba(0,220,255,0.2), 0 0 40px rgba(0,220,255,0.1); }
+  @keyframes pulse-core { 0%,100% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.05); opacity: 0.9; } }
+  @keyframes spin-slow { to { transform: rotate(360deg); } }
+</style>
+<style>*, ::before, ::after{--tw-border-spacing-x:0;--tw-border-spacing-y:0;--tw-translate-x:0;--tw-translate-y:0;--tw-rotate:0;--tw-skew-x:0;--tw-skew-y:0;--tw-scale-x:1;--tw-scale-y:1;--tw-pan-x: ;--tw-pan-y: ;--tw-pinch-zoom: ;--tw-scroll-snap-strictness:proximity;--tw-gradient-from-position: ;--tw-gradient-via-position: ;--tw-gradient-to-position: ;--tw-ordinal: ;--tw-slashed-zero: ;--tw-numeric-figure: ;--tw-numeric-spacing: ;--tw-numeric-fraction: ;--tw-ring-inset: ;--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-color:rgb(59 130 246 / 0.5);--tw-ring-offset-shadow:0 0 #0000;--tw-ring-shadow:0 0 #0000;--tw-shadow:0 0 #0000;--tw-shadow-colored:0 0 #0000;--tw-blur: ;--tw-brightness: ;--tw-contrast: ;--tw-grayscale: ;--tw-hue-rotate: ;--tw-invert: ;--tw-saturate: ;--tw-sepia: ;--tw-drop-shadow: ;--tw-backdrop-blur: ;--tw-backdrop-brightness: ;--tw-backdrop-contrast: ;--tw-backdrop-grayscale: ;--tw-backdrop-hue-rotate: ;--tw-backdrop-invert: ;--tw-backdrop-opacity: ;--tw-backdrop-saturate: ;--tw-backdrop-sepia: ;--tw-contain-size: ;--tw-contain-layout: ;--tw-contain-paint: ;--tw-contain-style: }::backdrop{--tw-border-spacing-x:0;--tw-border-spacing-y:0;--tw-translate-x:0;--tw-translate-y:0;--tw-rotate:0;--tw-skew-x:0;--tw-skew-y:0;--tw-scale-x:1;--tw-scale-y:1;--tw-pan-x: ;--tw-pan-y: ;--tw-pinch-zoom: ;--tw-scroll-snap-strictness:proximity;--tw-gradient-from-position: ;--tw-gradient-via-position: ;--tw-gradient-to-position: ;--tw-ordinal: ;--tw-slashed-zero: ;--tw-numeric-figure: ;--tw-numeric-spacing: ;--tw-numeric-fraction: ;--tw-ring-inset: ;--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-color:rgb(59 130 246 / 0.5);--tw-ring-offset-shadow:0 0 #0000;--tw-ring-shadow:0 0 #0000;--tw-shadow:0 0 #0000;--tw-shadow-colored:0 0 #0000;--tw-blur: ;--tw-brightness: ;--tw-contrast: ;--tw-grayscale: ;--tw-hue-rotate: ;--tw-invert: ;--tw-saturate: ;--tw-sepia: ;--tw-drop-shadow: ;--tw-backdrop-blur: ;--tw-backdrop-brightness: ;--tw-backdrop-contrast: ;--tw-backdrop-grayscale: ;--tw-backdrop-hue-rotate: ;--tw-backdrop-invert: ;--tw-backdrop-opacity: ;--tw-backdrop-saturate: ;--tw-backdrop-sepia: ;--tw-contain-size: ;--tw-contain-layout: ;--tw-contain-paint: ;--tw-contain-style: }/* ! tailwindcss v3.4.17 | MIT License | https://tailwindcss.com */*,::after,::before{box-sizing:border-box;border-width:0;border-style:solid;border-color:#e5e7eb}::after,::before{--tw-content:''}:host,html{line-height:1.5;-webkit-text-size-adjust:100%;-moz-tab-size:4;tab-size:4;font-family:ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";font-feature-settings:normal;font-variation-settings:normal;-webkit-tap-highlight-color:transparent}body{margin:0;line-height:inherit}hr{height:0;color:inherit;border-top-width:1px}abbr:where([title]){-webkit-text-decoration:underline dotted;text-decoration:underline dotted}h1,h2,h3,h4,h5,h6{font-size:inherit;font-weight:inherit}a{color:inherit;text-decoration:inherit}b,strong{font-weight:bolder}code,kbd,pre,samp{font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;font-feature-settings:normal;font-variation-settings:normal;font-size:1em}small{font-size:80%}sub,sup{font-size:75%;line-height:0;position:relative;vertical-align:baseline}sub{bottom:-.25em}sup{top:-.5em}table{text-indent:0;border-color:inherit;border-collapse:collapse}button,input,optgroup,select,textarea{font-family:inherit;font-feature-settings:inherit;font-variation-settings:inherit;font-size:100%;font-weight:inherit;line-height:inherit;letter-spacing:inherit;color:inherit;margin:0;padding:0}button,select{text-transform:none}button,input:where([type=button]),input:where([type=reset]),input:where([type=submit]){-webkit-appearance:button;background-color:transparent;background-image:none}:-moz-focusring{outline:auto}:-moz-ui-invalid{box-shadow:none}progress{vertical-align:baseline}::-webkit-inner-spin-button,::-webkit-outer-spin-button{height:auto}[type=search]{-webkit-appearance:textfield;outline-offset:-2px}::-webkit-search-decoration{-webkit-appearance:none}::-webkit-file-upload-button{-webkit-appearance:button;font:inherit}summary{display:list-item}blockquote,dd,dl,figure,h1,h2,h3,h4,h5,h6,hr,p,pre{margin:0}fieldset{margin:0;padding:0}legend{padding:0}menu,ol,ul{list-style:none;margin:0;padding:0}dialog{padding:0}textarea{resize:vertical}input::placeholder,textarea::placeholder{opacity:1;color:#9ca3af}[role=button],button{cursor:pointer}:disabled{cursor:default}audio,canvas,embed,iframe,img,object,svg,video{display:block;vertical-align:middle}img,video{max-width:100%;height:auto}[hidden]:where(:not([hidden=until-found])){display:none}.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0, 0, 0, 0);white-space:nowrap;border-width:0}.pointer-events-none{pointer-events:none}.fixed{position:fixed}.absolute{position:absolute}.relative{position:relative}.sticky{position:sticky}.-inset-0\.5{inset:-0.125rem}.inset-0{inset:0px}.-bottom-1\/2{bottom:-50%}.-left-1\/2{left:-50%}.-right-1\/2{right:-50%}.-top-1\/2{top:-50%}.bottom-6{bottom:1.5rem}.left-1\/2{left:50%}.top-0{top:0px}.-z-10{z-index:-10}.z-40{z-index:40}.z-50{z-index:50}.col-span-12{grid-column:span 12 / span 12}.mx-auto{margin-left:auto;margin-right:auto}.-mt-1{margin-top:-0.25rem}.mb-1{margin-bottom:0.25rem}.mb-3{margin-bottom:0.75rem}.mt-1{margin-top:0.25rem}.mt-2{margin-top:0.5rem}.mt-3{margin-top:0.75rem}.mt-4{margin-top:1rem}.mt-5{margin-top:1.25rem}.flex{display:flex}.grid{display:grid}.hidden{display:none}.aspect-square{aspect-ratio:1 / 1}.h-1\.5{height:0.375rem}.h-2{height:0.5rem}.h-6{height:1.5rem}.h-9{height:2.25rem}.h-\[700px\]{height:700px}.h-\[800px\]{height:800px}.h-full{height:100%}.h-7{height:1.75rem}.h-\[48px\]{height:48px}.min-h-screen{min-height:100vh}.w-1\.5{width:0.375rem}.w-2{width:0.5rem}.w-6{width:1.5rem}.w-9{width:2.25rem}.w-\[45\%\]{width:45%}.w-\[700px\]{width:700px}.w-\[800px\]{width:800px}.w-full{width:100%}.w-7{width:1.75rem}.max-w-\[1800px\]{max-width:1800px}.max-w-\[800px\]{max-width:800px}.-translate-x-1\/2{--tw-translate-x:-50%;transform:translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))}.translate-y-20{--tw-translate-y:5rem;transform:translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))}.animate-\[spin-slow_20s_linear_infinite\]{animation:spin-slow 20s linear infinite}@keyframes pulse{50%{opacity:.5}}.animate-pulse{animation:pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite}.cursor-pointer{cursor:pointer}.grid-cols-1{grid-template-columns:repeat(1, minmax(0, 1fr))}.grid-cols-12{grid-template-columns:repeat(12, minmax(0, 1fr))}.grid-cols-2{grid-template-columns:repeat(2, minmax(0, 1fr))}.grid-cols-3{grid-template-columns:repeat(3, minmax(0, 1fr))}.items-start{align-items:flex-start}.items-center{align-items:center}.items-baseline{align-items:baseline}.justify-center{justify-content:center}.justify-between{justify-content:space-between}.gap-1{gap:0.25rem}.gap-2{gap:0.5rem}.gap-3{gap:0.75rem}.gap-4{gap:1rem}.gap-5{gap:1.25rem}.gap-1\.5{gap:0.375rem}.space-y-4 > :not([hidden]) ~ :not([hidden]){--tw-space-y-reverse:0;margin-top:calc(1rem * calc(1 - var(--tw-space-y-reverse)));margin-bottom:calc(1rem * var(--tw-space-y-reverse))}.overflow-hidden{overflow:hidden}.rounded-\[24px\]{border-radius:24px}.rounded-full{border-radius:9999px}.rounded-lg{border-radius:0.5rem}.rounded-md{border-radius:0.375rem}.rounded-xl{border-radius:0.75rem}.rounded{border-radius:0.25rem}.rounded-2xl{border-radius:1rem}.border{border-width:1px}.border-b{border-bottom-width:1px}.border-t{border-top-width:1px}.border-cyan-400\/20{border-color:rgb(34 211 238 / 0.2)}.border-white\/10{border-color:rgb(255 255 255 / 0.1)}.border-white\/5{border-color:rgb(255 255 255 / 0.05)}.bg-\[\#02030a\]{--tw-bg-opacity:1;background-color:rgb(2 3 10 / var(--tw-bg-opacity, 1))}.bg-black{--tw-bg-opacity:1;background-color:rgb(0 0 0 / var(--tw-bg-opacity, 1))}.bg-black\/80{background-color:rgb(0 0 0 / 0.8)}.bg-cyan-400{--tw-bg-opacity:1;background-color:rgb(34 211 238 / var(--tw-bg-opacity, 1))}.bg-cyan-500\/10{background-color:rgb(6 182 212 / 0.1)}.bg-emerald-400{--tw-bg-opacity:1;background-color:rgb(52 211 153 / var(--tw-bg-opacity, 1))}.bg-violet-600\/10{background-color:rgb(124 58 237 / 0.1)}.bg-white\/5{background-color:rgb(255 255 255 / 0.05)}.bg-black\/40{background-color:rgb(0 0 0 / 0.4)}.bg-gradient-to-br{background-image:linear-gradient(to bottom right, var(--tw-gradient-stops))}.bg-gradient-to-r{background-image:linear-gradient(to right, var(--tw-gradient-stops))}.from-amber-500{--tw-gradient-from:#f59e0b var(--tw-gradient-from-position);--tw-gradient-to:rgb(245 158 11 / 0) var(--tw-gradient-to-position);--tw-gradient-stops:var(--tw-gradient-from), var(--tw-gradient-to)}.from-cyan-400{--tw-gradient-from:#22d3ee var(--tw-gradient-from-position);--tw-gradient-to:rgb(34 211 238 / 0) var(--tw-gradient-to-position);--tw-gradient-stops:var(--tw-gradient-from), var(--tw-gradient-to)}.from-cyan-500{--tw-gradient-from:#06b6d4 var(--tw-gradient-from-position);--tw-gradient-to:rgb(6 182 212 / 0) var(--tw-gradient-to-position);--tw-gradient-stops:var(--tw-gradient-from), var(--tw-gradient-to)}.to-cyan-400{--tw-gradient-to:#22d3ee var(--tw-gradient-to-position)}.to-violet-600{--tw-gradient-to:#7c3aed var(--tw-gradient-to-position)}.p-2\.5{padding:0.625rem}.p-3{padding:0.75rem}.p-4{padding:1rem}.p-5{padding:1.25rem}.px-4{padding-left:1rem;padding-right:1rem}.px-6{padding-left:1.5rem;padding-right:1.5rem}.py-2\.5{padding-top:0.625rem;padding-bottom:0.625rem}.py-3{padding-top:0.75rem;padding-bottom:0.75rem}.px-2{padding-left:0.5rem;padding-right:0.5rem}.py-1{padding-top:0.25rem;padding-bottom:0.25rem}.pt-4{padding-top:1rem}.pt-5{padding-top:1.25rem}.text-center{text-align:center}.text-right{text-align:right}.text-4xl{font-size:2.25rem;line-height:2.5rem}.text-\[10px\]{font-size:10px}.text-\[11px\]{font-size:11px}.text-lg{font-size:1.125rem;line-height:1.75rem}.text-sm{font-size:0.875rem;line-height:1.25rem}.text-xs{font-size:0.75rem;line-height:1rem}.text-\[28px\]{font-size:28px}.font-medium{font-weight:500}.font-semibold{font-weight:600}.uppercase{text-transform:uppercase}.leading-none{line-height:1}.tracking-\[0\.25em\]{letter-spacing:0.25em}.tracking-\[0\.2em\]{letter-spacing:0.2em}.tracking-wide{letter-spacing:0.025em}.tracking-widest{letter-spacing:0.1em}.tracking-\[0\.18em\]{letter-spacing:0.18em}.text-amber-400{--tw-text-opacity:1;color:rgb(251 191 36 / var(--tw-text-opacity, 1))}.text-cyan-400{--tw-text-opacity:1;color:rgb(34 211 238 / var(--tw-text-opacity, 1))}.text-cyan-400\/70{color:rgb(34 211 238 / 0.7)}.text-violet-400{--tw-text-opacity:1;color:rgb(167 139 250 / var(--tw-text-opacity, 1))}.text-white{--tw-text-opacity:1;color:rgb(255 255 255 / var(--tw-text-opacity, 1))}.text-white\/30{color:rgb(255 255 255 / 0.3)}.text-white\/40{color:rgb(255 255 255 / 0.4)}.text-white\/50{color:rgb(255 255 255 / 0.5)}.text-white\/60{color:rgb(255 255 255 / 0.6)}.text-white\/70{color:rgb(255 255 255 / 0.7)}.opacity-0{opacity:0}.opacity-40{opacity:0.4}.opacity-60{opacity:0.6}.blur{--tw-blur:blur(8px);filter:var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow)}.blur-\[180px\]{--tw-blur:blur(180px);filter:var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow)}.blur-\[200px\]{--tw-blur:blur(200px);filter:var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow)}.backdrop-blur{--tw-backdrop-blur:blur(8px);-webkit-backdrop-filter:var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia);backdrop-filter:var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia)}.transition{transition-property:color, background-color, border-color, fill, stroke, opacity, box-shadow, transform, filter, -webkit-text-decoration-color, -webkit-backdrop-filter;transition-property:color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter;transition-property:color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter, -webkit-text-decoration-color, -webkit-backdrop-filter;transition-timing-function:cubic-bezier(0.4, 0, 0.2, 1);transition-duration:150ms}.transition-all{transition-property:all;transition-timing-function:cubic-bezier(0.4, 0, 0.2, 1);transition-duration:150ms}.transition-opacity{transition-property:opacity;transition-timing-function:cubic-bezier(0.4, 0, 0.2, 1);transition-duration:150ms}.duration-500{transition-duration:500ms}.hover\:bg-white\/10:hover{background-color:rgb(255 255 255 / 0.1)}.group:hover .group-hover\:opacity-100{opacity:1}@media (min-width: 640px){.sm\:inline{display:inline}.sm\:flex{display:flex}.sm\:hidden{display:none}.sm\:gap-6{gap:1.5rem}.sm\:p-6{padding:1.5rem}.sm\:px-5{padding-left:1.25rem;padding-right:1.25rem}}@media (min-width: 768px){.md\:grid-cols-2{grid-template-columns:repeat(2, minmax(0, 1fr))}}@media (min-width: 1280px){.xl\:col-span-4{grid-column:span 4 / span 4}.xl\:col-span-8{grid-column:span 8 / span 8}.xl\:grid-cols-3{grid-template-columns:repeat(3, minmax(0, 1fr))}}@media (min-width: 1536px){.\32xl\:grid-cols-6{grid-template-columns:repeat(6, minmax(0, 1fr))}}</style></head>
+<body class="text-white min-h-screen relative plasma-wired">
+  <!-- Background -->
+  <div class="fixed inset-0 -z-10">
+    <div class="absolute inset-0 bg-[#02030a]"></div>
+    <div class="absolute inset-0 plasma-grid opacity-40"></div>
+    <div class="absolute -top-1/2 -left-1/2 w-[800px] h-[800px] rounded-full bg-cyan-500/10 blur-[200px]"></div>
+    <div class="absolute -bottom-1/2 -right-1/2 w-[700px] h-[700px] rounded-full bg-violet-600/10 blur-[180px]"></div>
+  </div>
+
+  <header class="sticky top-0 z-40 border-b border-white/5 glass">
+    <div class="max-w-[1800px] mx-auto px-4 py-3 flex items-center justify-between gap-4">
+      <div class="flex items-center gap-4">
+        <div class="w-9 h-9 rounded-lg bg-gradient-to-br from-cyan-400 to-violet-600 flex items-center justify-center animate-[spin-slow_20s_linear_infinite]">
+          <div class="w-6 h-6 rounded-md bg-black/80 backdrop-blur flex items-center justify-center">
+            <div class="w-2 h-2 rounded-full bg-cyan-400 animate-pulse"></div>
+          </div>
+        <div>
+          <h1 class="text-lg font-semibold tracking-wide">SINGULARITY DASHBOARD <span class="text-cyan-400 mono">v3.0</span></h1>
+          <p class="text-[10px] uppercase tracking-[0.2em] text-white/50 -mt-1">PLASMA PRIMARY • 128-BIT FRACTAL</p>
+        </div>
+      </div>
+      <div class="flex items-center gap-3 sm:gap-6">
+        <div class="hidden sm:flex items-center gap-3">
+          <span class="text-xs uppercase tracking-widest text-white/60">Plasma Wired</span>
+          <label class="cursor-pointer">
+            <input id="wiredToggle" type="checkbox" class="sr-only">
+            <div class="toggle"></div>
+          </label>
+        </div>
+        <button id="engageBtn" class="relative group">
+          <div class="absolute -inset-0.5 bg-gradient-to-r from-cyan-500 to-violet-600 rounded-lg blur opacity-60 group-hover:opacity-100 transition"></div>
+          <div class="relative px-4 sm:px-5 py-2.5 bg-black rounded-lg text-sm font-medium tracking-wide flex items-center gap-2">
+            <span class="w-2 h-2 rounded-full bg-cyan-400 animate-pulse"></span>
+            <span class="hidden sm:inline">ENGAGE</span> SINGULARITY
+          </div>
+        </button>
+      </div>
+    </div>
+  </div></header>
+
+  <main class="max-w-[1800px] mx-auto p-3 sm:p-6 grid-cols-12 gap-4 sm:gap-6">
+    <!-- Main Visualization -->
+    <section class="col-span-12 xl:col-span-8 glass rounded-[24px] p-4 sm:p-6 relative overflow-hidden">
+      <div class="flex justify-between items-start mb-3">
+        <div>
+          <h2 class="text-xs uppercase tracking-[0.2em] text-white/50">4-Quadrant Photonic Core</h2>
+          <p class="mono text-[11px] text-cyan-400 mt-1">inner = ƒₚ×0.08 • outer = ƒₚ×0.05 • laser = ƒₚ×0.1</p>
+        </div>
+        <div id="coreStatus" class="text-right">
+          <div class="text-[10px] uppercase tracking-widest text-white/40">Mode</div>
+          <div class="mono text-sm text-cyan-400">SINGULARITY</div>
+        </div>
+      </div>
+      <div class="relative aspect-square w-full max-w-[800px] mx-auto">
+        <canvas id="mainCanvas" width="1000" height="1000" class="w-full h-full"></canvas>
+        <div class="absolute inset-0 flex items-center justify-center pointer-events-none">
+          <div class="text-center">
+            <div class="mono text-[10px] text-white/30 uppercase tracking-widest">128 Tips</div>
+            <div id="tipPulseRate" class="mono text-lg text-cyan-400">0.002×</div>
+          </div>
+        </div>
+      <div class="grid grid-cols-3 gap-3 mt-4 text-[11px] mono">
+        <div class="glass rounded-lg p-2.5 text-center"><div class="text-white/40">INNER</div><div id="innerSpeed" class="text-cyan-400">0.163</div></div>
+        <div class="glass rounded-lg p-2.5 text-center"><div class="text-white/40">OUTER</div><div id="outerSpeed" class="text-violet-400">0.102</div></div>
+        <div class="glass rounded-lg p-2.5 text-center"><div class="text-white/40">LASER</div><div id="laserRate" class="text-amber-400">0.204</div></div>
+      </div>
+    </div></section>
+
+    <!-- Plasma Drive Panel -->
+    <aside class="col-span-12 xl:col-span-4 space-y-4">
+      <div class="glass rounded-[24px] p-5 sm:p-6">
+        <div class="flex items-center justify-between">
+          <h2 class="text-sm uppercase tracking-[0.2em] font-medium">Plasma Drive Active</h2>
+          <div class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></div>
+        </div>
+        <div class="mt-5 grid grid-cols-2 gap-5">
+          <div>
+            <div class="text-[11px] uppercase tracking-widest text-white/40 mb-1">Total Power</div>
+            <div class="flex items-baseline gap-1">
+              <span id="totalPower" class="text-4xl mono text-cyan-400">12.234</span>
+              <span class="text-sm text-white/60">MHz</span>
+            </div>
+          </div>
+          <div>
+            <div class="text-[11px] uppercase tracking-widest text-white/40 mb-1">Beat Frequency</div>
+            <div class="flex items-baseline gap-1">
+              <span id="beatFreq" class="text-4xl mono text-violet-400">1,561</span>
+              <span class="text-sm text-white/60">kHz</span>
+            </div>
+          </div>
+        </div>
+        <div class="mt-5 pt-4 border-t border-white/10">
+          <div class="flex items-center justify-between text-[11px]">
+            <span class="text-white/50">Audio is 1/34,242 scale of plasma</span>
+            <span class="mono text-cyan-400/70">1:34242</span>
+          </div>
+        </div>
+        <div id="phaseLockPanel" class="mt-5 pt-5 border-t border-cyan-400/20">
+          <div class="text-[11px] uppercase tracking-[0.25em] text-cyan-400 mb-3 flex items-center gap-2">
+            <span class="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse"></span>
+            PHASE-LOCKED PLASMA ARRAY
+          </div>
+          <div id="phaseLockList" class="grid grid-cols-3 gap-2 mono text-xs"><div class="py-1 px-2 rounded bg-white/5 border border-cyan-400/20"><span class="text-white/40">1</span> 1.356</div><div class="py-1 px-2 rounded bg-white/5 border border-cyan-400/20"><span class="text-white/40">2</span> 1.428</div><div class="py-1 px-2 rounded bg-white/5 border border-cyan-400/20"><span class="text-white/40">3</span> 1.808</div><div class="py-1 px-2 rounded bg-white/5 border border-cyan-400/20"><span class="text-white/40">4</span> 2.188</div><div class="py-1 px-2 rounded bg-white/5 border border-cyan-400/20"><span class="text-white/40">5</span> 2.537</div><div class="py-1 px-2 rounded bg-white/5 border border-cyan-400/20"><span class="text-white/40">6</span> 2.917</div></div>
+          <div class="mt-3 text-[10px] text-white/50">λ = c/ƒ • interference active</div>
+        </div>
+      </div>
+
+      <div class="glass rounded-[24px] p-5">
+        <h3 class="text-xs uppercase tracking-widest text-white/60 mb-3">Array Status</h3>
+        <div id="arrayStatus" class="mono text-lg text-cyan-400 animate-pulse">PHASE-LOCKED PLASMA ARRAY</div>
+        <div class="mt-3 h-1.5 rounded-full bg-white/5 overflow-hidden">
+          <div id="coherenceBar" class="h-full w-[45%] bg-gradient-to-r from-amber-500 to-cyan-400 transition-all duration-500" style="width: 100%;"></div>
+        </div>
+        <div class="mt-2 flex justify-between text-[10px] mono text-white/40">
+          <span>Coherence</span>
+          <span id="coherencePct">100%</span>
+        </div>
+      </div>
+
+      <div class="sm:hidden flex items-center justify-between glass rounded-xl p-3">
+        <span class="text-xs uppercase tracking-widest text-white/60">Plasma Wired</span>
+        <label class="cursor-pointer">
+          <input id="wiredToggleMobile" type="checkbox" class="sr-only">
+          <div class="toggle"></div>
+        </label>
+      </div>
+    </aside>
+
+    <!-- Tone Cards -->
+    <section class="col-span-12 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-6 gap-4" id="toneGrid">
+      <!-- injected -->
+    <div class="glass rounded-2xl p-4 relative overflow-hidden group">
+    <div class="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity" style="background: radial-gradient(400px circle at var(--mx,50%) var(--my,50%), #ff3b6b10, transparent 40%)"></div>
+    <div class="relative">
+      <div class="flex justify-between items-start">
+        <div>
+          <div class="text-[10px] mono text-white/40">TONE 1</div>
+          <div class="text-[11px] uppercase tracking-[0.18em] font-medium" style="color:#ff3b6b">LIBERATION</div>
+        </div>
+        <button data-play="0" class="w-7 h-7 rounded-lg bg-white/5 hover:bg-white/10 flex items-center justify-center transition border border-white/10">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+        </button>
+      </div>
+      <div class="mt-4">
+        <div class="flex items-baseline gap-1.5">
+          <span class="text-[11px] uppercase tracking-widest text-white/50">Plasma</span>
+        </div>
+        <div class="flex items-baseline gap-2">
+          <span class="plasmaVal mono text-[28px] leading-none" style="color:#ff3b6b; text-shadow: 0 0 20px #ff3b6b60">1.356</span>
+          <span class="text-sm text-white/60">MHz</span>
+        </div>
+        <div class="mt-1 flex items-baseline gap-2">
+          <span class="text-[10px] text-white/40">Audio</span>
+          <span class="audioVal mono text-xs text-white/70">39.60 Hz</span>
+        </div>
+      </div>
+      <div class="mt-4">
+        <input type="range" class="slider w-full" data-idx="0" min="1.2" max="1.52" step="0.001" value="1.356" style="color:#ff3b6b">
+      </div>
+      <canvas class="oscilloscope w-full h-[48px] mt-3 rounded-lg bg-black/40 border border-white/5 hidden" width="360" height="48" data-idx="0"></canvas>
+      <div class="mt-2 flex justify-between text-[10px] mono text-white/30">
+        <span>λ 221.1m</span>
+        <span data-wavelength="0">221.1m</span>
+      </div>
+    </div>
+  </div><div class="glass rounded-2xl p-4 relative overflow-hidden group">
+    <div class="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity" style="background: radial-gradient(400px circle at var(--mx,50%) var(--my,50%), #ff8a3b10, transparent 40%)"></div>
+    <div class="relative">
+      <div class="flex justify-between items-start">
+        <div>
+          <div class="text-[10px] mono text-white/40">TONE 2</div>
+          <div class="text-[11px] uppercase tracking-[0.18em] font-medium" style="color:#ff8a3b">TRANSMUTATION</div>
+        </div>
+        <button data-play="1" class="w-7 h-7 rounded-lg bg-white/5 hover:bg-white/10 flex items-center justify-center transition border border-white/10">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+        </button>
+      </div>
+      <div class="mt-4">
+        <div class="flex items-baseline gap-1.5">
+          <span class="text-[11px] uppercase tracking-widest text-white/50">Plasma</span>
+        </div>
+        <div class="flex items-baseline gap-2">
+          <span class="plasmaVal mono text-[28px] leading-none" style="color:#ff8a3b; text-shadow: 0 0 20px #ff8a3b60">1.428</span>
+          <span class="text-sm text-white/60">MHz</span>
+        </div>
+        <div class="mt-1 flex items-baseline gap-2">
+          <span class="text-[10px] text-white/40">Audio</span>
+          <span class="audioVal mono text-xs text-white/70">41.70 Hz</span>
+        </div>
+      </div>
+      <div class="mt-4">
+        <input type="range" class="slider w-full" data-idx="1" min="1.26" max="1.6" step="0.001" value="1.428" style="color:#ff8a3b">
+      </div>
+      <canvas class="oscilloscope w-full h-[48px] mt-3 rounded-lg bg-black/40 border border-white/5 hidden" width="360" height="48" data-idx="1"></canvas>
+      <div class="mt-2 flex justify-between text-[10px] mono text-white/30">
+        <span>λ 209.9m</span>
+        <span data-wavelength="1">209.9m</span>
+      </div>
+    </div>
+  </div><div class="glass rounded-2xl p-4 relative overflow-hidden group">
+    <div class="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity" style="background: radial-gradient(400px circle at var(--mx,50%) var(--my,50%), #ffd93b10, transparent 40%)"></div>
+    <div class="relative">
+      <div class="flex justify-between items-start">
+        <div>
+          <div class="text-[10px] mono text-white/40">TONE 3</div>
+          <div class="text-[11px] uppercase tracking-[0.18em] font-medium" style="color:#ffd93b">MIRACLES</div>
+        </div>
+        <button data-play="2" class="w-7 h-7 rounded-lg bg-white/5 hover:bg-white/10 flex items-center justify-center transition border border-white/10">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+        </button>
+      </div>
+      <div class="mt-4">
+        <div class="flex items-baseline gap-1.5">
+          <span class="text-[11px] uppercase tracking-widest text-white/50">Plasma</span>
+        </div>
+        <div class="flex items-baseline gap-2">
+          <span class="plasmaVal mono text-[28px] leading-none" style="color:#ffd93b; text-shadow: 0 0 20px #ffd93b60">1.808</span>
+          <span class="text-sm text-white/60">MHz</span>
+        </div>
+        <div class="mt-1 flex items-baseline gap-2">
+          <span class="text-[10px] text-white/40">Audio</span>
+          <span class="audioVal mono text-xs text-white/70">52.80 Hz</span>
+        </div>
+      </div>
+      <div class="mt-4">
+        <input type="range" class="slider w-full" data-idx="2" min="1.62" max="2" step="0.001" value="1.808" style="color:#ffd93b">
+      </div>
+      <canvas class="oscilloscope w-full h-[48px] mt-3 rounded-lg bg-black/40 border border-white/5 hidden" width="360" height="48" data-idx="2"></canvas>
+      <div class="mt-2 flex justify-between text-[10px] mono text-white/30">
+        <span>λ 165.8m</span>
+        <span data-wavelength="2">165.8m</span>
+      </div>
+    </div>
+  </div><div class="glass rounded-2xl p-4 relative overflow-hidden group">
+    <div class="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity" style="background: radial-gradient(400px circle at var(--mx,50%) var(--my,50%), #3bff8a10, transparent 40%)"></div>
+    <div class="relative">
+      <div class="flex justify-between items-start">
+        <div>
+          <div class="text-[10px] mono text-white/40">TONE 4</div>
+          <div class="text-[11px] uppercase tracking-[0.18em] font-medium" style="color:#3bff8a">CONNECTION</div>
+        </div>
+        <button data-play="3" class="w-7 h-7 rounded-lg bg-white/5 hover:bg-white/10 flex items-center justify-center transition border border-white/10">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+        </button>
+      </div>
+      <div class="mt-4">
+        <div class="flex items-baseline gap-1.5">
+          <span class="text-[11px] uppercase tracking-widest text-white/50">Plasma</span>
+        </div>
+        <div class="flex items-baseline gap-2">
+          <span class="plasmaVal mono text-[28px] leading-none" style="color:#3bff8a; text-shadow: 0 0 20px #3bff8a60">2.188</span>
+          <span class="text-sm text-white/60">MHz</span>
+        </div>
+        <div class="mt-1 flex items-baseline gap-2">
+          <span class="text-[10px] text-white/40">Audio</span>
+          <span class="audioVal mono text-xs text-white/70">63.90 Hz</span>
+        </div>
+      </div>
+      <div class="mt-4">
+        <input type="range" class="slider w-full" data-idx="3" min="1.98" max="2.4" step="0.001" value="2.188" style="color:#3bff8a">
+      </div>
+      <canvas class="oscilloscope w-full h-[48px] mt-3 rounded-lg bg-black/40 border border-white/5 hidden" width="360" height="48" data-idx="3"></canvas>
+      <div class="mt-2 flex justify-between text-[10px] mono text-white/30">
+        <span>λ 137.0m</span>
+        <span data-wavelength="3">137.0m</span>
+      </div>
+    </div>
+  </div><div class="glass rounded-2xl p-4 relative overflow-hidden group">
+    <div class="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity" style="background: radial-gradient(400px circle at var(--mx,50%) var(--my,50%), #3ba6ff10, transparent 40%)"></div>
+    <div class="relative">
+      <div class="flex justify-between items-start">
+        <div>
+          <div class="text-[10px] mono text-white/40">TONE 5</div>
+          <div class="text-[11px] uppercase tracking-[0.18em] font-medium" style="color:#3ba6ff">AWAKENING</div>
+        </div>
+        <button data-play="4" class="w-7 h-7 rounded-lg bg-white/5 hover:bg-white/10 flex items-center justify-center transition border border-white/10">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+        </button>
+      </div>
+      <div class="mt-4">
+        <div class="flex items-baseline gap-1.5">
+          <span class="text-[11px] uppercase tracking-widest text-white/50">Plasma</span>
+        </div>
+        <div class="flex items-baseline gap-2">
+          <span class="plasmaVal mono text-[28px] leading-none" style="color:#3ba6ff; text-shadow: 0 0 20px #3ba6ff60">2.537</span>
+          <span class="text-sm text-white/60">MHz</span>
+        </div>
+        <div class="mt-1 flex items-baseline gap-2">
+          <span class="text-[10px] text-white/40">Audio</span>
+          <span class="audioVal mono text-xs text-white/70">74.10 Hz</span>
+        </div>
+      </div>
+      <div class="mt-4">
+        <input type="range" class="slider w-full" data-idx="4" min="2.3" max="2.78" step="0.001" value="2.537" style="color:#3ba6ff">
+      </div>
+      <canvas class="oscilloscope w-full h-[48px] mt-3 rounded-lg bg-black/40 border border-white/5 hidden" width="360" height="48" data-idx="4"></canvas>
+      <div class="mt-2 flex justify-between text-[10px] mono text-white/30">
+        <span>λ 118.2m</span>
+        <span data-wavelength="4">118.2m</span>
+      </div>
+    </div>
+  </div><div class="glass rounded-2xl p-4 relative overflow-hidden group">
+    <div class="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity" style="background: radial-gradient(400px circle at var(--mx,50%) var(--my,50%), #a63bff10, transparent 40%)"></div>
+    <div class="relative">
+      <div class="flex justify-between items-start">
+        <div>
+          <div class="text-[10px] mono text-white/40">TONE 6</div>
+          <div class="text-[11px] uppercase tracking-[0.18em] font-medium" style="color:#a63bff">INTUITION</div>
+        </div>
+        <button data-play="5" class="w-7 h-7 rounded-lg bg-white/5 hover:bg-white/10 flex items-center justify-center transition border border-white/10">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+        </button>
+      </div>
+      <div class="mt-4">
+        <div class="flex items-baseline gap-1.5">
+          <span class="text-[11px] uppercase tracking-widest text-white/50">Plasma</span>
+        </div>
+        <div class="flex items-baseline gap-2">
+          <span class="plasmaVal mono text-[28px] leading-none" style="color:#a63bff; text-shadow: 0 0 20px #a63bff60">2.917</span>
+          <span class="text-sm text-white/60">MHz</span>
+        </div>
+        <div class="mt-1 flex items-baseline gap-2">
+          <span class="text-[10px] text-white/40">Audio</span>
+          <span class="audioVal mono text-xs text-white/70">85.20 Hz</span>
+        </div>
+      </div>
+      <div class="mt-4">
+        <input type="range" class="slider w-full" data-idx="5" min="2.65" max="3.18" step="0.001" value="2.917" style="color:#a63bff">
+      </div>
+      <canvas class="oscilloscope w-full h-[48px] mt-3 rounded-lg bg-black/40 border border-white/5 hidden" width="360" height="48" data-idx="5"></canvas>
+      <div class="mt-2 flex justify-between text-[10px] mono text-white/30">
+        <span>λ 102.8m</span>
+        <span data-wavelength="5">102.8m</span>
+      </div>
+    </div>
+  </div></section>
+  </main>
+
+  <!-- Toast -->
+  <div id="toast" class="fixed bottom-6 left-1/2 -translate-x-1/2 glass rounded-full px-6 py-3 mono text-sm translate-y-20 opacity-0 transition-all duration-500 pointer-events-none z-50">
+    <span class="text-cyan-400">PLASMA WIRED:</span> TRUE
+  </div>
+
+<script>
+const TONES = [
+  { id:1, name:'LIBERATION', audioBase:39.6, plasmaBase:1.356, color:'#ff3b6b', range:[1.20,1.52] },
+  { id:2, name:'TRANSMUTATION', audioBase:41.7, plasmaBase:1.428, color:'#ff8a3b', range:[1.26,1.60] },
+  { id:3, name:'MIRACLES', audioBase:52.8, plasmaBase:1.808, color:'#ffd93b', range:[1.62,2.00] },
+  { id:4, name:'CONNECTION', audioBase:63.9, plasmaBase:2.188, color:'#3bff8a', range:[1.98,2.40] },
+  { id:5, name:'AWAKENING', audioBase:74.1, plasmaBase:2.537, color:'#3ba6ff', range:[2.30,2.78] },
+  { id:6, name:'INTUITION', audioBase:85.2, plasmaBase:2.917, color:'#a63bff', range:[2.65,3.18] },
+];
+
+const SCALE = 34242;
+const C = 299792458;
+let plasmaValues = TONES.map(t=>t.plasmaBase);
+let audioValues = TONES.map(t=>t.audioBase);
+let wired = false;
+let phaseLocked = false;
+let audioCtx, oscillators = [];
+
+const toneGrid = document.getElementById('toneGrid');
+TONES.forEach((tone,i)=>{
+  const card = document.createElement('div');
+  card.className = 'glass rounded-2xl p-4 relative overflow-hidden group';
+  card.innerHTML = `
+    <div class="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity" style="background: radial-gradient(400px circle at var(--mx,50%) var(--my,50%), ${tone.color}10, transparent 40%)"></div>
+    <div class="relative">
+      <div class="flex justify-between items-start">
+        <div>
+          <div class="text-[10px] mono text-white/40">TONE ${tone.id}</div>
+          <div class="text-[11px] uppercase tracking-[0.18em] font-medium" style="color:${tone.color}">${tone.name}</div>
+        </div>
+        <button data-play="${i}" class="w-7 h-7 rounded-lg bg-white/5 hover:bg-white/10 flex items-center justify-center transition border border-white/10">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+        </button>
+      </div>
+      <div class="mt-4">
+        <div class="flex items-baseline gap-1.5">
+          <span class="text-[11px] uppercase tracking-widest text-white/50">Plasma</span>
+        </div>
+        <div class="flex items-baseline gap-2">
+          <span class="plasmaVal mono text-[28px] leading-none" style="color:${tone.color}; text-shadow: 0 0 20px ${tone.color}60">${tone.plasmaBase.toFixed(3)}</span>
+          <span class="text-sm text-white/60">MHz</span>
+        </div>
+        <div class="mt-1 flex items-baseline gap-2">
+          <span class="text-[10px] text-white/40">Audio</span>
+          <span class="audioVal mono text-xs text-white/70">${tone.audioBase.toFixed(2)} Hz</span>
+        </div>
+      </div>
+      <div class="mt-4">
+        <input type="range" class="slider w-full" data-idx="${i}" min="${tone.range[0]}" max="${tone.range[1]}" step="0.001" value="${tone.plasmaBase}" style="color:${tone.color}">
+      </div>
+      <canvas class="oscilloscope w-full h-[48px] mt-3 rounded-lg bg-black/40 border border-white/5 hidden" width="360" height="48" data-idx="${i}"></canvas>
+      <div class="mt-2 flex justify-between text-[10px] mono text-white/30">
+        <span>λ ${(C/(tone.plasmaBase*1e6)).toFixed(1)}m</span>
+        <span data-wavelength="${i}">${(C/(tone.plasmaBase*1e6)).toFixed(1)}m</span>
+      </div>
+    </div>
+  `;
+  toneGrid.appendChild(card);
+  card.addEventListener('pointermove', e=>{
+    const r = card.getBoundingClientRect();
+    card.style.setProperty('--mx', ((e.clientX-r.left)/r.width*100)+'%');
+    card.style.setProperty('--my', ((e.clientY-r.top)/r.height*100)+'%');
+  });
+});
+
+function initAudio(){
+  if(audioCtx) return;
+  audioCtx = new (window.AudioContext||window.webkitAudioContext)();
+  TONES.forEach((_,i)=>{
+    const osc = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+    osc.type='sine'; osc.frequency.value = audioValues[i];
+    gain.gain.value = 0;
+    osc.connect(gain).connect(audioCtx.destination);
+    osc.start();
+    oscillators[i]={osc,gain,playing:false};
+  });
+}
+
+document.querySelectorAll('[data-play]').forEach(btn=>{
+  btn.onclick = ()=>{
+    initAudio();
+    const i = +btn.dataset.play;
+    const o = oscillators[i];
+    o.playing = !o.playing;
+    o.gain.gain.linearTargetTimeConstant = 0.02;
+    o.gain.gain.linearRampToValueAtTime(o.playing?0.03:0, audioCtx.currentTime+0.05);
+    btn.style.background = o.playing ? TONES[i].color+'30' : '';
+    btn.style.borderColor = o.playing ? TONES[i].color+'80' : '';
+    btn.style.color = o.playing ? TONES[i].color : '';
+  };
+});
+
+function updateTone(i,val){
+  plasmaValues[i]=val;
+  audioValues[i]=val*1e6/SCALE;
+  const card = toneGrid.children[i];
+  card.querySelector('.plasmaVal').textContent = val.toFixed(3);
+  card.querySelector('.audioVal').textContent = audioValues[i].toFixed(2)+' Hz';
+  card.querySelector(`[data-wavelength]`).textContent = (C/(val*1e6)).toFixed(1)+'m';
+  if(oscillators[i]) oscillators[i].osc.frequency.linearRampToValueAtTime(audioValues[i], audioCtx.currentTime+0.05);
+  updateReadouts();
+  checkPhaseLock();
+}
+
+document.querySelectorAll('.slider').forEach(s=>{
+  s.addEventListener('input', e=> updateTone(+e.target.dataset.idx, parseFloat(e.target.value)));
+});
+
+function updateReadouts(){
+  const total = plasmaValues.reduce((a,b)=>a+b,0);
+  const beat = (Math.max(...plasmaValues)-Math.min(...plasmaValues))*1000;
+  document.getElementById('totalPower').textContent = total.toFixed(3);
+  document.getElementById('beatFreq').textContent = Math.round(beat).toLocaleString();
+  
+  const avg = total/6;
+  document.getElementById('innerSpeed').textContent = (avg*0.08).toFixed(3);
+  document.getElementById('outerSpeed').textContent = (avg*0.05).toFixed(3);
+  document.getElementById('laserRate').textContent = (avg*0.1).toFixed(3);
+  document.getElementById('tipPulseRate').textContent = (0.001*avg).toFixed(3)+'×';
+}
+
+function checkPhaseLock(){
+  const tol = 0.002;
+  const locked = TONES.every((t,i)=> Math.abs(plasmaValues[i]-t.plasmaBase) < tol);
+  phaseLocked = locked;
+  const status = document.getElementById('arrayStatus');
+  const panel = document.getElementById('phaseLockPanel');
+  const coreStatus = document.getElementById('coreStatus').children[1];
+  const coherenceBar = document.getElementById('coherenceBar');
+  const coherencePct = document.getElementById('coherencePct');
+  
+  if(locked){
+    status.textContent = 'PHASE-LOCKED PLASMA ARRAY';
+    status.className = 'mono text-lg text-cyan-400 animate-pulse';
+    coreStatus.textContent = 'SINGULARITY';
+    coreStatus.className = 'mono text-sm text-cyan-400';
+    panel.classList.remove('hidden');
+    document.getElementById('phaseLockList').innerHTML = TONES.map(t=>`<div class="py-1 px-2 rounded bg-white/5 border border-cyan-400/20"><span class="text-white/40">${t.id}</span> ${t.plasmaBase.toFixed(3)}</div>`).join('');
+    coherenceBar.style.width='100%';
+    coherencePct.textContent='100%';
+    document.body.classList.add('plasma-wired');
+  } else {
+    const dev = TONES.reduce((sum,t,i)=> sum+Math.abs(plasmaValues[i]-t.plasmaBase)/t.plasmaBase,0)/6;
+    const coh = Math.max(5, Math.round((1-dev*3)*100));
+    status.textContent = wired ? 'PLASMA DRIVE ACTIVE' : 'CALIBRATING';
+    status.className = 'mono text-lg '+(wired?'text-violet-400':'text-amber-400');
+    coreStatus.textContent = wired ? 'WIRED' : 'STANDBY';
+    coreStatus.className = 'mono text-sm '+(wired?'text-violet-400':'text-amber-400');
+    panel.classList.add('hidden');
+    coherenceBar.style.width = coh+'%';
+    coherencePct.textContent = coh+'%';
+  }
+}
+
+// Wired toggle
+const wiredToggle = document.getElementById('wiredToggle');
+const wiredMobile = document.getElementById('wiredToggleMobile');
+function setWired(v){
+  wired=v; wiredToggle.checked=v; if(wiredMobile) wiredMobile.checked=v;
+  document.body.classList.toggle('plasma-wired', v||phaseLocked);
+  document.querySelectorAll('.oscilloscope').forEach(c=>c.classList.toggle('hidden', !v));
+  checkPhaseLock();
+}
+wiredToggle.onchange = e=> setWired(e.target.checked);
+if(wiredMobile) wiredMobile.onchange = e=> setWired(e.target.checked);
+
+// Engage
+document.getElementById('engageBtn').onclick = ()=>{
+  setWired(true);
+  TONES.forEach((t,i)=>{
+    const s = document.querySelector(`.slider[data-idx="${i}"]`);
+    s.value = t.plasmaBase;
+    updateTone(i, t.plasmaBase);
+  });
+  const toast = document.getElementById('toast');
+  toast.style.transform='translate(-50%,0)'; toast.style.opacity='1';
+  setTimeout(()=>{ toast.style.transform='translate(-50%,80px)'; toast.style.opacity='0'; }, 2500);
+};
+
+// MAIN CANVAS
+const canvas = document.getElementById('mainCanvas');
+const ctx = canvas.getContext('2d');
+let t0 = performance.now();
+
+function draw(){
+  const now = performance.now();
+  const time = (now - t0)/1000;
+  const w = canvas.width, h = canvas.height, cx=w/2, cy=h/2;
+  ctx.clearRect(0,0,w,h);
+  
+  // bg
+  const g = ctx.createRadialGradient(cx,cy,0,cx,cy,450);
+  g.addColorStop(0, 'rgba(0,220,255,0.08)');
+  g.addColorStop(0.5, 'rgba(139,92,246,0.04)');
+  g.addColorStop(1, 'rgba(0,0,0,0)');
+  ctx.fillStyle=g; ctx.beginPath(); ctx.arc(cx,cy,450,0,Math.PI*2); ctx.fill();
+  
+  const avgPlasma = plasmaValues.reduce((a,b)=>a+b,0)/6;
+  const innerSpeed = avgPlasma * 0.08;
+  const outerSpeed = avgPlasma * 0.05;
+  const laserRate = avgPlasma * 0.1;
+  
+  // outer ring
+  ctx.save(); ctx.translate(cx,cy); ctx.rotate(time*outerSpeed*0.5);
+  for(let i=0;i<64;i++){
+    const a = i/64*Math.PI*2;
+    const r = 340;
+    const x = Math.cos(a)*r, y=Math.sin(a)*r;
+    const p = plasmaValues[i%6]/3;
+    ctx.beginPath();
+    ctx.arc(x,y,2+p*2,0,Math.PI*2);
+    ctx.fillStyle = `hsla(${200+i*2},100%,65%,${0.3+ p*0.4})`;
+    ctx.shadowBlur = wired ? 15+p*10 : 5;
+    ctx.shadowColor = TONES[i%6].color;
+    ctx.fill();
+  }
+  ctx.restore();
+  
+  // inner ring
+  ctx.save(); ctx.translate(cx,cy); ctx.rotate(-time*innerSpeed*0.7);
+  for(let i=0;i<48;i++){
+    const a = i/48*Math.PI*2;
+    const r = 240;
+    const x = Math.cos(a)*r, y=Math.sin(a)*r;
+    const p = plasmaValues[(i+2)%6]/3;
+    ctx.beginPath();
+    ctx.arc(x,y,1.5+p*1.5,0,Math.PI*2);
+    ctx.fillStyle = `hsla(${280-i*3},100%,70%,${0.4+p*0.5})`;
+    ctx.shadowBlur = wired ? 12 : 4;
+    ctx.shadowColor = '#00dcff';
+    ctx.fill();
+  }
+  ctx.restore();
+  
+  // 4 quadrants
+  for(let q=0;q<4;q++){
+    ctx.save(); ctx.translate(cx,cy); ctx.rotate(q*Math.PI/2 + time*0.05);
+    ctx.strokeStyle = 'rgba(255,255,255,0.03)';
+    ctx.lineWidth=1;
+    for(let r=100;r<=400;r+=60){ ctx.beginPath(); ctx.arc(0,0,r,0,Math.PI/2); ctx.stroke(); }
+    ctx.restore();
+  }
+  
+  // 128 tips - fractal
+  ctx.save(); ctx.translate(cx,cy);
+  for(let i=0;i<128;i++){
+    const baseAngle = i/128*Math.PI*2;
+    let angle = baseAngle;
+    let radius = 180;
+    
+    if(phaseLocked){
+      // interference from actual wavelengths
+      let interference = 0;
+      plasmaValues.forEach((f,idx)=>{
+        const lambda = C/(f*1e6);
+        const k = 2*Math.PI/lambda;
+        interference += Math.sin(k*radius*0.1 + time*2 + idx + i*0.1) * 8;
+      });
+      radius += interference/6;
+      angle += Math.sin(time*0.5 + i*0.2) * 0.02;
+    }
+    
+    // pulse at true plasma rate (0.001 scale visually)
+    const plasmaIdx = i % 6;
+    const pulsePhase = wired ? Math.sin(time * plasmaValues[plasmaIdx] * 0.5) * 0.5 + 0.5 : 0.5;
+    const tipIntensity = 0.3 + pulsePhase*0.7;
+    
+    const x1 = Math.cos(angle) * 90;
+    const y1 = Math.sin(angle) * 90;
+    const x2 = Math.cos(angle) * radius;
+    const y2 = Math.sin(angle) * radius;
+    
+    // tip line
+    ctx.beginPath();
+    ctx.moveTo(x1,y1); ctx.lineTo(x2,y2);
+    ctx.strokeStyle = `rgba(${wired?'0,220,255':'139,92,246'},${0.15 + tipIntensity*0.25})`;
+    ctx.lineWidth = 0.5 + tipIntensity;
+    ctx.shadowBlur = wired ? 8 : 0;
+    ctx.shadowColor = TONES[plasmaIdx].color;
+    ctx.stroke();
+    
+    // tip dot
+    ctx.beginPath();
+    ctx.arc(x2,y2,1.2+tipIntensity*2,0,Math.PI*2);
+    ctx.fillStyle = TONES[plasmaIdx].color;
+    ctx.globalAlpha = 0.4 + tipIntensity*0.6;
+    ctx.shadowBlur = 12 + tipIntensity*8;
+    ctx.shadowColor = TONES[plasmaIdx].color;
+    ctx.fill();
+    ctx.globalAlpha = 1;
+    ctx.shadowBlur=0;
+  }
+  ctx.restore();
+  
+  // central core - laser pulse
+  const corePulse = Math.sin(time * laserRate * Math.PI*2) * 0.5 + 0.5;
+  const coreSize = 28 + corePulse*12;
+  ctx.save(); ctx.translate(cx,cy);
+  // outer glow
+  const coreGrad = ctx.createRadialGradient(0,0,0,0,0,coreSize*3);
+  coreGrad.addColorStop(0, `rgba(0,220,255,${0.3+corePulse*0.3})`);
+  coreGrad.addColorStop(0.4, `rgba(139,92,246,${0.2})`);
+  coreGrad.addColorStop(1, 'rgba(0,0,0,0)');
+  ctx.fillStyle=coreGrad; ctx.beginPath(); ctx.arc(0,0,coreSize*3,0,Math.PI*2); ctx.fill();
+  // core
+  ctx.beginPath(); ctx.arc(0,0,coreSize,0,Math.PI*2);
+  ctx.fillStyle = '#02030a';
+  ctx.fill();
+  ctx.strokeStyle = `rgba(0,220,255,${0.8+corePulse*0.2})`;
+  ctx.lineWidth=2; ctx.shadowBlur=20; ctx.shadowColor='#00dcff'; ctx.stroke();
+  // inner
+  ctx.beginPath(); ctx.arc(0,0,coreSize*0.5,0,Math.PI*2);
+  ctx.fillStyle = `rgba(0,220,255,${0.9})`;
+  ctx.shadowBlur=30; ctx.fill();
+  ctx.restore();
+  
+  // draw oscilloscopes
+  if(wired){
+    document.querySelectorAll('.oscilloscope').forEach((c)=>{
+      const i = +c.dataset.idx;
+      const octx = c.getContext('2d');
+      const cw=c.width, ch=c.height;
+      octx.clearRect(0,0,cw,ch);
+      octx.fillStyle='rgba(0,0,0,0.8)'; octx.fillRect(0,0,cw,ch);
+      // grid
+      octx.strokeStyle='rgba(0,220,255,0.1)'; octx.lineWidth=1;
+      for(let gx=0;gx<cw;gx+=36){ octx.beginPath(); octx.moveTo(gx,0); octx.lineTo(gx,ch); octx.stroke(); }
+      for(let gy=0; gy<ch; gy+=12){ octx.beginPath(); octx.moveTo(0,gy); octx.lineTo(cw,gy); octx.stroke(); }
+      // waveform - plasma scaled 1,000,000x
+      const fDisplay = plasmaValues[i] / 1.0; // ~1.3-2.9 Hz for display
+      octx.beginPath();
+      octx.strokeStyle=TONES[i].color; octx.lineWidth=2; octx.shadowBlur=10; octx.shadowColor=TONES[i].color;
+      for(let x=0;x<cw;x++){
+        const phase = (x/cw)*Math.PI*4 + time * fDisplay * 2;
+        const y = ch/2 + Math.sin(phase) * (ch*0.35) * (0.7 + Math.sin(time+ i)*0.3);
+        if(x===0) octx.moveTo(x,y); else octx.lineTo(x,y);
+      }
+      octx.stroke(); octx.shadowBlur=0;
+      // readout
+      octx.fillStyle='rgba(0,0,0,0.7)'; octx.fillRect(4,4,84,16);
+      octx.fillStyle=TONES[i].color; octx.font='10px JetBrains Mono'; octx.fillText(`${plasmaValues[i].toFixed(3)} MHz`,8,15);
+    });
+  }
+  
+  requestAnimationFrame(draw);
+}
+draw();
+
+// init
+updateReadouts();
+checkPhaseLock();
+
+// Handle resize for canvas sharpness
+function resizeCanvas(){
+  const dpr = Math.min(window.devicePixelRatio||1,2);
+  const rect = canvas.getBoundingClientRect();
+  // keep internal resolution fixed for performance, scale via CSS
+}
+window.addEventListener('resize', resizeCanvas);
+</script>
+
+</body></html>

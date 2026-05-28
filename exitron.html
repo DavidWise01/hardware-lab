@@ -1,0 +1,379 @@
+html
+
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Light Meets Matter — Photon · Electron · Exciton</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600&family=IBM+Plex+Mono:wght@400;500;600&family=Spline+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#05060d;--ink:#edf1f9;--body:#a8b4ca;--dim:#64728c;--dimmer:#27344a;
+  --photon:#ffe14d;--electron:#4ad9ff;--hole:#ff5d8f;--exciton:#b888ff;--gold:#ffd166;
+  --line:rgba(74,217,255,.13);--panel:rgba(10,14,26,.82);
+  --mono:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
+  --sans:"Spline Sans",ui-sans-serif,system-ui,sans-serif;
+  --serif:"Fraunces",Georgia,serif;
+}
+*{box-sizing:border-box}html{scroll-behavior:smooth}
+body{margin:0;color:var(--ink);font-family:var(--sans);line-height:1.62;
+  background:
+   radial-gradient(120% 60% at 50% -10%,rgba(255,225,77,.07),transparent 50%),
+   radial-gradient(50% 50% at 84% 10%,rgba(74,217,255,.06),transparent 55%),
+   radial-gradient(55% 50% at 14% 92%,rgba(184,136,255,.06),transparent 55%),
+   linear-gradient(180deg,#06080f,#05060d 60%,#03040a);
+  background-attachment:fixed;-webkit-font-smoothing:antialiased}
+.grain{position:fixed;inset:0;pointer-events:none;z-index:88;opacity:.05;mix-blend-mode:screen;background-image:url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="160" height="160"><filter id="n"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2"/></filter><rect width="100%25" height="100%25" filter="url(%23n)"/></svg>')}
+
+nav{position:sticky;top:0;z-index:30;border-bottom:1px solid var(--line);background:rgba(5,6,13,.86);backdrop-filter:blur(12px)}
+.nbar{max-width:1180px;margin:auto;display:flex;align-items:center;justify-content:space-between;gap:14px;padding:12px 22px}
+.brand{font-family:var(--mono);font-weight:600;letter-spacing:.1em;font-size:12px;color:var(--photon);text-transform:uppercase}
+.nlinks{display:flex;gap:18px;flex-wrap:wrap}
+.nlinks a{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--dim);text-decoration:none}
+.nlinks a:hover{color:var(--photon)}
+
+.wrap{max-width:1180px;margin:0 auto;padding:0 22px}
+header.hero{padding:74px 0 46px;border-bottom:1px solid var(--line)}
+.eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.26em;text-transform:uppercase;color:var(--exciton);margin-bottom:16px}
+h1{font-family:var(--serif);font-size:clamp(38px,7vw,78px);line-height:.98;margin:0 0 18px;letter-spacing:-.02em;font-weight:600}
+h1 em{font-style:italic;color:var(--photon)}
+.sub{font-size:18px;color:var(--body);max-width:760px}
+.disc{margin-top:22px;font-family:var(--mono);font-size:11px;color:var(--dim);border-left:2px solid var(--dimmer);padding-left:12px;max-width:760px;line-height:1.7}
+
+section{padding:60px 0;border-top:1px solid rgba(74,217,255,.08)}
+.kick{font-family:var(--mono);font-size:11px;letter-spacing:.24em;text-transform:uppercase;color:var(--gold);margin-bottom:12px}
+h2{font-family:var(--serif);font-size:clamp(26px,4vw,42px);line-height:1.04;margin:0 0 14px;letter-spacing:-.01em;font-weight:600}
+h2 em{font-style:italic;color:var(--photon)}
+p{color:var(--body);max-width:760px}
+p code,td code,li code{font-family:var(--mono);font-size:.88em;color:var(--gold);background:rgba(255,209,102,.08);padding:1px 5px;border-radius:4px}
+.note{font-size:13px;color:var(--dim)}
+
+.bench{margin-top:24px;border:1px solid var(--line);border-radius:16px;background:var(--panel);overflow:hidden;box-shadow:0 30px 70px rgba(0,0,0,.45)}
+.bhead{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:13px 18px;border-bottom:1px solid var(--line);background:rgba(74,217,255,.03)}
+.btitle{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--electron)}
+.btag{font-family:var(--mono);font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--dim);border:1px solid var(--dimmer);border-radius:3px;padding:3px 8px}
+.bgrid{display:grid;grid-template-columns:1.25fr .75fr;gap:0}
+@media(max-width:920px){.bgrid{grid-template-columns:1fr}}
+.viz{padding:10px;border-right:1px solid var(--line);position:relative}
+@media(max-width:920px){.viz{border-right:none;border-bottom:1px solid var(--line)}}
+#scene{display:block;width:100%;border-radius:12px;background:radial-gradient(60% 70% at 50% 50%,rgba(16,22,40,.7),rgba(3,5,12,.97))}
+.panel{padding:20px;display:flex;flex-direction:column;gap:15px}
+.ctl label{display:flex;justify-content:space-between;font-family:var(--mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--dim);margin-bottom:7px}
+.ctl label b{color:var(--electron);font-size:13px}
+input[type=range]{width:100%;height:4px}
+#s-photon{accent-color:var(--photon)} #s-size{accent-color:var(--electron)}
+.readout{border:1px solid var(--line);border-radius:10px;background:rgba(6,9,18,.6);overflow:hidden}
+.rrow{display:flex;justify-content:space-between;align-items:center;padding:9px 14px;border-bottom:1px solid rgba(74,217,255,.07);font-family:var(--mono);font-size:13px}
+.rrow:last-child{border-bottom:none}
+.rrow span{color:var(--dim);font-size:10.5px;letter-spacing:.05em;text-transform:uppercase}
+.rrow b{font-weight:600;font-size:14px}
+.rrow b.p{color:var(--photon)}.rrow b.e{color:var(--electron)}.rrow b.h{color:var(--hole)}.rrow b.x{color:var(--exciton)}
+.verdict{font-family:var(--mono);font-size:12px;padding:10px 13px;border-radius:8px;line-height:1.5}
+.verdict.absorb{background:rgba(74,217,255,.1);color:var(--electron)}
+.verdict.pass{background:rgba(120,130,150,.1);color:var(--dim)}
+.chips{display:flex;gap:7px;flex-wrap:wrap}
+.chip{font-family:var(--mono);font-size:10px;letter-spacing:.05em;text-transform:uppercase;border:1px solid var(--line);border-radius:18px;padding:6px 11px;cursor:pointer;transition:.12s;color:var(--electron);background:rgba(74,217,255,.05)}
+.chip:hover{background:rgba(74,217,255,.16)}
+.chip.fire{color:var(--photon);border-color:rgba(255,225,77,.4);background:rgba(255,225,77,.07)}
+
+.eq{font-family:var(--mono);background:rgba(6,9,18,.6);border:1px solid var(--line);border-left:3px solid var(--photon);border-radius:8px;padding:18px;margin-top:18px;font-size:13px;line-height:2;color:var(--body);overflow-x:auto}
+.eq b{color:var(--gold)}.eq .e{color:var(--electron)}.eq .p{color:var(--photon)}.eq .h{color:var(--hole)}
+.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:24px}
+@media(max-width:760px){.cards{grid-template-columns:1fr}}
+.card{border:1px solid var(--line);border-radius:12px;background:var(--panel);padding:20px}
+.card h4{margin:0 0 9px;font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase}
+.card.p h4{color:var(--photon)}.card.e h4{color:var(--electron)}.card.x h4{color:var(--exciton)}
+.card p{font-size:13.5px;margin:0;color:var(--body)}
+ul.clean{list-style:none;padding:0;margin:18px 0;max-width:760px}
+ul.clean li{padding:9px 0 9px 22px;position:relative;color:var(--body);border-bottom:1px solid rgba(74,217,255,.06)}
+ul.clean li::before{content:"▸";position:absolute;left:0;color:var(--electron)}
+ul.clean li b{color:var(--ink)}
+footer{padding:46px 0 80px;border-top:1px solid var(--line);font-family:var(--mono);font-size:11px;color:var(--dimmer);letter-spacing:.06em;line-height:1.8}
+</style>
+</head>
+<body>
+<div class="grain"></div>
+
+<nav><div class="nbar">
+  <div class="brand">⊙ Light Meets Matter</div>
+  <div class="nlinks"><a href="#bench">Instrument</a><a href="#why">Mechanism</a><a href="#players">The players</a><a href="#uses">Why it matters</a><a href="#honest">Caveats</a></div>
+</div></nav>
+
+<header class="hero"><div class="wrap">
+  <div class="eyebrow">light–matter interaction · the quantum dot, completed</div>
+  <h1>A photon arrives.<br>An electron <em>leaps.</em></h1>
+  <p class="sub">This closes the trilogy. The <strong>dot</strong> showed how size sets the gap; the <strong>ring</strong> showed flux bending an electron's phase. Here is the event itself: a photon strikes the dot, lifts an electron across the bandgap, leaves a positive hole behind, and the bound pair — an <strong>exciton</strong> — recombines and re-emits light. Absorb, relax, glow. Fire a photon and watch.</p>
+  <p class="disc">Real energetics: photon energy E = hc/λ, absorption only when E ≥ the dot's bandgap, emission near the gap (red-shifted by the Stokes shift). Physics as represented in my training data; idealized single-electron picture, limits stated at the end.</p>
+</div></header>
+
+<section id="bench"><div class="wrap">
+  <div class="kick">// instrument</div>
+  <h2>The absorption–emission <em>event</em></h2>
+
+  <div class="bench">
+    <div class="bhead"><div class="btitle">photon in · electron up · exciton · photon out</div><div class="btag" id="tag">CdSe dot</div></div>
+    <div class="bgrid">
+      <div class="viz"><canvas id="scene" height="440"></canvas></div>
+      <div class="panel">
+        <div class="ctl">
+          <label>incoming photon energy <b id="v-ph">2.50 eV</b></label>
+          <input type="range" id="s-photon" min="120" max="340" value="250">
+        </div>
+        <div class="ctl">
+          <label>dot size → bandgap <b id="v-gap">2.10 eV</b></label>
+          <input type="range" id="s-size" min="180" max="700" value="320">
+        </div>
+        <div class="chips">
+          <span class="chip fire" id="fire">▸ fire photon</span>
+          <span class="chip" id="auto">↻ auto-fire</span>
+        </div>
+        <div class="verdict pass" id="verdict">Tune the photon above the bandgap, then fire.</div>
+        <div class="readout">
+          <div class="rrow"><span>photon λ in</span><b class="p" id="o-lam">—</b></div>
+          <div class="rrow"><span>bandgap E_g</span><b id="o-gap">—</b></div>
+          <div class="rrow"><span>excess → heat</span><b class="e" id="o-excess">—</b></div>
+          <div class="rrow"><span>emitted photon</span><b class="x" id="o-emit">—</b></div>
+        </div>
+        <p class="note" style="margin:0">If the photon's energy is below the gap it passes straight through — the dot is transparent to it. Above the gap it's absorbed; any excess energy is lost as heat as the electron relaxes to the band edge, so the <em>emitted</em> photon is always near the gap regardless of how energetic the one that came in. That's why a dot glows one color no matter how you excite it.</p>
+      </div>
+    </div>
+  </div>
+</div></section>
+
+<section id="why"><div class="wrap">
+  <div class="kick">// the mechanism</div>
+  <h2>Three moves: <em>absorb, relax, emit</em></h2>
+  <p>A semiconductor has a filled valence band and an empty conduction band, split by the bandgap. A photon carrying at least that much energy can be absorbed: it promotes one electron up to the conduction band and leaves behind a <em>hole</em> — the absence of that electron, which behaves like a positive particle. The electron and hole attract each other and form a bound pair, the <strong>exciton</strong>. After a brief moment the electron falls back, the pair annihilates, and a new photon comes out at the gap energy.</p>
+  <div class="eq">
+1. <b>absorb</b>   <span class="p">γ</span>(E≥E_g)  →  <span class="e">e⁻</span> in conduction band  +  <span class="h">h⁺</span> in valence band
+2. <b>relax</b>    excess energy (E − E_g) → lattice heat (phonons)
+3. <b>bind</b>     <span class="e">e⁻</span> + <span class="h">h⁺</span> → exciton, binding ≈ Ry*·(μ/m₀)/ε²  (~10–30 meV)
+4. <b>emit</b>     exciton recombines → <span class="p">γ′</span> at  E ≈ E_g − (Stokes shift)
+
+  photon energy ↔ wavelength :   E(eV) = 1239.84 / λ(nm)
+  </div>
+  <p class="note">The instrument evaluates exactly this: it compares the photon's E = hc/λ to the dot's gap, absorbs only if E ≥ E_g, dumps the excess, forms the exciton, and emits near the gap. Two photons of different incoming color produce the <em>same</em> output color — the hallmark of fluorescence.</p>
+</div></section>
+
+<section id="players"><div class="wrap">
+  <div class="kick">// the cast</div>
+  <h2>Who's on <em>stage</em></h2>
+  <div class="cards">
+    <div class="card p"><h4>● photon — γ</h4><p>A quantum of light. No mass, no charge; carries energy E = hc/λ and momentum. The thing absorbed, and the thing emitted. Color <em>is</em> its energy.</p></div>
+    <div class="card e"><h4>● electron — e⁻</h4><p>The charge carrier that leaps the gap. In the dot its allowed energies are discrete (the confinement from the first instrument). Negative charge, real mass.</p></div>
+    <div class="card x"><h4>● hole + exciton</h4><p>The hole is the vacancy the electron left — it acts like a positive particle. Electron + hole, bound by attraction, is an exciton: a hydrogen-like pair that lives briefly, then recombines into light.</p></div>
+  </div>
+  <p class="note" style="margin-top:14px">A note on scope, kept honest: electrons and photons are <em>elementary</em> particles and belong here naturally. Quarks — which build protons and neutrons via the strong force — live in a completely different regime (femtometres, GeV, accelerators) and play no role in quantum-dot optics, so they're not on this stage. Same reason the dot and the ring share a bench but a quark never would.</p>
+</div></section>
+
+<section id="uses"><div class="wrap">
+  <div class="kick">// why anyone cares</div>
+  <h2>The glow does <em>work</em></h2>
+  <ul class="clean">
+    <li><b>Why a QLED screen is pure.</b> A blue source excites dots well above their gap; every dot emits at its own narrow gap energy, so the output color is sharp and saturated regardless of excitation. The "same color out" property is the feature.</li>
+    <li><b>Down-conversion.</b> Dots turn high-energy photons into lower-energy ones efficiently — used in lighting, displays, and luminescent solar concentrators.</li>
+    <li><b>Single-photon emission.</b> A single dot can release exactly one photon per excitation cycle — a controllable light source for quantum optics.</li>
+    <li><b>Fluorescent labels.</b> In biology, dots absorb one excitation color and emit a chosen, stable color — bright, long-lived tags for imaging.</li>
+  </ul>
+</div></section>
+
+<section id="honest"><div class="wrap">
+  <div class="kick">// honesty about the model</div>
+  <h2>Where this <em>simplifies</em></h2>
+  <ul class="clean">
+    <li><b>Single electron, single photon.</b> Real dots host multi-exciton states, Auger processes, and blinking; this shows one clean cycle.</li>
+    <li><b>Instant relaxation.</b> The "excess → heat" step really takes finite time through many phonon emissions; here it's collapsed to one move.</li>
+    <li><b>Stokes shift is nominal.</b> The emission red-shift depends on the specific dot and environment; the value shown is illustrative.</li>
+    <li><b>Color is approximate.</b> Single-wavelength → sRGB is a perceptual approximation; real emission is a peak with finite width.</li>
+  </ul>
+  <p class="note">Background: standard semiconductor optics (absorption above gap, band-edge emission, Stokes shift); exciton binding from the hydrogenic effective-mass picture. Consistent with the Brus and Alivisatos references behind the dot instrument.</p>
+</div></section>
+
+<footer><div class="wrap">
+  Light Meets Matter · photon · electron · hole · exciton · E = hc/λ computed live, absorption gated at the bandgap · teaching instrument, not lab metrology
+</div></footer>
+
+<script>
+"use strict";
+const h=6.626e-34, c=2.998e8, e=1.602e-19;
+const E_to_lam = E => 1239.84/E;            // eV -> nm
+const lam_to_E = l => 1239.84/l;
+
+function wl2rgb(wl){
+  let r=0,g=0,b=0;
+  if(wl>=380&&wl<440){r=-(wl-440)/60;b=1;}
+  else if(wl<490){g=(wl-440)/50;b=1;}
+  else if(wl<510){g=1;b=-(wl-510)/20;}
+  else if(wl<580){r=(wl-510)/70;g=1;}
+  else if(wl<645){r=1;g=-(wl-645)/65;}
+  else if(wl<=780){r=1;}
+  let f=1; if(wl<420)f=0.3+0.7*(wl-380)/40; else if(wl>700)f=0.3+0.7*(780-wl)/80;
+  const C=v=>Math.round(255*Math.pow(Math.max(0,v)*f,0.8));
+  return [C(r),C(g),C(b)];
+}
+const rgb=a=>`rgb(${a[0]},${a[1]},${a[2]})`;
+
+const $=id=>document.getElementById(id);
+let photonE=2.5, gapE=2.10;
+let stokes=0.08;                     // eV red-shift
+let auto=false;
+
+/* animation state machine: idle -> incoming -> (absorbed|passed) -> exciton -> emit */
+let state="idle", t=0;
+let inPhoton=null, outPhoton=null, exciton=0, passing=null, heatPulse=0;
+
+function fire(){
+  state="incoming"; t=0;
+  const lam=E_to_lam(photonE);
+  inPhoton={x:0,y:0,col:rgb(wl2rgb(lam)), e:photonE};
+  outPhoton=null; passing=null; exciton=0;
+}
+function decide(){
+  if(photonE>=gapE){
+    state="absorbed"; t=0; heatPulse=1;
+  } else {
+    state="passing"; t=0;
+    passing={x:0};
+  }
+}
+function emit(){
+  const emitE=Math.max(0.4,gapE-stokes);
+  const lam=E_to_lam(emitE);
+  outPhoton={x:0,y:0,ang:Math.random()*0.6-0.3,col:rgb(wl2rgb(lam)),e:emitE};
+  state="emitting"; t=0;
+}
+
+const cv=$("scene"), x=cv.getContext("2d");
+let W=0,H=0,DPR=Math.min(devicePixelRatio||1,2);
+function fit(){W=cv.clientWidth;H=440;cv.width=W*DPR;cv.height=H*DPR;x.setTransform(DPR,0,0,DPR,0,0);}
+
+function draw(){
+  const cx=W*0.62, cy=H/2;
+  const dotR=34+(2.6-(gapE))*0; // keep visual fixed-ish; size encoded by color
+  const R=46;
+  x.clearRect(0,0,W,H);
+
+  // band diagram on the left
+  const bx=W*0.10, bw=W*0.16, vbY=H*0.66, cbY=H*0.30;
+  x.strokeStyle="rgba(168,180,202,.25)";x.lineWidth=1.5;
+  x.beginPath();x.moveTo(bx,vbY);x.lineTo(bx+bw,vbY);x.stroke();      // valence band
+  x.beginPath();x.moveTo(bx,cbY);x.lineTo(bx+bw,cbY);x.stroke();      // conduction band
+  x.fillStyle="#64728c";x.font="9px 'IBM Plex Mono',monospace";
+  x.fillText("conduction",bx,cbY-7); x.fillText("valence",bx,vbY+15);
+  // gap arrow
+  x.strokeStyle="rgba(255,209,102,.5)";x.setLineDash([3,3]);
+  x.beginPath();x.moveTo(bx+bw/2,vbY);x.lineTo(bx+bw/2,cbY);x.stroke();x.setLineDash([]);
+  x.fillStyle="#ffd166";x.fillText("E_g="+gapE.toFixed(2),bx+bw/2+5,(vbY+cbY)/2);
+  // electron on a band depending on state
+  const eUp = (state==="absorbed"||state==="exciton");
+  x.fillStyle="#4ad9ff";x.shadowColor="#4ad9ff";x.shadowBlur=10;
+  x.beginPath();x.arc(bx+bw/2, eUp?cbY:vbY, 5,0,7);x.fill();x.shadowBlur=0;
+  if(eUp){ // hole left behind
+    x.fillStyle="#ff5d8f";x.shadowColor="#ff5d8f";x.shadowBlur=8;
+    x.beginPath();x.arc(bx+bw/2,vbY,5,0,7);x.fill();x.shadowBlur=0;
+    x.strokeStyle="#ff5d8f";x.lineWidth=1;x.beginPath();x.arc(bx+bw/2,vbY,5,0,7);x.stroke();
+  }
+
+  // the dot — color = emission color (gap-stokes)
+  const emitLam=E_to_lam(Math.max(0.4,gapE-stokes));
+  const dotCol = (emitLam>=380&&emitLam<=720)?rgb(wl2rgb(emitLam)):"rgb(40,46,60)";
+  const glow = (state==="exciton")?28:(state==="emitting")?40:14;
+  const g=x.createRadialGradient(cx,cy,2,cx,cy,R*1.8);
+  g.addColorStop(0,dotCol);g.addColorStop(1,"rgba(0,0,0,0)");
+  x.globalAlpha=0.5;x.fillStyle=g;x.beginPath();x.arc(cx,cy,R*1.8,0,7);x.fill();x.globalAlpha=1;
+  // dot body
+  const bg=x.createRadialGradient(cx-12,cy-12,4,cx,cy,R);
+  bg.addColorStop(0,"#fff");bg.addColorStop(0.4,dotCol);bg.addColorStop(1,"rgba(8,12,22,.9)");
+  x.fillStyle=bg;x.shadowColor=dotCol;x.shadowBlur=glow;
+  x.beginPath();x.arc(cx,cy,R,0,7);x.fill();x.shadowBlur=0;
+  // lattice dots
+  x.fillStyle="rgba(255,255,255,.12)";
+  for(let i=0;i<5;i++)for(let j=0;j<5;j++){const px=cx-24+i*12,py=cy-24+j*12;
+    if(Math.hypot(px-cx,py-cy)<R-6)x.fillRect(px,py,1.5,1.5);}
+
+  // heat shimmer when absorbing excess
+  if(heatPulse>0.02){x.globalAlpha=heatPulse*0.6;
+    for(let i=0;i<6;i++){x.strokeStyle="rgba(255,160,80,.5)";x.beginPath();
+      const a=i/6*7+t*0.1;x.arc(cx,cy,R+6+Math.sin(t*0.2+i)*4,a,a+0.6);x.stroke();}
+    x.globalAlpha=1;heatPulse*=0.95;}
+
+  // exciton: bound e- and h+ orbiting inside dot
+  if(state==="exciton"||(state==="emitting"&&t<6)){
+    const orb=8, a=t*0.25;
+    const ex=cx+Math.cos(a)*orb, ey=cy+Math.sin(a)*orb*0.7;
+    const hx=cx-Math.cos(a)*orb, hy=cy-Math.sin(a)*orb*0.7;
+    x.strokeStyle="rgba(184,136,255,.5)";x.lineWidth=1;x.beginPath();x.moveTo(ex,ey);x.lineTo(hx,hy);x.stroke();
+    x.fillStyle="#4ad9ff";x.beginPath();x.arc(ex,ey,3.5,0,7);x.fill();
+    x.fillStyle="#ff5d8f";x.beginPath();x.arc(hx,hy,3.5,0,7);x.fill();
+  }
+
+  // incoming photon (wavy)
+  if(state==="incoming"||state==="passing"){
+    const prog=t/40;
+    const px=-20+prog*(cx-R-(-20));
+    drawPhoton(px,cy,inPhoton.col,t);
+    if(state==="passing"){ // continues through
+      if(t>40){const px2=cx+R+ (t-40)/40*(W-cx-R+30);drawPhoton(px2,cy,inPhoton.col,t);}
+    }
+  }
+  // outgoing photon
+  if(state==="emitting"&&outPhoton){
+    const prog=Math.max(0,(t-6)/40);
+    const px=cx+R+prog*(W-cx-R+40);
+    const py=cy+Math.sin(outPhoton.ang)*prog*60;
+    drawPhoton(px,py,outPhoton.col,t);
+  }
+
+  // labels
+  x.fillStyle="#64728c";x.font="10px 'IBM Plex Mono',monospace";x.textAlign="center";
+  x.fillText("quantum dot",cx,cy+R+22);
+  x.textAlign="left";
+}
+function drawPhoton(px,py,col,t){
+  x.strokeStyle=col;x.lineWidth=2.5;x.shadowColor=col;x.shadowBlur=10;
+  x.beginPath();
+  for(let i=-14;i<=14;i++){const yy=py+Math.sin((i*0.6)+t*0.4)*5;i===-14?x.moveTo(px+i,yy):x.lineTo(px+i,yy);}
+  x.stroke();x.shadowBlur=0;
+  x.fillStyle="#fff";x.beginPath();x.arc(px+14,py,3,0,7);x.fill();
+}
+
+/* state machine tick */
+function tick(){
+  t++;
+  if(state==="incoming" && t>=40) decide();
+  else if(state==="absorbed" && t>=22){ state="exciton"; t=0; }
+  else if(state==="exciton" && t>=44){ emit(); }
+  else if(state==="emitting" && t>=52){ state="idle"; t=0; if(auto)setTimeout(fire,500); }
+  else if(state==="passing" && t>=82){ state="idle"; t=0; if(auto)setTimeout(fire,500); }
+}
+
+/* readouts */
+function sync(){
+  $("v-ph").textContent=photonE.toFixed(2)+" eV";
+  $("v-gap").textContent=gapE.toFixed(2)+" eV";
+  const lamIn=E_to_lam(photonE), emitE=Math.max(0.4,gapE-stokes), lamOut=E_to_lam(emitE);
+  $("o-lam").textContent=lamIn.toFixed(0)+" nm";
+  $("o-gap").textContent=gapE.toFixed(2)+" eV";
+  $("o-excess").textContent=(photonE>=gapE)?("+"+(photonE-gapE).toFixed(2)+" eV"):"—";
+  $("o-emit").textContent=lamOut.toFixed(0)+" nm ("+emitE.toFixed(2)+" eV)";
+  const v=$("verdict");
+  if(photonE>=gapE){v.className="verdict absorb";
+    v.textContent="E_photon ≥ E_gap → ABSORBED. Excess "+(photonE-gapE).toFixed(2)+" eV → heat. Emits ~"+lamOut.toFixed(0)+" nm.";}
+  else{v.className="verdict pass";
+    v.textContent="E_photon < E_gap → dot is TRANSPARENT. Photon passes straight through.";}
+}
+
+function loop(){ tick(); draw(); requestAnimationFrame(loop); }
+
+$("s-photon").addEventListener("input",e=>{photonE=(+e.target.value)/100;sync();});
+$("s-size").addEventListener("input",e=>{gapE=(+e.target.value)/100;sync();});
+$("fire").addEventListener("click",()=>{if(state==="idle"||state==="emitting"||state==="passing")fire();});
+$("auto").addEventListener("click",e=>{auto=!auto;e.target.style.color=auto?"#ffe14d":"";if(auto&&state==="idle")fire();});
+addEventListener("resize",fit);
+fit();sync();loop();
+</script>
+</body>
+</html>

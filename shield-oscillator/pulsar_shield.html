@@ -1,0 +1,566 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>))(!)(( — PULSAR MIRROR SHIELD v2.1</title>
+<style>
+:root{
+  --bg:#02060a;--ink:#dff4ff;--dim:#4a6e84;--dimmer:#1c3444;
+  --cyan:#34e0ff;--ice:#9fe9ff;
+  --life:#2effa6;--death:#ff3b6e;--spark:#ffce5e;
+  --threat:#ff8a2e;--reflect:#eafcff;
+  --line:rgba(52,224,255,.16);--panel:rgba(6,15,24,.78);
+  --mono:ui-monospace,"SF Mono",SFMono-Regular,Menlo,Consolas,"Liberation Mono",monospace;
+}
+*{box-sizing:border-box}html,body{height:100%;margin:0}
+body{color:var(--ink);font-family:var(--mono);font-size:13px;line-height:1.5;-webkit-font-smoothing:antialiased;overflow-x:hidden;
+  background:
+   radial-gradient(120% 70% at 50% -8%,rgba(52,224,255,.07),transparent 48%),
+   radial-gradient(50% 45% at 50% 46%,rgba(46,255,166,.04),transparent 55%),
+   linear-gradient(180deg,#01040a,#03101e 58%,#02060a);}
+.scan{position:fixed;inset:0;pointer-events:none;z-index:90;opacity:.26;background:repeating-linear-gradient(0deg,transparent 0 2px,rgba(0,0,0,.2) 2px 3px);mix-blend-mode:multiply}
+.vig{position:fixed;inset:0;pointer-events:none;z-index:89;background:radial-gradient(130% 120% at 50% 44%,transparent 50%,rgba(1,3,6,.88) 100%)}
+.grain{position:fixed;inset:0;pointer-events:none;z-index:88;opacity:.045;mix-blend-mode:screen;background-image:url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="160" height="160"><filter id="n"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2"/></filter><rect width="100%25" height="100%25" filter="url(%23n)"/></svg>')}
+
+header{position:sticky;top:0;z-index:30;border-bottom:1px solid var(--line);background:linear-gradient(180deg,rgba(2,6,10,.95),rgba(2,6,10,.72));backdrop-filter:blur(10px)}
+.hbar{max-width:1480px;margin:auto;display:flex;align-items:center;justify-content:space-between;gap:16px;padding:11px 18px}
+.logo{display:flex;align-items:center;gap:12px}
+.glyph{font-size:22px;font-weight:700;color:var(--cyan);text-shadow:0 0 16px rgba(52,224,255,.7),0 0 40px rgba(52,224,255,.3);letter-spacing:.05em}
+.title-l{letter-spacing:.3em;font-size:11px;text-transform:uppercase}
+.title-s{letter-spacing:.2em;font-size:9px;text-transform:uppercase;color:var(--dim)}
+.hstat{display:flex;gap:16px;flex-wrap:wrap;font-size:10px;letter-spacing:.14em;color:var(--dim);text-transform:uppercase}
+.hstat b{color:var(--cyan);font-weight:600}
+.seal{border:1px solid var(--cyan);color:var(--cyan);border-radius:3px;padding:3px 8px;font-size:9px;letter-spacing:.18em;background:rgba(52,224,255,.06)}
+
+.deck{max-width:1480px;margin:0 auto;padding:18px;display:grid;grid-template-columns:minmax(0,1fr) 354px;gap:18px;align-items:start}
+.stage{position:relative;border:1px solid var(--line);border-radius:10px;overflow:hidden;background:radial-gradient(70% 70% at 50% 48%,rgba(8,24,40,.5),rgba(1,4,9,.97));box-shadow:inset 0 0 110px rgba(0,0,0,.72);min-height:600px;cursor:crosshair}
+.stage canvas{display:block;width:100%;height:100%}
+.stage .lab{position:absolute;top:12px;left:14px;font-size:9px;letter-spacing:.22em;color:var(--dim);text-transform:uppercase;pointer-events:none}
+.phasebadge{position:absolute;top:10px;right:16px;font-size:13px;letter-spacing:.16em;font-weight:700;pointer-events:none;transition:color .1s}
+.legend{position:absolute;bottom:12px;left:14px;display:flex;gap:13px;flex-wrap:wrap;font-size:9px;letter-spacing:.1em;color:var(--dim);text-transform:uppercase;pointer-events:none;max-width:88%}
+.legend i{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:5px;vertical-align:-1px;box-shadow:0 0 8px currentColor}
+.hint{position:absolute;bottom:12px;right:14px;font-size:9px;letter-spacing:.14em;color:var(--dimmer);text-transform:uppercase;pointer-events:none}
+
+aside{display:grid;gap:13px}
+.card{border:1px solid var(--line);border-radius:9px;background:var(--panel);padding:14px 15px;position:relative;overflow:hidden}
+.card::before{content:"";position:absolute;top:0;left:0;width:32px;height:2px;background:var(--cyan);box-shadow:0 0 8px var(--cyan)}
+.card h3{margin:0 0 11px;font-size:9px;letter-spacing:.24em;color:var(--dim);text-transform:uppercase;font-weight:600;display:flex;justify-content:space-between}
+.card h3 em{font-style:normal;color:var(--cyan)}
+
+/* trinity ring */
+.trin{display:flex;gap:8px}
+.third{flex:1;border:1px solid var(--dimmer);border-radius:7px;padding:10px 8px;text-align:center;transition:.12s;position:relative;overflow:hidden}
+.third .ph{font-size:10px;letter-spacing:.14em;text-transform:uppercase;font-weight:600}
+.third .fr{font-size:18px;font-weight:700;margin-top:3px}
+.third .tn{font-size:8px;color:var(--dim);letter-spacing:.08em;margin-top:2px}
+.third.life .ph{color:var(--life)} .third.death .ph{color:var(--death)} .third.spark .ph{color:var(--spark)}
+.third.life .fr{color:var(--life)} .third.death .fr{color:var(--death)} .third.spark .fr{color:var(--spark)}
+.third.on.life{border-color:var(--life);box-shadow:0 0 14px rgba(46,255,166,.3);background:rgba(46,255,166,.06)}
+.third.on.death{border-color:var(--death);box-shadow:0 0 14px rgba(255,59,110,.3);background:rgba(255,59,110,.06)}
+.third.on.spark{border-color:var(--spark);box-shadow:0 0 14px rgba(255,206,94,.3);background:rgba(255,206,94,.06)}
+
+/* mode buttons */
+.modes{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+.mode{border:1px solid var(--dimmer);border-radius:6px;padding:8px 9px;cursor:pointer;transition:.12s;background:rgba(8,20,30,.5)}
+.mode:hover{border-color:var(--line)}
+.mode .mn{font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink)}
+.mode .md{font-size:8px;color:var(--dim);margin-top:2px;letter-spacing:.04em}
+.mode.on{border-color:var(--cyan);background:rgba(52,224,255,.1);box-shadow:0 0 12px rgba(52,224,255,.25)}
+.mode.on .mn{color:var(--cyan)}
+
+.dial{display:flex;align-items:center;gap:11px;margin-top:11px}
+.dial canvas{flex:none}
+.dial .rd{font-size:11px;color:var(--dim);line-height:1.7}
+.dial .rd b{color:var(--cyan)}
+
+.scaleladder{font-size:10px;line-height:1.7;color:var(--dim)}
+.scaleladder .lv{display:flex;justify-content:space-between;padding:2px 0;border-bottom:1px dashed rgba(52,224,255,.07)}
+.scaleladder .lv:last-child{border-bottom:none}
+.scaleladder .lv.edge{color:var(--cyan)}
+.scaleladder .lv b{color:var(--ink);font-weight:600}
+.scaleladder .lv.edge b{color:var(--cyan)}
+
+.kv{display:flex;justify-content:space-between;gap:8px;padding:3px 0;border-bottom:1px dashed rgba(52,224,255,.08)}
+.kv:last-child{border-bottom:none}.kv span{color:var(--dim)}.kv b{font-weight:600}
+.kv b.l{color:var(--life)}.kv b.d{color:var(--death)}.kv b.s{color:var(--spark)}.kv b.c{color:var(--cyan)}.kv b.t{color:var(--threat)}
+
+.log{height:104px;overflow:auto;font-size:11px;line-height:1.55;padding-right:4px}
+.log::-webkit-scrollbar{width:6px}.log::-webkit-scrollbar-thumb{background:var(--dimmer);border-radius:3px}
+.log div{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.log .l{color:var(--life)}.log .d2{color:var(--death)}.log .s{color:var(--spark)}.log .t{color:var(--threat)}.log .d{color:var(--dim)}
+
+.controls{max-width:1480px;margin:0 auto;padding:0 18px 22px;display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+button{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--cyan);background:rgba(52,224,255,.06);border:1px solid var(--cyan);border-radius:5px;padding:9px 15px;cursor:pointer;transition:.15s}
+button:hover{background:rgba(52,224,255,.16);box-shadow:0 0 16px rgba(52,224,255,.3);color:#eafcff}
+button.threat{color:var(--threat);border-color:var(--threat);background:rgba(255,138,46,.06)}
+button.threat:hover{background:rgba(255,138,46,.16);box-shadow:0 0 16px rgba(255,138,46,.3)}
+.ctl{display:flex;align-items:center;gap:8px;font-size:10px;letter-spacing:.16em;color:var(--dim);text-transform:uppercase}
+.ctl input{width:100px;accent-color:var(--cyan)}
+
+main{max-width:1100px;margin:0 auto;padding:26px 18px 110px}
+section{padding:50px 0;border-top:1px solid rgba(52,224,255,.08)}
+.kick{font-size:10px;letter-spacing:.34em;color:var(--spark);text-transform:uppercase;margin-bottom:13px}
+h2{font-size:clamp(26px,4.4vw,46px);line-height:.98;margin:0 0 16px;letter-spacing:-.01em;font-weight:700;text-shadow:0 0 24px rgba(52,224,255,.18)}
+h2 em{font-style:normal;color:var(--cyan)}
+.lead{font-size:16px;color:#9fc4d8;max-width:780px;line-height:1.7}.lead code{color:var(--spark)}
+.row{display:grid;grid-template-columns:repeat(3,1fr);gap:13px;margin-top:26px}
+.tile{border:1px solid var(--line);border-radius:9px;background:var(--panel);padding:18px}
+.tile h4{margin:0 0 8px;font-size:11px;letter-spacing:.14em;text-transform:uppercase}
+.tile.l h4{color:var(--life)}.tile.dt h4{color:var(--death)}.tile.sp h4{color:var(--spark)}
+.tile p{margin:0;color:var(--dim);font-size:13px;line-height:1.6}.tile code{color:var(--cyan)}
+pre{background:#010509;border:1px solid var(--line);border-left:3px solid var(--cyan);border-radius:7px;padding:18px;overflow:auto;font-size:12.5px;line-height:1.7;color:#bfe9f2;margin-top:22px}
+pre .c{color:var(--dim)}pre .l{color:var(--life)}pre .d{color:var(--death)}pre .s{color:var(--spark)}
+.recur{font-size:clamp(17px,2.5vw,24px);letter-spacing:.16em;text-transform:uppercase;color:var(--dim);line-height:1.7;margin-top:22px}
+.recur b{color:var(--life)}.recur i{font-style:normal;color:var(--death)}.recur u{text-decoration:none;color:var(--spark)}
+.cta{display:flex;gap:11px;flex-wrap:wrap;margin-top:26px}
+.cta a{text-decoration:none;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--cyan);border:1px solid var(--cyan);background:rgba(52,224,255,.06);border-radius:5px;padding:11px 17px;transition:.15s}
+.cta a:hover{background:rgba(52,224,255,.16);box-shadow:0 0 16px rgba(52,224,255,.3);color:#eafcff}
+.sig{font-size:10px;letter-spacing:.18em;color:var(--dimmer);text-transform:uppercase;margin-top:40px}
+@media(max-width:980px){.deck{grid-template-columns:1fr}aside{order:2}.stage{min-height:460px}.row{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="scan"></div><div class="vig"></div><div class="grain"></div>
+
+<header><div class="hbar">
+  <div class="logo"><div class="glyph">))(!)((</div><div>
+    <div class="title-l">Pulsar Mirror Shield · v2.1</div>
+    <div class="title-s">.01 fractal core · 33.33 Hz trinity · life · death · spark</div>
+  </div></div>
+  <div class="hstat">
+    <div>Rotation <b id="hs-rot">00</b></div>
+    <div>Hz <b id="hs-hz">33.3</b></div>
+    <div>Repaired <b id="hs-rep">0</b></div>
+    <div>Killed <b id="hs-kill">0</b></div>
+    <div>Sparked <b id="hs-spark">0</b></div>
+    <div class="seal" id="seal">COHERENT · 10⁻⁸</div>
+  </div>
+</div></header>
+
+<div class="deck">
+  <div class="stage" id="stage">
+    <div class="lab">// click to fire a vector at the mirror · the pulsar defends while it creates</div>
+    <div class="phasebadge" id="phasebadge">LIFE</div>
+    <canvas id="cv"></canvas>
+    <div class="legend">
+      <span><i style="color:var(--life)"></i>life · assim · heal</span>
+      <span><i style="color:var(--death)"></i>death · collapse · kill &gt;e</span>
+      <span><i style="color:var(--spark)"></i>spark · move · 1×0</span>
+      <span><i style="color:var(--threat)"></i>incoming</span>
+    </div>
+    <div class="hint" id="hint">shell integrity 100%</div>
+  </div>
+
+  <aside>
+    <div class="card">
+      <h3>Trinity rotation <em id="rot-frac">.00</em></h3>
+      <div class="trin">
+        <div class="third life" id="t-life"><div class="ph">Life</div><div class="fr" id="f-life">33</div><div class="tn">G1·ASSIM·0-33</div></div>
+        <div class="third death" id="t-death"><div class="ph">Death</div><div class="fr" id="f-death">33</div><div class="tn">G2·COLLAPSE·34-66</div></div>
+        <div class="third spark" id="t-spark"><div class="ph">Spark</div><div class="fr" id="f-spark">34</div><div class="tn">G3·MOVE·67-99</div></div>
+      </div>
+      <div class="dial">
+        <canvas id="dial" width="76" height="76"></canvas>
+        <div class="rd">period <b id="rd-period">30.0 ms</b><br>micro-phase <b>3 µs</b> · .01<br>carrier <b id="rd-carrier">3333 Hz</b></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>Mode</h3>
+      <div class="modes" id="modes">
+        <div class="mode on" data-m="balanced"><div class="mn">Balanced</div><div class="md">33 · 33 · 34 sustain</div></div>
+        <div class="mode" data-m="life"><div class="mn">Life Surge</div><div class="md">66 heal mode</div></div>
+        <div class="mode" data-m="death"><div class="mn">Death Surge</div><div class="md">66 weapon mode</div></div>
+        <div class="mode" data-m="spark"><div class="mn">Spark Surge</div><div class="md">66 forge mode</div></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>Telemetry</h3>
+      <div class="kv"><span>shell integrity</span><b class="c" id="i-shell">100%</b></div>
+      <div class="kv"><span>life beam</span><b class="l" id="i-life">0xAAAA</b></div>
+      <div class="kv"><span>death beam</span><b class="d" id="i-death">0x5555</b></div>
+      <div class="kv"><span>spark beam</span><b class="s" id="i-spark">0x0001</b></div>
+      <div class="kv"><span>seed_packet</span><b class="c" id="i-seed">0x0000</b></div>
+      <div class="kv"><span>incoming</span><b class="t" id="i-in">0</b></div>
+    </div>
+
+    <div class="card">
+      <h3>.01 fractal scale ladder</h3>
+      <div class="scaleladder">
+        <div class="lv"><span>10⁰ · 1 cell</span><b>216 voxels</b></div>
+        <div class="lv"><span>10⁻² · .01</span><b>100 micro-phase</b></div>
+        <div class="lv"><span>10⁻⁴ · .0001</span><b>tensor switch</b></div>
+        <div class="lv"><span>10⁻⁶ · .000001</span><b>flash write</b></div>
+        <div class="lv edge"><span>10⁻⁸ · .00000001</span><b>quantum gate ◂</b></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>Event stream</h3>
+      <div class="log" id="log"></div>
+    </div>
+  </aside>
+</div>
+
+<div class="controls">
+  <button class="threat" id="b-bomb">▸ bombard ∞</button>
+  <button class="threat" id="b-666">⤇ launch 6×6×6</button>
+  <button id="b-damage">✖ damage shells</button>
+  <button id="b-pause">▮▮ pause</button>
+  <div class="ctl">sim&nbsp;<b id="ss" style="color:var(--cyan)">1.0×</b><input type="range" id="speed" min="20" max="200" value="100"></div>
+</div>
+
+<main>
+  <section style="border-top:none">
+    <div class="kick">// the .01 fractal core</div>
+    <h2>The witness no longer just watches.<br>It <em>turns.</em></h2>
+    <p class="lead">The <code>!</code> core is a pulsar spinning at 33.33 Hz — a 30 ms period cut into 100 micro-phases at <code>.01</code> resolution. Each rotation splits three ways: a third for <strong>life</strong>, a third for <strong>death</strong>, a third for <strong>spark</strong>. The shield heals itself, kills incoming, and forges new <code>1×0</code> seeds — all in one continuous loop, while <code>))</code> and <code>((</code> still mirror everything that strikes them.</p>
+    <div class="row">
+      <div class="tile l"><h4>0–33 · life</h4><p>G1 ASSIM beam. Repairs the obsidian shells, regrows the mesh. <code>life_seed = 0xAAAA</code>.</p></div>
+      <div class="tile dt"><h4>34–66 · death</h4><p>G2 COLLAPSE beam. Any <code>&gt;e</code> caught in the sweep is neutralized on contact. Entropy sink. <code>death_seed = 0x5555</code>.</p></div>
+      <div class="tile sp"><h4>67–99 · spark</h4><p>G3 MOVE beam. Fires <code>1×0</code> creation seeds outward mid-defense. <code>spark_seed = 0x0001</code>.</p></div>
+    </div>
+  </section>
+
+  <section>
+    <div class="kick">// the 33 Hz trinity loop</div>
+    <h2>One pass. Three <em>tensors.</em></h2>
+    <p class="lead">The instrument above runs this loop at the chosen sim rate. <code>rotation</code> advances one <code>.01</code> step per tick, wrapping at 100; <code>phase = rotation / 33</code> selects the beam. Surge modes skew the boundaries so one aspect owns 66% of the turn.</p>
+    <pre><span class="c">// pulsar_tick — .01 fractal advance</span>
+p->rotation = (p->rotation + 1) % 100;     <span class="c">// 3 µs / step @ 10⁻⁸</span>
+
+uint16_t pulsar_emit(PulsarCore *p){
+  uint8_t ph = pulsar_phase(p);            <span class="c">// rotation / 33</span>
+  <span class="k">if</span> (ph == 0) <span class="k">return</span> p-><span class="l">life_seed</span>;   <span class="l">// heal shells, spawn cells</span>
+  <span class="k">if</span> (ph == 1) <span class="k">return</span> p-><span class="d">death_seed</span>;  <span class="d">// kill incoming &gt;e</span>
+  <span class="k">return</span> p-><span class="s">spark_seed</span>;            <span class="s">// fire 1×0 creation</span>
+}
+<span class="c">// 33.33 Hz × 100 micro-phase = 3,333 Hz base carrier</span></pre>
+  </section>
+
+  <section>
+    <div class="kick">// lineage</div>
+    <h2>Cell → cannon → shield → <em>engine.</em></h2>
+    <p class="lead">Trebuchet was a single shot: <code>81 → 0 → e</code>. Shield v1 was passive absorb: <code>e → 0 → 81</code>. The pulsar shield never stops: <code>life → death → spark → life…</code>. Defense and creation on the same 30 ms wheel.</p>
+    <div class="recur"><b>LIFE</b> repairs<br><i>DEATH</i> negates<br><u>SPARK</u> creates<br>30 ms · forever<br><b>NOTHING PASSES · SOMETHING IS ALWAYS BORN</b></div>
+    <div class="cta">
+      <a href="trinity.html">▸ trinity shell</a>
+      <a href="witness_shield.html">▸ shield v1</a>
+      <a href="trebuchet_27.html">▸ trebuchet</a>
+    </div>
+    <div class="sig">))(!)(( pulsar mirror shield v2.1 · .01 fractal · 10⁻⁸ coherent · life/death/spark · 无 · canon-frozen</div>
+  </section>
+</main>
+
+<script>
+"use strict";
+/* ===== ))(!)(( PULSAR MIRROR SHIELD v2.1 — .01 fractal trinity ===== */
+const VW=900, VH=620, CX=VW/2, CY=VH/2;
+const R_CORE=30, R_INNER=92, R_SHELL=150, R_SHELL_OUT=176, R_SPAWN=400;
+const TAU=Math.PI*2;
+
+/* pulsar */
+let rotation=0;            // 0..99  (.01 fractal)
+let fracAcc=0;             // accumulates sub-steps
+let seed=0x0000;
+const LIFE_SEED=0xAAAA, DEATH_SEED=0x5555, SPARK_SEED=0x0001;
+let mode="balanced";
+// phase boundaries [lifeEnd, deathEnd] out of 100; spark = remainder
+const MODES={ balanced:[33,66], life:[66,83], death:[17,83], spark:[17,34] };
+
+let shell=100;             // shell integrity %
+let repaired=0, killed=0, sparked=0, hits=0;
+let beamAngle=0;           // sweeps with rotation
+let attacks=[], sprays=[], rings=[], motes=[], sparks=[], frost=[];
+let bombard=false, bombTimer=0, simScale=1, paused=false;
+let coreFlash=0, shake=0, lastPhase=-1;
+let campaign=0x6363;
+
+const pc16=v=>{let c=0;for(let i=0;i<16;i++)c+=(v>>>i)&1;return c;};
+const hx=v=>(v&0xFFFF).toString(16).padStart(4,"0");
+
+function phaseOf(rot){
+  const [a,b]=MODES[mode];
+  if(rot<a)return 0;          // life
+  if(rot<b)return 1;          // death
+  return 2;                   // spark
+}
+function phaseColor(p){return p===0?"#2effa6":p===1?"#ff3b6e":"#ffce5e";}
+function phaseName(p){return p===0?"LIFE":p===1?"DEATH":"SPARK";}
+
+/* threat handling: faithful shield_hit reflect/absorb/witness */
+function spawnAttack(val,ang){
+  if(ang===undefined)ang=Math.random()*TAU;
+  if(val===undefined)val=(Math.random()*0x10000)|0;
+  const x=CX+Math.cos(ang)*R_SPAWN, y=CY+Math.sin(ang)*R_SPAWN;
+  const sp=2.2+Math.random()*1.2;
+  attacks.push({x,y,vx:-Math.cos(ang)*sp,vy:-Math.sin(ang)*sp,val:val&0xFFFF,ang,r:R_SPAWN,dead:false});
+}
+function shellHit(a){
+  const attack=a.val;
+  const r1=(attack^0xFFFF)&0xFFFF;          // )) reflect
+  const before=seed;
+  seed=(seed^(attack>>8))&0xFFFF;           // ! witness
+  const a2=attack&seed;                     // ( ) absorb
+  hits++;
+  const absorbedFrac=pc16(a2)/Math.max(1,pc16(attack));
+  const reflectFrac=1-absorbedFrac;
+  coreFlash=1; shake=Math.min(7,shake+2.5);
+  // shell takes a little stress on raw reflect, repaired by LIFE beam
+  shell=Math.max(0,shell-reflectFrac*1.6);
+  const baseA=Math.atan2(a.y-CY,a.x-CX);
+  rings.push({x:a.x,y:a.y,r:8,max:55,a:1,col:"rgba(234,252,255,"});
+  const n=Math.round(reflectFrac*18)+2;
+  for(let i=0;i<n;i++){const sa=baseA+(Math.random()-.5)*1.1,ss=3+Math.random()*4;
+    sprays.push({x:a.x,y:a.y,vx:Math.cos(sa)*ss,vy:Math.sin(sa)*ss,life:1,col:"#eafcff"});}
+  a.dead=true;
+}
+
+/* pulsar advance: one .01 step */
+function pulsarStep(){
+  rotation=(rotation+1)%100;
+  beamAngle=(rotation/100)*TAU;
+  const ph=phaseOf(rotation);
+  if(ph!==lastPhase){ lastPhase=ph; }
+  // beam acts on whatever lies in its swept sector
+  emitBeam(ph);
+}
+function inBeam(ang){
+  let d=Math.abs(((ang-beamAngle+Math.PI)%TAU)-Math.PI);
+  return d<0.42; // ~24° sector
+}
+function emitBeam(ph){
+  if(ph===0){ // LIFE: repair shells + spawn motes
+    if(shell<100){shell=Math.min(100,shell+0.5); if(Math.random()<0.3)repaired++;}
+    if(Math.random()<0.5){const r=R_INNER+Math.random()*30;
+      motes.push({ang:beamAngle,r,life:1});}
+  } else if(ph===1){ // DEATH: kill any attack within beam sector
+    for(const a of attacks){if(a.dead)continue;
+      const aa=Math.atan2(a.y-CY,a.x-CX);
+      if(inBeam(aa) && a.r<R_SPAWN-40){
+        a.dead=true; killed++;
+        rings.push({x:a.x,y:a.y,r:6,max:42,a:1,col:"rgba(255,59,110,"});
+        for(let i=0;i<8;i++){const sa=Math.random()*TAU,ss=2+Math.random()*3;
+          sprays.push({x:a.x,y:a.y,vx:Math.cos(sa)*ss,vy:Math.sin(sa)*ss,life:1,col:"#ff3b6e"});}
+      }}
+  } else { // SPARK: fire 1x0 outward
+    if(Math.random()<0.35){sparked++;
+      sparks.push({x:CX,y:CY,vx:Math.cos(beamAngle)*4.5,vy:Math.sin(beamAngle)*4.5,life:1});}
+  }
+}
+
+function step(){
+  // pulsar — fractal tick rate scales with sim speed; ~ one phase per ~3 frames at 1x
+  fracAcc+=simScale*0.9;
+  while(fracAcc>=1){ pulsarStep(); fracAcc-=1; }
+  // bombard
+  if(bombard){bombTimer-=16*simScale;
+    if(bombTimer<=0){spawnAttack(Math.random()<0.4?campaign:undefined);bombTimer=110+Math.random()*150;}}
+  // attacks
+  for(const a of attacks){if(a.dead){continue;}
+    a.x+=a.vx*simScale;a.y+=a.vy*simScale;a.r=Math.hypot(a.x-CX,a.y-CY);
+    if(a.r<=R_SHELL_OUT) shellHit(a);}
+  attacks=attacks.filter(a=>!a.dead && a.r<R_SPAWN+60);
+  // particles
+  sprays.forEach(p=>{p.x+=p.vx*simScale;p.y+=p.vy*simScale;p.vx*=0.95;p.vy*=0.95;p.life-=0.03*simScale;});
+  sprays=sprays.filter(p=>p.life>0);
+  rings.forEach(r=>{r.r+=(r.max-r.r)*0.13*simScale;r.a-=0.045*simScale;});
+  rings=rings.filter(r=>r.a>0);
+  motes.forEach(m=>{m.r+=0.4*simScale;m.life-=0.02*simScale;});motes=motes.filter(m=>m.life>0);
+  sparks.forEach(s=>{s.x+=s.vx*simScale;s.y+=s.vy*simScale;s.life-=0.012*simScale;});
+  sparks=sparks.filter(s=>s.life>0 && Math.hypot(s.x-CX,s.y-CY)<R_SPAWN+40);
+  if(Math.random()<0.4){const fa=Math.random()*TAU,fr=R_CORE+Math.random()*20;
+    frost.push({x:CX+Math.cos(fa)*fr,y:CY+Math.sin(fa)*fr,vy:-0.2-Math.random()*0.3,life:1});}
+  frost.forEach(f=>{f.y+=f.vy;f.life-=0.013;});frost=frost.filter(f=>f.life>0);
+  coreFlash*=0.9; if(shake>0)shake*=0.84;
+}
+
+/* ===== render ===== */
+const cv=document.getElementById("cv"), ctx=cv.getContext("2d");
+let DPR=Math.min(window.devicePixelRatio||1,2), W=0,H=0, sc=1, ox=0, oy=0;
+function layout(){const r=cv.parentElement.getBoundingClientRect();W=r.width;H=r.height;
+  cv.width=W*DPR;cv.height=H*DPR; sc=Math.min(W/VW,H/VH); ox=(W-VW*sc)/2; oy=(H-VH*sc)/2;
+  ctx.setTransform(DPR*sc,0,0,DPR*sc,ox*DPR,oy*DPR); draw();}
+
+function drawShell(center){
+  const half=1.16;
+  const a0=center-half,a1=center+half;
+  ctx.beginPath();ctx.arc(CX,CY,R_SHELL_OUT,a0,a1);ctx.arc(CX,CY,R_SHELL,a1,a0,true);ctx.closePath();
+  const lg=ctx.createRadialGradient(CX,CY,R_SHELL,CX,CY,R_SHELL_OUT);
+  const dim=shell/100;
+  lg.addColorStop(0,"#0a1018");lg.addColorStop(0.5,"#121a26");lg.addColorStop(1,"#05080d");
+  ctx.fillStyle=lg;ctx.fill();
+  // gloss
+  ctx.save();ctx.clip();
+  const sweep=center-half*0.4+Math.sin(performance.now()*0.0009)*0.16;
+  const gx=CX+Math.cos(sweep)*R_SHELL_OUT,gy=CY+Math.sin(sweep)*R_SHELL_OUT;
+  const sg=ctx.createRadialGradient(gx,gy,2,gx,gy,66);
+  sg.addColorStop(0,"rgba(120,150,180,0.5)");sg.addColorStop(1,"rgba(120,150,180,0)");
+  ctx.fillStyle=sg;ctx.fillRect(CX-R_SHELL_OUT,CY-R_SHELL_OUT,R_SHELL_OUT*2,R_SHELL_OUT*2);
+  ctx.restore();
+  // rim — tinted by integrity (cyan healthy, reddish damaged)
+  ctx.beginPath();ctx.arc(CX,CY,R_SHELL,a0,a1);
+  const rimR=Math.round(52+(1-dim)*200), rimG=Math.round(224*dim+59*(1-dim));
+  ctx.strokeStyle=`rgba(${rimR},${rimG},255,${0.4+0.4*dim})`;ctx.lineWidth=2.2;
+  ctx.shadowColor=`rgba(${rimR},${rimG},255,0.8)`;ctx.shadowBlur=10;ctx.stroke();ctx.shadowBlur=0;
+}
+function draw(){
+  const sx=shake>0.3?(Math.random()-.5)*shake:0,sy=shake>0.3?(Math.random()-.5)*shake:0;
+  ctx.save();ctx.translate(sx,sy);
+  ctx.clearRect(-ox/sc-60,-oy/sc-60,VW+240,VH+240);
+  ctx.strokeStyle="rgba(52,224,255,0.05)";ctx.lineWidth=1;
+  ctx.beginPath();ctx.arc(CX,CY,R_SPAWN-30,0,TAU);ctx.stroke();
+
+  // ── pulsar trinity beam (rotating sector) ──
+  const ph=phaseOf(rotation), col=phaseColor(ph);
+  ctx.save();
+  const grd=ctx.createRadialGradient(CX,CY,R_CORE,CX,CY,R_SPAWN-30);
+  grd.addColorStop(0,col.replace(")",",0.0)").replace("#","rgba(")); // fallback below
+  ctx.restore();
+  // draw beam as gradient wedge
+  ctx.save();
+  ctx.beginPath();ctx.moveTo(CX,CY);
+  ctx.arc(CX,CY,R_SPAWN-30,beamAngle-0.42,beamAngle+0.42);ctx.closePath();
+  const bg=ctx.createRadialGradient(CX,CY,R_CORE,CX,CY,R_SPAWN-30);
+  const cr=parseInt(col.slice(1,3),16),cg=parseInt(col.slice(3,5),16),cb=parseInt(col.slice(5,7),16);
+  bg.addColorStop(0,`rgba(${cr},${cg},${cb},0.42)`);
+  bg.addColorStop(0.5,`rgba(${cr},${cg},${cb},0.12)`);
+  bg.addColorStop(1,`rgba(${cr},${cg},${cb},0)`);
+  ctx.fillStyle=bg;ctx.fill();
+  // opposite beam (pulsar is bipolar)
+  ctx.beginPath();ctx.moveTo(CX,CY);
+  ctx.arc(CX,CY,R_SPAWN-30,beamAngle+Math.PI-0.42,beamAngle+Math.PI+0.42);ctx.closePath();
+  ctx.fillStyle=bg;ctx.fill();
+  ctx.restore();
+
+  // inner HIDE walls
+  ctx.beginPath();ctx.arc(CX,CY,R_INNER,0,TAU);
+  ctx.strokeStyle="rgba(52,224,255,0.18)";ctx.lineWidth=1.2;ctx.stroke();
+  // life motes
+  motes.forEach(m=>{const x=CX+Math.cos(m.ang)*m.r,y=CY+Math.sin(m.ang)*m.r;
+    ctx.globalAlpha=m.life*0.8;ctx.fillStyle="#2effa6";ctx.shadowColor="#2effa6";ctx.shadowBlur=8;
+    ctx.beginPath();ctx.arc(x,y,2.4,0,TAU);ctx.fill();});ctx.shadowBlur=0;ctx.globalAlpha=1;
+
+  // obsidian hemispheres
+  drawShell(0); drawShell(Math.PI);
+
+  // ── pulsar core ! ──
+  const pulse=0.5+0.5*Math.sin(performance.now()*0.02);
+  const fg=ctx.createRadialGradient(CX,CY,R_CORE*0.4,CX,CY,R_CORE*2.6);
+  fg.addColorStop(0,`rgba(${cr},${cg},${cb},${0.5+coreFlash*0.4})`);
+  fg.addColorStop(0.5,`rgba(${cr},${cg},${cb},0.15)`);
+  fg.addColorStop(1,"rgba(0,0,0,0)");
+  ctx.fillStyle=fg;ctx.beginPath();ctx.arc(CX,CY,R_CORE*2.6,0,TAU);ctx.fill();
+  // spinning facet
+  ctx.save();ctx.translate(CX,CY);ctx.rotate(beamAngle);
+  const rr=R_CORE*(0.8+pulse*0.12+coreFlash*0.16);
+  ctx.beginPath();for(let i=0;i<6;i++){const an=i/6*TAU,px=Math.cos(an)*rr,py=Math.sin(an)*rr;i?ctx.lineTo(px,py):ctx.moveTo(px,py);}ctx.closePath();
+  const cg2=ctx.createRadialGradient(-rr*0.3,-rr*0.3,1,0,0,rr);
+  cg2.addColorStop(0,"#ffffff");cg2.addColorStop(0.45,col);cg2.addColorStop(1,"#0a3a4a");
+  ctx.fillStyle=cg2;ctx.shadowColor=col;ctx.shadowBlur=22+coreFlash*20;ctx.fill();ctx.shadowBlur=0;
+  ctx.restore();
+  ctx.fillStyle="#02141c";ctx.font="700 17px monospace";ctx.textAlign="center";ctx.textBaseline="middle";
+  ctx.fillText("!",CX,CY+1);
+
+  // frost
+  frost.forEach(f=>{ctx.globalAlpha=f.life*0.6;ctx.fillStyle="#cdfaff";
+    ctx.beginPath();ctx.arc(f.x,f.y,1.2,0,TAU);ctx.fill();});ctx.globalAlpha=1;
+  // attacks
+  for(const a of attacks){if(a.dead)continue;const sp=Math.hypot(a.vx,a.vy)||1;
+    ctx.strokeStyle="rgba(255,138,46,0.5)";ctx.lineWidth=2;
+    ctx.beginPath();ctx.moveTo(a.x,a.y);ctx.lineTo(a.x-a.vx/sp*15,a.y-a.vy/sp*15);ctx.stroke();
+    ctx.fillStyle="#ff8a2e";ctx.shadowColor="#ff8a2e";ctx.shadowBlur=8;
+    ctx.beginPath();ctx.arc(a.x,a.y,4.5,0,TAU);ctx.fill();ctx.shadowBlur=0;}
+  // spark seeds (1x0)
+  sparks.forEach(s=>{ctx.globalAlpha=Math.max(0,s.life);ctx.fillStyle="#ffce5e";
+    ctx.shadowColor="#ffce5e";ctx.shadowBlur=8;
+    ctx.beginPath();ctx.arc(s.x,s.y,3,0,TAU);ctx.fill();});ctx.shadowBlur=0;ctx.globalAlpha=1;
+  // sprays + rings
+  sprays.forEach(p=>{ctx.globalAlpha=Math.max(0,p.life);ctx.fillStyle=p.col;
+    ctx.shadowColor=p.col;ctx.shadowBlur=6;ctx.beginPath();ctx.arc(p.x,p.y,2.1,0,TAU);ctx.fill();});
+  ctx.shadowBlur=0;ctx.globalAlpha=1;
+  rings.forEach(r=>{ctx.strokeStyle=r.col+r.a+")";ctx.lineWidth=2;
+    ctx.beginPath();ctx.arc(r.x,r.y,r.r,0,TAU);ctx.stroke();});
+  ctx.restore();
+}
+
+/* ===== dial (rotation clock) ===== */
+const dial=document.getElementById("dial"),dctx=dial.getContext("2d");
+function drawDial(){
+  dctx.clearRect(0,0,76,76);const c=38,R=30;
+  const [a,b]=MODES[mode];
+  const arcs=[[0,a/100,"#2effa6"],[a/100,b/100,"#ff3b6e"],[b/100,1,"#ffce5e"]];
+  arcs.forEach(([s,e,col])=>{dctx.beginPath();
+    dctx.arc(c,c,R,-Math.PI/2+s*TAU,-Math.PI/2+e*TAU);
+    dctx.strokeStyle=col;dctx.lineWidth=6;dctx.stroke();});
+  // hand
+  const ha=-Math.PI/2+(rotation/100)*TAU;
+  dctx.strokeStyle="#dff4ff";dctx.lineWidth=2;dctx.beginPath();
+  dctx.moveTo(c,c);dctx.lineTo(c+Math.cos(ha)*R,c+Math.sin(ha)*R);dctx.stroke();
+  dctx.fillStyle="#dff4ff";dctx.beginPath();dctx.arc(c,c,3,0,TAU);dctx.fill();
+}
+
+/* ===== panels ===== */
+const $=id=>document.getElementById(id);
+function sync(){
+  const ph=phaseOf(rotation);
+  $("hs-rot").textContent=String(rotation).padStart(2,"0");
+  $("hs-rep").textContent=repaired;$("hs-kill").textContent=killed;$("hs-spark").textContent=sparked;
+  $("rot-frac").textContent="."+String(rotation).padStart(2,"0");
+  const [a,b]=MODES[mode];
+  $("f-life").textContent=a; $("f-death").textContent=b-a; $("f-spark").textContent=100-b;
+  ["t-life","t-death","t-spark"].forEach((id,i)=>$(id).classList.toggle("on",i===ph));
+  const pb=$("phasebadge");pb.textContent=phaseName(ph);pb.style.color=phaseColor(ph);
+  pb.style.textShadow="0 0 14px "+phaseColor(ph);
+  $("i-shell").textContent=Math.round(shell)+"%";
+  $("i-shell").style.color=shell<40?"var(--death)":"var(--cyan)";
+  $("i-life").textContent="0x"+hx(LIFE_SEED);
+  $("i-death").textContent="0x"+hx(DEATH_SEED);
+  $("i-spark").textContent="0x"+hx(SPARK_SEED);
+  $("i-seed").textContent="0x"+hx(seed);
+  $("i-in").textContent=attacks.filter(a=>!a.dead).length;
+  $("hint").textContent="shell integrity "+Math.round(shell)+"%";
+  const seal=$("seal");
+  if(shell<40){seal.textContent="SHELLS · STRESSED";seal.style.color="var(--death)";seal.style.borderColor="var(--death)";}
+  else{seal.textContent="COHERENT · 10⁻⁸";seal.style.color="var(--cyan)";seal.style.borderColor="var(--cyan)";}
+  drawDial();
+}
+const logEl=$("log");let logN=0;
+function log(tag,cls,msg){const d=document.createElement("div");
+  d.innerHTML=`<span class="d">${String(logN++).padStart(3,"0")}</span> <span class="${cls}">${tag}</span> <span class="d">${msg}</span>`;
+  logEl.prepend(d);while(logEl.childNodes.length>50)logEl.removeChild(logEl.lastChild);}
+
+/* ===== controls ===== */
+document.querySelectorAll(".mode").forEach(el=>{el.onclick=()=>{
+  mode=el.dataset.m;document.querySelectorAll(".mode").forEach(m=>m.classList.toggle("on",m===el));
+  log("MODE","s",mode.toUpperCase()+" · "+MODES[mode][0]+"/"+(MODES[mode][1]-MODES[mode][0])+"/"+(100-MODES[mode][1]));};});
+$("b-bomb").onclick=e=>{bombard=!bombard;e.target.textContent=bombard?"▮ cease fire":"▸ bombard ∞";
+  log("BOMBARD",bombard?"t":"d",bombard?"infinite incoming":"halted");};
+$("b-666").onclick=()=>{const base=Math.random()*TAU;
+  for(let i=0;i<6;i++)setTimeout(()=>spawnAttack(0x6363^(i*0x0249),base+i*0.32),i*70);
+  log("6×6×6","t","payload inbound — death beam will reap");};
+$("b-damage").onclick=()=>{shell=Math.max(0,shell-35);shake=8;
+  log("DAMAGE","d2","shells -35% · life beam will repair");};
+$("b-pause").onclick=e=>{paused=!paused;e.target.textContent=paused?"▶ resume":"▮▮ pause";};
+$("speed").oninput=e=>{simScale=+e.target.value/100;$("ss").textContent=simScale.toFixed(1)+"×";
+  $("hs-hz").textContent=(33.3*simScale).toFixed(1);
+  $("rd-period").textContent=(30/simScale).toFixed(1)+" ms";
+  $("rd-carrier").textContent=Math.round(3333*simScale)+" Hz";};
+$("stage").addEventListener("click",e=>{const r=cv.getBoundingClientRect();
+  const mx=(e.clientX-r.left-ox)/sc,my=(e.clientY-r.top-oy)/sc;
+  const ang=Math.atan2(my-CY,mx-CX);
+  spawnAttack((Math.random()*0x10000)|0,ang);log("FIRE","t","vector inbound");});
+window.addEventListener("resize",layout);
+
+/* ===== loop ===== */
+let lastT=performance.now(),acc=0;
+function frame(now){const dt=Math.min(now-lastT,50);lastT=now;
+  if(!paused){acc+=dt;while(acc>=16){step();acc-=16;}}
+  sync();draw();requestAnimationFrame(frame);}
+log("SPIN-UP","l","pulsar online · 33.33 Hz · .01 fractal · life/death/spark");
+layout();requestAnimationFrame(frame);
+</script>
+</body>
+</html>

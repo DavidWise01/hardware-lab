@@ -1,0 +1,655 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Laser Stack • Solfeggio Harmonics</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Space+Grotesk:wght@300;500;600&display=swap" rel="stylesheet">
+    <style>
+        * { -webkit-font-smoothing: antialiased; }
+        body { 
+            font-family: 'Space Grotesk', sans-serif;
+            background: #020208;
+            overflow-x: hidden;
+        }
+        .font-mono { font-family: 'JetBrains Mono', monospace; }
+        .glass {
+            background: linear-gradient(180deg, rgba(10,15,25,0.8), rgba(5,8,15,0.9));
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(34,211,238,0.15);
+        }
+        .neon-text { text-shadow: 0 0 20px currentColor; }
+        input[type="range"] {
+            -webkit-appearance: none;
+            background: transparent;
+            cursor: pointer;
+        }
+        input[type="range"]::-webkit-slider-runnable-track {
+            height: 4px;
+            background: linear-gradient(90deg, rgba(34,211,238,0.2), rgba(168,85,247,0.3));
+            border-radius: 2px;
+        }
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 16px;
+            height: 16px;
+            margin-top: -6px;
+            background: #22d3ee;
+            border-radius: 50%;
+            box-shadow: 0 0 15px rgba(34,211,238,0.8), inset 0 0 4px rgba(255,255,255,0.5);
+            transition: transform 0.2s;
+        }
+        input[type="range"]::-webkit-slider-thumb:hover { transform: scale(1.2); }
+        input[type="range"]::-moz-range-track {
+            height: 4px;
+            background: linear-gradient(90deg, rgba(34,211,238,0.2), rgba(168,85,247,0.3));
+            border-radius: 2px;
+            border: none;
+        }
+        input[type="range"]::-moz-range-thumb {
+            width: 16px;
+            height: 16px;
+            background: #22d3ee;
+            border-radius: 50%;
+            border: none;
+            box-shadow: 0 0 15px rgba(34,211,238,0.8);
+        }
+        .solfeggio-btn.active {
+            background: rgba(34,211,238,0.15) !important;
+            border-color: rgba(34,211,238,0.8) !important;
+            box-shadow: 0 0 25px rgba(34,211,238,0.3), inset 0 0 15px rgba(34,211,238,0.1);
+            color: #67e8f9 !important;
+        }
+        .solfeggio-btn.active::after {
+            content: '';
+            position: absolute;
+            inset: -1px;
+            border-radius: inherit;
+            padding: 1px;
+            background: linear-gradient(90deg, transparent, #22d3ee, transparent);
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            opacity: 0.5;
+        }
+        @keyframes pulse-glow {
+            0%, 100% { opacity: 0.8; }
+            50% { opacity: 1; }
+        }
+        .animate-pulse-glow { animation: pulse-glow 2s ease-in-out infinite; }
+    </style>
+</head>
+<body class="text-cyan-100 min-h-screen selection:bg-cyan-500/30">
+    <div class="fixed inset-0 -z-10">
+        <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_rgba(34,211,238,0.08),transparent_60%)]"></div>
+        <div class="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[800px] bg-purple-900/10 rounded-full blur-[150px]"></div>
+        <div class="absolute bottom-0 right-0 w-[600px] h-[600px] bg-cyan-900/10 rounded-full blur-[120px]"></div>
+    </div>
+
+    <div class="relative z-10 max-w-[1600px] mx-auto px-4 py-6 lg:py-8">
+        <header class="flex items-center justify-between mb-6 lg:mb-8">
+            <div class="flex items-center gap-4">
+                <div class="w-10 h-10 rounded-lg glass flex items-center justify-center">
+                    <div class="w-6 h-6 rounded-full border-2 border-cyan-400 animate-pulse-glow" style="box-shadow: 0 0 15px rgba(34,211,238,0.6);"></div>
+                </div>
+                <div>
+                    <h1 class="text-xl lg:text-2xl font-semibold tracking-wider">LASER STACK <span class="text-cyan-400/70">MK-IV</span></h1>
+                    <p class="text-[11px] font-mono text-cyan-400/60 tracking-[0.2em] uppercase">Dual Electron Confinement • Solfeggio Tuned</p>
+                </div>
+            </div>
+            <div class="hidden md:flex items-center gap-3 font-mono text-[11px]">
+                <div class="px-3 py-1.5 glass rounded-full">
+                    <span class="text-cyan-400/50">STACK</span> <span class="text-cyan-300 ml-2">16-SEG</span>
+                </div>
+                <div class="px-3 py-1.5 glass rounded-full">
+                    <span class="text-cyan-400/50">FIELDS</span> <span class="text-cyan-300 ml-2">64/96 e⁻</span>
+                </div>
+            </div>
+        </header>
+
+        <main class="grid grid-cols-1 xl:grid-cols-[320px_1fr_300px] gap-5 lg:gap-6">
+            <!-- LEFT PANEL -->
+            <div class="glass rounded-[24px] p-5 lg:p-6 h-fit">
+                <div class="flex items-center justify-between mb-5">
+                    <h2 class="text-sm font-semibold tracking-[0.15em] text-cyan-200">CONTROLS</h2>
+                    <div class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" style="box-shadow: 0 0 10px #10b981;"></div>
+                </div>
+
+                <div class="space-y-6">
+                    <div>
+                        <div class="flex justify-between mb-2">
+                            <label class="text-[11px] font-mono tracking-wider text-cyan-400/70">LASER POWER</label>
+                            <span id="laserVal" class="text-[11px] font-mono text-cyan-300">65%</span>
+                        </div>
+                        <input id="laserPower" type="range" min="0" max="100" value="65" class="w-full">
+                    </div>
+
+                    <div>
+                        <div class="flex justify-between mb-2">
+                            <label class="text-[11px] font-mono tracking-wider text-cyan-400/70">FIELD 1 STRENGTH</label>
+                            <span id="field1Val" class="text-[11px] font-mono text-cyan-300">60%</span>
+                        </div>
+                        <input id="field1" type="range" min="0" max="100" value="60" class="w-full">
+                        <p class="text-[10px] text-cyan-500/50 mt-1 font-mono">INNER • 64 ELECTRONS</p>
+                    </div>
+
+                    <div>
+                        <div class="flex justify-between mb-2">
+                            <label class="text-[11px] font-mono tracking-wider text-red-400/70">FIELD 2 STRENGTH</label>
+                            <span id="field2Val" class="text-[11px] font-mono text-red-300">55%</span>
+                        </div>
+                        <input id="field2" type="range" min="0" max="100" value="55" class="w-full">
+                        <p class="text-[10px] text-red-500/50 mt-1 font-mono">OUTER • 96 ELECTRONS</p>
+                    </div>
+                </div>
+
+                <div class="mt-8 pt-6 border-t border-cyan-500/10">
+                    <h3 class="text-[12px] font-semibold tracking-[0.2em] text-violet-300 mb-1 neon-text">SOLFEGGIO HARMONICS</h3>
+                    <p class="text-[10px] font-mono text-violet-400/50 mb-4">PLASMA FREQUENCY MAPPING</p>
+                    
+                    <div class="grid grid-cols-2 gap-2.5">
+                        <button data-freq="396" class="solfeggio-btn group relative px-3 py-3 glass rounded-xl text-left hover:border-cyan-400/50 transition-all duration-300">
+                            <div class="text-[15px] font-medium text-cyan-100 group-hover:text-white">396<span class="text-[11px] ml-1 opacity-70">Hz</span></div>
+                            <div class="text-[9px] font-mono text-cyan-500/60 mt-0.5">UT • 13.56MHz</div>
+                        </button>
+                        <button data-freq="417" class="solfeggio-btn group relative px-3 py-3 glass rounded-xl text-left hover:border-cyan-400/50 transition-all duration-300">
+                            <div class="text-[15px] font-medium text-cyan-100 group-hover:text-white">417<span class="text-[11px] ml-1 opacity-70">Hz</span></div>
+                            <div class="text-[9px] font-mono text-cyan-500/60 mt-0.5">RE • 27.12MHz</div>
+                        </button>
+                        <button data-freq="528" class="solfeggio-btn group relative px-3 py-3 glass rounded-xl text-left hover:border-cyan-400/50 transition-all duration-300">
+                            <div class="text-[15px] font-medium text-cyan-100 group-hover:text-white">528<span class="text-[11px] ml-1 opacity-70">Hz</span></div>
+                            <div class="text-[9px] font-mono text-cyan-500/60 mt-0.5">MI • 40.68MHz</div>
+                        </button>
+                        <button data-freq="639" class="solfeggio-btn group relative px-3 py-3 glass rounded-xl text-left hover:border-cyan-400/50 transition-all duration-300">
+                            <div class="text-[15px] font-medium text-cyan-100 group-hover:text-white">639<span class="text-[11px] ml-1 opacity-70">Hz</span></div>
+                            <div class="text-[9px] font-mono text-cyan-500/60 mt-0.5">FA • 54.24MHz</div>
+                        </button>
+                        <button data-freq="741" class="solfeggio-btn group relative px-3 py-3 glass rounded-xl text-left hover:border-cyan-400/50 transition-all duration-300">
+                            <div class="text-[15px] font-medium text-cyan-100 group-hover:text-white">741<span class="text-[11px] ml-1 opacity-70">Hz</span></div>
+                            <div class="text-[9px] font-mono text-cyan-500/60 mt-0.5">SOL • 67.80MHz</div>
+                        </button>
+                        <button data-freq="852" class="solfeggio-btn group relative px-3 py-3 glass rounded-xl text-left hover:border-cyan-400/50 transition-all duration-300">
+                            <div class="text-[15px] font-medium text-cyan-100 group-hover:text-white">852<span class="text-[11px] ml-1 opacity-70">Hz</span></div>
+                            <div class="text-[9px] font-mono text-cyan-500/60 mt-0.5">LA • 81.36MHz</div>
+                        </button>
+                    </div>
+
+                    <button id="harmonize" class="relative w-full mt-4 group overflow-hidden">
+                        <div class="absolute inset-0 bg-gradient-to-r from-violet-600 to-fuchsia-600 opacity-80 group-hover:opacity-100 transition-opacity rounded-xl blur-[1px]"></div>
+                        <div class="absolute inset-0 bg-gradient-to-r from-violet-600/20 to-fuchsia-600/20 group-hover:from-violet-600/30 group-hover:to-fuchsia-600/30 transition-all rounded-xl"></div>
+                        <div class="relative px-4 py-3.5 rounded-xl border border-violet-400/50 group-hover:border-violet-300/70 transition-all">
+                            <div class="flex items-center justify-center gap-2.5">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" class="text-violet-100">
+                                    <path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/>
+                                </svg>
+                                <span class="text-[13px] font-semibold tracking-[0.15em] text-white">HARMONIZE ALL</span>
+                            </div>
+                        </div>
+                    </button>
+                    <p class="text-[9px] text-center font-mono text-violet-400/40 mt-2 tracking-wider">PLAYS 6-TONE CHORD • VISUAL INTERFERENCE</p>
+                </div>
+            </div>
+
+            <!-- CENTER VISUALIZATION -->
+            <div class="glass rounded-[24px] p-4 lg:p-6 relative overflow-hidden">
+                <div id="harmonizeStatus" class="absolute top-5 left-1/2 -translate-x-1/2 z-20 px-5 py-2.5 glass rounded-full border-white/20 opacity-0 pointer-events-none transition-all duration-500">
+                    <div class="flex items-center gap-2.5">
+                        <div class="w-1.5 h-1.5 rounded-full bg-white animate-pulse"></div>
+                        <span class="text-[11px] font-mono tracking-[0.15em] text-white whitespace-nowrap">HARMONIZING: 396+417+528+639+741+852 Hz</span>
+                    </div>
+                </div>
+                
+                <div class="relative aspect-[4/3] xl:aspect-[16/12] w-full">
+                    <canvas id="viz" class="w-full h-full rounded-xl"></canvas>
+                    <div class="absolute bottom-3 left-3 right-3 flex justify-between items-end pointer-events-none">
+                        <div class="px-2.5 py-1.5 glass rounded-lg">
+                            <div class="text-[9px] font-mono text-cyan-400/60">PLASMA</div>
+                            <div id="plasmaReadout" class="text-[13px] font-mono text-cyan-200 -mt-0.5">13.56 MHz</div>
+                        </div>
+                        <div class="px-2.5 py-1.5 glass rounded-lg text-right">
+                            <div class="text-[9px] font-mono text-violet-400/60">MODE</div>
+                            <div id="modeReadout" class="text-[13px] font-mono text-violet-200 -mt-0.5">UT • 396 Hz</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- RIGHT PANEL -->
+            <div class="glass rounded-[24px] p-5 lg:p-6 h-fit">
+                <h3 class="text-sm font-semibold tracking-[0.15em] text-cyan-200 mb-5">FIELD TELEMETRY</h3>
+                
+                <div class="space-y-4">
+                    <div class="glass rounded-xl p-3.5 border-cyan-500/10">
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="text-[11px] font-mono text-cyan-400/70">INNER FIELD</span>
+                            <span class="text-[10px] px-2 py-0.5 rounded-full bg-cyan-500/15 text-cyan-300 border border-cyan-500/30">64 e⁻</span>
+                        </div>
+                        <div class="h-[36px] flex items-end gap-[2px]" id="field1-bars"></div>
+                        <div class="mt-2 flex justify-between text-[10px] font-mono">
+                            <span class="text-cyan-500/50">COHERENCE</span>
+                            <span id="coherence1" class="text-cyan-300">94.2%</span>
+                        </div>
+                    </div>
+
+                    <div class="glass rounded-xl p-3.5 border-red-500/10">
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="text-[11px] font-mono text-red-400/70">OUTER FIELD</span>
+                            <span class="text-[10px] px-2 py-0.5 rounded-full bg-red-500/15 text-red-300 border border-red-500/30">96 e⁻</span>
+                        </div>
+                        <div class="h-[36px] flex items-end gap-[2px]" id="field2-bars"></div>
+                        <div class="mt-2 flex justify-between text-[10px] font-mono">
+                            <span class="text-red-500/50">COHERENCE</span>
+                            <span id="coherence2" class="text-red-300">91.7%</span>
+                        </div>
+                    </div>
+
+                    <div class="glass rounded-xl p-3.5">
+                        <div class="text-[11px] font-mono text-violet-400/70 mb-2.5">STACK CORE</div>
+                        <div class="grid grid-cols-4 gap-1.5" id="stack-grid"></div>
+                        <div class="mt-3 pt-2.5 border-t border-white/5 flex justify-between text-[10px] font-mono">
+                            <span class="text-white/40">TEMP</span>
+                            <span class="text-violet-300">2,847 K</span>
+                        </div>
+                    </div>
+
+                    <div class="pt-4 border-t border-white/5">
+                        <div class="text-[10px] font-mono text-white/30 leading-relaxed">
+                            Solfeggio tones mapped to industrial plasma bands (13.56–81.36 MHz ISM). Each preset adjusts confinement fields for harmonic resonance.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <footer class="text-center mt-10 pb-4">
+            <p class="text-[11px] font-mono tracking-[0.2em] text-cyan-400/40 uppercase">Six tones, two fields, one stack — harmonized</p>
+        </footer>
+    </div>
+
+    <script>
+        // Audio System
+        let audioCtx = null;
+        let activeOscillators = [];
+        const solfeggioMap = {
+            396: { f1: 60, f2: 55, laser: 65, plasma: '13.56 MHz', name: 'UT' },
+            417: { f1: 65, f2: 60, laser: 70, plasma: '27.12 MHz', name: 'RE' },
+            528: { f1: 70, f2: 65, laser: 75, plasma: '40.68 MHz', name: 'MI' },
+            639: { f1: 75, f2: 70, laser: 80, plasma: '54.24 MHz', name: 'FA' },
+            741: { f1: 80, f2: 75, laser: 85, plasma: '67.80 MHz', name: 'SOL' },
+            852: { f1: 85, f2: 80, laser: 90, plasma: '81.36 MHz', name: 'LA' }
+        };
+
+        function ensureAudio() {
+            if (!audioCtx) {
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            }
+            if (audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
+            return audioCtx;
+        }
+
+        document.body.addEventListener('click', ensureAudio, { once: true });
+        document.body.addEventListener('touchstart', ensureAudio, { once: true });
+
+        function playTone(freq, duration = 2) {
+            const ctx = ensureAudio();
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+            const filter = ctx.createBiquadFilter();
+            
+            osc.type = 'sine';
+            osc.frequency.value = freq;
+            filter.type = 'lowpass';
+            filter.frequency.value = 2000;
+            filter.Q.value = 1;
+            
+            gain.gain.setValueAtTime(0, ctx.currentTime);
+            gain.gain.linearRampToValueAtTime(0.25, ctx.currentTime + 0.03);
+            gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + duration);
+            
+            osc.connect(filter).connect(gain).connect(ctx.destination);
+            osc.start();
+            osc.stop(ctx.currentTime + duration);
+        }
+
+        function playHarmony() {
+            const ctx = ensureAudio();
+            stopHarmony();
+            
+            const master = ctx.createGain();
+            master.gain.value = 0.85;
+            master.connect(ctx.destination);
+            
+            const freqs = [396, 417, 528, 639, 741, 852];
+            freqs.forEach((f, i) => {
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+                const pan = ctx.createStereoPanner();
+                
+                osc.type = 'sine';
+                osc.frequency.value = f;
+                pan.panning.value = (i - 2.5) * 0.3;
+                gain.gain.setValueAtTime(0, ctx.currentTime);
+                gain.gain.linearRampToValueAtTime(0.13, ctx.currentTime + 0.5);
+                gain.gain.linearRampToValueAtTime(0.13, ctx.currentTime + 5);
+                gain.gain.linearRampToValueAtTime(0, ctx.currentTime + 6);
+                
+                osc.connect(gain).connect(pan).connect(master);
+                osc.start();
+                osc.stop(ctx.currentTime + 6.2);
+                activeOscillators.push(osc);
+            });
+        }
+
+        function stopHarmony() {
+            activeOscillators.forEach(o => { try { o.stop(); } catch(e){} });
+            activeOscillators = [];
+        }
+
+        // Controls
+        const laserSlider = document.getElementById('laserPower');
+        const field1Slider = document.getElementById('field1');
+        const field2Slider = document.getElementById('field2');
+        const laserVal = document.getElementById('laserVal');
+        const field1Val = document.getElementById('field1Val');
+        const field2Val = document.getElementById('field2Val');
+        const plasmaReadout = document.getElementById('plasmaReadout');
+        const modeReadout = document.getElementById('modeReadout');
+        const harmonizeStatus = document.getElementById('harmonizeStatus');
+
+        let laserPower = 65, field1Strength = 60, field2Strength = 55;
+        let harmonizing = false, harmonizeStart = 0;
+
+        function updateSliders() {
+            laserVal.textContent = laserPower + '%';
+            field1Val.textContent = field1Strength + '%';
+            field2Val.textContent = field2Strength + '%';
+            document.getElementById('coherence1').textContent = (85 + field1Strength * 0.15).toFixed(1) + '%';
+            document.getElementById('coherence2').textContent = (82 + field2Strength * 0.15).toFixed(1) + '%';
+        }
+
+        laserSlider.addEventListener('input', e => { laserPower = +e.target.value; updateSliders(); });
+        field1Slider.addEventListener('input', e => { field1Strength = +e.target.value; updateSliders(); });
+        field2Slider.addEventListener('input', e => { field2Strength = +e.target.value; updateSliders(); });
+
+        // Solfeggio buttons
+        document.querySelectorAll('.solfeggio-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const freq = +btn.dataset.freq;
+                const cfg = solfeggioMap[freq];
+                
+                document.querySelectorAll('.solfeggio-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                
+                field1Strength = cfg.f1;
+                field2Strength = cfg.f2;
+                laserPower = cfg.laser;
+                
+                field1Slider.value = cfg.f1;
+                field2Slider.value = cfg.f2;
+                laserSlider.value = cfg.laser;
+                updateSliders();
+                
+                plasmaReadout.textContent = cfg.plasma;
+                modeReadout.textContent = `${cfg.name} • ${freq} Hz`;
+                
+                playTone(freq, 2);
+            });
+        });
+
+        document.getElementById('harmonize').addEventListener('click', () => {
+            playHarmony();
+            harmonizing = true;
+            harmonizeStart = performance.now();
+            harmonizeStatus.style.opacity = '1';
+            harmonizeStatus.style.transform = 'translate(-50%, 0)';
+            
+            // Visual pulse all buttons
+            document.querySelectorAll('.solfeggio-btn').forEach((b,i) => {
+                setTimeout(() => {
+                    b.classList.add('active');
+                    setTimeout(() => b.classList.remove('active'), 800);
+                }, i * 100);
+            });
+
+            setTimeout(() => {
+                harmonizing = false;
+                harmonizeStatus.style.opacity = '0';
+            }, 6000);
+        });
+
+        // Initialize telemetry bars
+        const f1bars = document.getElementById('field1-bars');
+        const f2bars = document.getElementById('field2-bars');
+        for(let i=0;i<32;i++){
+            const b=document.createElement('div');
+            b.className='flex-1 bg-cyan-400/80 rounded-[1px]';
+            b.style.height=Math.random()*100+'%';
+            b.style.boxShadow='0 0 6px rgba(34,211,238,0.5)';
+            f1bars.appendChild(b);
+        }
+        for(let i=0;i<40;i++){
+            const b=document.createElement('div');
+            b.className='flex-1 bg-red-400/80 rounded-[1px]';
+            b.style.height=Math.random()*100+'%';
+            b.style.boxShadow='0 0 6px rgba(248,113,113,0.5)';
+            f2bars.appendChild(b);
+        }
+        const stackGrid=document.getElementById('stack-grid');
+        for(let i=0;i<16;i++){
+            const c=document.createElement('div');
+            c.className='aspect-square rounded-[3px] bg-violet-500/30 border border-violet-400/20';
+            c.style.boxShadow='inset 0 0 8px rgba(139,92,246,0.3)';
+            stackGrid.appendChild(c);
+        }
+
+        // Visualization
+        const canvas = document.getElementById('viz');
+        const ctx = canvas.getContext('2d');
+        let dpr = Math.min(window.devicePixelRatio || 1, 2);
+        
+        function resize() {
+            const rect = canvas.getBoundingClientRect();
+            canvas.width = rect.width * dpr;
+            canvas.height = rect.height * dpr;
+            ctx.setTransform(1,0,0,1,0,0);
+            ctx.scale(dpr, dpr);
+        }
+        window.addEventListener('resize', resize);
+        resize();
+
+        // Electron fields
+        const field1Electrons = Array.from({length: 64}, (_,i) => ({
+            angle: (i/64) * Math.PI * 2 + Math.random()*0.2,
+            speed: 0.008 + Math.random()*0.004,
+            radiusJitter: Math.random()*6,
+            size: 1.5 + Math.random()*1.2
+        }));
+        const field2Electrons = Array.from({length: 96}, (_,i) => ({
+            angle: (i/96) * Math.PI * 2 + Math.random()*0.2,
+            speed: 0.005 + Math.random()*0.003,
+            radiusJitter: Math.random()*8,
+            size: 1.2 + Math.random()*1
+        }));
+
+        function animate(t) {
+            const rect = canvas.getBoundingClientRect();
+            const w = rect.width, h = rect.height;
+            const cx = w/2, cy = h/2 + 10;
+            const time = t * 0.001;
+            
+            ctx.clearRect(0,0,w,h);
+            
+            // Background glow
+            const bgGrad = ctx.createRadialGradient(cx, cy, 0, cx, cy, Math.min(w,h)*0.5);
+            bgGrad.addColorStop(0, 'rgba(34,211,238,0.03)');
+            bgGrad.addColorStop(0.5, 'rgba(139,92,246,0.02)');
+            bgGrad.addColorStop(1, 'rgba(0,0,0,0)');
+            ctx.fillStyle = bgGrad;
+            ctx.fillRect(0,0,w,h);
+
+            const pulse = harmonizing ? 1 + Math.sin(time*8)*0.12 : 1;
+            const baseR1 = Math.min(w,h)*0.22;
+            const baseR2 = Math.min(w,h)*0.35;
+            const r1 = baseR1 * pulse;
+            const r2 = baseR2 * pulse;
+
+            // Outer field ring
+            ctx.beginPath();
+            ctx.arc(cx, cy, r2, 0, Math.PI*2);
+            ctx.strokeStyle = `rgba(248,113,113,${0.15 + field2Strength/500})`;
+            ctx.lineWidth = 2;
+            ctx.shadowBlur = 20;
+            ctx.shadowColor = 'rgba(248,113,113,0.5)';
+            ctx.stroke();
+            ctx.shadowBlur = 0;
+
+            // Inner field ring
+            ctx.beginPath();
+            ctx.arc(cx, cy, r1, 0, Math.PI*2);
+            ctx.strokeStyle = `rgba(34,211,238,${0.2 + field1Strength/400})`;
+            ctx.lineWidth = 2;
+            ctx.shadowBlur = 20;
+            ctx.shadowColor = 'rgba(34,211,238,0.6)';
+            ctx.stroke();
+            ctx.shadowBlur = 0;
+
+            // Field 2 electrons (96, red)
+            field2Electrons.forEach(e => {
+                e.angle += e.speed * (0.5 + field2Strength/80);
+                const r = r2 + Math.sin(time*2 + e.angle*3)*e.radiusJitter*0.3;
+                const x = cx + Math.cos(e.angle + time*0.3) * r;
+                const y = cy + Math.sin(e.angle + time*0.3) * r;
+                
+                ctx.beginPath();
+                ctx.arc(x, y, e.size, 0, Math.PI*2);
+                const alpha = 0.6 + Math.sin(time*3 + e.angle*5)*0.3;
+                ctx.fillStyle = `rgba(251,113,133,${alpha})`;
+                ctx.shadowBlur = 12;
+                ctx.shadowColor = 'rgba(251,113,133,0.9)';
+                ctx.fill();
+            });
+            ctx.shadowBlur = 0;
+
+            // Field 1 electrons (64, cyan)
+            field1Electrons.forEach(e => {
+                e.angle += e.speed * (0.7 + field1Strength/70);
+                const r = r1 + Math.sin(time*2.5 + e.angle*4)*e.radiusJitter*0.25;
+                const x = cx + Math.cos(-e.angle + time*0.5) * r;
+                const y = cy + Math.sin(-e.angle + time*0.5) * r;
+                
+                ctx.beginPath();
+                ctx.arc(x, y, e.size*1.1, 0, Math.PI*2);
+                const alpha = 0.7 + Math.sin(time*4 + e.angle*6)*0.3;
+                ctx.fillStyle = `rgba(103,232,249,${alpha})`;
+                ctx.shadowBlur = 14;
+                ctx.shadowColor = 'rgba(34,211,238,1)';
+                ctx.fill();
+            });
+            ctx.shadowBlur = 0;
+
+            // Central 16-segment laser stack
+            const stackHeight = 160;
+            const segH = stackHeight / 16;
+            for(let i=0;i<16;i++){
+                const y = cy - stackHeight/2 + i*segH + segH/2;
+                const width = 22 + i*1.8 + Math.sin(time*2 + i*0.5)*2;
+                const intensity = laserPower/100;
+                const hue = harmonizing && Math.sin(time*20 + i)>0 ? 0 : 190 + i*4;
+                const sat = harmonizing ? 0 : 85;
+                const light = 55 + intensity*25 + (harmonizing?20:0);
+                
+                // Glow
+                ctx.beginPath();
+                ctx.rect(cx - width/2 - 4, y - segH/2 + 1, width + 8, segH - 2);
+                ctx.fillStyle = `hsla(${hue}, ${sat}%, ${light}%, ${0.15 + intensity*0.2})`;
+                ctx.shadowBlur = 25 + intensity*15;
+                ctx.shadowColor = `hsl(${hue}, ${sat}%, ${light}%)`;
+                ctx.fill();
+                ctx.shadowBlur = 0;
+                
+                // Core segment
+                const grad = ctx.createLinearGradient(cx-width/2, y, cx+width/2, y);
+                grad.addColorStop(0, `hsla(${hue}, ${sat}%, ${light-10}%, 0.9)`);
+                grad.addColorStop(0.5, `hsla(${hue}, ${sat}%, ${light+10}%, 1)`);
+                grad.addColorStop(1, `hsla(${hue}, ${sat}%, ${light-10}%, 0.9)`);
+                ctx.fillStyle = grad;
+                ctx.fillRect(cx - width/2, y - segH/2 + 2, width, segH - 4);
+                
+                // Center line
+                ctx.fillStyle = `rgba(255,255,255,${0.3 + intensity*0.4})`;
+                ctx.fillRect(cx - width/2, y-0.5, width, 1);
+            }
+
+            // Core
+            const coreGrad = ctx.createRadialGradient(cx, cy, 0, cx, cy, 28);
+            coreGrad.addColorStop(0, `rgba(255,255,255,${0.9 + laserPower/200})`);
+            coreGrad.addColorStop(0.3, `rgba(167,243,252,${0.6})`);
+            coreGrad.addColorStop(1, 'rgba(34,211,238,0)');
+            ctx.fillStyle = coreGrad;
+            ctx.beginPath();
+            ctx.arc(cx, cy, 28 + laserPower*0.15, 0, Math.PI*2);
+            ctx.fill();
+
+            // Harmonize interference pattern
+            if (harmonizing) {
+                ctx.save();
+                ctx.translate(cx, cy);
+                ctx.globalAlpha = 0.9;
+                
+                // 6-wave sum
+                for(let layer=0; layer<3; layer++){
+                    ctx.beginPath();
+                    for(let x=-140; x<=140; x+=2){
+                        let y = 0;
+                        const freqs=[396,417,528,639,741,852];
+                        freqs.forEach((f,idx)=>{
+                            const amp = (7-idx) * (1.2 - layer*0.3);
+                            y += Math.sin((x*0.018 + time*3) * (f/400) + idx) * amp;
+                        });
+                        y *= 0.8;
+                        if(x===-140) ctx.moveTo(x, y);
+                        else ctx.lineTo(x, y);
+                    }
+                    ctx.strokeStyle = layer===0 ? 'rgba(255,255,255,0.95)' : layer===1 ? 'rgba(192,132,252,0.7)' : 'rgba(103,232,249,0.5)';
+                    ctx.lineWidth = 3 - layer;
+                    ctx.shadowBlur = 20 - layer*5;
+                    ctx.shadowColor = '#fff';
+                    ctx.stroke();
+                }
+                ctx.restore();
+                ctx.shadowBlur = 0;
+                ctx.globalAlpha = 1;
+            }
+
+            // Update telemetry bars
+            if (Math.floor(time*10) % 3 === 0) {
+                [...f1bars.children].forEach(b => {
+                    b.style.height = (20 + Math.random()*80 * field1Strength/100) + '%';
+                });
+                [...f2bars.children].forEach(b => {
+                    b.style.height = (15 + Math.random()*85 * field2Strength/100) + '%';
+                });
+                [...stackGrid.children].forEach((c,i) => {
+                    const active = Math.random() < laserPower/120;
+                    c.style.background = active ? 'rgba(167,139,250,0.5)' : 'rgba(139,92,246,0.15)';
+                    c.style.boxShadow = active ? '0 0 10px rgba(167,139,250,0.6), inset 0 0 8px rgba(139,92,246,0.4)' : 'inset 0 0 8px rgba(139,92,246,0.2)';
+                });
+            }
+
+            requestAnimationFrame(animate);
+        }
+        requestAnimationFrame(animate);
+        updateSliders();
+
+        // Auto-select 396Hz on load for demo
+        setTimeout(() => {
+            document.querySelector('[data-freq="396"]').click();
+        }, 300);
+    </script>
+</body>
+</html>

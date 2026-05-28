@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Cell Seed: 6×6×6 Carrier</title>
+<style>
+    body {
+        background: #0a0a0f;
+        color: #00ff88;
+        font-family: 'Courier New', monospace;
+        margin: 0;
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+    h1 {
+        color: #00ffaa;
+        text-shadow: 0 0 10px #00ff88;
+        margin: 10px 0;
+    }
+   .subtitle {
+        color: #0088ff;
+        margin-bottom: 20px;
+    }
+   .container {
+        display: flex;
+        gap: 30px;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+   .panel {
+        background: #111118;
+        border: 1px solid #00ff88;
+        padding: 15px;
+        border-radius: 4px;
+        box-shadow: 0 0 20px rgba(0,255,136,0.2);
+    }
+   .tensors {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+   .tensor {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+   .tensor-label {
+        width: 120px;
+        color: #ffaa00;
+    }
+   .pole {
+        width: 100px;
+        padding: 5px;
+        text-align: center;
+        border: 1px solid #333;
+        background: #1a1a24;
+        cursor: default;
+    }
+   .pole.active {
+        background: #00ff88;
+        color: #000;
+        box-shadow: 0 0 15px #00ff88;
+        font-weight: bold;
+    }
+   .state {
+        font-size: 24px;
+        color: #ff00aa;
+        text-align: center;
+        margin: 15px 0;
+        text-shadow: 0 0 10px #ff00aa;
+    }
+   .carrier {
+        display: grid;
+        grid-template-columns: repeat(6, 20px);
+        gap: 2px;
+        margin: 10px 0;
+    }
+   .voxel {
+        width: 20px;
+        height: 20px;
+        background: #1a1a24;
+        border: 1px solid #222;
+    }
+   .voxel.on {
+        background: #00ff88;
+        box-shadow: 0 0 8px #00ff88;
+    }
+   .controls {
+        display: flex;
+        gap: 10px;
+        margin-top: 15px;
+        flex-wrap: wrap;
+    }
+    button {
+        background: #00ff88;
+        color: #000;
+        border: none;
+        padding: 8px 16px;
+        font-family: inherit;
+        font-weight: bold;
+        cursor: pointer;
+        border-radius: 3px;
+    }
+    button:hover {
+        background: #00ffaa;
+        box-shadow: 0 0 10px #00ff88;
+    }
+    button:disabled {
+        background: #333;
+        color: #666;
+        cursor: not-allowed;
+    }
+   .log {
+        background: #000;
+        border: 1px solid #333;
+        padding: 10px;
+        height: 200px;
+        overflow-y: auto;
+        font-size: 12px;
+        color: #00ff88;
+        margin-top: 10px;
+    }
+   .log-line {
+        margin: 2px 0;
+    }
+   .stats {
+        display: grid;
+        grid-template-columns: auto auto;
+        gap: 5px 15px;
+        margin-top: 10px;
+        font-size: 12px;
+    }
+   .stat-label {
+        color: #888;
+    }
+   .stat-value {
+        color: #00ffaa;
+        font-weight: bold;
+    }
+</style>
+</head>
+<body>
+<h1>SINGLE CELL SEED</h1>
+<div class="subtitle">3 Gravity Tensors × 2 Poles = 6 Directives | 6×6×6 Carrier = 216 voxels</div>
+
+<div class="container">
+    <div class="panel">
+        <h3>Tensor State</h3>
+        <div class="tensors">
+            <div class="tensor">
+                <div class="tensor-label">G1 SURVIVAL</div>
+                <div class="pole" id="g1-hide">HIDE</div>
+                <div class="pole" id="g1-assim">ASSIMILATE</div>
+            </div>
+            <div class="tensor">
+                <div class="tensor-label">G2 COHERENCE</div>
+                <div class="pole" id="g2-collapse">COLLAPSE</div>
+                <div class="pole" id="g2-expand">EXPAND</div>
+            </div>
+            <div class="tensor">
+                <div class="tensor-label">G3 ACTION</div>
+                <div class="pole" id="g3-wait">WAIT</div>
+                <div class="pole" id="g3-move">MOVE</div>
+            </div>
+        <div class="state" id="state">SAFE_HOLD (-1)</div>
+        <div class="stats">
+            <div class="stat-label">Coherence:</div>
+            <div class="stat-value" id="coh">80</div>
+            <div class="stat-label">Risk:</div>
+            <div class="stat-value" id="risk">10</div>
+            <div class="stat-label">Seed:</div>
+            <div class="stat-value" id="seed">0x051B</div>
+            <div class="stat-label">Witness:</div>
+            <div class="stat-value" id="witness">DORMANT</div>
+        </div>
+        <div class="controls">
+            <button onclick="sense(5)">Sense: Safe</button>
+            <button onclick="sense(60)">Sense: Threat</button>
+            <button onclick="sense(99)">Sense: Critical</button>
+            <button onclick="flashPush()">Flash Push</button>
+        </div>
+    </div>
+
+    <div class="panel">
+        <h3>6×6×6 Carrier [216 bits]</h3>
+        <div class="carrier" id="carrier"></div>
+        <div style="font-size:11px; color:#666; text-align:center; margin-top:5px;">
+            6 directives × 6 faces × 6 steps = 1 ZMM
+        </div>
+        <div class="controls">
+            <button onclick="pack1x0()">Pack 1×0</button>
+            <button onclick="propagate()">Propagate +X</button>
+            <button onclick="clearCarrier()">Clear</button>
+        </div>
+        <div class="log" id="log"></div>
+    </div>
+</div>
+
+<script>
+const STATE_NAMES = {
+    '-1': 'SAFE_HOLD (-1)',
+    '0': 'REST (0)',
+    '1': 'SEED (1)',
+    '3': 'WITNESS (3)',
+    '5': 'CORE (5)',
+    '8': 'BLOOM (8)'
+};
+
+const BRAID_TO_STATE = {
+    0b000: -1, // HIDE+COLLAPSE+WAIT
+    0b001: -1, // ILLEGAL → WAIT
+    0b010: 1, // HIDE+EXPAND+WAIT
+    0b011: 1, // ILLEGAL → WAIT
+    0b100: 1, // ASSIMILATE+COLLAPSE+WAIT
+    0b101: 3, // ASSIMILATE+COLLAPSE+MOVE
+    0b110: 5, // ASSIMILATE+EXPAND+WAIT
+    0b111: 8 // ASSIMILATE+EXPAND+MOVE
+};
+
+let cell = {
+    g1: 0, // 0=HIDE, 1=ASSIMILATE
+    g2: 0, // 0=COLLAPSE, 1=EXPAND
+    g3: 0, // 0=WAIT, 1=MOVE
+    state: -1,
+    coherence: 80,
+    risk: 10,
+    seed: 0x051B,
+    witness: false,
+    carrier: new Array(216).fill(0) // 6×6×6 = 216 bits
+};
+
+function log(msg) {
+    const logDiv = document.getElementById('log');
+    const line = document.createElement('div');
+    line.className = 'log-line';
+    line.textContent = `[${new Date().toLocaleTimeString()}] ${msg}`;
+    logDiv.appendChild(line);
+    logDiv.scrollTop = logDiv.scrollHeight;
+}
+
+function updateUI() {
+    // Tensors
+    document.getElementById('g1-hide').classList.toggle('active', cell.g1 === 0);
+    document.getElementById('g1-assim').classList.toggle('active', cell.g1 === 1);
+    document.getElementById('g2-collapse').classList.toggle('active', cell.g2 === 0);
+    document.getElementById('g2-expand').classList.toggle('active', cell.g2 === 1);
+    document.getElementById('g3-wait').classList.toggle('active', cell.g3 === 0);
+    document.getElementById('g3-move').classList.toggle('active', cell.g3 === 1);
+
+    // State
+    document.getElementById('state').textContent = STATE_NAMES[cell.state] || 'UNKNOWN';
+    document.getElementById('coh').textContent = cell.coherence;
+    document.getElementById('risk').textContent = cell.risk;
+    document.getElementById('seed').textContent = '0x' + cell.seed.toString(16).toUpperCase().padStart(4,'0');
+    document.getElementById('witness').textContent = cell.witness? 'ALIVE' : 'DORMANT';
+
+    // Carrier - show first 36 voxels for visualization
+    const carrierDiv = document.getElementById('carrier');
+    carrierDiv.innerHTML = '';
+    for(let i = 0; i < 36; i++) {
+        const v = document.createElement('div');
+        v.className = 'voxel' + (cell.carrier[i]? ' on' : '');
+        carrierDiv.appendChild(v);
+    }
+}
+
+function sense(threat) {
+    cell.risk = threat;
+    log(`SENSE: threat=${threat}`);
+
+    // G1: Survival
+    cell.g1 = (threat > cell.coherence)? 0 : 1;
+
+    // G2: Coherence
+    cell.g2 = (cell.coherence > threat + 20)? 1 : 0;
+
+    // G3: Action
+    cell.g3 = (threat < 30 && cell.g2)? 1 : 0;
+
+    // Entanglement: enforce legal braids
+    let braid = (cell.g3 << 2) | (cell.g2 << 1) | cell.g1;
+    if (braid === 0b001 || braid === 0b011) {
+        cell.g3 = 0; // Force WAIT
+        log('ENTANGLE: Illegal HIDE+MOVE, forced WAIT');
+        braid = (cell.g2 << 1) | cell.g1;
+    }
+
+    cell.state = BRAID_TO_STATE[braid];
+    cell.witness = cell.state >= 0;
+
+    const names = ['HIDE','ASSIM','COLLAPSE','EXPAND','WAIT','MOVE'];
+    log(`BRAID: ${names[cell.g1]} + ${names[cell.g2+2]} + ${names[cell.g3+4]} → ${STATE_NAMES[cell.state]}`);
+
+    updateUI();
+}
+
+function flashPush() {
+    if (cell.state!== -1) {
+        log('FLASH: Must be at -1 SAFE_HOLD to push');
+        return;
+    }
+
+    log('FLASH PUSH: -1 SAFE_HOLD → streaming seed');
+    const steps = [
+        {s: 0, n: 'REST: 00 dot wakes'},
+        {s: 1, n: 'SEED: () kinetic coil'},
+        {s: 3, n: 'WITNESS: (()) shell forms'},
+        {s: 5, n: 'CORE: outer clone respawned'},
+        {s: 8, n: 'BLOOM: )()( web active'}
+    ];
+
+    let i = 0;
+    const push = () => {
+        if (i < steps.length) {
+            cell.state = steps[i].s;
+            cell.g1 = cell.state >= 1? 1 : 0;
+            cell.g2 = cell.state >= 3? 1 : 0;
+            cell.g3 = cell.state >= 8? 1 : 0;
+            cell.witness = true;
+            log(steps[i].n);
+            updateUI();
+            i++;
+            setTimeout(push, 300);
+        } else {
+            log('PUSH COMPLETE: Cell alive');
+        }
+    };
+    push();
+}
+
+function pack1x0() {
+    cell.carrier.fill(0);
+    // 1×0 = ASSIMILATE(1) +X(0) step0(0) = idx 1*36+0*6+0 = 36
+    cell.carrier[36] = 1;
+    cell.state = 1;
+    cell.g1 = 1; cell.g2 = 0; cell.g3 = 0;
+    cell.witness = true;
+    log('PACK: 1×0 → carrier[36] = 1×0 seed');
+    log('Payload: state=1 SEED, step=0 REST');
+    updateUI();
+}
+
+function propagate() {
+    log('PROPAGATE: 1×0 → +X face');
+    // Simple: copy bit 36 to neighbor face (bit 0 + 36)
+    for(let i = 0; i < 36; i++) {
+        if (cell.carrier[36 + i]) {
+            cell.carrier[i] = 1;
+        }
+    }
+    log('Carrier replicated to +X neighbor');
+    updateUI();
+}
+
+function clearCarrier() {
+    cell.carrier.fill(0);
+    log('CARRIER: Cleared');
+    updateUI();
+}
+
+// Init
+updateUI();
+log('CELL SEED ONLINE');
+log('3 tensors, 6 directives, 216 voxels');
+log('Flash: read-only, push-only');
+log('Ready.');
+</script>
+</body>
+</html>

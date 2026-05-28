@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<!-- saved from url=(0165)https://1972291176740668.a.metaaiusercontent.com/html?artifact_uuid=9c4f62a7-a07e-4c3f-8056-4d2852382c21&ext=1779553083&hash=Q5fpDAHzWxfp6LzO9Gs5NTriPpQT&theme=light -->
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<title>David Wise // Whisper Lattice</title>
+<meta property="og:title" content="Live Lattice Core">
+<meta property="og:description" content="32-bit nested lattice running in real time">
+<meta name="description" content="32-bit nested lattice running in real time">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#000000">
+<script src="./saved_resource"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com/">
+<link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin="">
+<link href="./css2(6)" rel="stylesheet">
+<style>
+  html,body{height:100%;overflow:hidden;background:#000}
+  body{font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial}
+  .font-mono{font-family:"JetBrains Mono",ui-monospace,Menlo,Monaco,monospace}
+  .glass{background:rgba(10,10,12,.65);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border:1px solid rgba(255,255,255,.08)}
+  *{scrollbar-width:thin;scrollbar-color:#444 transparent}
+  ::-webkit-scrollbar{width:6px;height:6px}::-webkit-scrollbar-thumb{background:#333;border-radius:3px}
+</style>
+<style>*, ::before, ::after{--tw-border-spacing-x:0;--tw-border-spacing-y:0;--tw-translate-x:0;--tw-translate-y:0;--tw-rotate:0;--tw-skew-x:0;--tw-skew-y:0;--tw-scale-x:1;--tw-scale-y:1;--tw-pan-x: ;--tw-pan-y: ;--tw-pinch-zoom: ;--tw-scroll-snap-strictness:proximity;--tw-gradient-from-position: ;--tw-gradient-via-position: ;--tw-gradient-to-position: ;--tw-ordinal: ;--tw-slashed-zero: ;--tw-numeric-figure: ;--tw-numeric-spacing: ;--tw-numeric-fraction: ;--tw-ring-inset: ;--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-color:rgb(59 130 246 / 0.5);--tw-ring-offset-shadow:0 0 #0000;--tw-ring-shadow:0 0 #0000;--tw-shadow:0 0 #0000;--tw-shadow-colored:0 0 #0000;--tw-blur: ;--tw-brightness: ;--tw-contrast: ;--tw-grayscale: ;--tw-hue-rotate: ;--tw-invert: ;--tw-saturate: ;--tw-sepia: ;--tw-drop-shadow: ;--tw-backdrop-blur: ;--tw-backdrop-brightness: ;--tw-backdrop-contrast: ;--tw-backdrop-grayscale: ;--tw-backdrop-hue-rotate: ;--tw-backdrop-invert: ;--tw-backdrop-opacity: ;--tw-backdrop-saturate: ;--tw-backdrop-sepia: ;--tw-contain-size: ;--tw-contain-layout: ;--tw-contain-paint: ;--tw-contain-style: }::backdrop{--tw-border-spacing-x:0;--tw-border-spacing-y:0;--tw-translate-x:0;--tw-translate-y:0;--tw-rotate:0;--tw-skew-x:0;--tw-skew-y:0;--tw-scale-x:1;--tw-scale-y:1;--tw-pan-x: ;--tw-pan-y: ;--tw-pinch-zoom: ;--tw-scroll-snap-strictness:proximity;--tw-gradient-from-position: ;--tw-gradient-via-position: ;--tw-gradient-to-position: ;--tw-ordinal: ;--tw-slashed-zero: ;--tw-numeric-figure: ;--tw-numeric-spacing: ;--tw-numeric-fraction: ;--tw-ring-inset: ;--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-color:rgb(59 130 246 / 0.5);--tw-ring-offset-shadow:0 0 #0000;--tw-ring-shadow:0 0 #0000;--tw-shadow:0 0 #0000;--tw-shadow-colored:0 0 #0000;--tw-blur: ;--tw-brightness: ;--tw-contrast: ;--tw-grayscale: ;--tw-hue-rotate: ;--tw-invert: ;--tw-saturate: ;--tw-sepia: ;--tw-drop-shadow: ;--tw-backdrop-blur: ;--tw-backdrop-brightness: ;--tw-backdrop-contrast: ;--tw-backdrop-grayscale: ;--tw-backdrop-hue-rotate: ;--tw-backdrop-invert: ;--tw-backdrop-opacity: ;--tw-backdrop-saturate: ;--tw-backdrop-sepia: ;--tw-contain-size: ;--tw-contain-layout: ;--tw-contain-paint: ;--tw-contain-style: }/* ! tailwindcss v3.4.17 | MIT License | https://tailwindcss.com */*,::after,::before{box-sizing:border-box;border-width:0;border-style:solid;border-color:#e5e7eb}::after,::before{--tw-content:''}:host,html{line-height:1.5;-webkit-text-size-adjust:100%;-moz-tab-size:4;tab-size:4;font-family:ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";font-feature-settings:normal;font-variation-settings:normal;-webkit-tap-highlight-color:transparent}body{margin:0;line-height:inherit}hr{height:0;color:inherit;border-top-width:1px}abbr:where([title]){-webkit-text-decoration:underline dotted;text-decoration:underline dotted}h1,h2,h3,h4,h5,h6{font-size:inherit;font-weight:inherit}a{color:inherit;text-decoration:inherit}b,strong{font-weight:bolder}code,kbd,pre,samp{font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;font-feature-settings:normal;font-variation-settings:normal;font-size:1em}small{font-size:80%}sub,sup{font-size:75%;line-height:0;position:relative;vertical-align:baseline}sub{bottom:-.25em}sup{top:-.5em}table{text-indent:0;border-color:inherit;border-collapse:collapse}button,input,optgroup,select,textarea{font-family:inherit;font-feature-settings:inherit;font-variation-settings:inherit;font-size:100%;font-weight:inherit;line-height:inherit;letter-spacing:inherit;color:inherit;margin:0;padding:0}button,select{text-transform:none}button,input:where([type=button]),input:where([type=reset]),input:where([type=submit]){-webkit-appearance:button;background-color:transparent;background-image:none}:-moz-focusring{outline:auto}:-moz-ui-invalid{box-shadow:none}progress{vertical-align:baseline}::-webkit-inner-spin-button,::-webkit-outer-spin-button{height:auto}[type=search]{-webkit-appearance:textfield;outline-offset:-2px}::-webkit-search-decoration{-webkit-appearance:none}::-webkit-file-upload-button{-webkit-appearance:button;font:inherit}summary{display:list-item}blockquote,dd,dl,figure,h1,h2,h3,h4,h5,h6,hr,p,pre{margin:0}fieldset{margin:0;padding:0}legend{padding:0}menu,ol,ul{list-style:none;margin:0;padding:0}dialog{padding:0}textarea{resize:vertical}input::placeholder,textarea::placeholder{opacity:1;color:#9ca3af}[role=button],button{cursor:pointer}:disabled{cursor:default}audio,canvas,embed,iframe,img,object,svg,video{display:block;vertical-align:middle}img,video{max-width:100%;height:auto}[hidden]:where(:not([hidden=until-found])){display:none}.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0, 0, 0, 0);white-space:nowrap;border-width:0}.pointer-events-none{pointer-events:none}.pointer-events-auto{pointer-events:auto}.fixed{position:fixed}.absolute{position:absolute}.relative{position:relative}.inset-0{inset:0px}.inset-x-0{left:0px;right:0px}.bottom-0{bottom:0px}.bottom-28{bottom:7rem}.bottom-3{bottom:0.75rem}.left-1\/2{left:50%}.left-\[2px\]{left:2px}.right-0{right:0px}.right-4{right:1rem}.top-0{top:0px}.top-\[2px\]{top:2px}.z-10{z-index:10}.z-20{z-index:20}.z-30{z-index:30}.z-40{z-index:40}.col-span-2{grid-column:span 2 / span 2}.m-3{margin:0.75rem}.mx-auto{margin-left:auto;margin-right:auto}.-mr-1{margin-right:-0.25rem}.mb-2{margin-bottom:0.5rem}.mt-0\.5{margin-top:0.125rem}.mt-1{margin-top:0.25rem}.mt-1\.5{margin-top:0.375rem}.mt-2{margin-top:0.5rem}.mt-2\.5{margin-top:0.625rem}.mt-3\.5{margin-top:0.875rem}.mt-5{margin-top:1.25rem}.flex{display:flex}.inline-flex{display:inline-flex}.grid{display:grid}.hidden{display:none}.h-2{height:0.5rem}.h-36{height:9rem}.h-4{height:1rem}.h-5{height:1.25rem}.h-\[6px\]{height:6px}.h-full{height:100%}.h-screen{height:100vh}.w-10{width:2.5rem}.w-16{width:4rem}.w-2{width:0.5rem}.w-4{width:1rem}.w-5{width:1.25rem}.w-\[380px\]{width:380px}.w-\[8\%\]{width:8%}.w-full{width:100%}.w-screen{width:100vw}.max-w-\[1800px\]{max-width:1800px}.max-w-\[94vw\]{max-width:94vw}.flex-1{flex:1 1 0%}.-translate-x-1\/2{--tw-translate-x:-50%;transform:translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))}.translate-x-full{--tw-translate-x:100%;transform:translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))}@keyframes ping{75%, 100%{transform:scale(2);opacity:0}}.animate-ping{animation:ping 1s cubic-bezier(0, 0, 0.2, 1) infinite}@keyframes pulse{50%{opacity:.5}}.animate-pulse{animation:pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite}.cursor-pointer{cursor:pointer}.select-none{-webkit-user-select:none;user-select:none}.grid-cols-2{grid-template-columns:repeat(2, minmax(0, 1fr))}.flex-col{flex-direction:column}.flex-wrap{flex-wrap:wrap}.place-items-center{place-items:center}.items-start{align-items:flex-start}.items-end{align-items:flex-end}.items-center{align-items:center}.justify-between{justify-content:space-between}.gap-1\.5{gap:0.375rem}.gap-2{gap:0.5rem}.gap-2\.5{gap:0.625rem}.gap-3{gap:0.75rem}.gap-4{gap:1rem}.gap-x-8{column-gap:2rem}.gap-y-2\.5{row-gap:0.625rem}.space-y-5 > :not([hidden]) ~ :not([hidden]){--tw-space-y-reverse:0;margin-top:calc(1.25rem * calc(1 - var(--tw-space-y-reverse)));margin-bottom:calc(1.25rem * var(--tw-space-y-reverse))}.overflow-auto{overflow:auto}.overflow-hidden{overflow:hidden}.overflow-y-auto{overflow-y:auto}.truncate{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.rounded{border-radius:0.25rem}.rounded-2xl{border-radius:1rem}.rounded-\[28px\]{border-radius:28px}.rounded-full{border-radius:9999px}.rounded-lg{border-radius:0.5rem}.rounded-xl{border-radius:0.75rem}.border{border-width:1px}.border-white\/10{border-color:rgb(255 255 255 / 0.1)}.border-white\/5{border-color:rgb(255 255 255 / 0.05)}.bg-amber-500\/20{background-color:rgb(245 158 11 / 0.2)}.bg-black{--tw-bg-opacity:1;background-color:rgb(0 0 0 / var(--tw-bg-opacity, 1))}.bg-black\/50{background-color:rgb(0 0 0 / 0.5)}.bg-black\/60{background-color:rgb(0 0 0 / 0.6)}.bg-emerald-400{--tw-bg-opacity:1;background-color:rgb(52 211 153 / var(--tw-bg-opacity, 1))}.bg-violet-600{--tw-bg-opacity:1;background-color:rgb(124 58 237 / var(--tw-bg-opacity, 1))}.bg-violet-600\/30{background-color:rgb(124 58 237 / 0.3)}.bg-white{--tw-bg-opacity:1;background-color:rgb(255 255 255 / var(--tw-bg-opacity, 1))}.bg-white\/10{background-color:rgb(255 255 255 / 0.1)}.bg-zinc-700{--tw-bg-opacity:1;background-color:rgb(63 63 70 / var(--tw-bg-opacity, 1))}.bg-zinc-800{--tw-bg-opacity:1;background-color:rgb(39 39 42 / var(--tw-bg-opacity, 1))}.bg-zinc-800\/80{background-color:rgb(39 39 42 / 0.8)}.bg-\[radial-gradient\(ellipse_at_center\2c rgba\(124\2c 58\2c 237\2c 0\.12\)\2c transparent_55\%\)\2c radial-gradient\(ellipse_at_bottom\2c rgba\(6\2c 182\2c 212\2c 0\.08\)\2c transparent_60\%\)\]{background-image:radial-gradient(ellipse at center,rgba(124,58,237,0.12),transparent 55%),radial-gradient(ellipse at bottom,rgba(6,182,212,0.08),transparent 60%)}.bg-gradient-to-r{background-image:linear-gradient(to right, var(--tw-gradient-stops))}.from-violet-500{--tw-gradient-from:#8b5cf6 var(--tw-gradient-from-position);--tw-gradient-to:rgb(139 92 246 / 0) var(--tw-gradient-to-position);--tw-gradient-stops:var(--tw-gradient-from), var(--tw-gradient-to)}.via-fuchsia-400{--tw-gradient-to:rgb(232 121 249 / 0)  var(--tw-gradient-to-position);--tw-gradient-stops:var(--tw-gradient-from), #e879f9 var(--tw-gradient-via-position), var(--tw-gradient-to)}.to-cyan-400{--tw-gradient-to:#22d3ee var(--tw-gradient-to-position)}.p-1\.5{padding:0.375rem}.p-2\.5{padding:0.625rem}.p-3\.5{padding:0.875rem}.p-4{padding:1rem}.p-5{padding:1.25rem}.px-1\.5{padding-left:0.375rem;padding-right:0.375rem}.px-2\.5{padding-left:0.625rem;padding-right:0.625rem}.px-3{padding-left:0.75rem;padding-right:0.75rem}.px-3\.5{padding-left:0.875rem;padding-right:0.875rem}.px-4{padding-left:1rem;padding-right:1rem}.py-0\.5{padding-top:0.125rem;padding-bottom:0.125rem}.py-1{padding-top:0.25rem;padding-bottom:0.25rem}.py-1\.5{padding-top:0.375rem;padding-bottom:0.375rem}.py-2{padding-top:0.5rem;padding-bottom:0.5rem}.py-2\.5{padding-top:0.625rem;padding-bottom:0.625rem}.py-3{padding-top:0.75rem;padding-bottom:0.75rem}.pb-5{padding-bottom:1.25rem}.pr-1{padding-right:0.25rem}.pt-4{padding-top:1rem}.text-right{text-align:right}.font-mono{font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace}.text-\[10px\]{font-size:10px}.text-\[11px\]{font-size:11px}.text-\[12px\]{font-size:12px}.text-\[22px\]{font-size:22px}.text-xs{font-size:0.75rem;line-height:1rem}.font-medium{font-weight:500}.uppercase{text-transform:uppercase}.leading-none{line-height:1}.leading-relaxed{line-height:1.625}.leading-snug{line-height:1.375}.tracking-\[0\.18em\]{letter-spacing:0.18em}.tracking-\[0\.22em\]{letter-spacing:0.22em}.tracking-\[0\.2em\]{letter-spacing:0.2em}.tracking-tight{letter-spacing:-0.025em}.tracking-widest{letter-spacing:0.1em}.text-amber-200\/90{color:rgb(253 230 138 / 0.9)}.text-amber-300{--tw-text-opacity:1;color:rgb(252 211 77 / var(--tw-text-opacity, 1))}.text-black{--tw-text-opacity:1;color:rgb(0 0 0 / var(--tw-text-opacity, 1))}.text-cyan-300\/90{color:rgb(103 232 249 / 0.9)}.text-emerald-400{--tw-text-opacity:1;color:rgb(52 211 153 / var(--tw-text-opacity, 1))}.text-violet-200{--tw-text-opacity:1;color:rgb(221 214 254 / var(--tw-text-opacity, 1))}.text-violet-300{--tw-text-opacity:1;color:rgb(196 181 253 / var(--tw-text-opacity, 1))}.text-white{--tw-text-opacity:1;color:rgb(255 255 255 / var(--tw-text-opacity, 1))}.text-white\/35{color:rgb(255 255 255 / 0.35)}.text-white\/60{color:rgb(255 255 255 / 0.6)}.text-white\/70{color:rgb(255 255 255 / 0.7)}.text-white\/80{color:rgb(255 255 255 / 0.8)}.text-zinc-100{--tw-text-opacity:1;color:rgb(244 244 245 / var(--tw-text-opacity, 1))}.text-zinc-300{--tw-text-opacity:1;color:rgb(212 212 216 / var(--tw-text-opacity, 1))}.text-zinc-400{--tw-text-opacity:1;color:rgb(161 161 170 / var(--tw-text-opacity, 1))}.text-zinc-500{--tw-text-opacity:1;color:rgb(113 113 122 / var(--tw-text-opacity, 1))}.text-zinc-600{--tw-text-opacity:1;color:rgb(82 82 91 / var(--tw-text-opacity, 1))}.placeholder-zinc-600::placeholder{--tw-placeholder-opacity:1;color:rgb(82 82 91 / var(--tw-placeholder-opacity, 1))}.accent-cyan-400{accent-color:#22d3ee}.accent-violet-500{accent-color:#8b5cf6}.opacity-75{opacity:0.75}.shadow-2xl{--tw-shadow:0 25px 50px -12px rgb(0 0 0 / 0.25);--tw-shadow-colored:0 25px 50px -12px var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.shadow-xl{--tw-shadow:0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);--tw-shadow-colored:0 20px 25px -5px var(--tw-shadow-color), 0 8px 10px -6px var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.shadow-black\/40{--tw-shadow-color:rgb(0 0 0 / 0.4);--tw-shadow:var(--tw-shadow-colored)}.shadow-black\/50{--tw-shadow-color:rgb(0 0 0 / 0.5);--tw-shadow:var(--tw-shadow-colored)}.outline-none{outline:2px solid transparent;outline-offset:2px}.transition{transition-property:color, background-color, border-color, fill, stroke, opacity, box-shadow, transform, filter, -webkit-text-decoration-color, -webkit-backdrop-filter;transition-property:color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter;transition-property:color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter, -webkit-text-decoration-color, -webkit-backdrop-filter;transition-timing-function:cubic-bezier(0.4, 0, 0.2, 1);transition-duration:150ms}.transition-all{transition-property:all;transition-timing-function:cubic-bezier(0.4, 0, 0.2, 1);transition-duration:150ms}.transition-transform{transition-property:transform;transition-timing-function:cubic-bezier(0.4, 0, 0.2, 1);transition-duration:150ms}.duration-300{transition-duration:300ms}.duration-500{transition-duration:500ms}.ease-out{transition-timing-function:cubic-bezier(0, 0, 0.2, 1)}.hover\:bg-violet-500:hover{--tw-bg-opacity:1;background-color:rgb(139 92 246 / var(--tw-bg-opacity, 1))}.hover\:bg-violet-600\/50:hover{background-color:rgb(124 58 237 / 0.5)}.hover\:bg-white\/10:hover{background-color:rgb(255 255 255 / 0.1)}.hover\:bg-white\/5:hover{background-color:rgb(255 255 255 / 0.05)}.hover\:bg-zinc-200:hover{--tw-bg-opacity:1;background-color:rgb(228 228 231 / var(--tw-bg-opacity, 1))}.hover\:bg-zinc-700:hover{--tw-bg-opacity:1;background-color:rgb(63 63 70 / var(--tw-bg-opacity, 1))}.focus\:border-violet-500\/50:focus{border-color:rgb(139 92 246 / 0.5)}@media (min-width: 640px){.sm\:w-auto{width:auto}.sm\:min-w-\[300px\]{min-width:300px}.sm\:flex-row{flex-direction:row}.sm\:gap-3{gap:0.75rem}.sm\:p-4{padding:1rem}.sm\:px-4{padding-left:1rem;padding-right:1rem}.sm\:px-6{padding-left:1.5rem;padding-right:1.5rem}.sm\:py-2\.5{padding-top:0.625rem;padding-bottom:0.625rem}.sm\:text-sm{font-size:0.875rem;line-height:1.25rem}.sm\:text-xs{font-size:0.75rem;line-height:1rem}}@media (min-width: 1024px){.lg\:flex{display:flex}}</style></head>
+<body class="bg-black text-zinc-100 select-none">
+<div class="relative w-screen h-screen overflow-hidden">
+  <canvas id="lattice" class="absolute inset-0 w-full h-full" width="2093" height="1310"></canvas>
+  <div class="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(124,58,237,0.12),transparent_55%),radial-gradient(ellipse_at_bottom,rgba(6,182,212,0.08),transparent_60%)]"></div>
+  <div class="pointer-events-none absolute inset-0" style="background:repeating-linear-gradient(transparent 0 2px, rgba(255,255,255,.02) 2px 3px)"></div>
+
+  <!-- Top -->
+  <div class="absolute top-0 inset-x-0 z-20">
+    <div class="mx-auto max-w-[1800px] px-4 sm:px-6 pt-4 flex items-start justify-between gap-3">
+      <div class="glass rounded-full px-3 py-1.5 flex items-center gap-2">
+        <span class="relative flex h-2 w-2"><span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span><span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-400"></span></span>
+        <span class="font-mono text-[11px] tracking-[0.18em] uppercase text-white/70">LIVE LATTICE CORE</span>
+      </div>
+
+      <div id="autopost-banner" class="glass rounded-2xl px-3 py-2 sm:px-4 sm:py-2.5 flex flex-col sm:flex-row items-center gap-2 sm:gap-3 shadow-2xl shadow-black/40">
+        <div class="flex items-center gap-2">
+          <div class="w-5 h-5 rounded-full bg-amber-500/20 grid place-items-center">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="text-amber-300"><path d="M12 5v14M5 12h14"></path></svg>
+          </div>
+          <span class="text-xs sm:text-sm font-medium text-amber-200/90">Auto-post ready <span id="ap-count" class="text-amber-300">(4)</span></span>
+        </div>
+        <div class="flex items-center gap-1.5">
+          <button id="btn-threads" class="px-2.5 py-1.5 rounded-lg bg-white text-black text-xs font-medium hover:bg-zinc-200 transition">Post to Threads</button>
+          <button id="btn-ig" class="px-2.5 py-1.5 rounded-lg bg-zinc-800 text-zinc-100 text-xs hover:bg-zinc-700 transition">IG Story</button>
+          <button id="btn-copy" class="px-2.5 py-1.5 rounded-lg bg-zinc-800 text-zinc-100 text-xs hover:bg-zinc-700 transition">Copy</button>
+          <button id="btn-dismiss" class="p-1.5 rounded-lg hover:bg-white/10 text-zinc-400" aria-label="Dismiss">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"></path></svg>
+          </button>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-2">
+        <button id="shareBtn" class="glass rounded-full px-3.5 py-1.5 text-xs font-medium hover:bg-white/10 transition">Share Lattice</button>
+        <button id="advancedBtn" class="glass rounded-full px-3.5 py-1.5 text-xs font-medium hover:bg-white/10 transition">Advanced</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bottom stats -->
+  <div class="absolute bottom-0 inset-x-0 z-20">
+    <div class="mx-auto max-w-[1800px] px-4 sm:px-6 pb-5 flex items-end justify-between gap-4">
+      <div class="glass rounded-2xl p-3.5 sm:p-4 w-full sm:w-auto sm:min-w-[300px]">
+        <div class="grid grid-cols-2 gap-x-8 gap-y-2.5 font-mono text-[11px] sm:text-xs">
+          <div>
+            <div class="text-zinc-500">N</div>
+            <div id="stat-n" class="text-[22px] leading-none mt-1 text-white tracking-tight">0.500</div>
+          </div>
+          <div>
+            <div class="text-zinc-500">φ</div>
+            <div id="stat-phi" class="text-[22px] leading-none mt-1 text-violet-300 tracking-tight">1.629</div>
+          </div>
+          <div class="col-span-2">
+            <div class="text-zinc-500 flex items-center gap-2">ternary · 32t <span class="text-[10px] px-1.5 py-0.5 rounded bg-white/10 text-white/60">base-3</span></div>
+            <div id="stat-ternary" class="mt-1 text-[11px] sm:text-xs text-cyan-300/90 tracking-widest truncate">00000000000000000000000001102120</div>
+          </div>
+          <div>
+            <div class="text-zinc-500">convergence</div>
+            <div id="stat-conv" class="mt-0.5 text-white">#4</div>
+          </div>
+          <div>
+            <div class="text-zinc-500">harmonizer</div>
+            <div id="stat-harm" class="mt-0.5 text-white">1.00×</div>
+          </div>
+        </div>
+        <div class="mt-3.5 flex items-center gap-2.5">
+          <div class="h-[6px] flex-1 rounded-full bg-white/10 overflow-hidden"><div id="coherence-bar" class="h-full w-[8%] bg-gradient-to-r from-violet-500 via-fuchsia-400 to-cyan-400 transition-all duration-500" style="width: 50%;"></div></div>
+          <span class="text-[10px] text-zinc-500 font-mono">d₀</span>
+        </div>
+      </div>
+
+      <div class="hidden lg:flex items-center gap-2.5">
+        <div class="glass rounded-full px-3 py-1.5 flex items-center gap-2">
+          <span class="text-[10px] uppercase tracking-widest text-zinc-500">Ternary Planck</span>
+          <span class="font-mono text-xs text-white/80">h₃ = 3⁻¹⁶</span>
+        </div>
+        <div class="glass rounded-full px-3 py-1.5 flex items-center gap-2">
+          <span class="text-[10px] uppercase tracking-widest text-zinc-500">Laser</span>
+          <span id="laser-state" class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+        </div>
+        <div class="glass rounded-full px-3 py-1.5 flex items-center gap-2">
+          <span class="text-[10px] uppercase tracking-widest text-zinc-500">Foundation</span>
+          <span class="font-mono text-xs text-white/70">d₀ active</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Watermark -->
+  <div class="absolute bottom-3 right-4 z-10 pointer-events-none">
+    <span class="font-mono text-[10px] tracking-[0.22em] text-white/35">core.davidwise.live</span>
+  </div>
+
+  <!-- Advanced Panel -->
+  <div id="advanced-panel" class="fixed top-0 right-0 h-full w-[380px] max-w-[94vw] z-30 translate-x-full transition-transform duration-300 ease-out">
+    <div class="h-full glass m-3 rounded-[28px] p-5 flex flex-col shadow-2xl shadow-black/50">
+      <div class="flex items-center justify-between">
+        <h2 class="text-[12px] uppercase tracking-[0.2em] text-zinc-400 font-medium">Advanced Controls</h2>
+        <button id="closeAdvanced" class="p-1.5 rounded-lg hover:bg-white/10 text-zinc-400">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"></path></svg>
+        </button>
+      </div>
+
+      <div class="mt-5 space-y-5 overflow-y-auto pr-1 -mr-1">
+        <div>
+          <label class="text-xs text-zinc-400">Harmonizer · 0.01 – ∞</label>
+          <div class="mt-2.5 flex items-center gap-3">
+            <input id="harmSlider" type="range" min="0" max="100" value="50" class="w-full accent-violet-500">
+            <span id="harmVal" class="font-mono text-xs w-16 text-right text-white">1.00×</span>
+          </div>
+          <div class="flex flex-wrap gap-1.5 mt-2.5">
+            <button data-h="0.01" class="hbtn px-2.5 py-1 rounded-lg bg-zinc-800/80 hover:bg-zinc-700 text-[11px]">0.01</button>
+            <button data-h="0.1" class="hbtn px-2.5 py-1 rounded-lg bg-zinc-800/80 hover:bg-zinc-700 text-[11px]">0.1</button>
+            <button data-h="1" class="hbtn px-2.5 py-1 rounded-lg bg-zinc-800/80 hover:bg-zinc-700 text-[11px]">1×</button>
+            <button data-h="10" class="hbtn px-2.5 py-1 rounded-lg bg-zinc-800/80 hover:bg-zinc-700 text-[11px]">10×</button>
+            <button data-h="100" class="hbtn px-2.5 py-1 rounded-lg bg-zinc-800/80 hover:bg-zinc-700 text-[11px]">100×</button>
+            <button data-h="inf" class="hbtn px-2.5 py-1 rounded-lg bg-violet-600/30 hover:bg-violet-600/50 text-[11px] text-violet-200">∞</button>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <label class="flex items-center justify-between glass rounded-xl px-3 py-3 cursor-pointer hover:bg-white/5">
+            <span class="text-xs">Teaching Pulses</span>
+            <input id="teachToggle" type="checkbox" class="sr-only" checked="">
+            <span id="teachUI" class="w-10 h-5 rounded-full bg-zinc-700 relative transition-all bg-violet-600"><span class="absolute top-[2px] left-[2px] w-4 h-4 bg-white rounded-full transition-all" style="transform: translateX(20px);"></span></span>
+          </label>
+          <label class="glass rounded-xl px-3 py-3">
+            <div class="flex items-center justify-between">
+              <span class="text-xs">Laser</span>
+              <span id="laserVal" class="font-mono text-[11px] text-zinc-400">75%</span>
+            </div>
+            <input id="laserSlider" type="range" min="0" max="100" value="75" class="w-full mt-2 accent-cyan-400">
+          </label>
+        </div>
+
+        <div class="glass rounded-2xl p-4">
+          <div class="text-xs text-zinc-300 mb-2 font-medium">Public Logging (no localhost)</div>
+          <input id="endpointInput" type="url" placeholder="https://your-worker.workers.dev/log" class="w-full bg-black/50 border border-white/10 rounded-xl px-3 py-2.5 text-xs font-mono outline-none focus:border-violet-500/50 placeholder-zinc-600">
+          <div class="flex gap-2 mt-2.5">
+            <button id="saveEndpoint" class="px-3 py-1.5 rounded-lg bg-violet-600 hover:bg-violet-500 text-xs font-medium">Save Endpoint</button>
+            <button id="clearEndpoint" class="px-3 py-1.5 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-xs">Local Only</button>
+            <button id="testLog" class="px-3 py-1.5 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-xs">Test</button>
+          </div>
+          <p class="text-[11px] text-zinc-500 mt-2.5 leading-snug">Default: fully client-side. Logs to localStorage &amp; window.latticeLog. Set URL to POST with CORS.</p>
+          <div class="mt-2 flex items-center gap-2 text-[11px] font-mono"><span class="text-zinc-600">status:</span><span id="logStatus" class="text-emerald-400">local</span></div>
+        </div>
+
+        <div class="glass rounded-2xl p-4">
+          <div class="flex items-center justify-between">
+            <span class="text-xs text-zinc-300">Recent Logs</span>
+            <button id="exportLogs" class="text-[11px] px-2.5 py-1 rounded-lg bg-zinc-800 hover:bg-zinc-700">Export JSON</button>
+          </div>
+          <pre id="logView" class="mt-2.5 h-36 overflow-auto bg-black/60 rounded-xl p-2.5 text-[10px] font-mono leading-snug text-zinc-300 border-white/5">16:19:33  teaching_pulse   c=1041
+16:19:33  tick             c=1010
+16:19:32  autopost_ready   c=1000
+16:19:31  tick             c=909
+16:19:29  tick             c=808
+16:19:28  tick             c=707
+16:19:26  teaching_pulse   c=608
+16:19:26  tick             c=606
+16:18:23  tick             c=505
+16:18:22  tick             c=404
+16:18:22  teaching_pulse   c=377
+16:18:20  tick             c=303
+16:18:19  tick             c=202
+16:18:17  tick             c=101
+16:18:17  autopost_ready   c=100
+16:18:15  autopost_ready   c=10
+16:18:14  autopost_ready   c=1
+16:18:14  teaching_pulse   c=0
+16:18:07  teaching_pulse   c=0
+16:18:05  session_start    </pre>
+        </div>
+
+        <div class="glass rounded-2xl p-4">
+          <div class="text-xs text-zinc-300 font-medium">32-bit Base-3 Core</div>
+          <p class="text-[11px] text-zinc-500 mt-1.5 leading-relaxed">Nested lattice with d₀ foundation. Ternary Planck h₃ defines minimum coherence. Harmonizer 0.01–∞ controls breathing rate. Teaching pulses inject φ-aligned patterns. Laser traces convergence path.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div id="toast" class="fixed left-1/2 -translate-x-1/2 bottom-28 z-40 hidden pointer-events-none">
+    <div class="glass rounded-full px-4 py-2 text-xs font-medium shadow-xl pointer-events-auto"></div>
+  </div>
+</div>
+
+<script>
+(() => {
+  // ===== PUBLIC LOGGING =====
+  window.latticeLog = JSON.parse(localStorage.getItem('lattice_log') || '[]');
+  const getEndpoint = () => localStorage.getItem('lattice_endpoint') || null;
+  const logStatusEl = document.getElementById('logStatus');
+
+  function updateLogStatus(){
+    const ep = getEndpoint();
+    logStatusEl.textContent = ep ? 'remote' : 'local';
+    logStatusEl.className = ep ? 'text-cyan-400' : 'text-emerald-400';
+  }
+
+  function logEvent(type, data={}){
+    const entry = { ts: Date.now(), type, ...data };
+    try{
+      window.latticeLog.push(entry);
+      if(window.latticeLog.length>2000) window.latticeLog = window.latticeLog.slice(-1200);
+      localStorage.setItem('lattice_log', JSON.stringify(window.latticeLog.slice(-600)));
+    }catch{}
+    const ep = getEndpoint();
+    if(ep){
+      try{
+        fetch(ep, {method:'POST', headers:{'Content-Type':'application/json'}, mode:'cors', keepalive:true, body:JSON.stringify(entry)}).catch(()=>{});
+      }catch{}
+    }
+    updateLogViewSoon();
+    return entry;
+  }
+
+  // ===== ELEMENTS =====
+  const canvas = document.getElementById('lattice');
+  const ctx = canvas.getContext('2d', {alpha:true});
+  const statN = document.getElementById('stat-n');
+  const statPhi = document.getElementById('stat-phi');
+  const statTernary = document.getElementById('stat-ternary');
+  const statConv = document.getElementById('stat-conv');
+  const statHarm = document.getElementById('stat-harm');
+  const coherenceBar = document.getElementById('coherence-bar');
+
+  // ===== CORE STATE =====
+  const TRITS = 32;
+  let trits = new Array(TRITS).fill(0);
+  let counter = 0n;
+  let powerHits = 0;
+  let N = 0;
+  let phi = 1.6180339887;
+  let harmonizer = 1.0;
+  let teaching = true;
+  let laserIntensity = 0.75;
+  let pulseTime = 0;
+  let autoPostQueue = [];
+
+  // ===== POWER OF 10 =====
+  function isPowerOfTen(n){
+    if(n < 1n) return false;
+    const s = n.toString(10);
+    if(s[0] !== '1') return false;
+    for(let i=1;i<s.length;i++) if(s[i]!=='0') return false;
+    return true;
+  }
+
+  // ===== VISUAL LOOP =====
+  let lastT = 0, acc = 0;
+  function step(){
+    counter++;
+    // base-3 increment
+    let carry = 1;
+    for(let i=0;i<TRITS && carry;i++){
+      const v = trits[i] + carry;
+      trits[i] = v % 3;
+      carry = v >= 3 ? 1 : 0;
+    }
+    const sum = trits.reduce((a,b)=>a+b,0);
+    N = sum / (2*TRITS);
+    phi = 1.6180339887 * (0.97 + 0.06 * N + 0.015 * Math.sin(performance.now()*0.0005));
+
+    if(isPowerOfTen(counter)){
+      powerHits++;
+      const text = `Lattice breathing // N=${N.toFixed(3)} φ=${phi.toFixed(3)} // ternary ${counter.toString(3)} // convergence #${powerHits} // live: core.davidwise.live`;
+      autoPostQueue.push(text);
+      showAutoPost();
+      logEvent('autopost_ready', {counter: counter.toString(), N: +N.toFixed(3), phi: +phi.toFixed(3), text});
+    }
+
+    // stats
+    statN.textContent = N.toFixed(3);
+    statPhi.textContent = phi.toFixed(3);
+    statTernary.textContent = counter.toString(3).padStart(TRITS, '0');
+    statConv.textContent = '#'+powerHits;
+    statHarm.textContent = harmonizer >= 250 ? '∞' : harmonizer.toFixed(2) + '×';
+    coherenceBar.style.width = Math.round(N*100) + '%';
+
+    if(counter % 101n === 0n) logEvent('tick', {counter: counter.toString(), N: +N.toFixed(4)});
+  }
+
+  function triggerTeach(){
+    pulseTime = performance.now();
+    for(let i=0;i<TRITS;i++) trits[i] = (i + powerHits) % 3;
+    logEvent('teaching_pulse', {counter: counter.toString()});
+  }
+
+  function resize(){
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    canvas.width = canvas.clientWidth * dpr;
+    canvas.height = canvas.clientHeight * dpr;
+    ctx.setTransform(dpr,0,0,dpr,0,0);
+  }
+  window.addEventListener('resize', resize, {passive:true});
+
+  function draw(t){
+    const w = canvas.clientWidth, h = canvas.clientHeight;
+    ctx.clearRect(0,0,w,h);
+    const cx = w*0.5, cy = h*0.53;
+    const maxR = Math.min(w,h) * 0.43;
+
+    // vignette
+    const vg = ctx.createRadialGradient(cx,cy,maxR*0.1,cx,cy,maxR*1.3);
+    vg.addColorStop(0,'rgba(0,0,0,0)'); vg.addColorStop(1,'rgba(0,0,0,0.7)');
+    ctx.fillStyle = vg; ctx.fillRect(0,0,w,h);
+
+    // d0 foundation
+    const d0 = maxR*0.055 * (0.92 + 0.08*Math.sin(t*0.0018 + N*6.283));
+    const d0g = ctx.createRadialGradient(cx,cy,0,cx,cy,d0*3);
+    d0g.addColorStop(0,'rgba(167,139,250,0.95)');
+    d0g.addColorStop(0.4,'rgba(139,92,246,0.35)');
+    d0g.addColorStop(1,'rgba(6,182,212,0)');
+    ctx.fillStyle = d0g; ctx.shadowColor='rgba(124,58,237,0.7)'; ctx.shadowBlur=40; ctx.beginPath(); ctx.arc(cx,cy,d0,0,Math.PI*2); ctx.fill(); ctx.shadowBlur=0;
+
+    // nested 32 rings
+    for(let i=TRITS-1; i>=0; i--){
+      const norm = i / (TRITS-1);
+      const r = maxR * (0.18 + 0.78*(1-norm));
+      const v = trits[i];
+      const hue = v===0 ? 260 : v===1 ? 30 : 186;
+      const sat = 65 + v*12;
+      const light = 52 + v*6;
+      const alpha = 0.11 + v*0.21;
+
+      ctx.beginPath(); ctx.arc(cx,cy,r,0,Math.PI*2);
+      ctx.strokeStyle = `hsla(${hue},${sat}%,${light}%,${alpha})`;
+      ctx.lineWidth = 1 + (1-norm)*1.6;
+      ctx.lineCap = 'round';
+      ctx.stroke();
+
+      const rot = t*0.00004 * (i%2?1:-1) * Math.min(harmonizer, 4);
+      const ang = (v/3)*Math.PI*2 + rot + i*0.207;
+      const px = cx + Math.cos(ang)*r;
+      const py = cy + Math.sin(ang)*r;
+      ctx.beginPath(); ctx.arc(px,py,1.6 + v*0.9,0,Math.PI*2);
+      ctx.fillStyle = `hsla(${hue},90%,${68+v*4}%,0.95)`;
+      ctx.shadowColor = `hsla(${hue},90%,65%,0.9)`; ctx.shadowBlur = 12 + v*4;
+      ctx.fill(); ctx.shadowBlur = 0;
+    }
+
+    // laser
+    const la = t * 0.00028 * Math.pow(Math.min(harmonizer,20),0.6);
+    ctx.save(); ctx.translate(cx,cy); ctx.rotate(la);
+    const lg = ctx.createLinearGradient(d0,0,maxR*0.96,0);
+    lg.addColorStop(0,'rgba(255,255,255,0)');
+    lg.addColorStop(0.15,`rgba(200,220,255,${0.12*laserIntensity})`);
+    lg.addColorStop(0.5,`rgba(167,139,250,${0.38*laserIntensity})`);
+    lg.addColorStop(1,'rgba(34,211,238,0)');
+    ctx.strokeStyle = lg; ctx.lineWidth = 2.2; ctx.beginPath(); ctx.moveTo(d0*0.9,0); ctx.lineTo(maxR*0.96,0); ctx.stroke();
+    ctx.strokeStyle = `rgba(255,255,255,${0.55*laserIntensity})`; ctx.lineWidth=1; ctx.beginPath(); ctx.moveTo(d0,0); ctx.lineTo(maxR*0.72,0); ctx.stroke();
+    ctx.restore();
+
+    // teaching pulse
+    if(pulseTime){
+      const age = t - pulseTime;
+      if(age < 850){
+        const pr = maxR*0.18 + (age/850)*maxR*0.82;
+        ctx.beginPath(); ctx.arc(cx,cy,pr,0,Math.PI*2);
+        ctx.strokeStyle = `rgba(251,191,36,${0.32*(1-age/850)})`; ctx.lineWidth=2; ctx.stroke();
+      }else{ pulseTime=0; }
+    }
+
+    // core dot
+    ctx.beginPath(); ctx.arc(cx,cy,2.3,0,7); ctx.fillStyle='#fff'; ctx.shadowColor='#a78bfa'; ctx.shadowBlur=10; ctx.fill(); ctx.shadowBlur=0;
+  }
+
+  function loop(t){
+    if(!lastT) lastT = t;
+    const dt = Math.min(50, t-lastT); lastT = t;
+    const rate = 0.065 * harmonizer;
+    acc += dt * rate;
+    const steps = harmonizer>200 ? Math.min(600, Math.floor(acc)) : Math.floor(acc);
+    if(steps>0){ for(let i=0;i<steps;i++) step(); acc -= steps; }
+    else if(acc>=1){ step(); acc-=1; }
+
+    if(teaching && t - (window._lastTeach||0) > 7200/Math.pow(Math.max(0.2,harmonizer),0.35)){
+      triggerTeach(); window._lastTeach = t;
+    }
+    draw(t);
+    requestAnimationFrame(loop);
+  }
+
+  // ===== AUTO POST UI =====
+  const banner = document.getElementById('autopost-banner');
+  const apCount = document.getElementById('ap-count');
+  function showAutoPost(){
+    banner.classList.remove('hidden');
+    apCount.textContent = `(${autoPostQueue.length})`;
+  }
+  function getLatest(){ return autoPostQueue[autoPostQueue.length-1] || ''; }
+  document.getElementById('btn-threads').onclick = () => {
+    const txt = getLatest(); if(!txt) return;
+    window.open('https://www.threads.net/intent/post?text=' + encodeURIComponent(txt), '_blank');
+    logEvent('autopost_threads', {text:txt}); toast('Opening Threads…');
+  };
+  document.getElementById('btn-ig').onclick = async () => {
+    const txt = getLatest(); if(!txt) return;
+    try{ await navigator.clipboard.writeText(txt); toast('Copied — paste to IG Story'); logEvent('autopost_ig',{});}catch{toast('Copy failed')}
+  };
+  document.getElementById('btn-copy').onclick = async () => {
+    const txt = getLatest(); if(!txt) return;
+    try{ await navigator.clipboard.writeText(txt); toast('Copied'); logEvent('autopost_copy',{});}catch{}
+  };
+  document.getElementById('btn-dismiss').onclick = () => { banner.classList.add('hidden'); autoPostQueue = []; };
+
+  // ===== SHARE =====
+  document.getElementById('shareBtn').onclick = async () => {
+    try{ await navigator.clipboard.writeText(location.href); toast('Link copied'); logEvent('share',{url:location.href}); }
+    catch{ toast('Copy failed'); }
+  };
+
+  // ===== ADVANCED PANEL =====
+  const panel = document.getElementById('advanced-panel');
+  document.getElementById('advancedBtn').onclick = () => panel.classList.toggle('translate-x-full');
+  document.getElementById('closeAdvanced').onclick = () => panel.classList.add('translate-x-full');
+
+  const harmSlider = document.getElementById('harmSlider');
+  const harmVal = document.getElementById('harmVal');
+  function setHarmonizer(v){
+    harmonizer = Math.max(0.01, Math.min(500, v));
+    const display = harmonizer>=250 ? '∞' : harmonizer.toFixed(2)+'×';
+    harmVal.textContent = display; statHarm.textContent = display;
+  }
+  harmSlider.oninput = e => {
+    const v = +e.target.value;
+    const val = Math.pow(10, (v-50)/25); // 0.01 → 100
+    setHarmonizer(val); logEvent('harmonizer',{value:+harmonizer.toFixed(4)});
+  };
+  document.querySelectorAll('.hbtn').forEach(b=>b.onclick=()=>{
+    const h=b.dataset.h; if(h==='inf'){ setHarmonizer(500); harmSlider.value=100; } else { const v=parseFloat(h); setHarmonizer(v); harmSlider.value = Math.round(50+25*Math.log10(Math.max(0.01,v))); } logEvent('harmonizer_preset',{value:h});
+  });
+
+  const teachToggle = document.getElementById('teachToggle');
+  const teachUI = document.getElementById('teachUI');
+  function updateTeachUI(){ teachUI.classList.toggle('bg-violet-600', teaching); teachUI.firstElementChild.style.transform = teaching ? 'translateX(20px)' : 'translateX(0px)'; }
+  teachToggle.onchange = e => { teaching = e.target.checked; updateTeachUI(); logEvent('teaching_toggle',{on:teaching}); };
+  updateTeachUI();
+
+  const laserSlider = document.getElementById('laserSlider');
+  const laserVal = document.getElementById('laserVal');
+  laserSlider.oninput = e => { laserIntensity = e.target.value/100; laserVal.textContent = e.target.value+'%'; document.getElementById('laser-state').style.opacity = 0.4 + laserIntensity*0.6; };
+
+  // logging settings
+  const endpointInput = document.getElementById('endpointInput');
+  endpointInput.value = getEndpoint() || '';
+  document.getElementById('saveEndpoint').onclick = () => {
+    const v = endpointInput.value.trim(); if(!v) return;
+    localStorage.setItem('lattice_endpoint', v); updateLogStatus(); toast('Endpoint saved'); logEvent('endpoint_set',{url:v});
+  };
+  document.getElementById('clearEndpoint').onclick = () => {
+    localStorage.removeItem('lattice_endpoint'); endpointInput.value=''; updateLogStatus(); toast('Using local only'); logEvent('endpoint_cleared',{});
+  };
+  document.getElementById('testLog').onclick = () => { logEvent('test',{manual:true, counter:counter.toString()}); toast('Test logged'); };
+
+  const logView = document.getElementById('logView');
+  let logTimer;
+  function updateLogViewSoon(){ clearTimeout(logTimer); logTimer = setTimeout(updateLogView, 200); }
+  function updateLogView(){
+    const rows = window.latticeLog.slice(-24).reverse().map(e=>{
+      const tm = new Date(e.ts).toISOString().slice(11,19);
+      return `${tm}  ${e.type.padEnd(16)} ${e.counter?('c='+e.counter):''}`;
+    });
+    logView.textContent = rows.join('\n');
+  }
+  document.getElementById('exportLogs').onclick = () => {
+    const blob = new Blob([JSON.stringify(window.latticeLog,null,2)], {type:'application/json'});
+    const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'lattice-log.json'; a.click(); URL.revokeObjectURL(a.href);
+  };
+
+  // toast
+  const toastEl = document.getElementById('toast');
+  function toast(msg){ toastEl.firstElementChild.textContent = msg; toastEl.classList.remove('hidden'); clearTimeout(window._t); window._t = setTimeout(()=>toastEl.classList.add('hidden'), 1900); }
+
+  // init
+  updateLogStatus(); updateLogView(); resize(); setHarmonizer(1);
+  logEvent('session_start', {href: location.href, tz:Intl.DateTimeFormat().resolvedOptions().timeZone});
+  requestAnimationFrame(loop);
+
+  // first teach pulse for visitors
+  setTimeout(()=>{ triggerTeach(); }, 1200);
+})();
+</script>
+
+</body></html>

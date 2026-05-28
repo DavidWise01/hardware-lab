@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<!-- saved from url=(0284)https://cdn.fbsbx.com/v/t65.102178-21/703889402_994012076348925_4929245927840559882_n.jpg/photonic16_v2_web_artifact_2_9bc0256f7e11.html?_nc_ht=cdn.fbsbx.com&_nc_ohc=q3HgQNcOTeYQ7kNvwFrm4zH&sdl=0&ccb=14-4&oh=00_Af4gX6xFcU1kXG64xdpNBetlp4BIm_T6VG9qQrmJVgU3Tw&oe=6A106615&_nc_sid=4ee932 -->
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>CHROMATIC 16-LAYER PHOTONIC PROCESSOR</title>
+<style>
+:root{
+  --bg:#07070a;
+  --cyan:#00d5ff;
+  --red:#ff1744;
+  --panel:#0b0f15;
+}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{
+  margin:0;
+  background: radial-gradient(1200px 800px at 50% -15%, #101726 0%, #07070a 55%, #040406 100%);
+  color:#cfe7f3;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+  letter-spacing:.02em;
+  overflow-x:hidden;
+}
+.wrap{max-width:1440px;margin:0 auto;padding:24px 18px 32px}
+header{text-align:center;padding:10px 0 16px;border-bottom:1px solid rgba(0,213,255,.14)}
+h1{
+  margin:0;
+  font-size:clamp(15px,2.1vw,22px);
+  font-weight:700;
+  letter-spacing:.08em;
+  color:#e6fbff;
+  text-shadow:0 0 12px rgba(0,213,255,.45),0 0 28px rgba(255,23,68,.18);
+}
+.subtitle{
+  margin-top:6px;
+  font-size:11px;
+  color:var(--cyan);
+  opacity:.78;
+  letter-spacing:.22em;
+  text-transform:uppercase;
+}
+.grid{
+  display:grid;
+  grid-template-columns:300px 1fr 280px;
+  gap:22px;
+  margin-top:22px;
+  align-items:start;
+}
+@media (max-width:1120px){
+  .grid{grid-template-columns:1fr;gap:18px}
+  .center{order:1}.left{order:2}.right{order:3}
+}
+.panel{
+  background:linear-gradient(180deg,rgba(14,19,27,.9),rgba(8,10,14,.88));
+  border:1px solid rgba(0,213,255,.14);
+  border-radius:14px;
+  padding:16px 14px;
+  box-shadow:inset 0 0 40px rgba(0,213,255,.03),0 12px 36px rgba(0,0,0,.55);
+  backdrop-filter: blur(6px);
+}
+.panel h2{
+  margin:0 0 12px;
+  font-size:11px;
+  color:var(--red);
+  letter-spacing:.2em;
+  text-transform:uppercase;
+  opacity:.92;
+}
+.ctrl{margin-bottom:16px}
+.ctrl:last-child{margin-bottom:4px}
+.ctrl label{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  font-size:11px;
+  color:#9dd8ef;
+  margin-bottom:8px;
+  letter-spacing:.12em;
+  text-transform:uppercase;
+}
+.ctrl label span{
+  color:#fff;
+  background:rgba(0,213,255,.08);
+  border:1px solid rgba(0,213,255,.25);
+  padding:2px 6px;
+  border-radius:6px;
+  min-width:58px;
+  text-align:right;
+  font-variant-numeric:tabular-nums;
+  box-shadow:0 0 10px rgba(0,213,255,.12) inset;
+}
+input[type=range]{
+  -webkit-appearance:none;appearance:none;
+  width:100%;height:6px;
+  background:linear-gradient(90deg, rgba(255,23,68,.25), rgba(0,213,255,.25));
+  border-radius:4px;
+  border:1px solid rgba(255,255,255,.06);
+  outline:none;
+}
+input[type=range]::-webkit-slider-thumb{
+  -webkit-appearance:none;
+  width:16px;height:16px;border-radius:50%;
+  background:radial-gradient(circle at 30% 30%,#fff,#bfefff 40%,#00d5ff 65%,#00677c);
+  border:1px solid rgba(0,213,255,.85);
+  box-shadow:0 0 12px rgba(0,213,255,.8),0 0 3px #fff inset;
+  cursor:pointer;
+}
+input[type=range]::-moz-range-thumb{
+  width:16px;height:16px;border-radius:50%;
+  background:radial-gradient(circle at 30% 30%,#fff,#bfefff 40%,#00d5ff 65%,#00677c);
+  border:1px solid rgba(0,213,255,.85);
+  box-shadow:0 0 12px rgba(0,213,255,.8),0 0 3px #fff inset;
+  cursor:pointer;
+}
+.center{display:flex;justify-content:center}
+.canvas-wrap{
+  position:relative;
+  width:min(92vw,900px);
+  aspect-ratio:1/1;
+}
+canvas{
+  width:100%;height:100%;display:block;
+  background:
+    radial-gradient(520px 360px at 50% 45%, rgba(0,213,255,.08), transparent 62%),
+    radial-gradient(700px 500px at 50% 72%, rgba(255,23,68,.06), transparent 70%),
+    #07080c;
+  border-radius:16px;
+  border:1px solid rgba(0,213,255,.16);
+  box-shadow:0 0 80px rgba(0,213,255,.05), inset 0 0 70px rgba(0,0,0,.92);
+}
+.right .layers{display:flex;flex-direction:column;gap:6px}
+.layer-item{
+  display:flex;align-items:center;gap:8px;
+  font-size:12px;
+  padding:6px 8px;
+  border-radius:8px;
+  background:rgba(255,255,255,.02);
+  border:1px solid rgba(255,255,255,.05);
+  color:#b6c8d6;
+}
+.layer-item .id{
+  width:28px;text-align:right;font-variant-numeric:tabular-nums;color:#7ec2e4;
+}
+.layer-item .dot{
+  width:10px;height:10px;border-radius:50%;flex-shrink:0;
+  box-shadow:0 0 8px currentColor,0 0 14px currentColor;
+}
+.layer-item[data-id="0"]{
+  background:rgba(255,255,255,.06);
+  border-color:rgba(0,213,255,.38);
+  color:#fff;
+  box-shadow:0 0 18px rgba(0,213,255,.12) inset;
+}
+footer{
+  margin-top:18px;
+  text-align:center;
+  font-size:11px;
+  color:#7c8e9f;
+  letter-spacing:.16em;
+  text-transform:uppercase;
+  opacity:.85;
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>CHROMATIC 16-LAYER PHOTONIC PROCESSOR // 8-0-8 ARCHITECTURE</h1>
+    <div class="subtitle">16 LAYERS / 8 ABOVE / 0 CENTER / 8 BELOW</div>
+  </header>
+
+  <main class="grid">
+    <aside class="left panel">
+      <h2>Containment Field</h2>
+      <div class="ctrl">
+        <label>Containment <span id="v-contain">98.0%</span></label>
+        <input id="containment" type="range" min="85" max="99.5" step="0.1" value="98">
+      </div>
+      <div class="ctrl">
+        <label>Inter-layer Coupling <span id="v-couple">42%</span></label>
+        <input id="coupling" type="range" min="0" max="100" step="1" value="42">
+      </div>
+      <div class="ctrl">
+        <label>Output <span id="v-output">2.0</span></label>
+        <input id="output" type="range" min="0.5" max="15" step="0.1" value="2">
+      </div>
+    </aside>
+
+    <section class="center">
+      <div class="canvas-wrap">
+        <canvas id="core" width="900" height="900"></canvas>
+      </div>
+    </section>
+
+    <aside class="right panel">
+      <h2>Layer Stack</h2>
+      <div class="layers" id="layerList"><div class="layer-item" data-id="-8"><span class="dot" style="background:#ff0033;color:#ff0033"></span><span class="id">-8</span><span>red pressure</span></div><div class="layer-item" data-id="-7"><span class="dot" style="background:#ff4d00;color:#ff4d00"></span><span class="id">-7</span><span>orange gain</span></div><div class="layer-item" data-id="-6"><span class="dot" style="background:#ff9500;color:#ff9500"></span><span class="id">-6</span><span>amber transition</span></div><div class="layer-item" data-id="-5"><span class="dot" style="background:#ffe600;color:#ffe600"></span><span class="id">-5</span><span>yellow lift</span></div><div class="layer-item" data-id="-4"><span class="dot" style="background:#b7ff00;color:#b7ff00"></span><span class="id">-4</span><span>lime correction</span></div><div class="layer-item" data-id="-3"><span class="dot" style="background:#00ff66;color:#00ff66"></span><span class="id">-3</span><span>green stability</span></div><div class="layer-item" data-id="-2"><span class="dot" style="background:#00ffc3;color:#00ffc3"></span><span class="id">-2</span><span>mint expansion</span></div><div class="layer-item" data-id="-1"><span class="dot" style="background:#00e5ff;color:#00e5ff"></span><span class="id">-1</span><span>cyan edge</span></div><div class="layer-item" data-id="0"><span class="dot" style="background:#ffffff;color:#ffffff"></span><span class="id">0</span><span>WHITE CORE</span></div><div class="layer-item" data-id="1"><span class="dot" style="background:#008cff;color:#008cff"></span><span class="id">+1</span><span>azure carrier</span></div><div class="layer-item" data-id="2"><span class="dot" style="background:#174bff;color:#174bff"></span><span class="id">+2</span><span>blue coherence</span></div><div class="layer-item" data-id="3"><span class="dot" style="background:#5b2cff;color:#5b2cff"></span><span class="id">+3</span><span>indigo depth</span></div><div class="layer-item" data-id="4"><span class="dot" style="background:#9a2cff;color:#9a2cff"></span><span class="id">+4</span><span>violet gate</span></div><div class="layer-item" data-id="5"><span class="dot" style="background:#e000ff;color:#e000ff"></span><span class="id">+5</span><span>magenta return</span></div><div class="layer-item" data-id="6"><span class="dot" style="background:#ff2ca8;color:#ff2ca8"></span><span class="id">+6</span><span>rose inversion</span></div><div class="layer-item" data-id="7"><span class="dot" style="background:#ff1744;color:#ff1744"></span><span class="id">+7</span><span>crimson lock</span></div><div class="layer-item" data-id="8"><span class="dot" style="background:#7a0000;color:#7a0000"></span><span class="id">+8</span><span>IR floor</span></div></div>
+    </aside>
+  </main>
+
+  <footer>Core Law: Sixteen colors enter. One white report exits.</footer>
+</div>
+
+<script>
+(function(){
+  const canvas = document.getElementById('core');
+  const ctx = canvas.getContext('2d');
+  const W = 900, H = 900, cx = 450, cy = 450;
+
+  const sliders = {
+    contain: document.getElementById('containment'),
+    couple: document.getElementById('coupling'),
+    output: document.getElementById('output')
+  };
+  const vContain = document.getElementById('v-contain');
+  const vCouple = document.getElementById('v-couple');
+  const vOutput = document.getElementById('v-output');
+
+  const layers = [
+    {id:-8,color:'#ff0033',name:'red pressure'},
+    {id:-7,color:'#ff4d00',name:'orange gain'},
+    {id:-6,color:'#ff9500',name:'amber transition'},
+    {id:-5,color:'#ffe600',name:'yellow lift'},
+    {id:-4,color:'#b7ff00',name:'lime correction'},
+    {id:-3,color:'#00ff66',name:'green stability'},
+    {id:-2,color:'#00ffc3',name:'mint expansion'},
+    {id:-1,color:'#00e5ff',name:'cyan edge'},
+    {id:0,color:'#ffffff',name:'WHITE CORE'},
+    {id:1,color:'#008cff',name:'azure carrier'},
+    {id:2,color:'#174bff',name:'blue coherence'},
+    {id:3,color:'#5b2cff',name:'indigo depth'},
+    {id:4,color:'#9a2cff',name:'violet gate'},
+    {id:5,color:'#e000ff',name:'magenta return'},
+    {id:6,color:'#ff2ca8',name:'rose inversion'},
+    {id:7,color:'#ff1744',name:'crimson lock'},
+    {id:8,color:'#7a0000',name:'IR floor'}
+  ];
+
+  const list = document.getElementById('layerList');
+  layers.forEach(l=>{
+    const el = document.createElement('div');
+    el.className='layer-item';
+    el.dataset.id=l.id;
+    const sign = l.id>0?'+':'';
+    el.innerHTML = `<span class="dot" style="background:${l.color};color:${l.color}"></span><span class="id">${sign}${l.id}</span><span>${l.name}</span>`;
+    list.appendChild(el);
+  });
+
+  function hexToRgba(hex,a){
+    hex=hex.replace('#','');
+    if(hex.length===3) hex=hex.split('').map(c=>c+c).join('');
+    const r=parseInt(hex.slice(0,2),16);
+    const g=parseInt(hex.slice(2,4),16);
+    const b=parseInt(hex.slice(4,6),16);
+    return `rgba(${r},${g},${b},${a})`;
+  }
+
+  function updateDisplays(){
+    vContain.textContent = parseFloat(sliders.contain.value).toFixed(1)+'%';
+    vCouple.textContent = Math.round(sliders.couple.value)+'%';
+    vOutput.textContent = parseFloat(sliders.output.value).toFixed(1);
+  }
+  ['input','change'].forEach(ev=>{
+    sliders.contain.addEventListener(ev,updateDisplays);
+    sliders.couple.addEventListener(ev,updateDisplays);
+    sliders.output.addEventListener(ev,updateDisplays);
+  });
+  updateDisplays();
+
+  function draw(t){
+    const time = t*0.001;
+    const containment = parseFloat(sliders.contain.value);
+    const coupling = parseFloat(sliders.couple.value);
+    const output = parseFloat(sliders.output.value);
+
+    const planeAlpha = 0.05 + ((containment-85)/14.5)*0.25;
+    const beamAlpha = 0.06 + (coupling/100)*0.78;
+    const beamWidth = 1 + (coupling/100)*2.4;
+
+    ctx.clearRect(0,0,W,H);
+    ctx.fillStyle='#07070a';
+    ctx.fillRect(0,0,W,H);
+
+    // subtle grid
+    ctx.save();
+    ctx.globalAlpha=0.04;
+    ctx.strokeStyle='#00d5ff';
+    ctx.lineWidth=1;
+    for(let y=80;y<H;y+=62){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(W,y);ctx.stroke();}
+    ctx.restore();
+
+    ctx.globalCompositeOperation='lighter';
+
+    // draw layers except center
+    layers.filter(l=>l.id!==0).forEach(l=>{
+      const i = l.id;
+      const layerY = cy + i*30;
+      const rx = 268 - Math.abs(i)*7.2;
+      const ry = rx * 0.265;
+      const dir = i<0 ? 1 : -1;
+      const spin = time * 0.28 * dir * (0.75 + Math.abs(i)*0.045);
+      
+      // vertical beam to center
+      ctx.beginPath();
+      ctx.moveTo(cx, layerY);
+      ctx.lineTo(cx, cy + (i<0?10:-10));
+      ctx.strokeStyle = hexToRgba(l.color, beamAlpha * (0.45 + 0.55*(1-Math.abs(i)/8.5)));
+      ctx.lineWidth = beamWidth * (0.7 + 0.3*(1-Math.abs(i)/8));
+      ctx.shadowColor = l.color;
+      ctx.shadowBlur = 14 * (coupling/100);
+      ctx.stroke();
+      ctx.shadowBlur=0;
+
+      // 16 dots and curves
+      for(let n=0;n<16;n++){
+        const ang = (n/16)*Math.PI*2 + spin;
+        const x = cx + Math.cos(ang)*rx;
+        const y = layerY + Math.sin(ang)*ry;
+
+        // curve to center of layer
+        ctx.beginPath();
+        ctx.moveTo(x,y);
+        const mx = cx + (x-cx)*0.33;
+        const my = layerY + (y-layerY)*0.33;
+        ctx.quadraticCurveTo(mx, my, cx, layerY);
+        ctx.strokeStyle = hexToRgba(l.color, 0.14 + beamAlpha*0.32);
+        ctx.lineWidth = 0.85;
+        ctx.stroke();
+
+        // dot
+        ctx.beginPath();
+        ctx.arc(x,y,2.7,0,Math.PI*2);
+        ctx.fillStyle = l.color;
+        ctx.shadowColor = l.color;
+        ctx.shadowBlur = 9;
+        ctx.fill();
+        ctx.shadowBlur=0;
+      }
+
+      // plane ellipse
+      ctx.beginPath();
+      ctx.ellipse(cx, layerY, rx, ry, 0, 0, Math.PI*2);
+      ctx.strokeStyle = hexToRgba(l.color, planeAlpha*0.85);
+      ctx.lineWidth = 1;
+      ctx.setLineDash([3,6]);
+      ctx.globalAlpha = 0.9;
+      ctx.stroke();
+      ctx.setLineDash([]);
+      ctx.globalAlpha = 1;
+    });
+
+    // center layer plane
+    const rx0 = 282, ry0 = 75;
+    ctx.beginPath();
+    ctx.ellipse(cx, cy, rx0, ry0, 0,0,Math.PI*2);
+    ctx.strokeStyle='rgba(255,255,255,0.22)';
+    ctx.lineWidth=1.4;
+    ctx.setLineDash([2,5]);
+    ctx.stroke();
+    ctx.setLineDash([]);
+
+    // core
+    const corePulse = Math.sin(time*2.2)*1.6;
+    const coreR = 10 + corePulse + output*0.55;
+
+    // core glow
+    for(let g=4;g>=0;g--){
+      ctx.beginPath();
+      ctx.arc(cx,cy, coreR + g*7,0,Math.PI*2);
+      ctx.fillStyle = `rgba(0,213,255,${0.045 - g*0.007})`;
+      ctx.shadowColor='#00d5ff';
+      ctx.shadowBlur = 22 + output*3.5;
+      ctx.fill();
+    }
+    ctx.shadowBlur=0;
+
+    ctx.beginPath();
+    ctx.arc(cx,cy,coreR+3,0,Math.PI*2);
+    ctx.fillStyle='rgba(255,255,255,0.12)';
+    ctx.fill();
+
+    ctx.beginPath();
+    ctx.arc(cx,cy,coreR,0,Math.PI*2);
+    ctx.fillStyle='#ffffff';
+    ctx.shadowColor='#00d5ff';
+    ctx.shadowBlur=18 + output*4;
+    ctx.fill();
+    ctx.shadowBlur=0;
+
+    ctx.beginPath();
+    ctx.arc(cx,cy,coreR*0.48,0,Math.PI*2);
+    ctx.fillStyle='rgba(255,255,255,0.95)';
+    ctx.fill();
+
+    // horizontal output beam
+    const beamStart = cx + coreR + 5;
+    const beamEnd = cx + 330;
+    const beamY = cy;
+    const w = output;
+
+    // outer glow
+    ctx.beginPath();
+    ctx.moveTo(beamStart, beamY);
+    ctx.lineTo(beamEnd, beamY);
+    ctx.strokeStyle='rgba(0,213,255,0.18)';
+    ctx.lineWidth = w + 18;
+    ctx.shadowColor='#00d5ff';
+    ctx.shadowBlur=28;
+    ctx.lineCap='round';
+    ctx.stroke();
+    ctx.shadowBlur=0;
+
+    ctx.beginPath();
+    ctx.moveTo(beamStart, beamY);
+    ctx.lineTo(beamEnd, beamY);
+    ctx.strokeStyle='rgba(255,255,255,0.92)';
+    ctx.lineWidth = w;
+    ctx.shadowColor='#00d5ff';
+    ctx.shadowBlur=14 + w*1.2;
+    ctx.stroke();
+    ctx.shadowBlur=0;
+
+    // traveling photons
+    const dist = beamEnd - beamStart;
+    const speed = 70 + output*14;
+    ctx.shadowColor='#ffffff';
+    ctx.shadowBlur=8;
+    for(let p=0;p<6;p++){
+      const pos = (time*speed + p*58) % (dist+40);
+      if(pos>dist) continue;
+      const x = beamStart + pos;
+      const ph = 1.8 + Math.sin(time*4 + p)*0.6;
+      ctx.beginPath();
+      ctx.arc(x, beamY, ph,0,Math.PI*2);
+      ctx.fillStyle='rgba(255,255,255,0.95)';
+      ctx.fill();
+    }
+    ctx.shadowBlur=0;
+
+    ctx.globalCompositeOperation='source-over';
+
+    // center label glow
+    ctx.fillStyle='rgba(0,213,255,0.09)';
+    ctx.font='10px monospace';
+    ctx.textAlign='center';
+    ctx.fillText('WHITE CORE', cx, cy+44);
+  }
+
+  let last=0;
+  function loop(ts){
+    draw(ts);
+    requestAnimationFrame(loop);
+  }
+  requestAnimationFrame(loop);
+})();
+</script>
+
+</body></html>

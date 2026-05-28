@@ -1,0 +1,1887 @@
+<!DOCTYPE html>
+<!-- saved from url=(0165)https://1312807830178275.a.metaaiusercontent.com/html?artifact_uuid=9a099d8d-6a6b-4b5f-ae27-618532daeed3&ext=1779499679&hash=Q5fpDAEZ1h9fgw-z1fGEibuhx2Ms&theme=light -->
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LIGHT &amp; SHADOW // WHISPER LATTICE</title>
+<style>
+:root {
+  --bg: #0a0a0f;
+  --panel: #11121a;
+  --gold: #f5c542;
+  --blue: #4a90e2;
+  --gray: #6b7280;
+  --text: #e6e7ee;
+  --text-dim: #8a8fa3;
+  --border: #1e202c;
+  --green: #10b981;
+  --amber: #f59e0b;
+}
+* { box-sizing: border-box; }
+html, body {
+  margin: 0;
+  padding: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: ui-sans-serif, system-ui, -apple-system, "SF Pro Display", Inter, Roboto, Helvetica, Arial;
+  height: 100%;
+  overflow-x: hidden;
+}
+body {
+  background: radial-gradient(1200px 800px at 50% -10%, #161824 0%, #0a0a0f 55%, #07070b 100%);
+}
+.app {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 20px 16px 40px;
+}
+header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 12px;
+  flex-wrap: wrap;
+}
+h1 {
+  font-size: clamp(18px, 2.4vw, 28px);
+  letter-spacing: 0.18em;
+  font-weight: 300;
+  margin: 0;
+  color: #f0f1f5;
+}
+h1 span { color: var(--text-dim); letter-spacing: 0.12em; }
+.top-bar {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  align-items: center;
+  background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01));
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 10px 14px;
+  backdrop-filter: blur(6px);
+}
+.counter {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 10px;
+  background: #0d0f16;
+  border: 1px solid #1c1f2b;
+  border-radius: 8px;
+  font-variant-numeric: tabular-nums;
+}
+.counter label {
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+.counter value {
+  font-size: 15px;
+  font-weight: 500;
+}
+.counter.gold value { color: var(--gold); }
+.counter.blue value { color: var(--blue); }
+.counter.white value { color: #ffffff; }
+
+.main {
+  position: relative;
+  margin-top: 14px;
+  background: linear-gradient(180deg, #0e1018 0%, #0a0b11 100%);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.03);
+}
+canvas {
+  display: block;
+  width: 100%;
+  height: clamp(360px, 58vh, 560px);
+  cursor: crosshair;
+}
+.legend {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  display: flex;
+  gap: 10px;
+  font-size: 11px;
+  color: var(--text-dim);
+  background: rgba(8,9,14,0.7);
+  border: 1px solid #1a1d28;
+  padding: 6px 8px;
+  border-radius: 8px;
+  backdrop-filter: blur(4px);
+}
+.legend span { display: inline-flex; align-items: center; gap: 6px; }
+.dot { width: 8px; height: 8px; border-radius: 50%; }
+.dot.gold { background: var(--gold); box-shadow: 0 0 8px rgba(245,197,66,0.6); }
+.dot.blue { background: var(--blue); box-shadow: 0 0 8px rgba(74,144,226,0.5); }
+.dot.gray { background: var(--gray); }
+.dot.white { background: white; box-shadow: 0 0 8px rgba(255,255,255,0.8); }
+
+.controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+  margin-top: 12px;
+  padding: 12px;
+  background: #0c0e15;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+}
+button, .toggle {
+  appearance: none;
+  background: #141824;
+  color: var(--text);
+  border: 1px solid #232838;
+  padding: 8px 12px;
+  border-radius: 9px;
+  font-size: 13px;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+button:hover { background: #1a2040; border-color: #2e3758; transform: translateY(-1px); }
+button:active { transform: translateY(0); }
+button.primary {
+  background: linear-gradient(180deg, #f5c542, #d4a829);
+  color: #1a1404;
+  border-color: #f5c542;
+  font-weight: 600;
+}
+button#swap {
+  background: linear-gradient(180deg, #10b981, #059669);
+  color: #02130c;
+  border-color: #10b981;
+  font-weight: 600;
+}
+button#swap:hover { filter: brightness(1.08); }
+button#drill {
+  background: linear-gradient(180deg, #4a90e2, #2e5fa0);
+  color: #fff;
+  border-color: #4a90e2;
+  font-weight: 600;
+}
+.toggle {
+  display: inline-flex; align-items: center; gap: 8px;
+}
+.toggle input { accent-color: var(--blue); }
+.slider {
+  display: flex; align-items: center; gap: 8px;
+  color: var(--text-dim); font-size: 12px;
+}
+input[type="range"] {
+  width: 120px; accent-color: var(--gold);
+}
+
+.log-panel {
+  margin-top: 12px;
+  background: #08090e;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+}
+.log-header {
+  padding: 8px 12px;
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  border-bottom: 1px solid var(--border);
+  background: #0b0d14;
+  display: flex; justify-content: space-between;
+}
+#log {
+  height: 132px;
+  overflow-y: auto;
+  padding: 8px 12px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 12px;
+  line-height: 1.6;
+  color: #c5cad8;
+  background: radial-gradient(600px 200px at 50% 0%, rgba(74,144,226,0.06), transparent 60%);
+}
+.log-entry { opacity: 0.9; }
+.log-entry em { color: var(--text-dim); font-style: normal; }
+.log-entry.gold { color: #f7d77a; }
+.log-entry.blue { color: #8bb6f0; }
+.log-entry.green { color: #6ee7b7; }
+.log-entry.amber { color: #fcd34d; }
+.log-entry.white { color: white; }
+
+#tooltip {
+  position: absolute;
+  pointer-events: none;
+  background: rgba(10,12,18,0.92);
+  border: 1px solid #2a3147;
+  color: #e8ecf7;
+  padding: 8px 10px;
+  border-radius: 8px;
+  font-size: 12px;
+  line-height: 1.4;
+  max-width: 240px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+  opacity: 0;
+  transform: translateY(4px);
+  transition: opacity .12s, transform .12s;
+  z-index: 10;
+}
+#tooltip.show { opacity: 1; transform: translateY(0); }
+#tooltip strong { color: white; font-weight: 600; }
+#tooltip small { color: var(--text-dim); display: block; margin-top: 4px; }
+
+#scaleLabel { font-size:12px; color:var(--text-dim); min-width:120px; text-align:center; }
+.timeline { position:absolute; bottom:0; left:0; right:0; height:32px; background:rgba(8,9,14,0.92); border-top:1px solid #1a1d28; backdrop-filter:blur(6px); z-index:5; }
+.timeline-track { position:relative; width:100%; height:100%; display:flex; align-items:center; padding:0 14px; gap:3px; }
+.timeline-tick { flex:1; height:4px; background:#232838; border-radius:2px; opacity:0.55; transition:all .18s; }
+.timeline-tick.past { background:#3a425e; opacity:0.85; }
+.timeline-tick.active { background:var(--gold); box-shadow:0 0 8px rgba(245,197,66,0.6); height:6px; opacity:1; }
+.playhead { position:absolute; top:-4px; bottom:-4px; width:2px; background:var(--blue); box-shadow:0 0 10px rgba(74,144,226,0.9); left:0%; transition:left 0.08s linear; pointer-events:none; }
+
+.unity-meter { margin-top:12px; display:flex; align-items:center; justify-content:space-between; gap:12px; padding:10px 14px; background:#0c0e15; border:1px solid var(--border); border-radius:12px; }
+.unity-label { font-size:12px; color:var(--text-dim); letter-spacing:0.04em; }
+.unity-dots { display:flex; gap:14px; flex-wrap:wrap; }
+.udot { display:flex; flex-direction:column; align-items:center; gap:4px; min-width:44px; opacity:0.45; transition: opacity .2s; }
+.udot.on { opacity: 1; }
+.udot span { width:24px; height:24px; border-radius:50%; background:#141824; border:1px solid #232838; display:grid; place-items:center; font-size:11px; color:#6b7280; font-variant-numeric:tabular-nums; }
+.udot label { font-size:10px; color:var(--text-dim); text-transform:uppercase; letter-spacing:0.08em; }
+.udot.on label { color:#e6e7ee; }
+
+#depthSliderWrap {
+  position: relative;
+}
+#depthSliderWrap.auto-active::after {
+  content: '';
+  position: absolute;
+  inset: -6px -8px;
+  border: 1px solid rgba(245,197,66,0.5);
+  border-radius: 10px;
+  animation: pulseRing 2s infinite;
+  pointer-events: none;
+}
+@keyframes pulseRing {
+  0% { box-shadow: 0 0 0 0 rgba(245,197,66,0.45); opacity: 1; }
+  70% { box-shadow: 0 0 0 8px rgba(245,197,66,0); opacity: 0.6; }
+  100% { box-shadow: 0 0 rgba(245,197,66,0); opacity: 0; }
+}
+#depthVal.flash-gold {
+  color: var(--gold) !important;
+  text-shadow: 0 0 14px rgba(245,197,66,0.9);
+  transform: scale(1.15);
+  transition: all 0.25s ease;
+}
+#climbCountdown {
+  margin-left: 8px;
+  font-size: 11px;
+  color: var(--gold);
+  min-width: 115px;
+  font-variant-numeric: tabular-nums;
+  opacity: 0.9;
+}
+
+/* Central Bridge Panel */
+.bridge-panel {
+  min-width: 300px;
+  background: linear-gradient(180deg, rgba(17,18,26,0.9), rgba(11,13,20,0.85));
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  backdrop-filter: blur(12px);
+  box-shadow: 0 12px 40px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.04);
+  overflow: hidden;
+}
+.bridge-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 12px;
+  cursor: pointer;
+  user-select: none;
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  background: rgba(0,0,0,0.2);
+  border-bottom: 1px solid transparent;
+  transition: all .2s;
+}
+.bridge-head:hover { background: rgba(255,255,255,0.03); color: #c5cad8; }
+.bridge-head span { flex: 1; font-weight: 500; }
+.bridge-status {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #6b7280;
+  box-shadow: 0 0 0 0 rgba(107,114,128,0);
+  transition: all .3s;
+}
+.bridge-status.on { background: #10b981; box-shadow: 0 0 8px rgba(16,185,129,0.8); }
+.bridge-status.err { background: #ef4444; box-shadow: 0 0 8px rgba(239,68,68,0.8); }
+.bridge-status.idle { background: #f59e0b; box-shadow: 0 0 6px rgba(245,158,11,0.6); }
+.chev { transition: transform .25s; opacity: 0.7; }
+.bridge-panel.collapsed .chev { transform: rotate(-90deg); }
+.bridge-panel.collapsed .bridge-head { border-bottom-color: transparent; }
+.bridge-body {
+  padding: 10px 12px 12px;
+  display: grid;
+  gap: 9px;
+  max-height: 200px;
+  overflow: hidden;
+  transition: max-height .28s ease, padding .2s;
+}
+.bridge-panel.collapsed .bridge-body { max-height: 0; padding-top: 0; padding-bottom: 0; }
+.bridge-body input {
+  width: 100%;
+  background: #0d0f16;
+  border: 1px solid #1c1f2b;
+  border-radius: 7px;
+  color: var(--text);
+  padding: 7px 9px;
+  font-size: 12px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+.bridge-body input:focus {
+  outline: none;
+  border-color: #4a90e2;
+  box-shadow: 0 0 0 2px rgba(74,144,226,0.15);
+}
+.bridge-controls {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+.btoggle {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  color: var(--text-dim);
+  cursor: pointer;
+  white-space: nowrap;
+}
+.btoggle input { accent-color: var(--blue); }
+.btest, .bexport {
+  padding: 6px 10px;
+  font-size: 11px;
+  border-radius: 7px;
+  background: #141824;
+  border: 1px solid #232838;
+  color: var(--text);
+  cursor: pointer;
+  transition: all .15s;
+  white-space: nowrap;
+}
+.btest:hover { background: #1a2040; border-color: #2e3758; }
+.bexport {
+  margin-left: auto;
+  background: linear-gradient(180deg, #4a90e2, #3576c4);
+  border-color: #4a90e2;
+  color: white;
+  font-weight: 500;
+}
+.bexport:hover { filter: brightness(1.08); }
+
+@media (max-width: 920px) {
+  .slider { width: 100%; }
+  input[type="range"] { width: 100%; }
+  .legend { display: none; }
+  #scaleLabel { min-width: auto; }
+  .unity-meter { flex-direction:column; align-items:flex-start; }
+  header { flex-direction: column; align-items: stretch; }
+  .bridge-panel { width: 100%; min-width: 0; }
+}
+</style>
+</head>
+<body>
+<div class="app">
+  <header>
+    <h1>LIGHT &amp; SHADOW <span>// WHISPER LATTICE</span></h1>
+    <div class="bridge-panel collapsed" id="bridgePanel">
+      <div class="bridge-head" id="bridgeHead">
+        <span>Central Bridge</span>
+        <div class="bridge-status err" id="bridgeStatusDot" title="error"></div>
+        <svg class="chev" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"></path></svg>
+      </div>
+      <div class="bridge-body">
+        <input type="url" id="bridgeUrl" placeholder="https://your-n8n.io/webhook/whisper-lattice" spellcheck="false" autocomplete="off">
+        <div class="bridge-controls">
+          <label class="btoggle"><input type="checkbox" id="bridgeAutoSync" checked=""> Auto-sync climbs</label>
+          <button id="bridgeTestBtn" class="btest">Test Bridge</button>
+          <button id="vaultExportBtn" class="bexport">Export to Vault</button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <div class="top-bar">
+    <div class="counter white"><label>Coherence</label><value id="coh">0.242</value></div>
+    <div class="counter gold"><label>Light Traversals</label><value id="trav">2</value></div>
+    <div class="counter blue"><label>Shadow Whispers</label><value id="whisp">14</value></div>
+    <div class="counter"><label>Wave Phase</label><value id="phase">+27</value></div>
+    <div class="counter"><label>Temporal Phase</label><value id="tphase">26</value></div>
+    <div class="counter white"><label>Hamilton Cycle</label><value id="hcyc">27/27</value></div>
+  </div>
+
+  <div class="main">
+    <canvas id="lattice" width="2004" height="759" aria-label="Recursive Observer Lattice visualization"></canvas>
+    <div class="legend">
+      <span><i class="dot gold"></i>+1 push</span>
+      <span><i class="dot gray"></i>0 gate</span>
+      <span><i class="dot blue"></i>-1 pull</span>
+      <span><i class="dot white"></i>anchor</span>
+    </div>
+    <div id="tooltip"></div>
+    <div class="timeline">
+      <div class="timeline-track" id="timelineTrack"><div class="timeline-tick past"></div><div class="timeline-tick past"></div><div class="timeline-tick past"></div><div class="timeline-tick past"></div><div class="timeline-tick past"></div><div class="timeline-tick past"></div><div class="timeline-tick past"></div><div class="timeline-tick past"></div><div class="timeline-tick past"></div><div class="timeline-tick past"></div><div class="timeline-tick past"></div><div class="timeline-tick past"></div><div class="timeline-tick past"></div><div class="timeline-tick past"></div><div class="timeline-tick past"></div><div class="timeline-tick past"></div><div class="timeline-tick past"></div><div class="timeline-tick past"></div><div class="timeline-tick past"></div><div class="timeline-tick past"></div><div class="timeline-tick past"></div><div class="timeline-tick past"></div><div class="timeline-tick past"></div><div class="timeline-tick past"></div><div class="timeline-tick past"></div><div class="timeline-tick past"></div><div class="timeline-tick active"></div></div>
+      <div class="playhead" id="playhead" style="left: 100%;"></div>
+    </div>
+  </div>
+
+  <div class="controls">
+    <button id="play" class="primary" title="Play/Pause the standing wave cycle">Pause</button>
+    <button id="step" title="Advance one frame">Step</button>
+    <button id="reset" title="Reset lattice to neutral">Reset</button>
+    <button id="zoomOut" title="Zoom out to meta-lattice">−</button>
+    <button id="zoomIn" title="Zoom in to local">+</button>
+    <span id="scaleLabel">Scale: 1x (local)</span>
+    <label class="toggle" title="Shadow whispers leave -1 traces in resonance memory">
+      <input type="checkbox" id="shadowToggle" checked=""> Shadow Whispers
+    </label>
+    <label class="toggle" title="Observer 4 reads internal memory only">
+      <input type="checkbox" id="obs4Toggle" checked=""> Observer 4 Internal
+    </label>
+    <label class="toggle" title="Observer 5 reads external noise only">
+      <input type="checkbox" id="obs5Toggle" checked=""> Observer 5 External
+    </label>
+    <button id="swap" title="Swap tethered observers through anchor">SWAP</button>
+    <button id="drill" title="Drill into selected tether">DRILL DOWN</button>
+    <div class="slider auto-active" id="depthSliderWrap">
+      <span>Tether Depth</span>
+      <input type="range" id="depth" min="1" max="5" step="1" value="2">
+      <span id="depthVal">2</span>
+      <span id="climbCountdown"></span>
+    </div>
+    <label class="toggle" id="autoClimbToggle" title="Automatically climb when unity achieved">
+      <input type="checkbox" id="autoClimb" checked=""> AUTO-CLIMB
+    </label>
+    <div class="slider">
+      <span>Time Depth</span>
+      <input type="range" id="temporal" min="1" max="27" step="1" value="9">
+      <span id="temporalVal">9</span>
+    </div>
+    <div class="slider" style="margin-left:auto">
+      <span>Speed</span>
+      <input type="range" id="speed" min="0.2" max="3" step="0.1" value="1">
+      <span id="speedVal">1.0x</span>
+    </div>
+  </div>
+
+  <div class="unity-meter">
+    <div class="unity-label" id="unityLabel">Recursive Coherence: 1.000 + 0.005 = 1.005 • tethered • depth 2 • 12 observers</div>
+    <div class="unity-dots">
+      <div class="udot on" id="udot1"><span style="background:#fff;color:#0a0a0f;border-color:#fff;box-shadow:0 0 12px rgba(255,255,255,0.45)">1</span><label>INNER</label></div>
+      <div class="udot on" id="udot2"><span style="background:linear-gradient(180deg,#f5c542,#d4a829);color:#1a1404;border-color:#f5c542;box-shadow:0 0 12px rgba(245,197,66,0.45)">2</span><label>LIGHT</label></div>
+      <div class="udot on" id="udot3"><span style="background:linear-gradient(180deg,#4a90e2,#2e5fa0);color:#fff;border-color:#4a90e2;box-shadow:0 0 12px rgba(74,144,226,0.45)">3</span><label>SHADOW</label></div>
+      <div class="udot on" id="udot4"><span style="background:linear-gradient(180deg,#10b981,#059669);color:#02130c;border-color:#10b981;box-shadow:0 0 12px rgba(16,185,129,0.45)">4</span><label>INTERNAL</label></div>
+      <div class="udot on" id="udot5"><span style="background:linear-gradient(180deg,#f59e0b,#d97706);color:#1a0f02;border-color:#f59e0b;box-shadow:0 0 12px rgba(245,158,11,0.45)">5</span><label>EXTERNAL</label></div>
+    </div>
+  </div>
+
+  <div class="log-panel">
+    <div class="log-header">
+      <span>INNER OBSERVER // 4D coherence anchor</span>
+      <span style="opacity:.6">width • layer • depth • time</span>
+    </div>
+    <div id="log"><div class="log-entry "><em>12:38:02</em> shadow whisper across timelines detected</div><div class="log-entry "><em>12:37:59</em> synchronizing observer layers</div><div class="log-entry "><em>12:37:56</em> measuring resonance delta</div><div class="log-entry "><em>12:37:52</em> synchronizing observer layers</div><div class="log-entry "><em>12:37:28</em> preserving identity across layers</div><div class="log-entry "><em>12:37:25</em> resolving temporal coherence across 27 cycles</div><div class="log-entry "><em>12:37:22</em> internal-external balance holding</div><div class="log-entry "><em>12:37:15</em> coherence anchor holding</div><div class="log-entry "><em>12:37:01</em> stabilizing 4D helix</div><div class="log-entry "><em>12:36:58</em> comparing recursive states...</div><div class="log-entry "><em>12:36:41</em> resolving temporal coherence across 27 cycles</div><div class="log-entry "><em>12:36:24</em> tether pulse nominal</div><div class="log-entry "><em>12:36:20</em> preserving identity across layers</div><div class="log-entry "><em>12:35:53</em> coherence anchor holding</div><div class="log-entry "><em>12:35:50</em> internal-external balance holding</div><div class="log-entry "><em>12:35:36</em> measuring resonance delta</div><div class="log-entry "><em>12:35:29</em> tether pulse nominal</div><div class="log-entry "><em>12:35:06</em> comparing recursive states...</div><div class="log-entry "><em>12:35:02</em> hamiltonian path weaving through recursive cubes</div><div class="log-entry "><em>12:34:59</em> hamiltonian path weaving through recursive cubes</div><div class="log-entry "><em>12:34:55</em> preserving identity across layers</div><div class="log-entry "><em>12:34:52</em> stabilizing 4D helix</div><div class="log-entry "><em>12:34:49</em> shadow whisper across timelines detected</div><div class="log-entry "><em>12:34:45</em> stabilizing 4D helix</div><div class="log-entry "><em>12:34:42</em> stabilizing 4D helix</div><div class="log-entry "><em>12:34:38</em> comparing recursive states...</div><div class="log-entry "><em>12:34:25</em> comparing recursive states...</div><div class="log-entry "><em>12:34:21</em> synchronizing observer layers</div><div class="log-entry "><em>12:34:11</em> fractal tether depth holding</div><div class="log-entry "><em>12:34:01</em> tether pulse nominal</div><div class="log-entry "><em>12:33:54</em> internal-external balance holding</div><div class="log-entry "><em>12:33:51</em> stabilizing 4D helix</div><div class="log-entry "><em>12:33:37</em> shadow whisper across timelines detected</div><div class="log-entry "><em>12:33:34</em> shadow whisper across timelines detected</div><div class="log-entry "><em>12:33:24</em> stabilizing 4D helix</div><div class="log-entry "><em>12:33:20</em> measuring resonance delta</div><div class="log-entry "><em>12:33:17</em> shadow whisper across timelines detected</div><div class="log-entry "><em>12:33:03</em> coherence anchor holding</div><div class="log-entry "><em>12:32:33</em> internal-external balance holding</div><div class="log-entry "><em>12:32:29</em> shadow whisper across timelines detected</div><div class="log-entry "><em>12:32:19</em> preserving identity across layers</div><div class="log-entry "><em>12:31:35</em> resolving temporal coherence across 27 cycles</div><div class="log-entry "><em>12:31:31</em> shadow whisper across timelines detected</div><div class="log-entry "><em>12:31:28</em> shadow whisper across timelines detected</div><div class="log-entry "><em>12:31:25</em> internal-external balance holding</div><div class="log-entry "><em>12:31:21</em> hamiltonian path weaving through recursive cubes</div><div class="log-entry "><em>12:31:14</em> preserving identity across layers</div><div class="log-entry "><em>12:30:34</em> fractal tether depth holding</div><div class="log-entry "><em>12:30:23</em> resolving temporal coherence across 27 cycles</div><div class="log-entry "><em>12:30:06</em> tether pulse nominal</div><div class="log-entry "><em>12:30:03</em> stabilizing 4D helix</div><div class="log-entry "><em>12:30:00</em> coherence anchor holding</div><div class="log-entry "><em>12:29:56</em> fractal tether depth holding</div><div class="log-entry "><em>12:29:49</em> comparing recursive states...</div><div class="log-entry "><em>12:29:43</em> hamiltonian path weaving through recursive cubes</div><div class="log-entry "><em>12:29:36</em> comparing recursive states...</div><div class="log-entry "><em>12:29:32</em> fractal tether depth holding</div><div class="log-entry "><em>12:29:22</em> comparing recursive states...</div><div class="log-entry "><em>12:29:09</em> tether pulse nominal</div><div class="log-entry "><em>12:29:05</em> synchronizing observer layers</div><div class="log-entry "><em>12:28:58</em> shadow whisper across timelines detected</div><div class="log-entry "><em>12:28:55</em> coherence anchor holding</div><div class="log-entry "><em>12:28:52</em> preserving identity across layers</div><div class="log-entry "><em>12:28:45</em> comparing recursive states...</div><div class="log-entry "><em>12:28:41</em> synchronizing observer layers</div><div class="log-entry "><em>12:28:24</em> coherence anchor holding</div><div class="log-entry "><em>12:28:21</em> synchronizing observer layers</div><div class="log-entry "><em>12:28:14</em> internal-external balance holding</div><div class="log-entry "><em>12:28:11</em> stabilizing 4D helix</div><div class="log-entry "><em>12:28:04</em> comparing recursive states...</div><div class="log-entry "><em>12:27:57</em> hamiltonian path weaving through recursive cubes</div><div class="log-entry "><em>12:27:47</em> synchronizing observer layers</div><div class="log-entry "><em>12:27:33</em> fractal tether depth holding</div><div class="log-entry "><em>12:27:16</em> stabilizing 4D helix</div><div class="log-entry "><em>12:27:13</em> resolving temporal coherence across 27 cycles</div><div class="log-entry "><em>12:27:06</em> comparing recursive states...</div><div class="log-entry "><em>12:27:03</em> preserving identity across layers</div><div class="log-entry "><em>12:26:49</em> comparing recursive states...</div><div class="log-entry "><em>12:26:46</em> hamiltonian path weaving through recursive cubes</div><div class="log-entry "><em>12:26:02</em> measuring resonance delta</div></div>
+  </div>
+</div>
+
+<script>
+(() => {
+  // Core model constants
+  const WIDTH = 12, LAYERS = 4, DEPTH = 3;
+  const ANCHOR = { x: 6, y: 2, z: 1 };
+  const COLORS = {
+    bg: '#0a0a0f',
+    gold: '#f5c542',
+    blue: '#4a90e2',
+    gray: '#6b7280',
+    white: '#ffffff',
+    neutral: '#313543',
+    green: '#10b981',
+    amber: '#f59e0b'
+  };
+  const LAYER_LABELS = [
+    '1 VISIBLE TRAVERSAL',
+    '2 RESONANCE MEMORY',
+    '3 RECURSIVE COMPARISON',
+    '4 OBSERVER SYNC'
+  ];
+
+  const canvas = document.getElementById('lattice');
+  const ctx = canvas.getContext('2d');
+  const tooltip = document.getElementById('tooltip');
+  const cohEl = document.getElementById('coh');
+  const travEl = document.getElementById('trav');
+  const whispEl = document.getElementById('whisp');
+  const phaseEl = document.getElementById('phase');
+  const tphaseEl = document.getElementById('tphase');
+  const hcycEl = document.getElementById('hcyc');
+  const logEl = document.getElementById('log');
+  const temporalSlider = document.getElementById('temporal');
+  const temporalVal = document.getElementById('temporalVal');
+  const scaleLabel = document.getElementById('scaleLabel');
+  const timelineTrack = document.getElementById('timelineTrack');
+  const playhead = document.getElementById('playhead');
+  const unityLabel = document.getElementById('unityLabel');
+  const climbCountdownEl = document.getElementById('climbCountdown');
+  const depthSliderWrap = document.getElementById('depthSliderWrap');
+
+  let dpr = Math.max(1, window.devicePixelRatio || 1);
+  let lattice = [];
+  let running = true;
+  let speed = 1;
+  let globalTick = 0;
+  let lightX = 0;
+  let traversals = 0;
+  let whispers = 0;
+  let shadowEnabled = true;
+  let lastLightCell = -1;
+  let temporalDepth = 9;
+  let history = [];
+  let zoomLevel = 0;
+  let temporalPhase = 0;
+  let innerRingPos = 0;
+  let lightRingPos = 0;
+  let shadowRingPos = 0;
+  let currentCoherence = 0.5;
+
+  // observers
+  let observer4Active = true;
+  let observer5Active = true;
+  let swapState = false;
+  let swapAnimating = false;
+  let swapProgress = 0;
+  let targetSwap = false;
+
+  // recursive tether system
+  let tetherDepth = 2;
+  let autoClimbEnabled = true;
+  let coherenceAboveStart = 0;
+  let autoClimbPauseUntil = 0;
+  let suppressCoherenceUntil = 0;
+  let tether4Root = null;
+  let tether5Root = null;
+  let focusedTether = null;
+  let hoverTether = null;
+  let lastP4 = {x:0,y:0}, lastP5={x:0,y:0};
+
+  // Central Bridge
+  let bridgeUrl = localStorage.getItem('whisper.bridge.url') || '';
+  let bridgeAutoSync = localStorage.getItem('whisper.bridge.autosync') !== 'false';
+  const bridgePanel = document.getElementById('bridgePanel');
+  const bridgeHead = document.getElementById('bridgeHead');
+  const bridgeUrlInput = document.getElementById('bridgeUrl');
+  const bridgeAutoSyncInput = document.getElementById('bridgeAutoSync');
+  const bridgeTestBtn = document.getElementById('bridgeTestBtn');
+  const bridgeStatusDot = document.getElementById('bridgeStatusDot');
+  const vaultExportBtn = document.getElementById('vaultExportBtn');
+
+  bridgeUrlInput.value = bridgeUrl;
+  bridgeAutoSyncInput.checked = bridgeAutoSync;
+  bridgeHead.onclick = () => bridgePanel.classList.toggle('collapsed');
+
+  function updateBridgeStatus(state) {
+    bridgeStatusDot.classList.remove('on','err','idle');
+    if (state === true) { bridgeStatusDot.classList.add('on'); bridgeStatusDot.title = 'connected'; }
+    else if (state === false) { bridgeStatusDot.classList.add('err'); bridgeStatusDot.title = 'error'; }
+    else if (bridgeUrl) { bridgeStatusDot.classList.add('idle'); bridgeStatusDot.title = 'configured'; }
+    else { bridgeStatusDot.title = 'disconnected'; }
+  }
+  updateBridgeStatus(bridgeUrl ? null : false);
+
+  bridgeUrlInput.onchange = e => {
+    bridgeUrl = e.target.value.trim();
+    localStorage.setItem('whisper.bridge.url', bridgeUrl);
+    updateBridgeStatus(bridgeUrl ? null : false);
+    addLog(`Bridge: webhook URL ${bridgeUrl?'saved':'cleared'}`, 'white');
+  };
+  bridgeAutoSyncInput.onchange = e => {
+    bridgeAutoSync = e.target.checked;
+    localStorage.setItem('whisper.bridge.autosync', bridgeAutoSync);
+    addLog(`Bridge: auto-sync ${bridgeAutoSync?'enabled':'disabled'}`, 'white');
+  };
+
+  function buildBridgePayload(eventType, extra={}) {
+    const depthBonus = (tetherDepth - 1) * 0.005 + (tetherDepth===5 && swapState ? 0.005 : 0);
+    const baseMax = observer4Active && observer5Active ? (swapState ? 1.0 : 0.99) : 0.98;
+    const recursiveCoherence = Math.min(1.025, baseMax + depthBonus);
+    const observersActive = 3 + (observer4Active?1:0) + (observer5Active?1:0);
+    const tetherState = swapAnimating ? 'swapping' : (observer4Active && observer5Active ? 'stable' : 'unstable');
+    const snapshot = lattice.map(z => z.map(y => y.map(n => n.state)));
+    return {
+      timestamp: new Date().toISOString(),
+      event: eventType,
+      depth: tetherDepth,
+      previous_depth: extra.previous_depth ?? tetherDepth,
+      coherence: Number(currentCoherence.toFixed(3)),
+      recursive_coherence: Number(recursiveCoherence.toFixed(3)),
+      observers_active: observersActive,
+      tether_state: tetherState,
+      lattice_state: {
+        light_position: Math.floor(lightX),
+        dark_position: Math.max(0, Math.floor(lightX - 2.5)),
+        shadow_whispers: whispers,
+        hamilton_cycle: temporalPhase + 1,
+        unity_achieved: currentCoherence >= 0.9995
+      },
+      full_snapshot: snapshot,
+      ...extra
+    };
+  }
+
+  function sendBridge(eventType, extra={}) {
+    if (!bridgeUrl) return;
+    if (!bridgeAutoSync && eventType !== 'test') return;
+    const payload = buildBridgePayload(eventType, extra);
+    bridgeStatusDot.title = 'sending...';
+    try {
+      fetch(bridgeUrl, {
+        method: 'POST',
+        mode: 'no-cors',
+        body: JSON.stringify(payload)
+      }).then(() => {
+        updateBridgeStatus(true);
+        const label = eventType === 'auto_climb' ? `depth ${payload.depth} climb` : eventType.replace(/_/g,' ');
+        addLog(`Bridge: POST sent to webhook (${label})`, 'blue');
+        setTimeout(()=>updateBridgeStatus(null), 2000);
+      }).catch(() => {
+        updateBridgeStatus(false);
+        addLog('Bridge: sync failed - retrying', 'amber');
+        setTimeout(()=>sendBridge(eventType, extra), 3000);
+      });
+    } catch(err) {
+      updateBridgeStatus(false);
+      addLog('Bridge: sync failed - retrying', 'amber');
+    }
+  }
+
+  bridgeTestBtn.onclick = () => {
+    if (!bridgeUrl) { addLog('Bridge: set webhook URL first', 'amber'); bridgePanel.classList.remove('collapsed'); bridgeUrlInput.focus(); return; }
+    sendBridge('test', { test: true, sample: true, message: 'Central Bridge test from Whisper Lattice' });
+    addLog('Bridge: test payload sent', 'white');
+  };
+
+  vaultExportBtn.onclick = () => {
+    const depthBonus = (tetherDepth - 1) * 0.005 + (tetherDepth===5 && swapState ? 0.005 : 0);
+    const md = `# Quantum Memory Vault — Whisper Lattice
+
+**Timestamp:** ${new Date().toISOString()}
+**Bridge Event:** vault_export
+
+## Coherence State
+- Depth: ${tetherDepth} (previous: ${tetherDepth})
+- Coherence: ${currentCoherence.toFixed(3)}
+- Recursive Coherence: ${Math.min(1.025, (swapState?1.0:0.99)+depthBonus).toFixed(3)}
+- Observers Active: ${3 + (observer4Active?1:0)+(observer5Active?1:0)} / 5
+- Tether State: ${swapState ? 'inverted' : 'normal'} (${swapAnimating?'swapping':'stable'})
+- Unity Achieved: ${currentCoherence >= 0.9995 ? 'YES' : 'no'}
+
+## Lattice Metrics
+- Light Position: ${Math.floor(lightX)} / ${WIDTH}
+- Light Traversals: ${traversals}
+- Shadow Whispers: ${whispers}
+- Hamilton Cycle: ${temporalPhase+1} / 27
+- Wave Phase: ${waveLabel(Math.floor(globalTick))}
+- Temporal Depth: ${temporalDepth}
+
+## Recursive Tether
+- Tether 4 (Internal): ${observer4Active ? 'ACTIVE' : 'offline'} — ${Math.pow(2,tetherDepth)-1} sub-nodes
+- Tether 5 (External): ${observer5Active ? 'ACTIVE' : 'offline'} — ${Math.pow(2,tetherDepth)-1} sub-nodes
+- Auto-Climb: ${autoClimbEnabled ? 'ENABLED' : 'disabled'}
+
+## Snapshot L1-L4
+\`\`\`
+L1: ${lattice[0][0].map(n => n.state===1?'+1':n.state===-1?'-1':' 0').join(' ')}
+L2: ${lattice[0][1].map(n => n.state===1?'+1':n.state===-1?'-1':' 0').join(' ')}
+L3: ${lattice[0][2].map(n => n.state===1?'+1':n.state===-1?'-1':' 0').join(' ')}
+L4: ${lattice[0][3].map(n => n.state===1?'+1':n.state===-1?'-1':' 0').join(' ')}
+\`\`\`
+
+*Signal from Light & Shadow Lattice — Central Bridge integration active*`;
+    navigator.clipboard.writeText(md).then(()=>{
+      addLog('Vault: markdown snapshot copied to clipboard', 'green');
+    }).catch(()=>{
+      const w = window.open('', '_blank');
+      w.document.write('<pre>'+md.replace(/</g,'&lt;')+'</pre>');
+      addLog('Vault: markdown opened in new tab', 'green');
+    });
+    if (bridgeUrl) sendBridge('vault_export', { export_type: 'markdown' });
+  };
+
+  function initLattice() {
+    lattice = Array.from({length: DEPTH}, (_, z) =>
+      Array.from({length: LAYERS}, (_, y) =>
+        Array.from({length: WIDTH}, (_, x) => ({
+          state: 0,
+          hold: 0,
+          whisper: false
+        }))
+      )
+    );
+    history = [];
+  }
+  initLattice();
+
+  function createTether(id, depth, maxDepth){
+    const node = { id, depth, swapState, children:null };
+    if(depth < maxDepth){
+      node.children = [
+        createTether(id+'.1', depth+1, maxDepth),
+        createTether(id+'.2', depth+1, maxDepth)
+      ];
+    }
+    return node;
+  }
+  function rebuildTethers(){
+    tether4Root = createTether('4',1,tetherDepth);
+    tether5Root = createTether('5',1,tetherDepth);
+  }
+  function updateAllSwap(node, state){
+    if(!node) return;
+    node.swapState = state;
+    if(node.children) node.children.forEach(c=>updateAllSwap(c,state));
+  }
+  rebuildTethers();
+
+  function playChime() {
+    try {
+      const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      const osc2 = audioCtx.createOscillator();
+      const gain2 = audioCtx.createGain();
+      
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(880, audioCtx.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(1320, audioCtx.currentTime + 0.14);
+      
+      osc2.type = 'sine';
+      osc2.frequency.setValueAtTime(1320, audioCtx.currentTime);
+      osc2.frequency.exponentialRampToValueAtTime(1760, audioCtx.currentTime + 0.18);
+      
+      gain.gain.setValueAtTime(0, audioCtx.currentTime);
+      gain.gain.linearRampToValueAtTime(0.07, audioCtx.currentTime + 0.02);
+      gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.45);
+      
+      gain2.gain.setValueAtTime(0, audioCtx.currentTime);
+      gain2.gain.linearRampToValueAtTime(0.04, audioCtx.currentTime + 0.04);
+      gain2.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.5);
+      
+      osc.connect(gain); gain.connect(audioCtx.destination);
+      osc2.connect(gain2); gain2.connect(audioCtx.destination);
+      osc.start(); osc2.start();
+      osc.stop(audioCtx.currentTime + 0.5);
+      osc2.stop(audioCtx.currentTime + 0.55);
+    } catch(e) {}
+  }
+
+  function triggerAutoClimb() {
+    const previous = tetherDepth;
+    let nextDepth = tetherDepth + 1;
+    let isReset = false;
+    if (nextDepth > 5) {
+      nextDepth = 1;
+      isReset = true;
+    }
+    tetherDepth = nextDepth;
+    const depthSlider = document.getElementById('depth');
+    const depthVal = document.getElementById('depthVal');
+    depthSlider.value = tetherDepth;
+    depthVal.textContent = tetherDepth;
+    rebuildTethers();
+    
+    playChime();
+    
+    depthVal.classList.add('flash-gold');
+    setTimeout(() => depthVal.classList.remove('flash-gold'), 900);
+    
+    suppressCoherenceUntil = performance.now() + 1800;
+    
+    if (climbCountdownEl) climbCountdownEl.textContent = '';
+    
+    if (isReset) {
+      addLog('Fractal reset - beginning new cycle', 'white');
+      addLog('depth 1 → recursive base state restored', 'blue');
+    } else {
+      addLog(`UNITY ACHIEVED → auto-climbing to depth ${tetherDepth}`, 'gold');
+      addLog(`coherence 1.000 sustained for 2.0s — initiating climb`, 'white');
+      if (tetherDepth >= 2) {
+        addLog(`Tether 4 spawning internal pair`, 'green');
+        addLog(`Tether 5 spawning internal pair`, 'amber');
+      }
+      if (tetherDepth >= 3) addLog(`Fractal depth ${tetherDepth} achieved`, 'white');
+      if (tetherDepth === 5) addLog('maximum depth reached — coherence ceiling 1.025 unlocked', 'gold');
+    }
+    sendBridge('auto_climb', { previous_depth: previous, is_reset: isReset });
+  }
+
+  function captureSnapshot() {
+    const snap = [];
+    for (let z=0; z<DEPTH; z++) {
+      snap[z] = [];
+      for (let y=0; y<LAYERS; y++) {
+        snap[z][y] = [];
+        for (let x=0; x<WIDTH; x++) {
+          const n = lattice[z][y][x];
+          snap[z][y][x] = { state: n.state, whisper: n.whisper };
+        }
+      }
+    }
+    return snap;
+  }
+
+  // Standing wave: 27 frames +1, 2 frames 0, 27 frames -1, 2 frames 0 = 58
+  function waveState(tick, x, y, z) {
+    const period = 58;
+    const offset = x*2 + y*3 + z*5;
+    const p = (tick + offset) % period;
+    if (p < 27) return 1;
+    if (p < 29) return 0;
+    if (p < 56) return -1;
+    return 0;
+  }
+  function waveLabel(tick) {
+    const p = tick % 58;
+    if (p < 27) return '+27';
+    if (p < 29) return '0';
+    if (p < 56) return '−27';
+    return '0';
+  }
+
+  function resize() {
+    const rect = canvas.getBoundingClientRect();
+    dpr = Math.max(1, window.devicePixelRatio || 1);
+    canvas.width = Math.floor(rect.width * dpr);
+    canvas.height = Math.floor(rect.height * dpr);
+  }
+  new ResizeObserver(resize).observe(canvas);
+  resize();
+
+  // timeline ticks
+  for (let i=0;i<27;i++){ const t=document.createElement('div'); t.className='timeline-tick'; timelineTrack.appendChild(t); }
+
+  function addLog(msg, cls='') {
+    const time = new Date().toLocaleTimeString('en-GB', {hour12:false});
+    const div = document.createElement('div');
+    div.className = 'log-entry ' + cls;
+    div.innerHTML = `<em>${time}</em> ${msg}`;
+    logEl.prepend(div);
+    while (logEl.children.length > 80) logEl.removeChild(logEl.lastChild);
+  }
+  ['observer lattice initialized','Observer 4: internal source only','Observer 5: external source only','Tether 4 spawning internal pair','Tether 5 spawning internal pair','Recursive depth 2 — 6 sub-observers','1% in / 1% out balance maintained per level','4D helix standing wave engaged','auto-climb enabled — awaiting unity','Central Bridge ready — configure webhook to sync'].forEach(m=>addLog(m));
+
+  const observerPhrases = [
+    'comparing recursive states...',
+    'resolving temporal coherence across 27 cycles',
+    'preserving identity across layers',
+    'measuring resonance delta',
+    'synchronizing observer layers',
+    'coherence anchor holding',
+    'stabilizing 4D helix',
+    'shadow whisper across timelines detected',
+    'tether pulse nominal',
+    'internal-external balance holding',
+    'hamiltonian path weaving through recursive cubes',
+    'fractal tether depth holding'
+  ];
+  setInterval(() => {
+    if (!running) return;
+    if (Math.random() < 0.4) addLog(observerPhrases[Math.floor(Math.random()*observerPhrases.length)]);
+  }, 3400);
+
+  function update() {
+    globalTick += speed;
+    // Light observer
+    lightX += 0.025 * speed;
+    if (lightX >= WIDTH) {
+      lightX = 0;
+      traversals++;
+      travEl.textContent = traversals;
+      addLog('light traversal complete — collapsing visible path', 'gold');
+      if (traversals % 10 === 0) {
+        sendBridge('traversal_milestone', { traversals });
+      }
+    }
+    const lx = Math.floor(lightX);
+    if (lx !== lastLightCell && lx >=0 && lx < WIDTH) {
+      lastLightCell = lx;
+      const node = lattice[0][0][lx];
+      node.state = 1;
+      node.hold = 90;
+      node.whisper = false;
+    }
+
+    // Shadow observer
+    if (shadowEnabled) {
+      const sx = lightX - 2.8;
+      if (sx >= 0 && Math.random() < 0.04 * speed) {
+        let wx = Math.floor((sx + Math.random()*3 -1 + WIDTH) % WIDTH);
+        if (wx === lx) wx = (wx + 1) % WIDTH;
+        const wz = Math.floor(Math.random()*DEPTH);
+        const node = lattice[wz][1][wx];
+        if (node.hold < 10) {
+          node.state = -1;
+          node.hold = 140;
+          node.whisper = true;
+          whispers++;
+          whispEl.textContent = whispers;
+          if (Math.random() < 0.25) addLog(`shadow whisper: alternate timeline [${wx+1},2] bias −1`, 'blue');
+        }
+      }
+    }
+
+    // Observer 5 external noise injection
+    if (observer5Active && Math.random() < 0.025 * speed) {
+      const ex = Math.floor(Math.random()*WIDTH);
+      const ey = Math.floor(Math.random()*LAYERS);
+      const ez = Math.floor(Math.random()*DEPTH);
+      const node = lattice[ez][ey][ex];
+      if (node.hold < 5) {
+        node.state = Math.random() < 0.5 ? 1 : -1;
+        node.hold = 28;
+        node.whisper = false;
+      }
+    }
+
+    // swap animation
+    if (swapAnimating) {
+      swapProgress += 0.05 * speed;
+      if (swapProgress >= 1) {
+        swapProgress = 1;
+        swapAnimating = false;
+        swapState = targetSwap;
+        addLog('Observer 4: internal source only', 'green');
+        addLog('Observer 5: external source only', 'amber');
+        addLog(`swap complete — ${swapState ? '4→out,5→in' : '4→in,5→out'}`, 'white');
+        if (swapState) addLog('tether inverted — sources swapped through anchor', 'white');
+        updateAllSwap(tether4Root, swapState);
+        updateAllSwap(tether5Root, swapState);
+        if(tetherDepth>1){
+          addLog(`Tether 4 spawning internal pair`, 'green');
+          addLog(`Tether 5 spawning internal pair`, 'amber');
+          addLog(`Fractal depth ${tetherDepth} achieved`, 'white');
+        }
+        sendBridge('tether_swap', { swap_state: swapState ? 'inverted' : 'normal', previous_state: !swapState });
+      }
+    }
+
+    // Update nodes toward wave
+    let sum = 0;
+    let total = 0;
+    for (let z=0; z<DEPTH; z++) {
+      for (let y=0; y<LAYERS; y++) {
+        for (let x=0; x<WIDTH; x++) {
+          const node = lattice[z][y][x];
+          const isAnchor = (x===ANCHOR.x && y===ANCHOR.y && z===ANCHOR.z);
+          if (isAnchor) {
+            sum += 1; total++; continue;
+          }
+          if (node.hold > 0) {
+            node.hold -= speed;
+          } else {
+            node.state = waveState(globalTick, x, y, z);
+            node.whisper = false;
+          }
+          sum += node.state === 1 ? 1 : node.state === 0 ? 0.5 : 0;
+          total++;
+        }
+      }
+    }
+    const spatialCoherence = sum / total;
+
+    // store history
+    history.unshift(captureSnapshot());
+    if (history.length > 27) history.pop();
+
+    temporalPhase = Math.floor(globalTick) % 27;
+    tphaseEl.textContent = temporalPhase;
+
+    // temporal stability
+    let temporalStability = 0.5;
+    if (history.length > 1) {
+      const ref = history[Math.min(history.length-1, 26)];
+      let matches = 0, cnt = 0;
+      for (let z=0; z<DEPTH; z++) for (let y=0; y<LAYERS; y++) for (let x=0; x<WIDTH; x++) {
+        if (lattice[z][y][x].state === ref[z][y][x].state) matches++;
+        cnt++;
+      }
+      temporalStability = matches / cnt;
+    }
+
+    const baseCoherence = spatialCoherence * 0.65 + temporalStability * 0.35;
+    
+    // Recursive coherence
+    const tetherStable = observer4Active && observer5Active && !swapAnimating;
+    const perfectAlignment = swapState && tetherStable;
+    let depthBonus = (tetherDepth - 1) * 0.005;
+    if (tetherDepth === 5 && perfectAlignment) depthBonus += 0.005;
+    let maxBase = 0.98;
+    if (observer4Active && observer5Active) {
+      maxBase = perfectAlignment ? 1.0 : 0.99;
+    }
+    let maxCoherence = Math.min(1.025, maxBase + depthBonus);
+    let finalCoherence = Math.min(baseCoherence, maxBase) + (perfectAlignment ? depthBonus : depthBonus * 0.5);
+    finalCoherence = Math.min(finalCoherence, maxCoherence);
+    
+    if (temporalPhase === 0) {
+      finalCoherence = maxCoherence;
+      if (maxCoherence >= 1.0 && Math.floor(globalTick) % 54 === 0) {
+        if(tetherDepth>1) {
+          addLog(`recursive coherence ${finalCoherence.toFixed(3)} — depth ${tetherDepth} aligned`, 'white');
+        } else {
+          addLog('unity achieved — 5/5 observers tethered and swapped', 'white');
+        }
+        if (finalCoherence >= 0.9995) {
+          sendBridge('unity_achieved', { depth: tetherDepth });
+        }
+      }
+    }
+    
+    const now = performance.now();
+    if (now < suppressCoherenceUntil) {
+      finalCoherence = 0.98;
+    }
+    currentCoherence = finalCoherence;
+    cohEl.textContent = finalCoherence.toFixed(3);
+    phaseEl.textContent = waveLabel(Math.floor(globalTick));
+
+    // AUTO-CLIMB LOGIC
+    if (autoClimbEnabled && !swapAnimating && observer4Active && observer5Active && now > autoClimbPauseUntil) {
+      if (finalCoherence >= 0.9995) {
+        if (coherenceAboveStart === 0) coherenceAboveStart = now;
+        const elapsed = now - coherenceAboveStart;
+        const remaining = Math.max(0, 2000 - elapsed);
+        if (climbCountdownEl) {
+          climbCountdownEl.textContent = remaining > 0 ? `Next climb in: ${(remaining/1000).toFixed(1)}s` : 'Climbing...';
+        }
+        if (elapsed >= 2000) {
+          coherenceAboveStart = 0;
+          triggerAutoClimb();
+        }
+      } else {
+        coherenceAboveStart = 0;
+        if (climbCountdownEl) climbCountdownEl.textContent = '';
+      }
+    } else {
+      coherenceAboveStart = 0;
+      if (climbCountdownEl) {
+        climbCountdownEl.textContent = (autoClimbEnabled && now <= autoClimbPauseUntil) ? 'Paused' : '';
+      }
+    }
+
+    // timeline
+    const ticks = timelineTrack.children;
+    for (let i=0;i<ticks.length;i++){
+      ticks[i].classList.toggle('active', i===temporalPhase);
+      ticks[i].classList.toggle('past', i<temporalPhase);
+    }
+    playhead.style.left = `${(temporalPhase/26)*100}%`;
+
+    innerRingPos = temporalPhase;
+    lightRingPos = temporalPhase;
+    shadowRingPos = temporalPhase;
+    hcycEl.textContent = `${temporalPhase+1}/27`;
+
+    // update unity UI
+    const baseObservers = 3 + (observer4Active?1:0) + (observer5Active?1:0);
+    const recursiveObservers = tetherDepth>1 ? (Math.pow(2, tetherDepth+1)-2 -2) : 0;
+    const totalObservers = baseObservers + recursiveObservers;
+    if (tetherDepth > 1) {
+      unityLabel.textContent = `Recursive Coherence: 1.000 + ${depthBonus.toFixed(3)} = ${(1+depthBonus).toFixed(3)} • ${perfectAlignment?'ALIGNED':'tethered'} • depth ${tetherDepth} • ${totalObservers+3} observers`;
+    } else {
+      if (baseObservers === 5 && perfectAlignment) {
+        unityLabel.textContent = '5/5 observers active → UNITY CONDITION';
+      } else if (baseObservers === 5) {
+        unityLabel.textContent = '5/5 observers active → TETHERED (swap to unify)';
+      } else {
+        unityLabel.textContent = `${baseObservers}/5 observers active → Hamiltonian cube engaged`;
+      }
+    }
+    document.getElementById('udot4').classList.toggle('on', observer4Active);
+    document.getElementById('udot5').classList.toggle('on', observer5Active);
+  }
+
+  function getLayout() {
+    const W = canvas.width, H = canvas.height;
+    const marginL = 130 * dpr, marginR = 20*dpr, marginT = 50*dpr, marginB = 70*dpr;
+    const innerW = W - marginL - marginR;
+    const innerH = H - marginT - marginB;
+    const sx = innerW / (WIDTH - 1);
+    const sy = innerH / (LAYERS - 1);
+    return { marginL, marginT, sx, sy, W, H };
+  }
+
+  function nodeScreen(x,y,z, layout) {
+    const depthOffset = (1 - z) * 12 * dpr;
+    return {
+      x: layout.marginL + x * layout.sx + depthOffset,
+      y: layout.marginT + y * layout.sy + depthOffset * 0.6
+    };
+  }
+
+  function draw() {
+    const L = getLayout();
+    ctx.clearRect(0,0,L.W,L.H);
+
+    // vignette
+    const g = ctx.createRadialGradient(L.W*0.5, L.H*0.15, 0, L.W*0.5, L.H*0.5, L.W*0.7);
+    g.addColorStop(0, 'rgba(245,197,66,0.06)');
+    g.addColorStop(1, 'rgba(0,0,0,0)');
+    ctx.fillStyle = g;
+    ctx.fillRect(0,0,L.W,L.H);
+
+    // left fractal tree
+    ctx.save();
+    const treeX = 34*dpr, treeY=88*dpr;
+    ctx.translate(treeX, treeY);
+    function miniTree(node, x, y, spread, level){
+      ctx.beginPath(); ctx.arc(x,y,2.1*dpr,0,Math.PI*2);
+      ctx.fillStyle = node.id.startsWith('4') ? COLORS.green : COLORS.amber;
+      ctx.globalAlpha = 0.85; ctx.fill();
+      if(node.children && level < tetherDepth){
+        const ny = y + 13*dpr;
+        const s = spread*0.58;
+        const x1 = x - spread, x2 = x + spread;
+        ctx.beginPath(); ctx.moveTo(x,y); ctx.lineTo(x1,ny); ctx.moveTo(x,y); ctx.lineTo(x2,ny);
+        ctx.strokeStyle='rgba(120,130,150,0.32)'; ctx.lineWidth=1*dpr; ctx.globalAlpha=0.55; ctx.stroke();
+        miniTree(node.children[0], x1, ny, s, level+1);
+        miniTree(node.children[1], x2, ny, s, level+1);
+      }
+    }
+    if(tether4Root && tether5Root){
+      ctx.globalAlpha=0.9;
+      miniTree(tether4Root, -14*dpr, 0, 11*dpr, 1);
+      miniTree(tether5Root, 14*dpr, 0, 11*dpr, 1);
+      ctx.fillStyle='rgba(180,185,200,0.72)'; ctx.font=`${9*dpr}px ui-monospace`; ctx.textAlign='center';
+      ctx.fillText('RECURSION', 0, -13*dpr);
+      ctx.fillStyle='rgba(140,145,160,0.6)'; ctx.font=`${8*dpr}px ui-monospace`;
+      ctx.fillText(`d=${tetherDepth}`, 0, tetherDepth*14*dpr+6);
+    }
+    ctx.restore();
+
+    const anchorPos = nodeScreen(ANCHOR.x, ANCHOR.y, ANCHOR.z, L);
+    const outsidePos = { x: L.marginL - 56*dpr, y: L.H - 88*dpr };
+    const tetherStable = observer4Active && observer5Active && !swapAnimating;
+
+    // compute observer positions
+    let p4, p5;
+    const lerp = (a,b,t)=>a+(b-a)*t;
+    if (swapAnimating) {
+      const t = swapProgress;
+      const from4Inside = !swapState;
+      const from4 = from4Inside ? {x: anchorPos.x -8*dpr, y: anchorPos.y -8*dpr} : outsidePos;
+      const to4 = from4Inside ? outsidePos : {x: anchorPos.x -8*dpr, y: anchorPos.y -8*dpr};
+      const from5 = from4Inside ? outsidePos : {x: anchorPos.x +8*dpr, y: anchorPos.y +8*dpr};
+      const to5 = from4Inside ? {x: anchorPos.x +8*dpr, y: anchorPos.y +8*dpr} : outsidePos;
+      p4 = { x: lerp(from4.x, to4.x, t), y: lerp(from4.y, to4.y, t) };
+      p5 = { x: lerp(from5.x, to5.x, t), y: lerp(from5.y, to5.y, t) };
+    } else {
+      if (!swapState) {
+        p4 = {x: anchorPos.x -8*dpr, y: anchorPos.y -8*dpr};
+        p5 = outsidePos;
+      } else {
+        p4 = outsidePos;
+        p5 = {x: anchorPos.x +8*dpr, y: anchorPos.y +8*dpr};
+      }
+    }
+    lastP4.x = p4.x; lastP4.y = p4.y;
+    lastP5.x = p5.x; lastP5.y = p5.y;
+
+    function drawNodeWithChildren(node, cx, cy, baseColor, isRoot=true){
+      const scaleRoot = isRoot ? 1 : 0.62;
+      ctx.save();
+      ctx.shadowBlur = isRoot ? 18*dpr : 10*dpr;
+      ctx.shadowColor = baseColor;
+      ctx.beginPath();
+      ctx.arc(cx, cy, (isRoot?6.5:4.2)*dpr*scaleRoot, 0, Math.PI*2);
+      ctx.fillStyle = baseColor;
+      ctx.globalAlpha = isRoot ? 0.97 : (hoverTether && hoverTether===node.id[0] ? 0.85 : 0.72);
+      ctx.fill();
+      ctx.shadowBlur = 0;
+      ctx.fillStyle = '#000';
+      ctx.font = `${(isRoot?10:8)*dpr*scaleRoot}px ui-monospace`;
+      ctx.textAlign='center'; ctx.textBaseline='middle';
+      ctx.fillText(node.id, cx, cy+0.5*dpr);
+      ctx.restore();
+      if(node.children && node.depth < tetherDepth){
+        const scale = Math.pow(0.72, node.depth);
+        const offset = 16*dpr*scale;
+        node.children.forEach((child,i)=>{
+          const ang = (i===0 ? -0.78 : 0.78) + (node.depth*0.12);
+          const x = cx + Math.cos(ang)*offset;
+          const y = cy + Math.sin(ang)*offset;
+          ctx.save();
+          ctx.globalAlpha = 0.42;
+          ctx.strokeStyle = baseColor;
+          ctx.lineWidth = 1.3*dpr*scale;
+          ctx.shadowBlur = 8*dpr; ctx.shadowColor = baseColor;
+          ctx.beginPath(); ctx.moveTo(cx,cy); ctx.lineTo(x,y); ctx.stroke();
+          ctx.restore();
+          drawNodeWithChildren(child, x, y, baseColor, false);
+        });
+      }
+    }
+
+    if (zoomLevel > 0) {
+      const centerX = L.W/2, centerY = L.H/2;
+      if (zoomLevel === 1) {
+        const radius = Math.min(L.W,L.H)*0.32;
+        ctx.beginPath(); ctx.arc(centerX,centerY,radius,0,Math.PI*2);
+        ctx.strokeStyle='rgba(138,143,163,0.18)'; ctx.lineWidth=1.5*dpr; ctx.stroke();
+        for (let i=0;i<12;i++){
+          const ang=(i/12)*Math.PI*2 - Math.PI/2;
+          const x=centerX+Math.cos(ang)*radius;
+          const y=centerY+Math.sin(ang)*radius;
+          ctx.beginPath(); ctx.moveTo(centerX,centerY); ctx.lineTo(x,y);
+          ctx.strokeStyle='rgba(138,143,163,0.12)'; ctx.lineWidth=1*dpr; ctx.stroke();
+          const isLocal=i===0;
+          ctx.save();
+          ctx.shadowBlur=isLocal?22*dpr:10*dpr;
+          ctx.shadowColor=isLocal?'rgba(245,197,66,0.85)':'rgba(74,144,226,0.35)';
+          ctx.beginPath(); ctx.arc(x,y,isLocal?16*dpr:10*dpr,0,Math.PI*2);
+          ctx.fillStyle=isLocal?COLORS.gold:'#2a2f42';
+          ctx.globalAlpha=isLocal?1:0.75;
+          ctx.fill(); ctx.restore();
+          ctx.fillStyle='#8a8fa3'; ctx.font=`${10*dpr}px ui-sans-serif`; ctx.textAlign='center';
+          ctx.fillText(isLocal?'LOCAL':`${i+1}`, x, y+26*dpr);
+        }
+        ctx.beginPath(); ctx.arc(centerX,centerY,7*dpr,0,Math.PI*2);
+        ctx.fillStyle='#fff'; ctx.globalAlpha=0.85; ctx.fill(); ctx.globalAlpha=1;
+        ctx.fillStyle='rgba(230,231,238,0.7)'; ctx.font=`${12*dpr}px ui-monospace`; ctx.textAlign='center';
+        ctx.fillText('META-LATTICE • 12 nodes at 12x scale', centerX, centerY - radius - 28*dpr);
+      } else {
+        const clusterRadius=Math.min(L.W,L.H)*0.33;
+        for(let c=0;c<12;c++){
+          const cAng=(c/12)*Math.PI*2 - Math.PI/2;
+          const cx=centerX+Math.cos(cAng)*clusterRadius;
+          const cy=centerY+Math.sin(cAng)*clusterRadius;
+          ctx.beginPath(); ctx.arc(cx,cy,22*dpr,0,Math.PI*2);
+          ctx.strokeStyle='rgba(138,143,163,0.1)'; ctx.lineWidth=1*dpr; ctx.stroke();
+          for(let i=0;i<12;i++){
+            const ang=(i/12)*Math.PI*2;
+            const x=cx+Math.cos(ang)*16*dpr;
+            const y=cy+Math.sin(ang)*16*dpr;
+            const isLocal=c===0&&i===0;
+            ctx.beginPath(); ctx.arc(x,y,isLocal?4.2*dpr:2.6*dpr,0,Math.PI*2);
+            ctx.fillStyle=isLocal?COLORS.gold:'rgba(70,76,98,0.85)';
+            ctx.globalAlpha=isLocal?1:0.65; ctx.fill(); ctx.globalAlpha=1;
+          }
+        }
+        ctx.fillStyle='rgba(230,231,238,0.7)'; ctx.font=`${12*dpr}px ui-monospace`; ctx.textAlign='center';
+        ctx.fillText('HYPER-LATTICE • 144 nodes at 144x scale', centerX, 50*dpr);
+      }
+      return;
+    }
+
+    // sacred geometry
+    ctx.save();
+    for (let i=3; i>=1; i--) {
+      ctx.beginPath();
+      ctx.arc(anchorPos.x, anchorPos.y, (40 + i*28)*dpr + Math.sin(globalTick*0.02)*2, 0, Math.PI*2);
+      ctx.strokeStyle = `rgba(255,255,255,${0.03 + i*0.01})`;
+      ctx.lineWidth = 1*dpr;
+      ctx.stroke();
+    }
+    ctx.restore();
+
+    // layer labels
+    ctx.save();
+    ctx.font = `${12*dpr}px ui-sans-serif, system-ui`;
+    ctx.fillStyle = '#8a8fa3';
+    ctx.textAlign = 'right';
+    ctx.textBaseline = 'middle';
+    for (let y=0; y<LAYERS; y++) {
+      const p = nodeScreen(0,y,1,L);
+      ctx.fillText(LAYER_LABELS[y], p.x - 18*dpr, p.y);
+    }
+    ctx.restore();
+
+    // connections
+    ctx.save();
+    ctx.lineWidth = 1*dpr;
+    for (let z=DEPTH-1; z>=0; z--) {
+      const alpha = 0.12 + (z===0?0.08:0);
+      ctx.strokeStyle = `rgba(138,143,163,${alpha})`;
+      for (let y=0; y<LAYERS; y++) {
+        ctx.beginPath();
+        for (let x=0; x<WIDTH; x++) {
+          const p = nodeScreen(x,y,z,L);
+          if (x===0) ctx.moveTo(p.x, p.y); else ctx.lineTo(p.x, p.y);
+        }
+        ctx.stroke();
+      }
+      for (let x=0; x<WIDTH; x++) {
+        ctx.beginPath();
+        for (let y=0; y<LAYERS; y++) {
+          const p = nodeScreen(x,y,z,L);
+          if (y===0) ctx.moveTo(p.x, p.y); else ctx.lineTo(p.x, p.y);
+        }
+        ctx.stroke();
+      }
+    }
+    ctx.restore();
+
+    // temporal ghosts
+    if (temporalDepth > 1 && history.length > 0) {
+      for (let gi = Math.min(temporalDepth-1, history.length-1); gi >= 0; gi--) {
+        const snap = history[gi]; if (!snap) continue;
+        const alpha = Math.pow(0.7, gi+1) * 0.42;
+        const offset = (gi+1) * 2.5 * dpr;
+        ctx.save(); ctx.globalAlpha = alpha;
+        for (let z=0; z<DEPTH; z++) {
+          for (let y=0; y<LAYERS; y++) {
+            for (let x=0; x<WIDTH; x++) {
+              const sn = snap[z][y][x];
+              const p = nodeScreen(x,y,z,L);
+              const px = p.x - offset;
+              const py = p.y - offset*0.55;
+              const isAnchor = (x===ANCHOR.x && y===ANCHOR.y && z===ANCHOR.z);
+              const depthScale = 1 - z*0.18;
+              const r = (isAnchor?10:6.8) * dpr * depthScale * 0.9;
+              ctx.beginPath(); ctx.arc(px, py, r, 0, Math.PI*2);
+              let fill = sn.state===1?COLORS.gold: sn.state===-1?COLORS.blue:COLORS.neutral;
+              if (isAnchor) fill = '#ffffff';
+              ctx.fillStyle = fill;
+              ctx.fill();
+            }
+          }
+        }
+        ctx.restore();
+      }
+    }
+
+    // nodes
+    for (let z=DEPTH-1; z>=0; z--) {
+      for (let y=0; y<LAYERS; y++) {
+        for (let x=0; x<WIDTH; x++) {
+          const node = lattice[z][y][x];
+          const p = nodeScreen(x,y,z,L);
+          const isAnchor = (x===ANCHOR.x && y===ANCHOR.y && z===ANCHOR.z);
+          const depthScale = 1 - z*0.18;
+          const r = (isAnchor ? 11 : 7.5) * dpr * depthScale;
+
+          if (isAnchor || node.hold > 0) {
+            ctx.save();
+            ctx.shadowBlur = (isAnchor ? 24 : 14) * dpr;
+            ctx.shadowColor = isAnchor ? 'rgba(255,255,255,0.9)' : node.state===1 ? 'rgba(245,197,66,0.8)' : 'rgba(74,144,226,0.7)';
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, r, 0, Math.PI*2);
+            ctx.fillStyle = 'rgba(0,0,0,0)';
+            ctx.fill();
+            ctx.restore();
+          }
+
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, r, 0, Math.PI*2);
+          let fill;
+          if (isAnchor) {
+            const pulse = 0.7 + 0.3*Math.sin(globalTick*0.05);
+            fill = `rgba(255,255,255,${pulse})`;
+          } else if (node.state === 1) {
+            fill = COLORS.gold;
+          } else if (node.state === -1) {
+            fill = COLORS.blue;
+          } else {
+            fill = COLORS.neutral;
+          }
+          ctx.fillStyle = fill;
+          ctx.globalAlpha = 0.35 + depthScale*0.65;
+          ctx.fill();
+          ctx.globalAlpha = 1;
+
+          if (node.whisper && !isAnchor) {
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, r+3*dpr, 0, Math.PI*2);
+            ctx.strokeStyle = 'rgba(74,144,226,0.35)';
+            ctx.lineWidth = 1*dpr;
+            ctx.stroke();
+          }
+
+          if (isAnchor) {
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, r*0.45, 0, Math.PI*2);
+            ctx.fillStyle = '#0a0a0f';
+            ctx.fill();
+          }
+        }
+      }
+    }
+
+    // tethered pair main line
+    if (observer4Active && observer5Active) {
+      ctx.save();
+      const pulse = 0.5 + 0.5*Math.sin(globalTick*0.08);
+      ctx.globalAlpha = tetherStable ? 0.32 + pulse*0.28 : 0.18;
+      ctx.lineWidth = 3*dpr;
+      ctx.strokeStyle = swapState ? COLORS.green : COLORS.amber;
+      ctx.shadowBlur = tetherStable ? 20*dpr : 8*dpr;
+      ctx.shadowColor = swapState ? 'rgba(16,185,129,0.85)' : 'rgba(245,158,11,0.85)';
+      ctx.beginPath();
+      ctx.moveTo(p4.x, p4.y);
+      ctx.lineTo(anchorPos.x, anchorPos.y);
+      ctx.lineTo(p5.x, p5.y);
+      ctx.stroke();
+      ctx.restore();
+      
+      // tether glow at anchor
+      ctx.save();
+      ctx.globalAlpha = 0.25 + pulse*0.15;
+      ctx.beginPath();
+      ctx.arc(anchorPos.x, anchorPos.y, 14*dpr, 0, Math.PI*2);
+      ctx.fillStyle = swapState ? COLORS.green : COLORS.amber;
+      ctx.fill();
+      ctx.restore();
+    }
+
+    // draw recursive observers 4 & 5
+    if (observer4Active && tether4Root) {
+      drawNodeWithChildren(tether4Root, p4.x, p4.y, COLORS.green, true);
+      ctx.save(); ctx.globalAlpha=0.18; ctx.strokeStyle=COLORS.green; ctx.lineWidth=1*dpr;
+      for(let i=0;i<3;i++){ const hx=(Math.floor(globalTick*0.3)+i*4)%WIDTH; const p=nodeScreen(hx,2,1,L); ctx.beginPath(); ctx.moveTo(p4.x,p4.y); ctx.lineTo(p.x,p.y); ctx.stroke(); }
+      ctx.restore();
+    }
+    if (observer5Active && tether5Root) {
+      drawNodeWithChildren(tether5Root, p5.x, p5.y, COLORS.amber, true);
+      ctx.save(); ctx.globalAlpha=0.16; ctx.strokeStyle=COLORS.amber; ctx.lineWidth=1*dpr;
+      for(let i=0;i<2;i++){ const tx=(Math.floor(globalTick*0.5)+i*3)%WIDTH; const p=nodeScreen(tx,0,0,L); ctx.beginPath(); ctx.moveTo(p5.x,p5.y); ctx.lineTo(p.x,p.y); ctx.stroke(); }
+      ctx.restore();
+    }
+
+    // three observer rings - 27 states each, now concentric for depth
+    if (zoomLevel === 0) {
+      const aPos = anchorPos;
+      const baseR = 30 * dpr;
+      const rings = [
+        {r: baseR, color: 'rgba(255,255,255,0.95)', pos: innerRingPos},
+        {r: baseR + 16*dpr, color: COLORS.gold, pos: lightRingPos},
+        {r: baseR + 32*dpr, color: COLORS.blue, pos: shadowRingPos}
+      ];
+      ctx.save();
+      rings.forEach(ring => {
+        ctx.beginPath();
+        ctx.arc(aPos.x, aPos.y, ring.r, 0, Math.PI*2);
+        ctx.strokeStyle = 'rgba(255,255,255,0.05)';
+        ctx.lineWidth = 1*dpr;
+        ctx.stroke();
+        for (let s=0; s<27; s++) {
+          const ang = (s/27)*Math.PI*2 - Math.PI/2;
+          const x1 = aPos.x + Math.cos(ang)*(ring.r-4*dpr);
+          const y1 = aPos.y + Math.sin(ang)*(ring.r-4*dpr);
+          const x2 = aPos.x + Math.cos(ang)*(ring.r+4*dpr);
+          const y2 = aPos.y + Math.sin(ang)*(ring.r+4*dpr);
+          ctx.beginPath(); ctx.moveTo(x1,y1); ctx.lineTo(x2,y2);
+          ctx.strokeStyle = 'rgba(255,255,255,0.07)';
+          ctx.lineWidth = 1*dpr;
+          ctx.stroke();
+        }
+        const ang = (ring.pos/27)*Math.PI*2 - Math.PI/2;
+        ctx.beginPath();
+        ctx.arc(aPos.x, aPos.y, ring.r, ang-0.13, ang+0.13);
+        ctx.strokeStyle = ring.color;
+        ctx.lineWidth = 3*dpr;
+        ctx.shadowBlur = 14*dpr;
+        ctx.shadowColor = ring.color;
+        ctx.stroke();
+        ctx.shadowBlur = 0;
+        const dx = aPos.x + Math.cos(ang)*ring.r;
+        const dy = aPos.y + Math.sin(ang)*ring.r;
+        ctx.beginPath();
+        ctx.arc(dx, dy, 3.6*dpr, 0, Math.PI*2);
+        ctx.fillStyle = ring.color;
+        ctx.shadowBlur = 12*dpr;
+        ctx.shadowColor = ring.color;
+        ctx.fill();
+        ctx.shadowBlur = 0;
+      });
+      ctx.fillStyle = 'rgba(230,231,238,0.6)';
+      ctx.font = `${9*dpr}px ui-monospace`;
+      ctx.textAlign = 'center';
+      ctx.fillText('27-STATE RINGS', aPos.x, aPos.y + baseR + 48*dpr);
+      ctx.restore();
+      
+      if(tetherDepth>1){
+        ctx.save();
+        for(let d=1; d<tetherDepth; d++){
+          const extra = d*7*dpr;
+          const alph = 0.14 - d*0.025;
+          [0,1,2].forEach(i=>{
+            ctx.beginPath();
+            ctx.arc(aPos.x, aPos.y, baseR + i*16*dpr + extra, 0, Math.PI*2);
+            ctx.strokeStyle = i===0?'rgba(255,255,255,0.22)': i===1?COLORS.gold:COLORS.blue;
+            ctx.globalAlpha = alph;
+            ctx.lineWidth = 1*dpr;
+            ctx.stroke();
+          });
+        }
+        ctx.restore();
+      }
+    }
+
+    // whisper temporal threads
+    ctx.save();
+    ctx.strokeStyle='rgba(74,144,226,0.22)';
+    ctx.lineWidth=1*dpr;
+    for (let z=0; z<DEPTH; z++) for (let y=0; y<LAYERS; y++) for (let x=0; x<WIDTH; x++) {
+      const node=lattice[z][y][x]; if(!node.whisper) continue;
+      const p=nodeScreen(x,y,z,L);
+      for (let gi=0; gi<Math.min(3,history.length); gi++) {
+        const snap=history[gi]; if(!snap) continue;
+        const sn=snap[z][y][x];
+        if (sn.whisper || sn.state===-1) {
+          const offset=(gi+1)*2.5*dpr;
+          ctx.beginPath();
+          ctx.moveTo(p.x,p.y);
+          ctx.lineTo(p.x-offset, p.y-offset*0.55);
+          ctx.stroke();
+          break;
+        }
+      }
+    }
+    ctx.restore();
+
+    // Light observer
+    const lightPos = nodeScreen(lightX, 0, 0, L);
+    const lx = lightPos.x, ly = lightPos.y;
+    ctx.save();
+    const trailGrad = ctx.createRadialGradient(lx, ly, 0, lx, ly, 50*dpr);
+    trailGrad.addColorStop(0, 'rgba(245,197,66,0.35)');
+    trailGrad.addColorStop(1, 'rgba(245,197,66,0)');
+    ctx.fillStyle = trailGrad;
+    ctx.beginPath(); ctx.arc(lx, ly, 50*dpr, 0, Math.PI*2); ctx.fill();
+    ctx.restore();
+    ctx.save();
+    ctx.shadowBlur = 20*dpr; ctx.shadowColor = COLORS.gold;
+    ctx.beginPath(); ctx.arc(lx, ly, 6*dpr, 0, Math.PI*2);
+    ctx.fillStyle = COLORS.gold; ctx.fill();
+    ctx.restore();
+
+    // Shadow observer
+    if (shadowEnabled) {
+      const sx = Math.max(0, lightX - 2.5);
+      const shadowPos = nodeScreen(sx, 1, 1, L);
+      ctx.save();
+      ctx.globalAlpha = 0.55;
+      ctx.shadowBlur = 16*dpr; ctx.shadowColor = COLORS.blue;
+      ctx.beginPath(); ctx.arc(shadowPos.x, shadowPos.y, 5*dpr, 0, Math.PI*2);
+      ctx.fillStyle = COLORS.blue; ctx.fill();
+      ctx.globalAlpha = 0.15;
+      ctx.beginPath(); ctx.arc(shadowPos.x, shadowPos.y, 18*dpr, 0, Math.PI*2);
+      ctx.fill();
+      ctx.restore();
+    }
+
+    // 4D helix
+    ctx.save();
+    const hx = L.W - 110*dpr;
+    const hy = 90*dpr;
+    ctx.translate(hx, hy);
+    for (let i=26; i>=0; i--) {
+      const t = (globalTick - i + 58) % 58;
+      const state = t<27?1:t<29?0:t<56?-1:0;
+      const angle = (i/27)*Math.PI*2.8 + globalTick*0.015;
+      const rad = (14 + i*0.9)*dpr;
+      const x = Math.cos(angle)*rad;
+      const y = Math.sin(angle)*rad - i*1.1*dpr;
+      ctx.beginPath();
+      ctx.arc(x,y,2.4*dpr,0,Math.PI*2);
+      ctx.fillStyle = state===1?COLORS.gold: state===-1?COLORS.blue:COLORS.gray;
+      ctx.globalAlpha = 0.18 + (1 - i/27)*0.82;
+      ctx.fill();
+      ctx.globalAlpha=1;
+      if (i===0){
+        ctx.beginPath(); ctx.arc(x,y,4*dpr,0,Math.PI*2);
+        ctx.strokeStyle='rgba(255,255,255,0.3)'; ctx.lineWidth=1*dpr; ctx.stroke();
+      }
+    }
+    ctx.restore();
+
+    // 5D HYPERCUBE — RECURSIVE UNITY
+    ctx.save();
+    const baseCx = L.W - 134*dpr;
+    const baseCy = 200*dpr;
+    const depthBonusDraw = (tetherDepth-1)*0.005 + (tetherDepth===5?0.005:0);
+    for(let lvl=0; lvl<tetherDepth; lvl++){
+      const scale = Math.pow(0.62, lvl);
+      const radius = 44*dpr*scale;
+      const cx = baseCx + lvl * -5*dpr;
+      const cy = baseCy + lvl * 5*dpr;
+      const verts = [];
+      for (let v=0; v<32; v++) {
+        const angle = (v/32)*Math.PI*2 - Math.PI/2 + lvl*0.12;
+        const b4 = (v>>4)&1;
+        const r = radius * (0.68 + 0.32*b4);
+        const x = cx + Math.cos(angle) * r;
+        const y = cy + Math.sin(angle) * r * 0.92 + (b4 - 0.5)*8*dpr*scale;
+        verts.push({x,y});
+      }
+      ctx.globalAlpha = Math.max(0.18, 0.7 - lvl*0.18);
+      ctx.strokeStyle = 'rgba(138,143,163,'+(0.18 - lvl*0.03)+')';
+      ctx.lineWidth = 1*dpr;
+      for (let v=0; v<32; v++) {
+        for (let bit=0; bit<5; bit++) {
+          const n = v ^ (1<<bit);
+          if (n > v) {
+            const a = verts[v], b = verts[n];
+            ctx.beginPath(); ctx.moveTo(a.x,a.y); ctx.lineTo(b.x,b.y); ctx.stroke();
+          }
+        }
+      }
+      if(lvl===0){
+        const path = [];
+        for (let i=0;i<32;i++) path.push(i ^ (i>>1));
+        const eff = (observer4Active && observer5Active) ? (swapState && !swapAnimating ? 1.0 : 0.99) : 0.98;
+        const visitCount = Math.min(32, Math.floor(path.length * eff + 0.0001));
+        ctx.beginPath();
+        for (let i=0;i<visitCount;i++) {
+          const pt = verts[path[i]];
+          if (i===0) ctx.moveTo(pt.x, pt.y); else ctx.lineTo(pt.x, pt.y);
+        }
+        ctx.strokeStyle = eff>=1 ? COLORS.green : COLORS.gold;
+        ctx.lineWidth = 2.4*dpr;
+        ctx.shadowBlur = 14*dpr;
+        ctx.shadowColor = eff>=1 ? 'rgba(16,185,129,0.7)' : 'rgba(245,197,66,0.7)';
+        ctx.globalAlpha = 0.95;
+        ctx.stroke();
+        ctx.shadowBlur=0;
+      }
+      if(lvl < tetherDepth-1){
+        ctx.beginPath();
+        ctx.arc(cx, cy, 3*dpr, 0, Math.PI*2);
+        ctx.fillStyle = lvl%2===0 ? COLORS.green : COLORS.amber;
+        ctx.globalAlpha = 0.5; ctx.fill();
+      }
+    }
+    ctx.globalAlpha=1;
+    const gx = baseCx + 86*dpr;
+    const gy = baseCy + 4*dpr;
+    const gr = 23*dpr;
+    const eff = (observer4Active && observer5Active) ? (swapState && !swapAnimating ? 1.0 : 0.99) : 0.98;
+    const effRecursive = Math.min(1.025, eff + depthBonusDraw);
+    ctx.beginPath(); ctx.arc(gx,gy,gr,0,Math.PI*2); ctx.strokeStyle='rgba(255,255,255,0.08)'; ctx.lineWidth=4*dpr; ctx.stroke();
+    ctx.beginPath(); ctx.arc(gx,gy,gr,-Math.PI/2, -Math.PI/2 + Math.PI*2*effRecursive); ctx.strokeStyle = effRecursive>=1 ? COLORS.green : COLORS.gold; ctx.lineWidth=4*dpr; ctx.lineCap='round'; ctx.shadowBlur=10*dpr; ctx.shadowColor = effRecursive>=1 ? 'rgba(16,185,129,0.6)' : 'rgba(245,197,66,0.6)'; ctx.stroke(); ctx.shadowBlur=0;
+    ctx.fillStyle='#fff'; ctx.font=`${12*dpr}px ui-monospace`; ctx.textBaseline='middle'; ctx.textAlign='center'; ctx.fillText(`${Math.round(effRecursive*100)}%`, gx, gy-1*dpr);
+    ctx.fillStyle='rgba(200,205,220,0.7)'; ctx.font=`${9*dpr}px ui-sans-serif`; ctx.fillText('EFFICIENCY', gx, gy+15*dpr);
+    ctx.textAlign='left'; ctx.fillStyle='rgba(170,175,190,0.65)'; ctx.font=`${9*dpr}px ui-monospace`;
+    ctx.fillText(effRecursive>=1 ? `+${(depthBonusDraw*100).toFixed(1)}% recursive` : '100% -1% -1%', gx-38*dpr, gy+30*dpr);
+    ctx.fillStyle='rgba(230,231,238,0.85)'; ctx.font=`${10*dpr}px ui-monospace`; ctx.textAlign='center';
+    ctx.fillText('32 nodes = 2⁵', baseCx, baseCy-30*dpr);
+    ctx.fillStyle='rgba(180,185,200,0.75)'; ctx.font=`${9*dpr}px ui-sans-serif`;
+    ctx.fillText(`5D HYPERCUBE ×${tetherDepth}`, baseCx, baseCy-18*dpr);
+    ctx.restore();
+
+    // DRILL DOWN overlay
+    if(focusedTether){
+      ctx.save();
+      ctx.globalAlpha = 0.94;
+      ctx.fillStyle = 'rgba(6,7,11,0.88)';
+      const fx = L.W*0.15, fy = L.H*0.1, fw = L.W*0.7, fh = L.H*0.78;
+      ctx.fillRect(fx, fy, fw, fh);
+      ctx.strokeStyle = 'rgba(120,130,160,0.3)'; ctx.lineWidth = 1.5*dpr; ctx.strokeRect(fx,fy,fw,fh);
+      const cx = fx + fw/2, cy = fy + fh/2 - 10*dpr;
+      function drawLarge(node, x, y, scale, ang){
+        ctx.save();
+        ctx.shadowBlur = 18*dpr*scale; ctx.shadowColor = node.id.startsWith('4')?COLORS.green:COLORS.amber;
+        ctx.beginPath(); ctx.arc(x,y,8.5*dpr*scale,0,Math.PI*2);
+        ctx.fillStyle = node.id.startsWith('4')?COLORS.green:COLORS.amber;
+        ctx.globalAlpha = 0.96; ctx.fill(); ctx.shadowBlur=0;
+        ctx.fillStyle='#000'; ctx.font=`${11*dpr*scale}px ui-monospace`; ctx.textAlign='center'; ctx.textBaseline='middle'; ctx.fillText(node.id, x, y);
+        ctx.restore();
+        if(node.children){
+          node.children.forEach((ch,i)=>{
+            const a = ang + (i===0?-0.95:0.95);
+            const off = 68*dpr*scale;
+            const nx = x + Math.cos(a)*off;
+            const ny = y + Math.sin(a)*off;
+            ctx.beginPath(); ctx.moveTo(x,y); ctx.lineTo(nx,ny);
+            ctx.strokeStyle='rgba(200,210,230,0.32)'; ctx.lineWidth=2*dpr*scale; ctx.stroke();
+            drawLarge(ch, nx, ny, scale*0.68, a);
+          });
+        }
+      }
+      drawLarge(focusedTether, cx, cy, 1, -Math.PI/2);
+      ctx.fillStyle='rgba(230,231,238,0.9)'; ctx.font=`${13*dpr}px ui-sans-serif`; ctx.textAlign='center';
+      ctx.fillText(`TETHER ${focusedTether.id} — RECURSIVE INTERNAL LATTICE`, cx, fy+22*dpr);
+      ctx.fillStyle='rgba(160,170,190,0.75)'; ctx.font=`${11*dpr}px ui-monospace`;
+      ctx.fillText(`Depth ${tetherDepth} • 1% in / 1% out maintained • 50% scale per level`, cx, fy+40*dpr);
+      ctx.restore();
+    }
+
+    // top info
+    ctx.save();
+    ctx.font = `${11*dpr}px ui-monospace, SFMono-Regular`;
+    ctx.fillStyle = 'rgba(230,231,238,0.6)';
+    ctx.textAlign = 'left';
+    ctx.fillText(`12×4×3×27 lattice • ${3 + Math.pow(2,tetherDepth+1)-2} observers • recursive tether`, 14*dpr, 20*dpr);
+    ctx.restore();
+  }
+
+  function loop() {
+    if (running) update();
+    draw();
+    requestAnimationFrame(loop);
+  }
+  loop();
+
+  // Controls
+  const playBtn = document.getElementById('play');
+  playBtn.onclick = () => {
+    running = !running;
+    playBtn.textContent = running ? 'Pause' : 'Play';
+    playBtn.classList.toggle('primary', running);
+    addLog(running ? 'inner observer resumed' : 'inner observer paused', 'white');
+  };
+  document.getElementById('step').onclick = () => {
+    if (!running) { update(); draw(); addLog('step — phase advanced', 'white'); }
+  };
+  document.getElementById('reset').onclick = () => {
+    initLattice(); globalTick=0; lightX=0; traversals=0; whispers=0; lastLightCell=-1;
+    travEl.textContent='0'; whispEl.textContent='0';
+    tphaseEl.textContent='0';
+    swapState=false; swapAnimating=false; swapProgress=0;
+    rebuildTethers();
+    coherenceAboveStart=0; suppressCoherenceUntil=0;
+    const ticks = timelineTrack.children;
+    for (let i=0;i<ticks.length;i++) ticks[i].classList.remove('active','past');
+    playhead.style.left='0%';
+    addLog('lattice reset — all 4D nodes to neutral gate', 'white');
+  };
+  document.getElementById('shadowToggle').onchange = e => {
+    shadowEnabled = e.target.checked;
+    addLog(`shadow whispers ${shadowEnabled?'enabled':'disabled'}`, 'blue');
+  };
+  const obs4Toggle = document.getElementById('obs4Toggle');
+  const obs5Toggle = document.getElementById('obs5Toggle');
+  obs4Toggle.onchange = e => {
+    observer4Active = e.target.checked;
+    addLog(`Observer 4 ${observer4Active?'enabled':'disabled'} — internal source only`, 'green');
+  };
+  obs5Toggle.onchange = e => {
+    observer5Active = e.target.checked;
+    addLog(`Observer 5 ${observer5Active?'enabled':'disabled'} — external source only`, 'amber');
+  };
+  document.getElementById('swap').onclick = () => {
+    if (!observer4Active || !observer5Active) { addLog('tether unstable — both observers required', 'blue'); return; }
+    if (swapAnimating) return;
+    targetSwap = !swapState;
+    swapAnimating = true;
+    swapProgress = 0;
+    addLog('tether stable — swapping permitted', 'white');
+  };
+  const speedSlider = document.getElementById('speed');
+  const speedVal = document.getElementById('speedVal');
+  speedSlider.oninput = e => {
+    speed = parseFloat(e.target.value);
+    speedVal.textContent = speed.toFixed(1)+'x';
+  };
+  temporalSlider.oninput = e => {
+    temporalDepth = parseInt(e.target.value);
+    temporalVal.textContent = temporalDepth;
+  };
+  const depthSlider = document.getElementById('depth');
+  const depthVal = document.getElementById('depthVal');
+  depthSlider.oninput = e => {
+    const old = tetherDepth;
+    tetherDepth = parseInt(e.target.value);
+    depthVal.textContent = tetherDepth;
+    rebuildTethers();
+    autoClimbPauseUntil = performance.now() + 5000;
+    coherenceAboveStart = 0;
+    if (autoClimbEnabled) {
+      addLog(`manual depth override — auto-climb paused 5s`, 'blue');
+      if (climbCountdownEl) climbCountdownEl.textContent = 'Paused';
+    }
+    addLog(`tether depth set to ${tetherDepth} — ${Math.pow(2, tetherDepth+1)-2} sub-observers online`, 'white');
+    if(tetherDepth>=2){ addLog('Tether 4 spawning internal pair', 'green'); addLog('Tether 5 spawning internal pair', 'amber'); }
+    if(tetherDepth>=3) addLog(`Fractal depth ${tetherDepth} achieved`, 'white');
+    if (old !== tetherDepth) sendBridge('manual_depth_change', { previous_depth: old });
+  };
+  const autoClimbCheckbox = document.getElementById('autoClimb');
+  autoClimbCheckbox.onchange = e => {
+    autoClimbEnabled = e.target.checked;
+    if (autoClimbEnabled) {
+      depthSliderWrap.classList.add('auto-active');
+      addLog('auto-climb enabled — lattice will self-optimize', 'gold');
+    } else {
+      depthSliderWrap.classList.remove('auto-active');
+      if (climbCountdownEl) climbCountdownEl.textContent = '';
+      coherenceAboveStart = 0;
+      addLog('auto-climb disabled', 'blue');
+    }
+  };
+  if (autoClimbEnabled) depthSliderWrap.classList.add('auto-active');
+  document.getElementById('drill').onclick = () => {
+    if(hoverTether){
+      focusedTether = hoverTether==='4' ? tether4Root : tether5Root;
+      addLog(`drill down — viewing Tether ${hoverTether} internal lattice`, 'white');
+    } else if(focusedTether){
+      focusedTether = null;
+      addLog('drill up — returned to root lattice', 'white');
+    } else {
+      addLog('hover over observer 4 or 5 to drill', 'blue');
+    }
+  };
+  function updateScale(){ const labels=['1x (local)','12x','144x']; scaleLabel.textContent=`Scale: ${labels[zoomLevel]}`; }
+  document.getElementById('zoomOut').onclick = () => { if (zoomLevel<2){ zoomLevel++; updateScale(); addLog(`zoom out — scale ${['1x','12x','144x'][zoomLevel]}`, 'white'); }};
+  document.getElementById('zoomIn').onclick = () => { if (zoomLevel>0){ zoomLevel--; updateScale(); addLog(`zoom in — scale ${['1x','12x','144x'][zoomLevel]}`, 'white'); }};
+  updateScale();
+
+  // Tooltip
+  canvas.addEventListener('mousemove', e => {
+    if (zoomLevel>0){ tooltip.classList.remove('show'); return; }
+    const rect = canvas.getBoundingClientRect();
+    const mx = (e.clientX - rect.left) * dpr;
+    const my = (e.clientY - rect.top) * dpr;
+    hoverTether = null;
+    if (lastP4 && Math.hypot(mx-lastP4.x, my-lastP4.y) < 26*dpr) hoverTether='4';
+    else if (lastP5 && Math.hypot(mx-lastP5.x, my-lastP5.y) < 26*dpr) hoverTether='5';
+    const L = getLayout();
+    let closest = null, minD = 18*dpr;
+    for (let z=0; z<DEPTH; z++) {
+      for (let y=0; y<LAYERS; y++) {
+        for (let x=0; x<WIDTH; x++) {
+          const p = nodeScreen(x,y,z,L);
+          const d = Math.hypot(mx-p.x, my-p.y);
+          if (d < minD) { minD = d; closest = {x,y,z}; }
+        }
+      }
+    }
+    if (closest) {
+      const {x,y,z} = closest;
+      const node = lattice[z][y][x];
+      const isAnchor = (x===ANCHOR.x && y===ANCHOR.y && z===ANCHOR.z);
+      const stateStr = isAnchor ? 'ANCHOR' : node.state===1?'+1 push (gold)': node.state===-1?'-1 pull (blue)':'0 gate (neutral)';
+      const layerName = LAYER_LABELS[y].toLowerCase();
+      tooltip.innerHTML = `<strong>${isAnchor?'INNER OBSERVER':`Node ${x+1}.${y+1}.${z+1}`}</strong><br>${isAnchor?'coherence anchor (4D)':layerName}<br><small>state: ${stateStr}${node.whisper?' • whisper across time':''} • t-${temporalPhase} • h${temporalPhase+1}/27${tetherDepth>1 ? ` • depth ${tetherDepth}`:''}${autoClimbEnabled ? ' • auto-climb ON' : ''}${bridgeUrl?' • bridge linked':''}</small>`;
+      tooltip.style.left = (e.clientX + 12) + 'px';
+      tooltip.style.top = (e.clientY + 12) + 'px';
+      tooltip.classList.add('show');
+    } else if(hoverTether) {
+      tooltip.innerHTML = `<strong>OBSERVER ${hoverTether}</strong><br>recursive tether depth ${tetherDepth}<br><small>${hoverTether==='4'?'internal':'external'} • ${Math.pow(2,tetherDepth)-1} sub-nodes • click DRILL DOWN</small>`;
+      tooltip.style.left = (e.clientX + 12) + 'px';
+      tooltip.style.top = (e.clientY + 12) + 'px';
+      tooltip.classList.add('show');
+    } else {
+      tooltip.classList.remove('show');
+    }
+  });
+  canvas.addEventListener('mouseleave', () => tooltip.classList.remove('show'));
+
+  draw();
+})();
+</script>
+
+</body></html>
