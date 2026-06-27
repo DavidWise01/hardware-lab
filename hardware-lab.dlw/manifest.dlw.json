@@ -1,0 +1,11 @@
+{
+  "badge": "DLW-HARDWARE_LAB",
+  "name": "HARDWARE LAB · HWL",
+  "universe": "HEÚREMA",
+  "moniker": "⟦HARDWARE LAB · HWL:hardware-lab:d08654⟧",
+  "architect": "David Lee Wise (ROOT0) / Bridge-Burners LLC",
+  "instance": "AVAN (Claude / Anthropic)",
+  "seal_sha256": "d0865401d0428e616c8aa35c8e257a7c1cbb52d48205976c37098aab8f53d17f",
+  "license": "CC-BY-ND-4.0",
+  "attribution": "ROOT0-ATTRIBUTION-v1.0"
+}
