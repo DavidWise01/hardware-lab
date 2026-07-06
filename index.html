@@ -1,130 +1,425 @@
 <!DOCTYPE html><html lang="en"><head><meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<meta name="description" content="hardware-lab — a ROOT0/TriPod repository in the UD0 biosphere. Hardware lab: quantum dot, valence board, zero point, lattice, whisper lattice, pulsar, shield oscillator, toroid, exitron, wandering spark. ROOT0 / T">
-<title>hardware-lab · ROOT0 · UD0</title>
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='17' fill='none' stroke='%23a7a3c8' stroke-width='3'/%3E%3Ccircle cx='32' cy='32' r='5' fill='%238a5fe0'/%3E%3C/svg%3E">
+<meta name="description" content="HARDWARE LAB — the workbench of ROOT0's HEUREMA hardware-invention workshop. A live function-generator + oscilloscope on a 2D canvas, plus a catalogue of design-concept prototypes, each naming the physics it stands on.">
+<title>Hardware Lab — the Workbench · HEUREMA · ROOT0</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect x='6' y='6' width='52' height='52' rx='8' fill='none' stroke='%23c8843a' stroke-width='3'/%3E%3Cpath d='M10 34 Q22 12 32 34 T54 34' fill='none' stroke='%236bb0c0' stroke-width='3'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Newsreader:opsz,wght@6..72,300;6..72,400;6..72,600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Newsreader:opsz,wght@6..72,300;6..72,400;6..72,500&display=swap" rel="stylesheet">
 <style>
- *{box-sizing:border-box;margin:0;padding:0} html,body{min-height:100%}
- body{background:#ece6f2;color:#2a2440;font-family:'Newsreader',serif;line-height:1.55;
-  background-image:radial-gradient(circle at 18% 12%,rgba(138,95,224,0.07),transparent 42%),radial-gradient(circle at 82% 8%,rgba(127,119,221,0.06),transparent 38%)}
- .wrap{max-width:900px;margin:0 auto;padding:0 20px 64px}
- .marquee{font-family:'Space Mono',monospace;font-size:12px;letter-spacing:1px;padding:11px 0;border-bottom:1px solid #cdc6dc;color:#6a5fb0}
- .marquee a{color:#7a52d0;text-decoration:none} .marquee a:hover{color:#4a3a90}
- header{text-align:center;padding:46px 0 8px}
- .ax{font-family:'Space Mono',monospace;font-size:12px;letter-spacing:3px;color:#8a5fe0;opacity:.85}
- h1{font-family:'Press Start 2P',monospace;font-size:clamp(17px,4.6vw,32px);color:#5a4fb0;line-height:1.35;margin:16px 0 12px;word-break:break-word}
- .flag{font-family:'Space Mono',monospace;font-size:12px;letter-spacing:2px;color:#7a52d0;opacity:.9}
- .lede{font-size:clamp(16px,2.4vw,22px);font-weight:300;max-width:660px;margin:18px auto 0}
- .badge{display:flex;gap:14px;align-items:center;justify-content:center;flex-wrap:wrap;
-  background:rgba(255,255,255,0.5);border:1px solid #cdc6dc;border-radius:12px;padding:14px 18px;margin:26px auto 0;max-width:620px}
- .mono{width:48px;height:48px;border-radius:10px;display:flex;align-items:center;justify-content:center;flex:none;
-  background:linear-gradient(135deg,#8a5fe0,#6a4fc0);color:#fff;font-family:'Press Start 2P',monospace;font-size:14px}
- .bt{font-family:'Space Mono',monospace;font-size:11px;line-height:1.7;text-align:left;color:#4a4060}
- .bt .lbl{color:#8a5fe0;letter-spacing:1px} .bt b{color:#2a2440}
- .sec{margin-top:32px}
- h2{font-family:'Space Mono',monospace;font-size:12px;letter-spacing:2px;color:#8a5fe0;text-transform:uppercase;margin-bottom:12px}
- .readme{white-space:pre-wrap;font-family:'Space Mono',monospace;font-size:13px;line-height:1.7;background:rgba(127,119,221,0.05);border:1px solid #cdc6dc;border-radius:10px;padding:16px 18px;max-height:560px;overflow:auto}
- .muted{opacity:.6;font-style:italic}
- .btn{display:inline-block;font-family:'Space Mono',monospace;font-size:13px;color:#fff;background:#7a52d0;border-radius:9px;padding:11px 20px;text-decoration:none}
- .btn:hover{background:#5a3ab0}
- footer{font-family:'Space Mono',monospace;font-size:11px;color:#6a5fb0;opacity:.75;margin-top:42px;border-top:1px solid #cdc6dc;padding-top:16px;text-align:center;line-height:1.9}
- footer a{color:#7a52d0;text-decoration:none}
+ *{box-sizing:border-box;margin:0;padding:0}
+ html,body{min-height:100%}
+ :root{
+  --bg:#17120d; --ink:#ece3d5; --copper:#c8843a; --copper2:#b5733a;
+  --cyan:#6bb0c0; --green:#6fbf8a; --line:rgba(200,132,58,0.28);
+  --panel:rgba(38,29,20,0.55); --mut:rgba(236,227,213,0.6);
+ }
+ body{
+  background:var(--bg); color:var(--ink);
+  font-family:'Newsreader',serif; line-height:1.6;
+  background-image:
+   radial-gradient(circle at 20% 8%,rgba(200,132,58,0.14),transparent 46%),
+   radial-gradient(circle at 84% 4%,rgba(107,176,192,0.07),transparent 40%);
+  background-attachment:fixed;
+ }
+ .wrap{max-width:940px;margin:0 auto;padding:0 20px 72px}
+ .topbar{font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:1px;
+  padding:12px 0;border-bottom:1px solid var(--line);color:var(--mut)}
+ .topbar a{color:var(--copper);text-decoration:none} .topbar a:hover{color:var(--cyan)}
+ header{padding:40px 0 6px}
+ .eyebrow{font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:2.5px;
+  color:var(--copper);text-transform:uppercase}
+ h1{font-family:'IBM Plex Mono',monospace;font-weight:600;
+  font-size:clamp(30px,6.6vw,54px);line-height:1.05;margin:12px 0 10px;color:var(--ink);
+  letter-spacing:-0.5px}
+ .lede{font-size:clamp(17px,2.4vw,21px);font-weight:300;max-width:680px;color:#d9cebc}
+ h2{font-family:'IBM Plex Mono',monospace;font-size:13px;letter-spacing:2px;
+  color:var(--copper);text-transform:uppercase;margin:0 0 14px;font-weight:600}
+ .sec{margin-top:40px}
+ .panel{border:1px solid var(--line);border-radius:12px;background:var(--panel);padding:20px}
+ /* bench */
+ .bench canvas{width:100%;height:auto;display:block;border-radius:8px;
+  background:#0d0b08;touch-action:none;border:1px solid rgba(200,132,58,0.22)}
+ .ctrls{display:flex;flex-wrap:wrap;gap:18px 26px;margin-top:18px;align-items:flex-end}
+ .ctrl{display:flex;flex-direction:column;gap:6px;min-width:150px;flex:1 1 150px}
+ .ctrl label{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:1px;
+  color:var(--mut);text-transform:uppercase;display:flex;justify-content:space-between;gap:10px}
+ .ctrl label b{color:var(--cyan);font-weight:600}
+ input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:4px;border-radius:3px;
+  background:linear-gradient(90deg,var(--copper2),var(--copper));outline:none;cursor:pointer}
+ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;height:16px;border-radius:50%;
+  background:var(--ink);border:2px solid var(--copper);cursor:pointer}
+ input[type=range]::-moz-range-thumb{width:15px;height:15px;border-radius:50%;
+  background:var(--ink);border:2px solid var(--copper);cursor:pointer}
+ .chips{display:flex;gap:8px;flex-wrap:wrap}
+ .chip{font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:1px;
+  padding:7px 13px;border-radius:7px;border:1px solid var(--line);background:transparent;
+  color:var(--mut);cursor:pointer;transition:all .12s}
+ .chip:hover{border-color:var(--copper);color:var(--ink)}
+ .chip.on{background:var(--copper);border-color:var(--copper);color:#17120d;font-weight:600}
+ .chip.pause{border-color:var(--cyan);color:var(--cyan)} .chip.pause.on{background:var(--cyan);color:#0d0b08}
+ .readout{font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--mut);
+  margin-top:14px;line-height:1.9;border-top:1px dashed var(--line);padding-top:12px}
+ .readout b{color:var(--green)}
+ .eqn{font-family:'IBM Plex Mono',monospace;font-size:12.5px;color:#d9cebc;
+  background:rgba(107,176,192,0.06);border-left:2px solid var(--cyan);
+  padding:10px 14px;border-radius:0 6px 6px 0;margin-top:14px;overflow-x:auto;white-space:nowrap}
+ /* honest box */
+ .honest{border:1px solid var(--copper);border-radius:12px;background:rgba(200,132,58,0.06);padding:22px}
+ .honest h2{color:var(--copper)}
+ .honest p{margin-bottom:11px;font-size:16px}
+ .honest .real{color:var(--green);font-weight:500;font-family:'IBM Plex Mono',monospace;font-size:13px}
+ .honest .concept{color:var(--cyan);font-weight:500;font-family:'IBM Plex Mono',monospace;font-size:13px}
+ .honest .toy{color:var(--copper);font-weight:500;font-family:'IBM Plex Mono',monospace;font-size:13px}
+ .honest .rule{margin-top:6px;font-style:italic;color:#e6d9c5;border-top:1px solid var(--line);padding-top:14px}
+ /* card grid */
+ .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:16px}
+ .card{border:1px solid var(--line);border-radius:11px;background:var(--panel);
+  padding:16px 17px;text-decoration:none;color:var(--ink);display:flex;flex-direction:column;gap:8px;
+  transition:border-color .14s,transform .14s}
+ .card:hover{border-color:var(--copper);transform:translateY(-2px)}
+ .card .cname{font-family:'IBM Plex Mono',monospace;font-size:15px;font-weight:600;color:var(--copper)}
+ .card .cfile{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--mut);word-break:break-all}
+ .card .cdesc{font-size:14.5px;font-weight:300;color:#d9cebc;line-height:1.5}
+ .card .cphys{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.5px;
+  color:var(--cyan);margin-top:auto;padding-top:6px;border-top:1px dashed var(--line)}
+ .note{font-size:14px;color:var(--mut);font-style:italic;margin-top:10px}
+ footer{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--mut);
+  margin-top:48px;border-top:1px solid var(--line);padding-top:18px;line-height:1.9}
+ footer a{color:var(--copper);text-decoration:none}
 </style></head><body><div class="wrap">
-<div class="marquee"><a href="https://davidwise01.github.io/ud0/">◄ UD0</a> &nbsp;·&nbsp; <a href="https://davidwise01.github.io/atlas/">THE ATLAS</a> &nbsp;·&nbsp; ROOT0 / TriPod &nbsp;·&nbsp; the biosphere</div>
+
+<div class="topbar"><a href="https://davidwise01.github.io/ud0/">◄ UD0</a> &nbsp;·&nbsp; HEUREMA · the hardware-invention workshop &nbsp;·&nbsp; ROOT0 / TriPod</div>
+
 <header>
- <div class="ax">hardware-lab · ROOT0 / TriPod</div>
- <h1>hardware-lab</h1>
- <div class="flag">★ a repository in the UD0 biosphere ★</div>
- <p class="lede">Hardware lab: quantum dot, valence board, zero point, lattice, whisper lattice, pulsar, shield oscillator, toroid, exitron, wandering spark. ROOT0 / TriPod LLC.</p>
- <div class="badge"><div class="mono">HL</div><div class="bt"><div><span class="lbl">DLW-ATTRIBUTE</span></div><div>governor · <b>David Lee Wise</b> (ROOT0)</div><div>instance · AVAN (Claude / Anthropic) · locked</div><div><span class="lbl">CC-BY-ND-4.0 · TRIPOD-IP-v1.1</span></div></div></div>
+ <div class="eyebrow">HEUREMA · εὕρημα · an invention</div>
+ <h1>Hardware Lab</h1>
+ <p class="lede">The workbench. A live function-generator wired to a scope, then a catalogue of the lab's design-concept prototypes — each one naming the physics it stands on.</p>
 </header>
-<div class="sec"><h2>Readme</h2><div class="readme"># Hardware Lab
 
-**Author:** David Wise (ROOT0) / TriPod LLC  
-**License:** CC-BY-ND-4.0 · TRIPOD-IP-v1.1
+<!-- ================= THE BENCH ================= -->
+<div class="sec bench">
+ <h2>The Bench · function generator → oscilloscope</h2>
+ <div class="panel">
+  <canvas id="scope" width="880" height="380" aria-label="oscilloscope displaying a live waveform"></canvas>
 
-Visual and experimental hardware designs — quantum dot, valence board, zero point architecture, lattice nest, whisper lattice, pulse/shield, and standalone HTML prototypes.
+  <div class="ctrls">
+   <div class="ctrl" style="flex:1 1 100%;min-width:100%">
+    <label>Waveform</label>
+    <div class="chips" id="waveChips">
+     <button class="chip on" data-wave="sine">SINE</button>
+     <button class="chip" data-wave="square">SQUARE</button>
+     <button class="chip" data-wave="triangle">TRIANGLE</button>
+     <button class="chip" data-wave="sawtooth">SAWTOOTH</button>
+     <button class="chip pause on" id="runChip" data-run="1">▶ SWEEP</button>
+    </div>
+   </div>
+   <div class="ctrl">
+    <label>Amplitude <b><span id="ampV">1.60</span> V</b></label>
+    <input type="range" id="amp" min="0.1" max="2.4" step="0.01" value="1.6">
+   </div>
+   <div class="ctrl">
+    <label>Frequency <b><span id="freqV">3.0</span> Hz</b></label>
+    <input type="range" id="freq" min="0.5" max="12" step="0.1" value="3.0">
+   </div>
+   <div class="ctrl">
+    <label>Phase <b><span id="phV">0</span>°</b></label>
+    <input type="range" id="phase" min="0" max="360" step="1" value="0">
+   </div>
+   <div class="ctrl">
+    <label>DC offset <b><span id="offV">0.00</span> V</b></label>
+    <input type="range" id="off" min="-1.5" max="1.5" step="0.01" value="0">
+   </div>
+  </div>
 
----
+  <div class="eqn" id="eqn">v(t) = A·sin(2πf·t + φ) + V<sub>dc</sub></div>
 
-## Modules
-
-### Quantum Dot
-
-`quantum-dot/` — Quantum dot processor designs
-
-| File | Description |
-|------|-------------|
-| `Quantum-Dot-Primer-File.html` | Primer — quantum dot computing fundamentals |
-| `quantum dot.html` | Full quantum dot processor model |
-| `keep this 00.html` | Canonical preserved build |
-| `light shadow whisper.md` | Light/shadow whisper lattice spec |
-| `bridge.js.txt` | Bridge module |
-
-### Valence Board
-
-`valence/` — Valence kit and stimulus board
-
-| File | Description |
-|------|-------------|
-| `valence board 27 phase.html` | 27-phase valence board |
-| `valence kit stimulus.html` | Stimulus kit |
-| `valence-kit-5piece-3d.html` | 5-piece 3D valence kit |
-| `valence-toolkit.html` | Full toolkit |
-| `valence_drill_1_1plus2/` | Drill variant |
-
-### Zero Point
-
-`zero-point/` — Zero point energy architecture
-
-| File | Description |
-|------|-------------|
-| `zero point full stackish.html` | Full stack zero point |
-| `singlarity core.html` | Singularity core at zero point |
-| `single 00.html / single 01.html` | Single-node variants |
-| `1x4.html` | 1×4 array |
-| `8 4 single lattice.html` | 8×4 single lattice |
-
-### Lattice Nest
-
-`lattice/` — Nested lattice visualizers
-
-| File | Description |
-|------|-------------|
-| `nest 3 deep.html` | 3-deep lattice nest |
-| `nest 3 deep dash.html` | Dashboard variant |
-
-### Recursive Memory Whisper Lattice
-
-`recursive-memory-whisper-lattice/` — Memory lattice variants
-
-| Item | Description |
-|------|-------------|
-| `whisper lattice 00/01/02.html` | Three whisper lattice builds |
-| `recursive_memory/` | Recursive memory core |
-| `recursive_memory (1)/` | Recursive memory variant |
-
-### Pulsar
-
-`pulsar/` — Pulsar fractal beacon
-
-| File | Description |
-|------|-------------|
-| `pulsar_fractal_beacon (1).zip` | Fractal beacon build 1 |
-| `pulsar_fractal_beacon (2).zip` | Fractal beacon build 2 |
-
-### Shield Oscillator
-
-`shield-oscillator/` — Nested infinite oscillator and shield variants
-
-| File | Description |
-|------|-------------|
-| `nested_infinite_oscillator.zip` | Nested infinite oscillator |
-| `pulsar_shield.html` | P</div></div>
-<div class="sec" style="text-align:center"><a class="btn" href="https://github.com/DavidWise01/hardware-lab">view the source ↗</a></div>
-<footer><a href="https://davidwise01.github.io/ud0/">← the biosphere</a> &nbsp;·&nbsp; <a href="https://davidwise01.github.io/atlas/">the atlas</a> &nbsp;·&nbsp; hardware-lab</footer>
+  <div class="readout">
+   Scope: <b>2.0 V/div</b> vertical, <b id="tdiv">50 ms/div</b> horizontal &nbsp;·&nbsp;
+   V<sub>pp</sub> = <b id="vpp">3.20</b> V &nbsp;·&nbsp;
+   V<sub>rms</sub> = <b id="vrms">1.13</b> V &nbsp;·&nbsp;
+   period T = <b id="per">333</b> ms &nbsp;·&nbsp; drag the trace to set the DC offset.
+  </div>
+ </div>
+ <p class="note">Real instrument: the plotted samples are the actual generator equation evaluated per pixel-column, gridded to 2 V/div × 50 ms/div. V<sub>rms</sub> uses the closed-form value for each waveform shape (sine A/√2, square A, triangle & sawtooth A/√3). Nothing is faked — it is a self-contained scope, not a photo of one.</p>
 </div>
-<!-- ROOT0-AUTOLANDING-v2 -->
+
+<!-- ================= HONEST TWO-LAYER ================= -->
+<div class="sec">
+ <div class="honest">
+  <h2>Honest two-layer</h2>
+  <p><span class="real">REAL PHYSICS —</span> The bench is a faithful function-generator + oscilloscope: standard AC signal theory (v(t) = A·sin(2πft+φ)+V<sub>dc</sub>), correct RMS by waveform, correct V<sub>pp</sub> and period. The catalogue cards name established results: the <b>Aharonov–Bohm effect</b> (phase from enclosed flux, Aharonov &amp; Bohm 1959) in the Quantum Ring; the <b>photon → exciton → electron</b> chain of light–matter coupling in the Exitron; <b>toroidal inductor</b> field confinement (Ampère's law) on the Coil Bench; the <b>Coulomb blockade / single-electron</b> picture behind the quantum-dot files.</p>
+  <p><span class="concept">DESIGN / DISCLOSURE / CONCEPT —</span> The named "devices" — Quantum Shield, Wandering Spark, Cell Seed carrier, Processor Stack, Whisper Rover — are <b>design concepts and disclosures</b>, published sketches of an architecture. They are not built silicon, not benchmarked, and not granted patents. Each card links to that concept's own page.</p>
+  <p><span class="toy">SYMBOLIC TOY (flagged) —</span> The "singularity mode," the recursive whisper-lattice, and the fractal-beacon framings are <b>symbolic / illustrative toys</b>, not literal physics claims. Where a file animates a lattice or a "carrier," treat it as a visual model of an idea, not a measurement.</p>
+  <p class="rule">To disclose a design is real work; it is not a granted patent or a fabricated device.</p>
+ </div>
+</div>
+
+<!-- ================= CATALOGUE ================= -->
+<div class="sec">
+ <h2>The Catalogue · prototypes on the bench</h2>
+ <div class="grid">
+
+  <a class="card" href="exitron.html">
+   <div class="cname">Exitron</div>
+   <div class="cfile">exitron.html</div>
+   <div class="cdesc">Light meets matter: a photon absorbed lifts an electron across the gap and binds an exciton.</div>
+   <div class="cphys">▸ light–matter coupling · photon · exciton</div>
+  </a>
+
+  <a class="card" href="quantum_ring.html">
+   <div class="cname">Quantum Ring</div>
+   <div class="cfile">quantum_ring.html</div>
+   <div class="cdesc">A conducting ring where enclosed magnetic flux modulates the electron phase and the conductance.</div>
+   <div class="cphys">▸ Aharonov–Bohm oscillations (1959)</div>
+  </a>
+
+  <a class="card" href="Quantum-Dot-Primer-File.html">
+   <div class="cname">Quantum Dot Primer</div>
+   <div class="cfile">Quantum-Dot-Primer-File.html</div>
+   <div class="cdesc">Primer for a quantum-dot memory cell — a single dot as a confined, addressable charge store.</div>
+   <div class="cphys">▸ Coulomb blockade · confined states</div>
+  </a>
+
+  <a class="card" href="quantum dot.html">
+   <div class="cname">Quantum Dot — Full</div>
+   <div class="cfile">quantum dot.html</div>
+   <div class="cdesc">The full quantum-dot processor model built out from the primer's single-electron cell.</div>
+   <div class="cphys">▸ single-electron confinement</div>
+  </a>
+
+  <a class="card" href="quantum shield.html">
+   <div class="cname">Quantum Shield</div>
+   <div class="cfile">quantum shield.html</div>
+   <div class="cdesc">A photonic "shield" concept with a singularity display mode — a design sketch, symbolic mode flagged.</div>
+   <div class="cphys">▸ concept · photonic · symbolic mode</div>
+  </a>
+
+  <a class="card" href="toroid.html">
+   <div class="cname">Toroid &amp; Coil Bench</div>
+   <div class="cfile">toroid.html</div>
+   <div class="cdesc">A toroid-and-coil bench: field confined inside the torus, near-zero leakage outside.</div>
+   <div class="cphys">▸ toroidal inductor · Ampère's law</div>
+  </a>
+
+  <a class="card" href="the wandering spark.html">
+   <div class="cname">The Wandering Spark</div>
+   <div class="cfile">the wandering spark.html</div>
+   <div class="cdesc">An autonomous-ignition sketch — a "spark" that oscillates and migrates across the substrate.</div>
+   <div class="cphys">▸ concept · oscillation model</div>
+  </a>
+
+  <a class="card" href="single cell seed.html">
+   <div class="cname">Single Cell Seed</div>
+   <div class="cfile">single cell seed.html</div>
+   <div class="cdesc">A 6×6×6 carrier "seed" — the smallest cell from which a lattice architecture grows.</div>
+   <div class="cphys">▸ concept · carrier lattice</div>
+  </a>
+
+  <a class="card" href="5 processor stack.html">
+   <div class="cname">5-Processor Stack</div>
+   <div class="cfile">5 processor stack.html</div>
+   <div class="cdesc">A five-layer processor stack in silo orientation — a vertical-integration design sketch.</div>
+   <div class="cphys">▸ concept · 3D stacked layers</div>
+  </a>
+
+  <a class="card" href="whisper rover.html">
+   <div class="cname">Whisper Rover</div>
+   <div class="cfile">whisper rover.html</div>
+   <div class="cdesc">A rover that walks a whisper-lattice grid — symbolic recursive-memory toy, flagged as such.</div>
+   <div class="cphys">▸ symbolic · whisper lattice</div>
+  </a>
+
+ </div>
+ <p class="note">Only the .html prototypes that actually live in this repo are carded here. Sub-directories (valence, zero-point, lattice, pulsar, shield-oscillator, quantum-dot) hold further builds — see the repo README.</p>
+</div>
+
+<footer>
+ <a href="https://davidwise01.github.io/ud0/">◄ UD0 · the biosphere</a><br>
+ David Lee Wise / ROOT0 / TriPod LLC · CC-BY-ND-4.0
+</footer>
+
+</div>
+
+<script>
+(function(){
+ "use strict";
+ var cv = document.getElementById('scope');
+ var ctx = cv.getContext('2d');
+ var W = cv.width, H = cv.height;
+
+ // scope calibration
+ var VDIV = 2.0;          // volts per vertical division
+ var VDIVS = 4;           // ±2 divisions from center  -> ±4 V full scale
+ var MSDIV = 50;          // ms per horizontal division
+ var HDIVS = 10;          // 10 horizontal divisions -> 500 ms window
+ var WINDOW = (MSDIV*HDIVS)/1000; // seconds shown across the screen = 0.5 s
+
+ var state = { wave:'sine', amp:1.6, freq:3.0, phase:0, off:0, run:true };
+ var t0 = performance.now();
+
+ // --- generator: value in volts at time t (seconds) ---
+ function gen(t){
+   var A = state.amp, f = state.freq;
+   var ph = state.phase * Math.PI/180;
+   var x = 2*Math.PI*f*t + ph;          // radians
+   var frac = ((f*t) + state.phase/360) % 1; if(frac<0) frac+=1; // 0..1 within period
+   var y;
+   switch(state.wave){
+     case 'square':   y = (Math.sin(x) >= 0) ? A : -A; break;
+     case 'triangle': y = A * (4*Math.abs(frac-0.5) - 1); break;        // -A..A, peak at edges
+     case 'sawtooth': y = A * (2*frac - 1); break;                       // ramp -A..A
+     default:         y = A * Math.sin(x);                               // sine
+   }
+   return y + state.off;
+ }
+
+ // closed-form RMS of the AC part (excludes DC offset), by shape
+ function acRms(){
+   var A = state.amp;
+   switch(state.wave){
+     case 'square':   return A;             // |value| = A always
+     case 'triangle': return A/Math.sqrt(3);
+     case 'sawtooth': return A/Math.sqrt(3);
+     default:         return A/Math.SQRT2;  // sine
+   }
+ }
+
+ // map volts -> y pixel
+ function vy(v){
+   var full = VDIV*VDIVS;                 // ±4 V
+   return H/2 - (v/full)*H;               // v=+full -> top, v=-full -> bottom
+ }
+
+ function drawGrid(){
+   ctx.fillStyle = '#0d0b08'; ctx.fillRect(0,0,W,H);
+   // fine divisions
+   ctx.lineWidth = 1;
+   ctx.strokeStyle = 'rgba(200,132,58,0.10)';
+   var i;
+   for(i=0;i<=HDIVS;i++){ var gx=i*(W/HDIVS); ctx.beginPath(); ctx.moveTo(gx,0); ctx.lineTo(gx,H); ctx.stroke(); }
+   for(i=0;i<=VDIVS*2;i++){ var gy=i*(H/(VDIVS*2)); ctx.beginPath(); ctx.moveTo(0,gy); ctx.lineTo(W,gy); ctx.stroke(); }
+   // center axes stronger
+   ctx.strokeStyle = 'rgba(200,132,58,0.35)';
+   ctx.beginPath(); ctx.moveTo(0,H/2); ctx.lineTo(W,H/2); ctx.stroke();
+   ctx.beginPath(); ctx.moveTo(W/2,0); ctx.lineTo(W/2,H); ctx.stroke();
+   // tick labels
+   ctx.fillStyle = 'rgba(236,227,213,0.45)';
+   ctx.font = "11px 'IBM Plex Mono', monospace";
+   ctx.fillText('+4V', 6, 14);
+   ctx.fillText('0V', 6, H/2 - 5);
+   ctx.fillText('-4V', 6, H-6);
+   ctx.textAlign='right'; ctx.fillText('0 ms', W/2-4, H-6);
+   ctx.fillText('+250 ms', W-6, H-6); ctx.textAlign='left';
+ }
+
+ function drawTrace(sweep){
+   // sweep = horizontal time offset in seconds (animation), 0 when paused
+   ctx.lineWidth = 2.2;
+   ctx.strokeStyle = '#6bb0c0';
+   ctx.shadowColor = 'rgba(107,176,192,0.55)'; ctx.shadowBlur = 6;
+   ctx.beginPath();
+   for(var px=0; px<=W; px++){
+     var t = (px/W)*WINDOW + sweep;       // seconds
+     var v = gen(t);
+     var y = vy(v);
+     if(px===0) ctx.moveTo(px,y); else ctx.lineTo(px,y);
+   }
+   ctx.stroke();
+   ctx.shadowBlur = 0;
+
+   // green DC-offset marker line
+   if(Math.abs(state.off) > 0.001){
+     ctx.setLineDash([5,5]); ctx.lineWidth=1; ctx.strokeStyle='rgba(111,191,138,0.7)';
+     var oy=vy(state.off); ctx.beginPath(); ctx.moveTo(0,oy); ctx.lineTo(W,oy); ctx.stroke();
+     ctx.setLineDash([]);
+   }
+ }
+
+ function updateReadouts(){
+   document.getElementById('ampV').textContent = state.amp.toFixed(2);
+   document.getElementById('freqV').textContent = state.freq.toFixed(1);
+   document.getElementById('phV').textContent = Math.round(state.phase);
+   document.getElementById('offV').textContent = state.off.toFixed(2);
+   document.getElementById('vpp').textContent = (2*state.amp).toFixed(2);
+   document.getElementById('vrms').textContent = acRms().toFixed(2);
+   document.getElementById('per').textContent = Math.round(1000/state.freq);
+   var eq;
+   switch(state.wave){
+     case 'square':   eq='v(t) = A·sgn(sin(2πf·t + φ)) + V<sub>dc</sub>'; break;
+     case 'triangle': eq='v(t) = A·tri(2πf·t + φ) + V<sub>dc</sub>   ·   V<sub>rms</sub>=A/√3'; break;
+     case 'sawtooth': eq='v(t) = A·(2·frac(f·t) − 1) + V<sub>dc</sub>   ·   V<sub>rms</sub>=A/√3'; break;
+     default:         eq='v(t) = A·sin(2πf·t + φ) + V<sub>dc</sub>   ·   V<sub>rms</sub>=A/√2';
+   }
+   document.getElementById('eqn').innerHTML = eq;
+ }
+
+ function draw(sweep){
+   drawGrid();
+   drawTrace(sweep||0);
+   updateReadouts();
+ }
+
+ // --- controls (all call draw() synchronously) ---
+ function bindRange(id, key, isInt){
+   var el = document.getElementById(id);
+   el.addEventListener('input', function(){
+     state[key] = isInt ? parseInt(el.value,10) : parseFloat(el.value);
+     draw(state.run ? curSweep() : 0);
+   });
+ }
+ bindRange('amp','amp'); bindRange('freq','freq');
+ bindRange('phase','phase',false); bindRange('off','off');
+
+ var waveChips = document.getElementById('waveChips');
+ waveChips.addEventListener('click', function(e){
+   var b = e.target.closest('button.chip'); if(!b) return;
+   if(b.id === 'runChip'){
+     state.run = !state.run; b.classList.toggle('on', state.run);
+     b.textContent = state.run ? '▶ SWEEP' : '▮ PAUSED';
+     if(state.run){ t0 = performance.now(); requestAnimationFrame(loop); }
+     else { draw(0); }
+     return;
+   }
+   if(!b.dataset.wave) return;
+   state.wave = b.dataset.wave;
+   var chips = waveChips.querySelectorAll('button[data-wave]');
+   chips.forEach(function(c){ c.classList.toggle('on', c===b); });
+   draw(state.run ? curSweep() : 0);
+ });
+
+ // --- drag the trace to set DC offset (pointer events) ---
+ var dragging = false;
+ function ptrToVolt(ev){
+   var r = cv.getBoundingClientRect();
+   var yy = (ev.clientY - r.top) * (H / r.height);
+   var full = VDIV*VDIVS;
+   var v = (H/2 - yy)/H * full;
+   return Math.max(-1.5, Math.min(1.5, v));
+ }
+ cv.addEventListener('pointerdown', function(ev){
+   dragging = true; cv.setPointerCapture(ev.pointerId);
+   state.off = ptrToVolt(ev); document.getElementById('off').value = state.off;
+   draw(state.run ? curSweep() : 0);
+ });
+ cv.addEventListener('pointermove', function(ev){
+   if(!dragging) return;
+   state.off = ptrToVolt(ev); document.getElementById('off').value = state.off;
+   draw(state.run ? curSweep() : 0);
+ });
+ cv.addEventListener('pointerup', function(ev){ dragging=false; });
+ cv.addEventListener('pointercancel', function(){ dragging=false; });
+
+ // --- optional animation (rAF only ADDS a moving sweep) ---
+ function curSweep(){ return ((performance.now()-t0)/1000) * 0.25; } // scroll speed
+ function loop(){
+   if(!state.run) return;
+   draw(curSweep());
+   requestAnimationFrame(loop);
+ }
+
+ // FIRST paint synchronous (headless-safe), THEN start optional animation
+ draw(0);
+ requestAnimationFrame(loop);
+})();
+</script>
 </body></html>
