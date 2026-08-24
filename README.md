@@ -19,6 +19,9 @@ Visual and experimental hardware designs — quantum dot, valence board, zero po
 | `quantum dot.html` | Full quantum dot processor model |
 | `keep this 00.html` | Canonical preserved build |
 | `quantum-tunnel-modulator.html` | QT-211 verified four-quadrant I/Q + WKB tunnel workbench |
+| `matter-state-transformer-3d.html` | MST-3D WebGL2/Canvas workbench for a single-particle state crossing a bounded vacuum gap |
+| `matter-state-transformer-model.js` | Deterministic unitary 3D split-operator FFT solver |
+| `MST-3D-BLUEPRINT.md` | Technical blueprint, equations, scale mapping and evidence boundary |
 | `light shadow whisper.md` | Light/shadow whisper lattice spec |
 | `bridge.js.txt` | Bridge module |
 

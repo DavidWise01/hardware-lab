@@ -1,0 +1,533 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="A deterministic three-dimensional single-particle matter-state transformer workbench for the .|-|.. vacuum-gap glyph.">
+  <title>MST-3D · Matter-State Transformer</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #100d0a;
+      --panel: #19130e;
+      --panel2: #21180f;
+      --ink: #eee5d7;
+      --muted: #a99a86;
+      --copper: #d18b40;
+      --cyan: #6cc8d7;
+      --green: #74d39c;
+      --red: #e17068;
+      --line: rgba(209,139,64,.28);
+    }
+    * { box-sizing: border-box; }
+    html, body { min-height: 100%; }
+    body {
+      margin: 0;
+      background:
+        radial-gradient(circle at 15% 0, rgba(209,139,64,.14), transparent 38rem),
+        radial-gradient(circle at 88% 5%, rgba(108,200,215,.09), transparent 34rem),
+        var(--bg);
+      color: var(--ink);
+      font: 16px/1.55 Georgia, serif;
+    }
+    .mono, button, input, .eyebrow, .metric strong, table, .stamp, .formula, .portline {
+      font-family: "IBM Plex Mono", "Cascadia Mono", Consolas, monospace;
+    }
+    .wrap { width: min(1200px, calc(100% - 28px)); margin: 0 auto; padding-bottom: 72px; }
+    nav { padding: 14px 0; border-bottom: 1px solid var(--line); font: 12px/1.4 Consolas, monospace; color: var(--muted); }
+    nav a, a { color: var(--copper); text-decoration: none; }
+    nav a:hover, a:hover { color: var(--cyan); }
+    header { padding: 42px 0 26px; display: grid; grid-template-columns: 1fr auto; gap: 24px; align-items: end; }
+    .eyebrow { color: var(--copper); letter-spacing: .2em; font-size: 12px; text-transform: uppercase; }
+    h1 { margin: 9px 0 8px; font: 600 clamp(30px, 6vw, 58px)/1 Consolas, monospace; letter-spacing: -.04em; }
+    .lede { margin: 0; max-width: 800px; color: #d4c7b5; font-size: clamp(17px, 2.2vw, 21px); }
+    .stamp { border: 1px solid var(--green); color: var(--green); padding: 10px 13px; font-size: 11px; letter-spacing: .08em; border-radius: 8px; text-align: center; }
+    .panel { background: linear-gradient(145deg, rgba(33,24,15,.92), rgba(22,17,12,.92)); border: 1px solid var(--line); border-radius: 14px; }
+    .bench { padding: 14px; }
+    canvas { display: block; width: 100%; height: auto; background: #090806; border: 1px solid rgba(108,200,215,.16); border-radius: 10px; touch-action: none; }
+    .metrics { display: grid; grid-template-columns: repeat(6, minmax(120px,1fr)); gap: 8px; margin: 10px 0; }
+    .metric { min-height: 74px; padding: 11px; background: rgba(9,8,6,.56); border: 1px solid var(--line); border-radius: 9px; color: var(--muted); font-size: 11px; text-transform: uppercase; letter-spacing: .08em; }
+    .metric strong { display: block; color: var(--cyan); margin-top: 5px; font-size: 14px; letter-spacing: 0; text-transform: none; }
+    .controls { display: grid; grid-template-columns: repeat(4, minmax(150px,1fr)); gap: 13px; padding-top: 10px; }
+    .control { min-width: 0; }
+    .control label { display: flex; justify-content: space-between; gap: 10px; color: var(--muted); font: 10px Consolas, monospace; letter-spacing: .08em; text-transform: uppercase; margin-bottom: 7px; }
+    .control output { color: var(--cyan); }
+    input[type=range] { width: 100%; accent-color: var(--copper); }
+    .buttons { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
+    button { cursor: pointer; border: 1px solid var(--line); background: #120f0b; color: var(--ink); padding: 9px 14px; border-radius: 8px; font-size: 11px; letter-spacing: .08em; }
+    button:hover { border-color: var(--copper); }
+    button.active { background: var(--copper); color: #100d0a; border-color: var(--copper); font-weight: 700; }
+    .portline { margin-top: 14px; padding: 12px 14px; border-left: 2px solid var(--cyan); background: rgba(108,200,215,.05); overflow-x: auto; white-space: nowrap; font-size: 13px; color: #d9d0c2; }
+    .portline b { color: var(--green); }
+    .grid { display: grid; grid-template-columns: 1.08fr .92fr; gap: 16px; margin-top: 16px; }
+    .section { padding: 20px; }
+    h2 { margin: 0 0 14px; color: var(--copper); font: 600 13px Consolas, monospace; text-transform: uppercase; letter-spacing: .14em; }
+    p { margin: 9px 0; }
+    .boundary { border-color: var(--copper); }
+    .real { color: var(--green); }
+    .proposed { color: var(--cyan); }
+    .excluded { color: var(--red); }
+    table { border-collapse: collapse; width: 100%; font-size: 12px; }
+    th, td { padding: 9px 8px; text-align: left; border-bottom: 1px solid var(--line); vertical-align: top; }
+    th { color: var(--muted); font-weight: 400; }
+    td:first-child { color: var(--green); font-weight: 700; white-space: nowrap; }
+    .checks { list-style: none; padding: 0; margin: 0; display: grid; gap: 7px; }
+    .checks li { display: flex; justify-content: space-between; gap: 16px; border-bottom: 1px dashed var(--line); padding: 5px 0; font: 11px Consolas, monospace; color: var(--muted); }
+    .checks b { color: var(--green); }
+    .checks b.fail { color: var(--red); }
+    .formula { overflow-x: auto; padding: 11px 13px; background: #0d0b08; border-radius: 8px; color: var(--cyan); font-size: 13px; white-space: nowrap; margin: 8px 0; }
+    .legend { display: flex; flex-wrap: wrap; gap: 16px; color: var(--muted); font: 11px Consolas, monospace; padding-top: 8px; }
+    .swatch::before { content: ""; display: inline-block; width: 9px; height: 9px; border-radius: 50%; margin-right: 6px; background: currentColor; }
+    .swatch.input { color: var(--copper); }
+    .swatch.vacuum { color: var(--cyan); }
+    .swatch.output { color: var(--green); }
+    footer { margin-top: 34px; padding-top: 18px; border-top: 1px solid var(--line); color: var(--muted); font: 11px/1.8 Consolas, monospace; }
+    @media (max-width: 900px) {
+      header { grid-template-columns: 1fr; }
+      .stamp { justify-self: start; }
+      .metrics { grid-template-columns: repeat(3,1fr); }
+      .controls { grid-template-columns: repeat(2,1fr); }
+      .grid { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 540px) {
+      .metrics { grid-template-columns: repeat(2,1fr); }
+      .controls { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <nav><a href="index.html">← Hardware Lab</a> · <a href="quantum-tunnel-modulator.html">QT-211</a> · MST-3D-1.0.0</nav>
+
+    <header>
+      <div>
+        <div class="eyebrow">HEUREMA · matter-state workbench</div>
+        <h1>.<span class="proposed">|−|</span>.. · Matter State</h1>
+        <p class="lede">A normalized three-dimensional wave packet evolves through a material–vacuum–material barrier. The paired bars bind the vacuum gap; the dash is the evanescent coupling path—not matter creation.</p>
+      </div>
+      <div class="stamp">CONTRACT FROZEN<br>23 / 23 PASS</div>
+    </header>
+
+    <main>
+      <section class="panel bench" aria-labelledby="bench-title">
+        <h2 id="bench-title">Live 3D probability field</h2>
+        <canvas id="field" width="1120" height="610" aria-label="Rotatable three-dimensional probability density moving through a bounded vacuum gap"></canvas>
+
+        <div class="metrics">
+          <div class="metric">Renderer<strong id="mRenderer">—</strong></div>
+          <div class="metric">Input probability<strong id="mLeft">—</strong></div>
+          <div class="metric">Vacuum gap<strong id="mGap">—</strong></div>
+          <div class="metric">Output probability<strong id="mRight">—</strong></div>
+          <div class="metric">Norm error<strong id="mNorm">—</strong></div>
+          <div class="metric">Centroid x<strong id="mCentroid">—</strong></div>
+        </div>
+
+        <div class="controls">
+          <div class="control"><label>Vacuum barrier V <output id="oBarrier">5.80 E₀</output></label><input id="barrier" type="range" min="0" max="10" step="0.05" value="5.8"></div>
+          <div class="control"><label>Gap half-width a <output id="oWidth">0.90 L₀</output></label><input id="width" type="range" min="0.35" max="1.8" step="0.05" value="0.9"></div>
+          <div class="control"><label>Input wave number k₀ <output id="oWave">3.20 L₀⁻¹</output></label><input id="wave" type="range" min="1.2" max="4" step="0.05" value="3.2"></div>
+          <div class="control"><label>Solver cadence <output id="oCadence">2 step/frame</output></label><input id="cadence" type="range" min="1" max="5" step="1" value="2"></div>
+        </div>
+
+        <div class="buttons">
+          <button id="run" class="active">RUN</button>
+          <button id="step">STEP +Δt</button>
+          <button id="reverse">REVERSE −Δt</button>
+          <button id="reset">RESET INPUT</button>
+        </div>
+
+        <div class="portline"><b>.</b> input &nbsp; <span class="proposed">| material→vacuum &nbsp; − evanescent coupling &nbsp; vacuum→material |</span> &nbsp; <b>.</b> output &nbsp; <span class="real">.</span> numerical witness</div>
+        <div class="legend"><span class="swatch input">input-side density</span><span class="swatch vacuum">bounded vacuum region</span><span class="swatch output">output-side density</span><span>drag field to rotate</span></div>
+      </section>
+
+      <div class="grid">
+        <section class="panel section boundary">
+          <h2>Evidence boundary</h2>
+          <p><strong class="real">Established:</strong> the nonrelativistic time-dependent Schrödinger equation, Born probability, FFT and unitary split-operator evolution.</p>
+          <p><strong class="proposed">Frozen model choices:</strong> the <span class="mono">.|−|..</span> glyph, a closed periodic grid, a planar vacuum potential barrier, weak transverse confinement and the selected nondimensional baseline.</p>
+          <p><strong class="excluded">Not claimed:</strong> matter creation, particle transmutation, a laboratory vacuum, relativistic quantum-field interactions, measurement back-action or fabricated-device performance.</p>
+          <div class="formula">i ∂ψ/∂t = [−½∇² + V(x,y,z)] ψ</div>
+          <div class="formula">U(Δt) ≈ e<sup>−iVΔt/2</sup> F<sup>−1</sup> e<sup>−ik²Δt/2</sup> F e<sup>−iVΔt/2</sup></div>
+          <div class="formula">P<sub>L</sub> + P<sub>vac</sub> + P<sub>R</sub> = ∑ |ψ|² = 1</div>
+        </section>
+
+        <section class="panel section">
+          <h2>Port and substrate specification</h2>
+          <table>
+            <thead><tr><th>Mark</th><th>Numerical object</th><th>Physical interpretation</th></tr></thead>
+            <tbody>
+              <tr><td>.</td><td>normalized Gaussian packet</td><td>localized input matter state</td></tr>
+              <tr><td>| |</td><td>two planar interfaces at x = ±a</td><td>material boundaries enclosing the vacuum gap</td></tr>
+              <tr><td>−</td><td>sub-barrier wave amplitude</td><td>evanescent coupling through vacuum</td></tr>
+              <tr><td>.</td><td>P<sub>R</sub></td><td>transformed output state</td></tr>
+              <tr><td>.</td><td>immutable snapshot</td><td>read-only numerical witness</td></tr>
+            </tbody>
+          </table>
+        </section>
+
+        <section class="panel section">
+          <h2>Numerical blueprint</h2>
+          <table>
+            <tbody>
+              <tr><td>Grid</td><td>32 × 16 × 16 complex samples</td></tr>
+              <tr><td>Spacing</td><td>Δx = Δy = Δz = 0.75 L₀</td></tr>
+              <tr><td>Time step</td><td>Δt = 0.018 t₀</td></tr>
+              <tr><td>Integrator</td><td>second-order Strang split operator</td></tr>
+              <tr><td>Kinetic step</td><td>separable radix-2 3D FFT</td></tr>
+              <tr><td>Boundary</td><td>periodic, closed computational volume</td></tr>
+              <tr><td>Example scale</td><td>L₀ = 1 nm, m* = mₑ → E₀ = <span id="scaleE">—</span>, t₀ = <span id="scaleT">—</span></td></tr>
+            </tbody>
+          </table>
+        </section>
+
+        <section class="panel section">
+          <h2>Browser witness</h2>
+          <ul class="checks" id="checks"></ul>
+        </section>
+
+        <section class="panel section">
+          <h2>Frozen verification</h2>
+          <p class="mono">Contract: MST-3D-BC-1.0</p>
+          <p class="mono">Seal: b1924bad1f35783c…044b6d131ac4</p>
+          <p class="mono">Node conformance: 23/23 PASS</p>
+          <p class="mono">Stress: 1,000 split steps on 16×8×8</p>
+          <p><a href="benchmarks/mst-3d-contract-v1.0.json">Open the immutable benchmark contract →</a></p>
+        </section>
+      </div>
+    </main>
+
+    <footer>
+      David Lee Wise / ROOT0 / TriPod LLC · CC-BY-ND-4.0 · TRIPOD-IP-v1.1<br>
+      Numerical references: Feit–Fleck–Steiger spectral propagation (JCP 47, 1982) · Cooley–Tukey FFT · CODATA exact ℏ and elementary charge.<br>
+      The final dot reports the computed state without simulating a physical measurement apparatus.
+    </footer>
+  </div>
+
+  <script src="matter-state-transformer-model.js"></script>
+  <script>
+    (function () {
+      "use strict";
+      const M = globalThis.MatterStateTransformer3D;
+      const canvas = document.getElementById("field");
+      const $ = (id) => document.getElementById(id);
+      const controls = { barrier: $("barrier"), width: $("width"), wave: $("wave"), cadence: $("cadence") };
+      let simulation;
+      let running = true;
+      let halted = false;
+      let lastPaintStep = -1;
+
+      function number(id) { return Number(controls[id].value); }
+      function percent(value) { return `${(value * 100).toFixed(3)}%`; }
+      function scientific(value) {
+        if (value === 0) return "0";
+        const parts = value.toExponential(2).split("e");
+        return `${parts[0]}×10^${Number(parts[1])}`;
+      }
+
+      function makeProgram(gl, vertexSource, fragmentSource) {
+        function shader(type, source) {
+          const value = gl.createShader(type);
+          gl.shaderSource(value, source);
+          gl.compileShader(value);
+          if (!gl.getShaderParameter(value, gl.COMPILE_STATUS)) throw new Error(gl.getShaderInfoLog(value));
+          return value;
+        }
+        const program = gl.createProgram();
+        gl.attachShader(program, shader(gl.VERTEX_SHADER, vertexSource));
+        gl.attachShader(program, shader(gl.FRAGMENT_SHADER, fragmentSource));
+        gl.linkProgram(program);
+        if (!gl.getProgramParameter(program, gl.LINK_STATUS)) throw new Error(gl.getProgramInfoLog(program));
+        return program;
+      }
+
+      function makeWebGLRenderer() {
+        const gl = canvas.getContext("webgl2", { antialias: true, alpha: false });
+        if (!gl) return null;
+        const vertex = `#version 300 es
+          precision highp float;
+          in vec3 aPosition;
+          in float aWeight;
+          uniform vec2 uAngles;
+          uniform float uAspect;
+          uniform float uPointScale;
+          out float vX;
+          out float vWeight;
+          void main() {
+            float cy = cos(uAngles.x), sy = sin(uAngles.x);
+            float cp = cos(uAngles.y), sp = sin(uAngles.y);
+            vec3 p = vec3(cy*aPosition.x + sy*aPosition.z, aPosition.y, -sy*aPosition.x + cy*aPosition.z);
+            p = vec3(p.x, cp*p.y - sp*p.z, sp*p.y + cp*p.z);
+            float depth = 4.2 - p.z;
+            gl_Position = vec4((p.x/uAspect)*2.8/depth, p.y*2.8/depth, 0.0, 1.0);
+            gl_PointSize = (2.0 + 10.0*sqrt(max(aWeight,0.0))) * uPointScale;
+            vX = aPosition.x;
+            vWeight = aWeight;
+          }`;
+        const fragment = `#version 300 es
+          precision highp float;
+          uniform float uGap;
+          uniform int uMode;
+          in float vX;
+          in float vWeight;
+          out vec4 outColor;
+          void main() {
+            if (uMode == 0 && distance(gl_PointCoord, vec2(0.5)) > 0.5) discard;
+            vec3 copper = vec3(0.82,0.55,0.25);
+            vec3 cyan = vec3(0.42,0.78,0.84);
+            vec3 green = vec3(0.45,0.82,0.61);
+            vec3 color = uMode == 1 ? cyan : (vX < -uGap ? copper : (vX > uGap ? green : cyan));
+            float alpha = uMode == 1 ? 0.70 : 0.22 + 0.78*sqrt(max(vWeight,0.0));
+            outColor = vec4(color, alpha);
+          }`;
+        const program = makeProgram(gl, vertex, fragment);
+        const positionLocation = gl.getAttribLocation(program, "aPosition");
+        const weightLocation = gl.getAttribLocation(program, "aWeight");
+        const buffer = gl.createBuffer();
+        const lineBuffer = gl.createBuffer();
+        let points = new Float32Array(0);
+        let lines = new Float32Array(0);
+        let yaw = -0.55;
+        let pitch = 0.42;
+        let dragging = false;
+        let lastX = 0;
+        let lastY = 0;
+
+        function buildLines(gap) {
+          const data = [];
+          const add = (a, b) => data.push(...a, 0.08, ...b, 0.08);
+          for (const x of [-gap, gap]) {
+            const q = 0.72;
+            add([x,-q,-q],[x,q,-q]); add([x,q,-q],[x,q,q]);
+            add([x,q,q],[x,-q,q]); add([x,-q,q],[x,-q,-q]);
+            for (const v of [-0.36,0,0.36]) {
+              add([x,v,-q],[x,v,q]); add([x,-q,v],[x,q,v]);
+            }
+          }
+          lines = Float32Array.from(data);
+        }
+
+        function update(density, config) {
+          let max = 0;
+          for (const value of density) if (value > max) max = value;
+          const data = [];
+          const halfX = config.nx * config.dx / 2;
+          const halfY = config.ny * config.dy / 2;
+          const halfZ = config.nz * config.dz / 2;
+          const cutoff = max * 0.006;
+          for (let x = 0; x < config.nx; x += 1) {
+            for (let y = 0; y < config.ny; y += 1) {
+              for (let z = 0; z < config.nz; z += 1) {
+                const value = density[M.index3(x,y,z,config.ny,config.nz)];
+                if (value < cutoff) continue;
+                data.push(
+                  M.coordinate(x,config.nx,config.dx)/halfX,
+                  M.coordinate(y,config.ny,config.dy)/halfY,
+                  M.coordinate(z,config.nz,config.dz)/halfZ,
+                  value/max
+                );
+              }
+            }
+          }
+          points = Float32Array.from(data);
+          buildLines(config.barrierHalfWidth / halfX);
+        }
+
+        function bindData(data) {
+          gl.bufferData(gl.ARRAY_BUFFER, data, gl.DYNAMIC_DRAW);
+          gl.enableVertexAttribArray(positionLocation);
+          gl.vertexAttribPointer(positionLocation, 3, gl.FLOAT, false, 16, 0);
+          gl.enableVertexAttribArray(weightLocation);
+          gl.vertexAttribPointer(weightLocation, 1, gl.FLOAT, false, 16, 12);
+        }
+
+        function draw(config) {
+          gl.viewport(0, 0, canvas.width, canvas.height);
+          gl.clearColor(0.035, 0.031, 0.024, 1);
+          gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+          gl.enable(gl.BLEND);
+          gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
+          gl.useProgram(program);
+          gl.uniform2f(gl.getUniformLocation(program,"uAngles"), yaw, pitch);
+          gl.uniform1f(gl.getUniformLocation(program,"uAspect"), canvas.width/canvas.height);
+          gl.uniform1f(gl.getUniformLocation(program,"uPointScale"), Math.max(1, canvas.width/1120));
+          gl.uniform1f(gl.getUniformLocation(program,"uGap"), config.barrierHalfWidth/(config.nx*config.dx/2));
+          gl.bindBuffer(gl.ARRAY_BUFFER, lineBuffer);
+          bindData(lines);
+          gl.uniform1i(gl.getUniformLocation(program,"uMode"), 1);
+          gl.drawArrays(gl.LINES, 0, lines.length/4);
+          gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
+          bindData(points);
+          gl.uniform1i(gl.getUniformLocation(program,"uMode"), 0);
+          gl.drawArrays(gl.POINTS, 0, points.length/4);
+        }
+
+        canvas.addEventListener("pointerdown", (event) => {
+          dragging = true; lastX = event.clientX; lastY = event.clientY; canvas.setPointerCapture(event.pointerId);
+        });
+        canvas.addEventListener("pointermove", (event) => {
+          if (!dragging) return;
+          yaw += (event.clientX-lastX)*0.008; pitch = Math.max(-1.2,Math.min(1.2,pitch+(event.clientY-lastY)*0.008));
+          lastX = event.clientX; lastY = event.clientY; draw(simulation.config);
+        });
+        canvas.addEventListener("pointerup", () => { dragging = false; });
+        canvas.addEventListener("pointercancel", () => { dragging = false; });
+        return { mode: "WebGL2", update, draw };
+      }
+
+      function makeCanvasRenderer() {
+        const ctx = canvas.getContext("2d");
+        let samples = [];
+        let gap = 0.08;
+        let yaw = -0.55;
+        let pitch = 0.42;
+        let dragging = false;
+        let lastX = 0;
+        let lastY = 0;
+
+        function project(point) {
+          const cy = Math.cos(yaw), sy = Math.sin(yaw), cp = Math.cos(pitch), sp = Math.sin(pitch);
+          const rx = cy*point.x + sy*point.z;
+          const rz = -sy*point.x + cy*point.z;
+          const ry = cp*point.y - sp*rz;
+          const zz = sp*point.y + cp*rz;
+          const scale = 270/(4.2-zz);
+          return { x: canvas.width/2 + rx*scale, y: canvas.height/2 - ry*scale, z: zz, weight: point.weight, originalX: point.x };
+        }
+
+        function update(density, config) {
+          let max = 0; for (const value of density) if (value > max) max = value;
+          const halfX = config.nx*config.dx/2, halfY = config.ny*config.dy/2, halfZ = config.nz*config.dz/2;
+          gap = config.barrierHalfWidth/halfX;
+          samples = [];
+          for (let x=0;x<config.nx;x+=1) for (let y=0;y<config.ny;y+=1) for (let z=0;z<config.nz;z+=1) {
+            const value = density[M.index3(x,y,z,config.ny,config.nz)];
+            if (value < max*0.008) continue;
+            samples.push({
+              x:M.coordinate(x,config.nx,config.dx)/halfX,
+              y:M.coordinate(y,config.ny,config.dy)/halfY,
+              z:M.coordinate(z,config.nz,config.dz)/halfZ,
+              weight:value/max
+            });
+          }
+        }
+
+        function plane(x) {
+          const corners = [[x,-.72,-.72],[x,.72,-.72],[x,.72,.72],[x,-.72,.72],[x,-.72,-.72]].map((p)=>project({x:p[0],y:p[1],z:p[2],weight:0}));
+          ctx.beginPath(); ctx.moveTo(corners[0].x,corners[0].y); for (let i=1;i<corners.length;i+=1) ctx.lineTo(corners[i].x,corners[i].y); ctx.stroke();
+        }
+
+        function draw() {
+          ctx.fillStyle="#090806"; ctx.fillRect(0,0,canvas.width,canvas.height);
+          ctx.strokeStyle="rgba(108,200,215,.7)"; ctx.lineWidth=2; plane(-gap); plane(gap);
+          const projected = samples.map(project).sort((a,b)=>a.z-b.z);
+          for (const p of projected) {
+            ctx.fillStyle = p.originalX < -gap ? `rgba(209,139,64,${.2+.8*p.weight})` : p.originalX > gap ? `rgba(116,211,156,${.2+.8*p.weight})` : `rgba(108,200,215,${.2+.8*p.weight})`;
+            ctx.beginPath(); ctx.arc(p.x,p.y,2+7*Math.sqrt(p.weight),0,Math.PI*2); ctx.fill();
+          }
+        }
+
+        canvas.addEventListener("pointerdown", (event) => { dragging=true; lastX=event.clientX; lastY=event.clientY; canvas.setPointerCapture(event.pointerId); });
+        canvas.addEventListener("pointermove", (event) => { if(!dragging)return; yaw+=(event.clientX-lastX)*.008; pitch=Math.max(-1.2,Math.min(1.2,pitch+(event.clientY-lastY)*.008)); lastX=event.clientX; lastY=event.clientY; draw(); });
+        canvas.addEventListener("pointerup",()=>{dragging=false;});
+        canvas.addEventListener("pointercancel",()=>{dragging=false;});
+        return { mode:"Canvas2D fallback", update, draw };
+      }
+
+      let renderer;
+      try { renderer = makeWebGLRenderer() || makeCanvasRenderer(); }
+      catch (error) { console.warn("WebGL2 renderer unavailable; using Canvas2D", error); renderer = makeCanvasRenderer(); }
+
+      function configFromControls() {
+        return { barrierHeight:number("barrier"), barrierHalfWidth:number("width"), waveNumber:number("wave") };
+      }
+
+      function rebuild() {
+        simulation = M.createSimulation(configFromControls());
+        halted = false;
+        lastPaintStep = -1;
+        update(true);
+      }
+
+      function update(force) {
+        const w = simulation.witness();
+        if (force || w.steps !== lastPaintStep) {
+          renderer.update(simulation.density(), simulation.config);
+          renderer.draw(simulation.config);
+          lastPaintStep = w.steps;
+        }
+        $("mRenderer").textContent = renderer.mode;
+        $("mLeft").textContent = percent(w.left);
+        $("mGap").textContent = percent(w.middle);
+        $("mRight").textContent = percent(w.right);
+        $("mNorm").textContent = scientific(Math.abs(w.norm-1));
+        $("mCentroid").textContent = `${w.centroidX.toFixed(3)} L₀`;
+        $("oBarrier").textContent = `${number("barrier").toFixed(2)} E₀`;
+        $("oWidth").textContent = `${number("width").toFixed(2)} L₀`;
+        $("oWave").textContent = `${number("wave").toFixed(2)} L₀⁻¹`;
+        $("oCadence").textContent = `${number("cadence")} step/frame`;
+        $("run").classList.toggle("active",running);
+        $("run").textContent = halted ? "HALTED · RESET" : running ? "RUN" : "PAUSED";
+      }
+
+      function frame() {
+        if (running && !halted) {
+          simulation.advance(number("cadence"));
+          if (simulation.snapshot().steps >= 230) { running=false; halted=true; }
+          update(false);
+        }
+        requestAnimationFrame(frame);
+      }
+
+      for (const id of ["barrier","width","wave"]) controls[id].addEventListener("input",rebuild);
+      controls.cadence.addEventListener("input",()=>update(false));
+      $("run").addEventListener("click",()=>{ if(halted)return; running=!running; update(false); });
+      $("step").addEventListener("click",()=>{ running=false; halted=false; simulation.advance(1); update(false); });
+      $("reverse").addEventListener("click",()=>{ running=false; halted=false; simulation.advance(1,-1); update(false); });
+      $("reset").addEventListener("click",()=>{ running=false; halted=false; simulation.reset(); update(true); });
+
+      function runWitness() {
+        const checks = [];
+        const add = (label, pass) => checks.push({label,pass:Boolean(pass)});
+        add("model API loaded", M.VERSION === "MST-3D-1.0.0");
+        add("vacuum-gap glyph", M.GLYPH === ".|-|..");
+        add("3D renderer available", /WebGL2|Canvas2D/.test(renderer.mode));
+        const initial = M.createSimulation();
+        add("initial norm = 1", Math.abs(initial.snapshot().norm-1)<1e-12);
+        const iw = initial.witness();
+        add("regional probability closure", Math.abs(iw.left+iw.middle+iw.right-iw.norm)<1e-14);
+        add("input localized left", iw.left>0.999);
+        initial.advance(10);
+        add("ten-step norm conservation", Math.abs(initial.snapshot().norm-1)<1e-11);
+        const reverse = M.createSimulation({nx:16,ny:8,nz:8,packetX:-3});
+        const rr=reverse.re.slice(), ri=reverse.im.slice();
+        reverse.advance(20); reverse.advance(20,-1);
+        let recovery=0; for(let i=0;i<rr.length;i+=1) recovery+=(reverse.re[i]-rr[i])**2+(reverse.im[i]-ri[i])**2;
+        add("time-reversal recovery", Math.sqrt(recovery)<2e-11);
+        const compact={nx:16,ny:8,nz:8,packetX:-3,sigmaX:.8,waveNumber:2.6,guideStrength:0,barrierHalfWidth:.6,dt:.018};
+        const free=M.createSimulation(Object.assign({},compact,{barrierHeight:0}));
+        const vacuum=M.createSimulation(Object.assign({},compact,{barrierHeight:5}));
+        free.advance(70); vacuum.advance(70);
+        add("free packet reaches output", free.snapshot().right>.4);
+        add("vacuum suppresses transfer", vacuum.snapshot().right<free.snapshot().right/5);
+        const before=vacuum.snapshot(); const witness=vacuum.witness(); const after=vacuum.snapshot();
+        add("witness is read-only", JSON.stringify(before)===JSON.stringify(witness)&&JSON.stringify(witness)===JSON.stringify(after));
+        const scale=M.physicalScale(1,1);
+        add("SI scale finite", Number.isFinite(scale.energyEv)&&Number.isFinite(scale.timeFs));
+        add("WKB estimate bounded", (()=>{const t=M.wkbTransmissionDimensionless(5.12,5.8,1.8);return t>0&&t<1;})());
+        add("sub-barrier domain guarded", (()=>{try{M.wkbTransmissionDimensionless(6,5.8,1.8);return false;}catch(error){return true;}})());
+        add("matter-creation claim excluded", /matter creation/.test(M.evidenceBoundary().excluded));
+        const list=$("checks"); list.textContent="";
+        for(const check of checks){const li=document.createElement("li");li.append(document.createTextNode(check.label));const b=document.createElement("b");b.textContent=check.pass?"PASS":"FAIL";if(!check.pass)b.className="fail";li.append(b);list.append(li);}
+        const total=document.createElement("li");total.append(document.createTextNode("browser total"));const b=document.createElement("b");const passed=checks.filter((c)=>c.pass).length;b.textContent=`${passed}/${checks.length}`;if(passed!==checks.length)b.className="fail";total.append(b);list.append(total);
+      }
+
+      const scale=M.physicalScale(1,1);
+      $("scaleE").textContent=`${scale.energyEv.toFixed(6)} eV`;
+      $("scaleT").textContent=`${scale.timeFs.toFixed(6)} fs`;
+      rebuild();
+      runWitness();
+      requestAnimationFrame(frame);
+    })();
+  </script>
+</body>
+</html>

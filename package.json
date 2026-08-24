@@ -2,9 +2,11 @@
   "name": "hardware-lab-qt211-bench",
   "version": "1.0.0",
   "private": true,
-  "description": "Deterministic verification bench for the 211 mV four-quadrant tunnel modulator",
+  "description": "Deterministic verification benches for QT-211 and the MST-3D matter-state transformer",
   "scripts": {
-    "test": "node --test tests/quantum-tunnel-model.test.js",
-    "benchmark": "node tests/quantum-tunnel-model.test.js"
+    "test": "node --test tests/*.test.js",
+    "test:qt211": "node --test tests/quantum-tunnel-model.test.js",
+    "test:mst3d": "node --test tests/matter-state-transformer-model.test.js",
+    "benchmark": "node --test tests/*.test.js"
   }
 }

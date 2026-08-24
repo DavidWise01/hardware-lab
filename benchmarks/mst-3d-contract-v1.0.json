@@ -1,0 +1,46 @@
+{
+  "id": "MST-3D-BC-1.0",
+  "status": "FROZEN",
+  "frozen_at": "2026-08-23T00:00:00Z",
+  "title": "Three-dimensional matter-state transformer benchmark contract",
+  "normative": {
+    "version": "MST-3D-1.0.0",
+    "glyph": ".|-|..",
+    "glyph_semantics": {
+      "first_dot": "localized input matter state",
+      "paired_bars": "material-vacuum interfaces bounding a vacuum gap",
+      "dash": "evanescent coupling path through the vacuum potential barrier",
+      "second_dot": "transformed output matter state",
+      "final_dot": "read-only numerical witness"
+    },
+    "model_class": "nonrelativistic single-particle matter-wave simulation",
+    "hamiltonian": "H = -(1/2) nabla^2 + V(x,y,z) in nondimensional units with hbar = m = 1",
+    "potential": "planar vacuum-gap barrier plus a weak transverse harmonic guide",
+    "propagator": "second-order Strang split-operator Fourier method",
+    "boundary_condition": "closed periodic computational volume",
+    "baseline_grid": [32, 16, 16],
+    "baseline_spacing": [0.75, 0.75, 0.75],
+    "baseline_dt": 0.018,
+    "baseline_wave_number": 3.2,
+    "baseline_barrier_height": 5.8,
+    "baseline_barrier_half_width": 0.9,
+    "required_witnesses": [
+      "finite complex state",
+      "probability norm conservation",
+      "left plus gap plus right probability closure",
+      "time-reversal recovery within floating-point tolerance",
+      "free packet propagates toward the output port",
+      "vacuum barrier suppresses transfer relative to the free baseline",
+      "read-only witness does not mutate the simulated state"
+    ],
+    "evidence_boundary": {
+      "established": "time-dependent Schrodinger equation, Born probability, FFT, unitary split propagation",
+      "design_choice": "the .|-|.. glyph, selected nondimensional parameters, periodic box and transverse guide",
+      "excluded": "matter creation, particle transmutation, relativistic field interactions, laboratory vacuum performance, measurement back-action and fabricated-device claims"
+    }
+  },
+  "freeze_seal": {
+    "algorithm": "SHA-256 over canonical normative object",
+    "digest": "b1924bad1f35783c0dcc7e906ba5f7f359a083418da83e363662044b6d131ac4"
+  }
+}
