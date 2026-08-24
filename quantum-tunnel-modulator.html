@@ -1,0 +1,440 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="A deterministic Canvas2D workbench for the QT-211 four-quadrant phase/amplitude alphabet feeding a WKB tunnel-barrier approximation.">
+  <title>QT-211 · Four-Quadrant Tunnel Modulator</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #100d0a;
+      --panel: #19130e;
+      --panel2: #21180f;
+      --ink: #eee5d7;
+      --muted: #a99a86;
+      --copper: #d18b40;
+      --cyan: #6cc8d7;
+      --green: #74d39c;
+      --red: #e17068;
+      --line: rgba(209,139,64,.28);
+    }
+    * { box-sizing: border-box; }
+    html, body { min-height: 100%; }
+    body {
+      margin: 0;
+      background:
+        radial-gradient(circle at 18% 0, rgba(209,139,64,.13), transparent 38rem),
+        radial-gradient(circle at 90% 8%, rgba(108,200,215,.08), transparent 34rem),
+        var(--bg);
+      color: var(--ink);
+      font: 16px/1.55 Georgia, serif;
+    }
+    .mono, button, input, .eyebrow, .metric strong, .symbol, table, .stamp {
+      font-family: "IBM Plex Mono", "Cascadia Mono", Consolas, monospace;
+    }
+    .wrap { width: min(1180px, calc(100% - 28px)); margin: 0 auto; padding-bottom: 72px; }
+    nav { padding: 14px 0; border-bottom: 1px solid var(--line); font: 12px/1.4 Consolas, monospace; color: var(--muted); }
+    nav a, a { color: var(--copper); text-decoration: none; }
+    nav a:hover, a:hover { color: var(--cyan); }
+    header { padding: 42px 0 26px; display: grid; grid-template-columns: 1fr auto; gap: 24px; align-items: end; }
+    .eyebrow { color: var(--copper); letter-spacing: .2em; font-size: 12px; text-transform: uppercase; }
+    h1 { margin: 9px 0 8px; font: 600 clamp(30px, 6vw, 58px)/1 Consolas, monospace; letter-spacing: -.04em; }
+    .lede { margin: 0; max-width: 760px; color: #d4c7b5; font-size: clamp(17px, 2.2vw, 21px); }
+    .stamp { border: 1px solid var(--green); color: var(--green); padding: 10px 13px; font-size: 11px; letter-spacing: .08em; border-radius: 8px; text-align: center; }
+    .panel { background: linear-gradient(145deg, rgba(33,24,15,.92), rgba(22,17,12,.92)); border: 1px solid var(--line); border-radius: 14px; }
+    .bench { padding: 14px; }
+    canvas { display: block; width: 100%; height: auto; background: #090806; border: 1px solid rgba(108,200,215,.16); border-radius: 10px; touch-action: none; }
+    .metrics { display: grid; grid-template-columns: repeat(6, minmax(120px,1fr)); gap: 8px; margin: 10px 0; }
+    .metric { min-height: 74px; padding: 11px; background: rgba(9,8,6,.56); border: 1px solid var(--line); border-radius: 9px; color: var(--muted); font-size: 11px; text-transform: uppercase; letter-spacing: .08em; }
+    .metric strong { display: block; color: var(--cyan); margin-top: 5px; font-size: 14px; letter-spacing: 0; text-transform: none; }
+    .controls { display: grid; grid-template-columns: repeat(5, minmax(130px,1fr)); gap: 13px; padding-top: 10px; }
+    .control { min-width: 0; }
+    .control label { display: flex; justify-content: space-between; gap: 10px; color: var(--muted); font: 10px Consolas, monospace; letter-spacing: .08em; text-transform: uppercase; margin-bottom: 7px; }
+    .control output { color: var(--cyan); }
+    input[type=range] { width: 100%; accent-color: var(--copper); }
+    .buttons { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
+    button { cursor: pointer; border: 1px solid var(--line); background: #120f0b; color: var(--ink); padding: 9px 14px; border-radius: 8px; font-size: 11px; letter-spacing: .08em; }
+    button:hover { border-color: var(--copper); }
+    button.active { background: var(--copper); color: #100d0a; border-color: var(--copper); font-weight: 700; }
+    .wordline { margin-top: 14px; padding: 12px 14px; border-left: 2px solid var(--cyan); background: rgba(108,200,215,.05); overflow-x: auto; white-space: nowrap; font: 13px Consolas, monospace; color: #d9d0c2; }
+    .wordline .symbol { color: var(--green); }
+    .grid { display: grid; grid-template-columns: 1.15fr .85fr; gap: 16px; margin-top: 16px; }
+    .section { padding: 20px; }
+    h2 { margin: 0 0 14px; color: var(--copper); font: 600 13px Consolas, monospace; text-transform: uppercase; letter-spacing: .14em; }
+    p { margin: 9px 0; }
+    .boundary { border-color: var(--copper); }
+    .real { color: var(--green); }
+    .proposed { color: var(--cyan); }
+    .excluded { color: var(--red); }
+    table { border-collapse: collapse; width: 100%; font-size: 12px; }
+    th, td { padding: 9px 8px; text-align: left; border-bottom: 1px solid var(--line); }
+    th { color: var(--muted); font-weight: 400; }
+    td:first-child { color: var(--green); font-weight: 700; }
+    .checks { list-style: none; padding: 0; margin: 0; display: grid; gap: 7px; }
+    .checks li { display: flex; justify-content: space-between; gap: 16px; border-bottom: 1px dashed var(--line); padding: 5px 0; font: 11px Consolas, monospace; color: var(--muted); }
+    .checks b { color: var(--green); }
+    .checks b.fail { color: var(--red); }
+    .formula { overflow-x: auto; padding: 11px 13px; background: #0d0b08; border-radius: 8px; color: var(--cyan); font: 13px Consolas, monospace; white-space: nowrap; }
+    footer { margin-top: 34px; padding-top: 18px; border-top: 1px solid var(--line); color: var(--muted); font: 11px/1.8 Consolas, monospace; }
+    @media (max-width: 900px) {
+      header { grid-template-columns: 1fr; }
+      .stamp { justify-self: start; }
+      .metrics { grid-template-columns: repeat(3,1fr); }
+      .controls { grid-template-columns: repeat(2,1fr); }
+      .grid { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 540px) {
+      .metrics { grid-template-columns: repeat(2,1fr); }
+      .controls { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <nav><a href="index.html">← Hardware Lab</a> · <a href="https://davidwise01.github.io/ud0/">UD0</a> · QT-211-Q4-1.0.0</nav>
+
+    <header>
+      <div>
+        <div class="eyebrow">HEUREMA · deterministic tunnel bench</div>
+        <h1>211 mV · Four Quadrants</h1>
+        <p class="lede">A four-state I/Q phase alphabet drives a low-bias current model through a rectangular WKB barrier approximation. The remembered two-quadrant word stays visible beside the corrected four-quadrant cycle.</p>
+      </div>
+      <div class="stamp">CONTRACT FROZEN<br>27 / 27 PASS</div>
+    </header>
+
+    <main>
+      <section class="panel bench" aria-labelledby="bench-title">
+        <h2 id="bench-title">Live Canvas2D workbench</h2>
+        <canvas id="scope" width="1120" height="620" aria-label="Animated four-quadrant phase constellation, tunnel barrier, and scope trace"></canvas>
+
+        <div class="metrics">
+          <div class="metric">Symbol<strong id="mSymbol">..</strong></div>
+          <div class="metric">Phase<strong id="mPhase">45°</strong></div>
+          <div class="metric">Bias magnitude<strong id="mBias">211.000 mV</strong></div>
+          <div class="metric">Electron energy<strong id="mEnergy">0.211 eV</strong></div>
+          <div class="metric">WKB transmission<strong id="mTrans">—</strong></div>
+          <div class="metric">Model current<strong id="mCurrent">—</strong></div>
+        </div>
+
+        <div class="controls">
+          <div class="control"><label>Amplitude <output id="oAmp">1.00×</output></label><input id="amp" type="range" min="0" max="1.5" step="0.01" value="1"></div>
+          <div class="control"><label>Symbol rate <output id="oRate">1.00 Hz</output></label><input id="rate" type="range" min="0.2" max="5" step="0.1" value="1"></div>
+          <div class="control"><label>Barrier Φ <output id="oBarrier">3.20 eV</output></label><input id="barrier" type="range" min="0.3" max="5" step="0.01" value="3.2"></div>
+          <div class="control"><label>Width d <output id="oWidth">1.10 nm</output></label><input id="width" type="range" min="0.2" max="2.5" step="0.01" value="1.1"></div>
+          <div class="control"><label>Effective mass <output id="oMass">0.50 mₑ</output></label><input id="mass" type="range" min="0.1" max="1.5" step="0.01" value="0.5"></div>
+        </div>
+
+        <div class="buttons">
+          <button id="run" class="active">RUN</button>
+          <button id="step">STEP</button>
+          <button id="invert">INVERT +180°</button>
+          <button id="reset">RESET 211 mV</button>
+        </div>
+
+        <div class="wordline">
+          remembered: <span>..--|..--.</span> = <span class="excluded">2 quadrants + pilot</span><br>
+          locked: <span class="symbol">[..,-.,--,.-]|[-.,..,.-,--].</span> = <span class="real">4 quadrants · reverse + invert</span>
+        </div>
+      </section>
+
+      <div class="grid">
+        <section class="panel section boundary">
+          <h2>Evidence boundary</h2>
+          <p><strong class="real">Established:</strong> <em>qV</em> energy conversion; four-state I/Q phase representation; an odd low-bias expansion <em>I = G₁V + G₃V³</em>; and the rectangular-barrier WKB approximation.</p>
+          <p><strong class="proposed">Frozen design choices:</strong> +211 mV, the dot–dash glyphs, and the clamped mirror-inverse word.</p>
+          <p><strong class="excluded">Not claimed:</strong> a universal tunnelling voltage, fabricated silicon, measured current, or quantum advantage.</p>
+          <div class="formula">T = exp(−2κd) · κ = √(2m<sub>eff</sub>(Φ−E)) / ℏ</div>
+          <p>The 211 mV electron-energy scale is 0.211 eV, only <span id="gapPct">18.839%</span> of the 1.12 eV silicon indirect-bandgap reference. A voltage alone does not specify total switching energy; capacitance, charge count, pulse width, geometry, and temperature remain device inputs.</p>
+        </section>
+
+        <section class="panel section">
+          <h2>Alphabet · I/Q sign pairs</h2>
+          <table>
+            <thead><tr><th>Glyph</th><th>I,Q</th><th>Phase</th><th>Inverse</th></tr></thead>
+            <tbody>
+              <tr><td>..</td><td>+1,+1</td><td>45°</td><td>--</td></tr>
+              <tr><td>-.</td><td>−1,+1</td><td>135°</td><td>.-</td></tr>
+              <tr><td>--</td><td>−1,−1</td><td>225°</td><td>..</td></tr>
+              <tr><td>.-</td><td>+1,−1</td><td>315°</td><td>-.</td></tr>
+            </tbody>
+          </table>
+        </section>
+
+        <section class="panel section">
+          <h2>Four trips · protocol over state</h2>
+          <table>
+            <thead><tr><th>Trip</th><th>Phase</th><th>Operation</th></tr></thead>
+            <tbody>
+              <tr><td>1</td><td>LOCATE</td><td>resolve address</td></tr>
+              <tr><td>2</td><td>CAPTURE</td><td>establish trap</td></tr>
+              <tr><td>3</td><td>TRANSFER</td><td>deposit capsule + return</td></tr>
+              <tr><td>4</td><td>CHOOSE</td><td>branch · repeat · invert · halt</td></tr>
+            </tbody>
+          </table>
+          <p><strong class="proposed">Spinor is conditional:</strong> the payload qualifies only when it is a normalized two-component complex vector evolved by SU(2). The protocol itself is a four-state machine.</p>
+        </section>
+
+        <section class="panel section">
+          <h2>Browser witness</h2>
+          <ul class="checks" id="checks"></ul>
+        </section>
+
+        <section class="panel section">
+          <h2>Frozen verification</h2>
+          <p class="mono">Contract: QT-211-Q4-BC-1.0</p>
+          <p class="mono">Seal: f882dbd1b80cbe8e…485348fb</p>
+          <p class="mono">Node conformance: 27/27 PASS</p>
+          <p class="mono">Stress: 1,000,000 deterministic evaluations</p>
+          <p><a href="benchmarks/qt-211-q4-contract-v1.0.json">Open the immutable benchmark contract →</a></p>
+        </section>
+      </div>
+    </main>
+
+    <footer>
+      David Lee Wise / ROOT0 / TriPod LLC · CC-BY-ND-4.0 · TRIPOD-IP-v1.1<br>
+      Physics references: <a href="https://nvlpubs.nist.gov/nistpubs/jres/091/jresv91n4p171_A1b.pdf">NIST gold–vacuum tunnelling study</a> · <a href="https://tsapps.nist.gov/publication/get_pdf.cfm?pub_id=960308">NIST silicon bandgap reference</a>
+    </footer>
+  </div>
+
+  <script src="quantum-tunnel-model.js"></script>
+  <script>
+    (function () {
+      "use strict";
+      const M = globalThis.QuantumTunnel211;
+      const canvas = document.getElementById("scope");
+      const ctx = canvas.getContext("2d");
+      const $ = (id) => document.getElementById(id);
+      const controls = {
+        amp: $("amp"), rate: $("rate"), barrier: $("barrier"), width: $("width"), mass: $("mass")
+      };
+      const state = { running: true, index: 0, inverted: false, elapsed: 0, last: 0, history: [] };
+      const colors = { copper: "#d18b40", cyan: "#6cc8d7", green: "#74d39c", red: "#e17068", muted: "#6f665a", grid: "#282017" };
+
+      function number(id) { return Number(controls[id].value); }
+      function symbol() {
+        const base = M.GRAY_CYCLE[state.index & 3];
+        return state.inverted ? M.invertSymbol(base) : base;
+      }
+      function phaseRad(sym) { return M.decodeSymbol(sym).phaseDeg * Math.PI / 180; }
+      function fmtSci(value) {
+        if (value === 0) return "0";
+        const [a, b] = value.toExponential(3).split("e");
+        return `${a}×10^${Number(b)}`;
+      }
+      function model() {
+        const sym = symbol();
+        const amp = number("amp");
+        const v = M.quadratureVoltage(sym, amp, M.BIAS_VOLTS);
+        const electronEnergyEv = Math.max(1e-9, Math.abs(v.magnitudeVolts));
+        const barrierEv = Math.max(number("barrier"), electronEnergyEv + 1e-6);
+        const transmission = M.tunnelTransmission({
+          barrierEv,
+          electronEnergyEv,
+          widthNm: number("width"),
+          effectiveMassRatio: number("mass")
+        });
+        const current = M.lowBiasCurrent(v.iVolts, 2.4e-6, 0.7e-6) * transmission;
+        return { sym, amp, v, electronEnergyEv, barrierEv, transmission, current };
+      }
+
+      function updateReadout(d) {
+        $("mSymbol").textContent = d.sym;
+        $("mPhase").textContent = `${d.v.phaseDeg}°`;
+        $("mBias").textContent = `${(d.v.magnitudeVolts * 1000).toFixed(3)} mV`;
+        $("mEnergy").textContent = `${d.electronEnergyEv.toFixed(3)} eV`;
+        $("mTrans").textContent = fmtSci(d.transmission);
+        $("mCurrent").textContent = `${fmtSci(d.current)} A`;
+        $("oAmp").textContent = `${number("amp").toFixed(2)}×`;
+        $("oRate").textContent = `${number("rate").toFixed(2)} Hz`;
+        $("oBarrier").textContent = `${number("barrier").toFixed(2)} eV`;
+        $("oWidth").textContent = `${number("width").toFixed(2)} nm`;
+        $("oMass").textContent = `${number("mass").toFixed(2)} mₑ`;
+        $("gapPct").textContent = `${(M.siliconBandgapRatio(M.BIAS_VOLTS) * 100).toFixed(3)}%`;
+      }
+
+      function gridLine(x1, y1, x2, y2, color, width) {
+        ctx.strokeStyle = color || colors.grid;
+        ctx.lineWidth = width || 1;
+        ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(x2, y2); ctx.stroke();
+      }
+
+      function text(value, x, y, color, size, align) {
+        ctx.fillStyle = color || colors.muted;
+        ctx.font = `${size || 12}px Consolas, monospace`;
+        ctx.textAlign = align || "left";
+        ctx.textBaseline = "middle";
+        ctx.fillText(value, x, y);
+      }
+
+      function drawConstellation(d) {
+        const x = 250, y = 236, r = 156;
+        text("FOUR-QUADRANT I/Q ALPHABET", 34, 32, colors.copper, 12);
+        gridLine(x - r - 30, y, x + r + 30, y);
+        gridLine(x, y - r - 30, x, y + r + 30);
+        text("+I", x + r + 35, y, colors.muted, 11);
+        text("−I", x - r - 35, y, colors.muted, 11, "right");
+        text("+Q", x, y - r - 36, colors.muted, 11, "center");
+        text("−Q", x, y + r + 36, colors.muted, 11, "center");
+        ctx.strokeStyle = "rgba(108,200,215,.18)";
+        ctx.beginPath(); ctx.arc(x, y, r, 0, Math.PI * 2); ctx.stroke();
+
+        for (const sym of M.GRAY_CYCLE) {
+          const p = phaseRad(sym);
+          const px = x + Math.cos(p) * r;
+          const py = y - Math.sin(p) * r;
+          const active = sym === d.sym;
+          ctx.fillStyle = active ? colors.green : "#30291f";
+          ctx.shadowBlur = active ? 22 : 0;
+          ctx.shadowColor = colors.green;
+          ctx.beginPath(); ctx.arc(px, py, active ? 13 : 8, 0, Math.PI * 2); ctx.fill();
+          ctx.shadowBlur = 0;
+          text(sym, px, py + (py < y ? -24 : 24), active ? colors.green : colors.muted, 13, "center");
+        }
+
+        const p = phaseRad(d.sym);
+        const ar = r * d.amp / 1.5;
+        const px = x + Math.cos(p) * ar;
+        const py = y - Math.sin(p) * ar;
+        gridLine(x, y, px, py, colors.cyan, 3);
+        ctx.fillStyle = colors.cyan;
+        ctx.shadowBlur = 16; ctx.shadowColor = colors.cyan;
+        ctx.beginPath(); ctx.arc(px, py, 7, 0, Math.PI * 2); ctx.fill();
+        ctx.shadowBlur = 0;
+        text(`A=${d.amp.toFixed(2)}  φ=${d.v.phaseDeg}°`, x, y + r + 70, colors.cyan, 12, "center");
+      }
+
+      function drawBarrier(d) {
+        const x0 = 510, y0 = 70, w = 570, h = 332;
+        text("RECTANGULAR BARRIER · WKB APPROXIMATION", x0, 32, colors.copper, 12);
+        ctx.fillStyle = "#0d0b08"; ctx.fillRect(x0, y0, w, h);
+        ctx.strokeStyle = colors.grid; ctx.strokeRect(x0, y0, w, h);
+        const baseY = y0 + h - 42;
+        const topY = y0 + 58;
+        const bx1 = x0 + 226;
+        const normalizedWidth = (number("width") - 0.2) / 2.3;
+        const bw = 42 + normalizedWidth * 165;
+        const bx2 = bx1 + bw;
+        gridLine(x0 + 25, baseY, x0 + w - 25, baseY, colors.muted);
+        ctx.fillStyle = "rgba(209,139,64,.14)";
+        ctx.fillRect(bx1, topY, bw, baseY - topY);
+        gridLine(bx1, baseY, bx1, topY, colors.copper, 2);
+        gridLine(bx1, topY, bx2, topY, colors.copper, 2);
+        gridLine(bx2, topY, bx2, baseY, colors.copper, 2);
+        text(`Φ=${d.barrierEv.toFixed(2)} eV`, bx1 + bw / 2, topY - 17, colors.copper, 11, "center");
+        text(`d=${number("width").toFixed(2)} nm`, bx1 + bw / 2, baseY + 23, colors.muted, 11, "center");
+
+        const phase = (performance.now() / 650) % (Math.PI * 2);
+        const leftX = bx1 - 78 + Math.sin(phase) * 24;
+        ctx.fillStyle = colors.cyan;
+        ctx.shadowBlur = 14; ctx.shadowColor = colors.cyan;
+        ctx.beginPath(); ctx.arc(leftX, baseY - 44, 8, 0, Math.PI * 2); ctx.fill();
+        ctx.shadowBlur = 0;
+        gridLine(leftX + 10, baseY - 44, bx1 - 3, baseY - 44, colors.cyan, 2);
+
+        const tailEnd = Math.min(bx2, bx1 + Math.max(4, -Math.log(Math.max(d.transmission, 1e-300)) * 1.8));
+        const grad = ctx.createLinearGradient(bx1, 0, bx2, 0);
+        grad.addColorStop(0, "rgba(116,211,156,.9)");
+        grad.addColorStop(1, "rgba(116,211,156,.02)");
+        gridLine(bx1, baseY - 44, tailEnd, baseY - 44, grad, 4);
+        if (d.transmission > 1e-9) {
+          ctx.globalAlpha = Math.min(1, .18 + Math.log10(d.transmission * 1e12 + 1) / 12);
+          ctx.fillStyle = colors.green;
+          ctx.beginPath(); ctx.arc(bx2 + 48, baseY - 44, 7, 0, Math.PI * 2); ctx.fill();
+          ctx.globalAlpha = 1;
+        }
+        text(`T=${fmtSci(d.transmission)}`, x0 + w - 28, y0 + 26, colors.green, 12, "right");
+        text("input phase/amplitude: linear", x0 + 22, baseY + 62, colors.cyan, 11);
+        text("barrier transfer: exponential", x0 + w - 22, baseY + 62, colors.copper, 11, "right");
+      }
+
+      function drawScope(d) {
+        const x0 = 34, y0 = 470, w = 1046, h = 118;
+        text("MODEL CURRENT · LAST 256 SAMPLES", x0, y0 - 18, colors.copper, 11);
+        ctx.fillStyle = "#080706"; ctx.fillRect(x0, y0, w, h);
+        ctx.strokeStyle = colors.grid; ctx.strokeRect(x0, y0, w, h);
+        gridLine(x0, y0 + h / 2, x0 + w, y0 + h / 2, "#2e281f");
+        state.history.push(d.current);
+        if (state.history.length > 256) state.history.shift();
+        const peak = Math.max(1e-18, ...state.history.map(Math.abs));
+        ctx.strokeStyle = colors.green; ctx.lineWidth = 2; ctx.beginPath();
+        state.history.forEach((value, i) => {
+          const px = x0 + i / 255 * w;
+          const py = y0 + h / 2 - value / peak * (h * .42);
+          i ? ctx.lineTo(px, py) : ctx.moveTo(px, py);
+        });
+        ctx.stroke();
+        text(`±${fmtSci(peak)} A`, x0 + w - 7, y0 + 13, colors.muted, 10, "right");
+      }
+
+      function render(now) {
+        if (!state.last) state.last = now;
+        const dt = Math.min((now - state.last) / 1000, .1);
+        state.last = now;
+        if (state.running) {
+          state.elapsed += dt;
+          const period = 1 / number("rate");
+          if (state.elapsed >= period) {
+            state.index = (state.index + 1) & 3;
+            state.elapsed %= period;
+          }
+        }
+        const d = model();
+        updateReadout(d);
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        drawConstellation(d);
+        drawBarrier(d);
+        drawScope(d);
+        requestAnimationFrame(render);
+      }
+
+      function browserTests() {
+        const cases = [
+          ["bias exactly 211 mV", () => M.BIAS_VOLTS === .211],
+          ["electron energy exactly 0.211 eV", () => M.energyPerElectronEv(.211) === .211],
+          ["four unique quadrants", () => new Set(M.GRAY_CYCLE).size === 4],
+          ["Gray closure distance = 1", () => M.hammingDistanceBits(".-", "..") === 1],
+          ["inverse phase = 180°", () => M.phaseDistanceDeg("..", M.invertSymbol("..")) === 180],
+          ["inverse is involutive", () => M.invertSymbol(M.invertSymbol("-.")) === "-."],
+          ["mirror-inverse word", () => M.RIGHT_WORD.join(",") === "-.,..,.-,--"],
+          ["remembered word stays two-quadrant", () => M.parseRememberedWord(M.REMEMBERED_WORD).uniqueQuadrants.length === 2],
+          ["silicon gap boundary preserved", () => !M.photonCrossesSiliconBandgap(.211)],
+          ["odd current inversion", () => Math.abs(M.lowBiasCurrent(.211, 1, .1) + M.lowBiasCurrent(-.211, 1, .1)) < 1e-15],
+          ["transmission bounded", () => { const t=M.tunnelTransmission({barrierEv:3.2,electronEnergyEv:.211,widthNm:1.1,effectiveMassRatio:.5}); return t>0&&t<1; }],
+          ["invalid symbol rejected", () => { try { M.decodeSymbol("||"); return false; } catch (_) { return true; } }]
+          , ["four-trip protocol closes", () => { let p="LOCATE"; for(let i=0;i<4;i+=1)p=M.advanceTrip(p); return p==="LOCATE"; }]
+          , ["spinor 2π sign flip", () => { const p=M.makeSpinor({re:1,im:0},{re:1,im:0}); const r=M.rotateSpinorZ(p,2*Math.PI); return M.spinorDistance(r,{alpha:{re:-p.alpha.re,im:-p.alpha.im},beta:{re:-p.beta.re,im:-p.beta.im}})<1e-15; }]
+          , ["spinor 4π return", () => { const p=M.makeSpinor({re:1,im:0},{re:0,im:1}); return M.spinorDistance(M.rotateSpinorZ(p,4*Math.PI),p)<1e-15; }]
+        ];
+        const list = $("checks");
+        let passed = 0;
+        for (const [name, fn] of cases) {
+          let ok = false;
+          try { ok = Boolean(fn()); } catch (_) { ok = false; }
+          passed += Number(ok);
+          const li = document.createElement("li");
+          const label = document.createElement("span"); label.textContent = name;
+          const result = document.createElement("b"); result.textContent = ok ? "PASS" : "FAIL"; result.className = ok ? "" : "fail";
+          li.append(label, result); list.append(li);
+        }
+        const li = document.createElement("li");
+        li.innerHTML = `<span>browser total</span><b class="${passed === cases.length ? "" : "fail"}">${passed}/${cases.length}</b>`;
+        list.append(li);
+      }
+
+      $("run").addEventListener("click", function () { state.running = !state.running; this.textContent = state.running ? "RUN" : "PAUSED"; this.classList.toggle("active", state.running); });
+      $("step").addEventListener("click", () => { state.index = (state.index + 1) & 3; state.elapsed = 0; });
+      $("invert").addEventListener("click", () => { state.inverted = !state.inverted; });
+      $("reset").addEventListener("click", () => {
+        Object.assign(state, { running: true, index: 0, inverted: false, elapsed: 0, history: [] });
+        Object.assign(controls.amp, { value: 1 }); Object.assign(controls.rate, { value: 1 });
+        Object.assign(controls.barrier, { value: 3.2 }); Object.assign(controls.width, { value: 1.1 }); Object.assign(controls.mass, { value: .5 });
+        $("run").textContent = "RUN"; $("run").classList.add("active");
+      });
+
+      browserTests();
+      requestAnimationFrame(render);
+    })();
+  </script>
+</body>
+</html>

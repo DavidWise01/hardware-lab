@@ -1,0 +1,100 @@
+{
+  "contract_id": "QT-211-Q4-BC-1.0",
+  "title": "211 mV Four-Quadrant Tunnel Modulator Deterministic Benchmark Contract",
+  "status": "FROZEN",
+  "frozen_utc": "2026-08-23T23:48:44Z",
+  "owner": "David Lee Wise / ROOT0 / TriPod LLC",
+  "license": "CC-BY-ND-4.0 / TRIPOD-IP-v1.1",
+  "normative": {
+    "model_version": "QT-211-Q4-1.0.0",
+    "bias_volts": 0.211,
+    "bias_classification": "candidate operating bias; not a universal tunnelling threshold",
+    "energy_per_electron_ev": 0.211,
+    "elementary_charge_c": 1.602176634e-19,
+    "silicon_indirect_bandgap_ev": 1.12,
+    "alphabet": {
+      "..": { "i": 1, "q": 1, "phase_deg": 45, "bits": "00" },
+      "-.": { "i": -1, "q": 1, "phase_deg": 135, "bits": "10" },
+      "--": { "i": -1, "q": -1, "phase_deg": 225, "bits": "11" },
+      ".-": { "i": 1, "q": -1, "phase_deg": 315, "bits": "01" }
+    },
+    "gray_cycle": ["..", "-.", "--", ".-"],
+    "inverse_rule": "(I,Q) -> (-I,-Q); phase += 180 degrees",
+    "mirror_inverse_rule": "reverse the left symbol order, then invert every symbol",
+    "left_word": ["..", "-.", "--", ".-"],
+    "right_word": ["-.", "..", ".-", "--"],
+    "locked_word": "[..,-.,--,.-]|[-.,..,.-,--].",
+    "remembered_word": "..--|..--.",
+    "remembered_word_classification": "two opposing quadrants plus terminal pilot; not a four-quadrant cycle",
+    "transport_protocol": [
+      { "trip": 1, "phase": "LOCATE", "operation": "resolve the destination address" },
+      { "trip": 2, "phase": "CAPTURE", "operation": "establish the trap or receiving boundary" },
+      { "trip": 3, "phase": "TRANSFER", "operation": "deposit the encapsulated payload and return" },
+      { "trip": 4, "phase": "CHOOSE", "operation": "branch, repeat, invert, or halt" }
+    ],
+    "spinor_classification": "conditional payload type only; the four-trip protocol is not itself a spinor",
+    "spinor_requirements": [
+      "payload is a normalized two-component complex vector",
+      "transport operations are SU(2) transformations",
+      "a 2*pi rotation maps psi to -psi",
+      "a 4*pi rotation returns psi"
+    ],
+    "low_bias_transfer": "I(V) = G1*V + G3*V^3",
+    "barrier_transfer": "T = exp(-2*kappa*d)",
+    "kappa": "sqrt(2*m_eff*(Phi-E))/hbar",
+    "acceptance": [
+      "the four alphabet states are unique and encode every sign pair of I and Q",
+      "each adjacent Gray-cycle state, including closure, changes exactly one bit",
+      "inversion is involutive and produces exactly 180 degrees of phase separation",
+      "mirror-inversion yields the frozen right word",
+      "quadrature magnitude equals requested amplitude and bias magnitude",
+      "one electron crossing 211 mV changes energy by exactly 0.211 eV",
+      "211 mV is below the 1.12 eV silicon indirect bandgap reference",
+      "the low-bias cubic transfer is odd under voltage inversion",
+      "WKB transmission decreases monotonically with barrier width and barrier height",
+      "the remembered word is reported as two quadrants, not silently promoted to four",
+      "invalid states and invalid WKB domains fail closed",
+      "the four transport phases advance in the frozen order and close to LOCATE",
+      "the reference spinor is normalized, flips sign at 2*pi, and returns at 4*pi",
+      "one million deterministic evaluations remain finite and complete"
+    ]
+  },
+  "evidence_boundaries": {
+    "established": [
+      "electron energy change qV",
+      "four-state I/Q phase alphabet",
+      "low-bias odd-power current expansion",
+      "WKB rectangular-barrier transmission approximation",
+      "silicon indirect bandgap reference near 1.12 eV"
+    ],
+    "proposed": [
+      "211 mV as this design's frozen operating bias",
+      "dot-dash glyph assignment",
+      "clamped mirror-inverse word"
+    ],
+    "not_claimed": [
+      "211 mV as a universal tunnelling voltage",
+      "a fabricated silicon device",
+      "measured tunnel current",
+      "quantum advantage"
+    ]
+  },
+  "sources": [
+    {
+      "title": "Room Temperature Gold-Vacuum-Gold Tunneling Experiments",
+      "publisher": "NIST",
+      "url": "https://nvlpubs.nist.gov/nistpubs/jres/091/jresv91n4p171_A1b.pdf"
+    },
+    {
+      "title": "A Metrological Near-Room-Temperature Photon-Number-Resolving Detector",
+      "publisher": "NIST",
+      "url": "https://tsapps.nist.gov/publication/get_pdf.cfm?pub_id=960308"
+    }
+  ],
+  "freeze_seal": {
+    "algorithm": "SHA-256",
+    "scope": "canonical JSON serialization of the normative object",
+    "digest": "f882dbd1b80cbe8efcf5c9d49a977276529f11b7953d0276a80ab168485348fb"
+  },
+  "change_rule": "Any change to normative semantics, constants, alphabet, equations, word, acceptance gates, or seal requires a new contract version."
+}

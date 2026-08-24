@@ -18,6 +18,7 @@ Visual and experimental hardware designs — quantum dot, valence board, zero po
 | `Quantum-Dot-Primer-File.html` | Primer — quantum dot computing fundamentals |
 | `quantum dot.html` | Full quantum dot processor model |
 | `keep this 00.html` | Canonical preserved build |
+| `quantum-tunnel-modulator.html` | QT-211 verified four-quadrant I/Q + WKB tunnel workbench |
 | `light shadow whisper.md` | Light/shadow whisper lattice spec |
 | `bridge.js.txt` | Bridge module |
 
