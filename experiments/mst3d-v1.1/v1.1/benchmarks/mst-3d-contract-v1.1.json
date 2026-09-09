@@ -1,0 +1,60 @@
+{
+  "id": "MST-3D-BC-1.1",
+  "status": "DRAFT",
+  "title": "Three-dimensional matter-state transformer benchmark contract",
+  "normative": {
+    "version": "MST-3D-1.1.0",
+    "glyph": ".|-|..",
+    "glyph_semantics": {
+      "first_dot": "localized input matter state",
+      "paired_bars": "material-vacuum interfaces bounding a vacuum gap",
+      "dash": "evanescent coupling path through the vacuum potential barrier",
+      "second_dot": "transformed output matter state",
+      "final_dot": "read-only numerical witness"
+    },
+    "model_class": "nonrelativistic single-particle matter-wave simulation",
+    "hamiltonian": "H = -(1/2) nabla^2 + V(x,y,z) in nondimensional units with hbar = m = 1",
+    "potential": "planar vacuum-gap barrier plus a weak transverse harmonic guide",
+    "propagator": "second-order Strang split-operator Fourier method",
+    "boundary_condition": "closed periodic computational volume",
+    "baseline_grid": [
+      32,
+      16,
+      16
+    ],
+    "baseline_spacing": [
+      0.75,
+      0.75,
+      0.75
+    ],
+    "baseline_dt": 0.018,
+    "baseline_wave_number": 3.2,
+    "baseline_barrier_height": 5.8,
+    "baseline_barrier_half_width": 0.9,
+    "required_witnesses": [
+      "finite complex state",
+      "probability norm conservation",
+      "left plus gap plus right probability closure",
+      "time-reversal recovery within floating-point tolerance",
+      "free packet propagates toward the output port",
+      "vacuum barrier suppresses transfer relative to the free baseline",
+      "read-only witness does not mutate the simulated state"
+    ],
+    "evidence_boundary": {
+      "established": "time-dependent Schrodinger equation, Born probability, FFT, unitary split propagation",
+      "design_choice": "the .|-|.. glyph, selected nondimensional parameters, periodic box and transverse guide",
+      "excluded": "matter creation, particle transmutation, relativistic field interactions, laboratory vacuum performance, measurement back-action and fabricated-device claims"
+    },
+    "physical_scale": {
+      "energy": "E0 = hbar^2/(m*L0^2)",
+      "time": "t0 = hbar/E0",
+      "reason": "Consistent with H = -(1/2) nabla^2 + V and i*dpsi/dt = H*psi"
+    }
+  },
+  "freeze_seal": {
+    "algorithm": "SHA-256 over canonical normative object",
+    "digest": "a05d607e58ccf37a19668f9f1d36c0ebf731ee16c8fa9318e48c84758c688a47",
+    "note": "Draft content checksum only; original frozen v1.0 unchanged."
+  },
+  "prepared_at": "2026-09-09"
+}
