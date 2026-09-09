@@ -1,0 +1,64 @@
+{
+  "moduleVersion": "MST-3D-1.1.0",
+  "checks": [
+    {
+      "id": "C1",
+      "name": "Analytic free Fourier-mode phase",
+      "error": 3.8841353483098475e-15,
+      "pass": true
+    },
+    {
+      "id": "C2",
+      "name": "Complex superposition linearity",
+      "error": 2.6088532629387873e-15,
+      "pass": true
+    },
+    {
+      "id": "C3",
+      "name": "Complex inner-product preservation",
+      "error": 3.4428131091690403e-16,
+      "pass": true
+    },
+    {
+      "id": "C4",
+      "name": "Forward/reverse phase recovery",
+      "error": 4.3084674908609475e-14,
+      "pass": true
+    },
+    {
+      "id": "C5",
+      "name": "Time-step convergence against independent exact discrete Hamiltonian",
+      "dt": [
+        0.04,
+        0.02,
+        0.01
+      ],
+      "errors": [
+        0.0004542472519403586,
+        0.00011352479886383327,
+        2.8378887519401398e-05
+      ],
+      "halving_ratios": [
+        4.001304177470538,
+        4.000325903762836
+      ],
+      "pass": true
+    },
+    {
+      "id": "C6",
+      "name": "SI scaling matches kinetic coefficient 1/2",
+      "coefficient": 0.5,
+      "expected": 0.5,
+      "scale": {
+        "lengthNm": 1,
+        "effectiveMassRatio": 1,
+        "energyEv": 0.0761996421259937,
+        "timeFs": 8.637992754077176
+      },
+      "pass": true
+    }
+  ],
+  "passed": 6,
+  "total": 6,
+  "reference_scope": "Same 4x4x4 periodic spatial discretization; exact matrix exponential by Hermitian eigendecomposition. Tests time convergence, not spatial convergence or laboratory accuracy."
+}
